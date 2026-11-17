@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>USAGI LIFE · 乌萨奇全能生活手账仪表盘</title>
+
+  <!-- Google Fonts: Fredoka & Quicksand -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- Supabase Cloud DB Client (Optional Free Cloud Database) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="antialiased">
+
+  <!-- ============================================================
+       AUTH SCREEN: 方案 A 私人登录系统 (Multi-User Data Isolation)
+       ============================================================ -->
+  <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-md">
+    <div class="modal-content glass-card max-w-md w-full p-8 relative overflow-hidden bg-white/95 border-4 border-amber-300">
+      
+      <!-- Authentic Usagi Illustration from Image 1 -->
+      <div class="flex justify-center -mt-6 mb-3">
+        <img src="assets/usagi_character.png" alt="乌萨奇" class="w-28 h-32 object-contain animate-bounce drop-shadow-md select-none" />
+      </div>
+
+      <div class="text-center mb-6">
+        <h2 class="text-2xl font-black text-stone-800 tracking-wide flex items-center justify-center gap-2">
+          <span>USAGI LIFE</span>
+          <span class="text-amber-500">·</span>
+          <span>生活手账</span>
+        </h2>
+        <p class="text-xs text-amber-700/80 font-bold mt-1 bg-amber-100/70 inline-block px-3 py-1 rounded-full border border-amber-300">
+          <i class="fa-solid fa-shield-cat mr-1"></i> 方案 A：私人专属独立登录系统
+        </p>
+        <p class="text-xs text-stone-500 mt-2">
+          每个账号数据完全独立隔离 · 仅自己可见经期与账单隐私
+        </p>
+      </div>
+
+      <!-- Auth Tabs: Login / Register -->
+      <div class="flex rounded-xl bg-amber-50 p-1 mb-6 border border-amber-200">
+        <button id="tab-btn-login" onclick="switchAuthTab('login')" class="flex-1 py-2 text-sm font-bold rounded-lg transition-all bg-amber-400 text-stone-900 shadow-sm">
+          私人登录
+        </button>
+        <button id="tab-btn-register" onclick="switchAuthTab('register')" class="flex-1 py-2 text-sm font-bold rounded-lg transition-all text-stone-600 hover:text-amber-700">
+          注册新账号
+        </button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="form-login" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-stone-600 mb-1">账号名称 (Username)</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-3 text-stone-400 text-sm"><i class="fa-solid fa-user"></i></span>
+            <input id="login-username" type="text" placeholder="例如: usagi_fan" class="w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm transition-all" required />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-stone-600 mb-1">登录密码 (Password)</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-3 text-stone-400 text-sm"><i class="fa-solid fa-lock"></i></span>
+            <input id="login-password" type="password" placeholder="请输入您的密码" class="w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm transition-all" required />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 mt-2">
+          <button type="submit" class="btn-usagi w-full py-2.5 text-sm font-black">
+            私人登录 🥕
+          </button>
+          <button type="button" onclick="USAGI_APP.guestLogin()" class="btn-secondary w-full py-2.5 text-xs font-black text-amber-900 border-amber-300 bg-amber-50 hover:bg-amber-100">
+            免密一键进入 ✨
+          </button>
+        </div>
+
+        <button type="button" onclick="fillDemoAccount()" class="w-full py-2 text-xs font-bold text-amber-700 bg-amber-100/60 hover:bg-amber-100 rounded-xl border border-dashed border-amber-300 transition-all flex items-center justify-center gap-1.5 mt-2">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> 填入演示账号 (usagi / 123)
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="form-register" onsubmit="handleRegisterSubmit(event)" class="space-y-3.5 hidden">
+        <div>
+          <label class="block text-xs font-bold text-stone-600 mb-1">设置用户名 (作为唯一登录凭证)</label>
+          <input id="reg-username" type="text" placeholder="字母/数字，如: my_usagi" class="w-full px-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm" required />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-stone-600 mb-1">手账昵称 (在界面显示的称呼)</label>
+          <input id="reg-nickname" type="text" placeholder="如: 乌萨奇头号饲养员" class="w-full px-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-stone-600 mb-1">设置密码</label>
+          <input id="reg-password" type="password" placeholder="不少于4位密码" class="w-full px-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm" required />
+        </div>
+        <button type="submit" class="btn-usagi w-full py-3 text-base font-black mt-2">
+          创建独立手账账号 ✨
+        </button>
+      </form>
+
+      <div class="mt-5 flex items-center justify-between text-xs text-stone-400 border-t border-stone-100 pt-3">
+        <span>数据本地隔离存储 · 独立私密</span>
+        <button type="button" onclick="localStorage.clear(); alert('本地缓存已完全重置！✨'); location.reload();" class="text-amber-600 hover:underline">
+          重置缓存
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MAIN APP CONTAINER (Rendered after Login)
+       ============================================================ -->
+  <div id="app-container" class="hidden min-h-screen flex flex-col relative z-10 pb-12">
+    
+    <!-- Top Header Bar -->
+    <header class="glass-card mx-4 mt-4 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 sticky top-4 z-40 bg-white/90 shadow-sm border-2 border-amber-200">
+      
+      <!-- Brand & Mascot with Authentic Usagi Artwork -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="USAGI_APP.switchTab('dashboard')">
+        <div class="w-13 h-13 bg-amber-100 rounded-2xl flex items-center justify-center p-1 border-2 border-amber-300 shadow-inner">
+          <img src="assets/usagi_character.png" alt="乌萨奇" class="w-10 h-10 object-contain hover:scale-110 transition-transform" />
+        </div>
+        <div>
+          <h1 class="text-xl font-black text-stone-800 tracking-tight flex items-center gap-2">
+            <span>USAGI LIFE</span>
+            <span class="badge-kawaii bg-amber-400 text-stone-900 text-xs">All-in-One</span>
+          </h1>
+          <p id="user-motto-display" class="text-xs text-amber-700 font-bold truncate max-w-xs">呀哈！每天都要元气满满！</p>
+        </div>
+      </div>
+
+      <!-- User Info & Interactive Controls -->
+      <div class="flex items-center gap-3">
+        <!-- User Badge -->
+        <div class="flex items-center gap-2 bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200">
+          <span id="user-avatar-display" class="w-6 h-6 flex items-center justify-center">
+            <img src="assets/usagi_character.png" alt="乌萨奇" class="w-6 h-6 object-contain" />
+          </span>
+          <span id="user-nickname-display" class="text-xs font-bold text-stone-700">乌萨奇饲养员</span>
+        </div>
+
+        <!-- Export Excel Button -->
+        <button onclick="openExportExcelModal('all_overview')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-emerald-50 border border-emerald-300 text-stone-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="导出 Excel 手账与财务对账单">
+          <i class="fa-solid fa-file-excel text-emerald-600"></i>
+          <span class="hidden sm:inline">导出 Excel</span>
+        </button>
+
+        <!-- Cloud DB Setting Button -->
+        <button onclick="openCloudDbModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-amber-100 border border-amber-300 text-stone-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="云端数据库设置">
+          <span id="cloud-status-dot" class="w-2.5 h-2.5 rounded-full bg-stone-300 inline-block"></span>
+          <span id="cloud-status-text" class="hidden sm:inline">数据库</span>
+          <i class="fa-solid fa-cloud text-amber-500"></i>
+        </button>
+
+        <!-- Controls: Sound, Particles, Backup, Logout -->
+        <button onclick="handleToggleSound()" id="btn-sound-toggle" class="w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 flex items-center justify-center text-stone-600 transition-all text-sm" title="切换音效">
+          <i class="fa-solid fa-volume-high"></i>
+        </button>
+
+        <button onclick="handleToggleParticles()" id="btn-particle-toggle" class="w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 flex items-center justify-center text-amber-500 transition-all text-sm" title="切换背景飘落动画">
+          <i class="fa-solid fa-sparkles"></i> ✨
+        </button>
+
+        <button onclick="USAGI_APP.exportDataJSON()" class="w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 flex items-center justify-center text-stone-600 transition-all text-sm" title="导出备份数据 JSON">
+          <i class="fa-solid fa-download"></i>
+        </button>
+
+        <label class="w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 flex items-center justify-center text-stone-600 transition-all text-sm cursor-pointer" title="导入备份数据">
+          <i class="fa-solid fa-upload"></i>
+          <input type="file" accept=".json" onchange="USAGI_APP.importDataJSON(event)" class="hidden" />
+        </label>
+
+        <button onclick="USAGI_APP.logout()" class="w-9 h-9 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-200 flex items-center justify-center text-rose-600 transition-all text-sm" title="退出私人账号">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace Layout -->
+    <div class="flex-1 max-w-7xl w-full mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- Navigation Sidebar -->
+      <aside class="lg:col-span-3">
+        <div class="glass-card p-4 sticky top-24 space-y-1.5 bg-white/80 border-2 border-stone-200/60">
+          <div class="text-xs font-black text-amber-800 uppercase tracking-wider px-3 py-1.5 flex items-center justify-between">
+            <span>导航手账模块</span>
+            <span class="text-base">🥕</span>
+          </div>
+
+          <div id="nav-dashboard" onclick="USAGI_APP.switchTab('dashboard')" class="nav-pill active flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">🌟</span>
+            <span>今日总览 (Dashboard)</span>
+          </div>
+
+          <div id="nav-calendar" onclick="USAGI_APP.switchTab('calendar')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">📅</span>
+            <span>生活手账日历 (Calendar)</span>
+          </div>
+
+          <div class="pt-2 text-xs font-black text-stone-400 px-3">健康与身体</div>
+
+          <div id="nav-period" onclick="USAGI_APP.switchTab('period')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">🌸</span>
+            <span>生理期追踪 (Period)</span>
+          </div>
+
+          <div id="nav-health" onclick="USAGI_APP.switchTab('health')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">💧</span>
+            <span>饮水 · 作息 · 运动</span>
+          </div>
+
+          <div id="nav-mood" onclick="USAGI_APP.switchTab('mood')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">🎭</span>
+            <span>情绪与症状日记</span>
+          </div>
+
+          <div class="pt-2 text-xs font-black text-stone-400 px-3">财务与效率</div>
+
+          <div id="nav-expense" onclick="USAGI_APP.switchTab('expense')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">💰</span>
+            <span>日常开销 (Expense)</span>
+          </div>
+
+          <div id="nav-habits" onclick="USAGI_APP.switchTab('habits')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">🟩</span>
+            <span>习惯养成与热力图</span>
+          </div>
+
+          <div id="nav-todos" onclick="USAGI_APP.switchTab('todos')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">⏳</span>
+            <span>待办清单与倒数日</span>
+          </div>
+
+          <div id="nav-notes" onclick="USAGI_APP.switchTab('notes')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">💡</span>
+            <span>碎片灵感备忘录</span>
+          </div>
+
+          <div class="pt-2 text-xs font-black text-stone-400 px-3">娱乐与幸福感</div>
+
+          <div id="nav-watchlist" onclick="USAGI_APP.switchTab('watchlist')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">🎬</span>
+            <span>书影音 · 购物冷静期</span>
+          </div>
+
+          <div id="nav-highlights" onclick="USAGI_APP.switchTab('highlights')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">✨</span>
+            <span>感恩日记 · 每日高光</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content Dynamic Panels -->
+      <main class="lg:col-span-9 space-y-6">
+
+        <!-- ========================================================
+             1. TAB: DASHBOARD OVERVIEW
+             ======================================================== -->
+        <div id="tab-dashboard" class="tab-content space-y-6">
+          
+          <!-- Banner: Daily Greeting & Energy with Usagi Mascot -->
+          <div class="glass-card p-6 bg-gradient-to-r from-amber-200/70 via-yellow-100/80 to-rose-100/70 border-2 border-amber-300 relative overflow-hidden">
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
+              <div class="flex items-center gap-4">
+                <img src="assets/usagi_character.png" alt="乌萨奇" class="w-20 h-24 object-contain animate-pulse select-none" />
+                <div>
+                  <span class="badge-kawaii bg-amber-400 text-stone-900">乌萨奇今日快报 🥕</span>
+                  <h2 class="text-2xl font-black text-stone-800 mt-1">呀哈！欢迎回到你的专属生活手账！</h2>
+                  <p class="text-sm text-stone-600 mt-1">今天又是元气满满的一天，记得按时喝温水、完成打卡目标哦~</p>
+                </div>
+              </div>
+              <button onclick="UsagiSound.yaha(); confettiRain();" class="btn-usagi px-5 py-2.5 text-sm whitespace-nowrap">
+                <span>拍拍乌萨奇</span> <img src="assets/usagi_character.png" alt="Usagi" class="w-5 h-5 inline-block object-contain" />
+              </button>
+            </div>
+            <!-- Decorative Background Graphic -->
+            <div class="absolute -right-4 -bottom-6 text-8xl opacity-10 select-none pointer-events-none">🥕</div>
+          </div>
+
+          <!-- Quick Metrics Row -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- Calendar Quick Card -->
+            <div onclick="USAGI_APP.switchTab('calendar')" class="glass-card p-5 cursor-pointer hover:border-amber-400 transition-all bg-white/80">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-stone-500">生活手账日历</span>
+                <span class="text-xs font-bold text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded-full">查看日历</span>
+              </div>
+              <div id="dash-cal-count" class="text-lg font-black text-amber-900 mt-2">今日 0 项手账日程</div>
+              <div id="dash-cal-sub" class="text-xs text-stone-500 mt-1 truncate">点击在日历中记录生活</div>
+            </div>
+
+            <!-- Period Status Quick Card -->
+            <div onclick="USAGI_APP.switchTab('period')" class="glass-card p-5 cursor-pointer hover:border-rose-400 transition-all bg-white/80">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-stone-500">生理期追踪</span>
+                <span id="dash-period-badge" class="badge-kawaii bg-rose-100 text-rose-700">加载中...</span>
+              </div>
+              <div id="dash-period-status" class="text-lg font-black text-rose-800 mt-2">--</div>
+              <div id="dash-period-sub" class="text-xs text-stone-500 mt-1 truncate">--</div>
+            </div>
+
+            <!-- Expense Quick Card -->
+            <div onclick="USAGI_APP.switchTab('expense')" class="glass-card p-5 cursor-pointer hover:border-amber-400 transition-all bg-white/80">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-stone-500">本月消费支出</span>
+                <span class="text-xs font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">日常记账</span>
+              </div>
+              <div id="dash-expense-spent" class="text-xl font-black text-stone-800 mt-2">RM 0.0</div>
+              <div class="w-full bg-stone-100 h-2 rounded-full overflow-hidden mt-2">
+                <div id="dash-expense-bar" class="bg-amber-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+              <div id="dash-expense-remaining" class="text-xs text-stone-500 mt-1">剩余 RM 0.0</div>
+            </div>
+
+            <!-- Water & Habits Quick Card -->
+            <div onclick="USAGI_APP.switchTab('health')" class="glass-card p-5 cursor-pointer hover:border-blue-400 transition-all bg-white/80">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-stone-500">今日饮水打卡</span>
+                <span class="text-xs font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">咕噜咕噜</span>
+              </div>
+              <div id="dash-water-text" class="text-lg font-black text-blue-800 mt-2">0 / 4 杯 (0ml)</div>
+              <div class="w-full bg-stone-100 h-2 rounded-full overflow-hidden mt-2">
+                <div id="dash-water-progress" class="bg-blue-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+              <div id="dash-habit-text" class="text-xs text-emerald-600 font-bold mt-1">0 项习惯打卡</div>
+            </div>
+          </div>
+
+          <!-- Bottom Grid: Nearest Countdowns & Quick Tasks -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Nearest Countdowns -->
+            <div class="glass-card p-5 bg-white/80">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                  <span>⏰</span> <span>倒数纪念日</span>
+                </h3>
+                <button onclick="USAGI_APP.switchTab('todos')" class="text-xs text-amber-600 font-bold hover:underline">查看全部</button>
+              </div>
+              <div id="dash-countdown-list" class="space-y-2"></div>
+            </div>
+
+            <!-- Pending To-Dos -->
+            <div class="glass-card p-5 bg-white/80">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                  <span>✍️</span> <span>待办核心清单</span>
+                </h3>
+                <span id="dash-todo-count" class="badge-kawaii bg-amber-100 text-amber-800 text-xs">0 项待完成</span>
+              </div>
+              <p class="text-xs text-stone-500 mb-3">今天最重要的小事，做完就可以无负罪感地休息啦！</p>
+              <button onclick="USAGI_APP.switchTab('todos')" class="btn-secondary w-full text-xs py-2">
+                前往待办清单进行打勾 🌸
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             1.5. TAB: 生活手账日历 (CALENDAR)
+             ======================================================== -->
+        <div id="tab-calendar" class="tab-content hidden space-y-6">
+          
+          <!-- Calendar Toolbar & Month Navigation -->
+          <div class="glass-card p-4 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <span class="text-xs font-black text-amber-900 flex items-center gap-1.5">
+                <i class="fa-solid fa-calendar text-amber-600 text-sm"></i>
+                <span>生活日历:</span>
+              </span>
+
+              <!-- Year Input (Support Direct Typing of Any Year) -->
+              <div class="flex items-center bg-white border-2 border-amber-300 rounded-xl px-2 py-1 shadow-sm">
+                <input id="cal-select-year" type="number" min="1970" max="2099" step="1" onchange="USAGI_APP.setCalendarYear(this.value)" class="w-16 font-black text-stone-800 text-xs bg-transparent focus:outline-none text-center" title="直接输入任意年份" />
+                <span class="text-xs font-black text-amber-900 select-none">年</span>
+              </div>
+
+              <!-- Month Picker -->
+              <select id="cal-select-month" onchange="USAGI_APP.setCalendarMonth(this.value)" class="px-3 py-1.5 border-2 border-amber-300 rounded-xl font-black text-stone-800 text-xs bg-white shadow-sm focus:outline-none cursor-pointer">
+                <option value="1">01 月</option>
+                <option value="2">02 月</option>
+                <option value="3">03 月</option>
+                <option value="4">04 月</option>
+                <option value="5">05 月</option>
+                <option value="6">06 月</option>
+                <option value="7">07 月</option>
+                <option value="8">08 月</option>
+                <option value="9">09 月</option>
+                <option value="10">10 月</option>
+                <option value="11">11 月</option>
+                <option value="12">12 月</option>
+              </select>
+
+              <!-- Prev / Today / Next Buttons -->
+              <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-amber-200 shadow-sm">
+                <button type="button" onclick="USAGI_APP.prevCalendarMonth()" class="px-2.5 py-1 text-xs font-bold text-stone-700 hover:text-amber-800 hover:bg-amber-100 rounded-lg transition-all" title="查看上一月">
+                  <i class="fa-solid fa-chevron-left mr-0.5"></i> 上月
+                </button>
+                <button type="button" onclick="USAGI_APP.todayCalendarMonth()" class="px-2.5 py-1 text-xs font-bold text-amber-900 bg-amber-200/80 hover:bg-amber-300 rounded-lg transition-all shadow-xs">
+                  今天
+                </button>
+                <button type="button" onclick="USAGI_APP.nextCalendarMonth()" class="px-2.5 py-1 text-xs font-bold text-stone-700 hover:text-amber-800 hover:bg-amber-100 rounded-lg transition-all" title="查看下一月">
+                  下月 <i class="fa-solid fa-chevron-right ml-0.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Current Period & Legend -->
+            <div class="flex items-center gap-3 text-xs flex-wrap">
+              <span id="cal-current-label" class="badge-kawaii bg-amber-400 text-stone-900 font-black text-xs py-1.5 px-3.5 shadow-sm">
+                2026年 11月
+              </span>
+              <div class="flex items-center gap-2 text-[11px] font-bold text-stone-600">
+                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-400 inline-block"></span> 经期</span>
+                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> 开销</span>
+                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-blue-400 inline-block"></span> 日程</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar View Card -->
+          <div class="glass-card p-5 bg-white/90">
+            <div class="flex items-center justify-between mb-3 text-xs text-stone-500">
+              <span class="font-bold flex items-center gap-1"><i class="fa-solid fa-hand-pointer text-amber-500"></i> 点击任意一天可直接记手账、安排日程或写当日便签</span>
+              <button onclick="USAGI_APP.openCalendarDayModal(new Date().toISOString().split('T')[0])" class="btn-usagi text-xs py-1.5 px-3">
+                <i class="fa-solid fa-plus mr-1"></i> 今日速记
+              </button>
+            </div>
+
+            <!-- Weekday Headers -->
+            <div class="grid grid-cols-7 gap-1.5 text-center text-xs font-black text-amber-900 bg-amber-100/60 p-2 rounded-xl mb-2">
+              <div class="text-rose-600">周日</div>
+              <div>周一</div>
+              <div>周二</div>
+              <div>周三</div>
+              <div>周四</div>
+              <div>周五</div>
+              <div class="text-amber-700">周六</div>
+            </div>
+
+            <!-- Calendar Days 7-Col Grid -->
+            <div id="calendar-days-grid" class="calendar-grid"></div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             2. TAB: 生理期追踪 (PERIOD TRACKER)
+             ======================================================== -->
+        <div id="tab-period" class="tab-content hidden space-y-6">
+          <div class="glass-card p-6 bg-rose-50/70 border-2 border-rose-200">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <span class="badge-kawaii bg-rose-200 text-rose-800">经期日记 & 预测 🌸</span>
+                <h3 id="period-status-banner" class="text-2xl font-black text-rose-900 mt-2">经期周期分析中...</h3>
+                <p id="period-tips-text" class="text-xs text-stone-600 mt-1">数据仅保存在您的专属本地分区中，安全私密</p>
+              </div>
+
+              <!-- Cycle & Duration Settings -->
+              <div class="flex items-center gap-2 bg-white/80 p-3 rounded-2xl border border-rose-200">
+                <div class="text-xs">
+                  <div class="font-bold text-stone-600">周期长度(天)</div>
+                  <input id="period-cycle-length-input" type="number" value="28" class="w-16 px-2 py-1 border rounded text-center text-sm font-bold" />
+                </div>
+                <div class="text-xs">
+                  <div class="font-bold text-stone-600">经期天数(天)</div>
+                  <input id="period-duration-input" type="number" value="5" class="w-16 px-2 py-1 border rounded text-center text-sm font-bold" />
+                </div>
+                <button onclick="USAGI_APP.savePeriodSettings()" class="btn-pink text-xs py-2 px-3">
+                  保存
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Period Form -->
+          <div class="glass-card p-5 bg-white/80 border border-rose-200">
+            <h4 class="font-bold text-rose-900 text-sm mb-3 flex items-center gap-2">
+              <i class="fa-solid fa-plus-circle text-rose-500"></i> 记录新的经期开始
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">开始日期</label>
+                <input id="period-new-start" type="date" class="w-full p-2 border border-stone-200 rounded-xl" />
+              </div>
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">结束日期 (可选)</label>
+                <input id="period-new-end" type="date" class="w-full p-2 border border-stone-200 rounded-xl" />
+              </div>
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">经血量</label>
+                <select id="period-new-flow" class="w-full p-2 border border-stone-200 rounded-xl">
+                  <option value="少">少 (Light)</option>
+                  <option value="中等" selected>中等 (Moderate)</option>
+                  <option value="多">多 (Heavy)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">痛经与身体反应</label>
+                <select id="period-new-pain" class="w-full p-2 border border-stone-200 rounded-xl">
+                  <option value="无痛经">无明显痛感 😊</option>
+                  <option value="轻微不适" selected>轻微下坠酸痛 🌸</option>
+                  <option value="中度疼痛">中度腹痛，需要暖宝宝 🥺</option>
+                  <option value="重度疼痛">重度疼痛，需要止痛药 💊</option>
+                </select>
+              </div>
+            </div>
+            <div class="mt-3">
+              <input id="period-new-notes" type="text" placeholder="随手备注（如：喝了红糖姜茶、情绪比较低落等）" class="w-full p-2 text-xs border border-stone-200 rounded-xl" />
+            </div>
+            <div class="mt-3 flex justify-end">
+              <button onclick="handleAddPeriodRecord()" class="btn-pink text-xs py-2 px-5 font-bold">
+                提交保存记录 🌸
+              </button>
+            </div>
+          </div>
+
+          <!-- History Records -->
+          <div class="glass-card p-5 bg-white/80">
+            <h4 class="font-bold text-stone-800 text-sm mb-3">历史记录一览</h4>
+            <div id="period-history-list" class="space-y-2"></div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             3. TAB: 日常记账本 (EXPENSE TRACKER)
+             ======================================================== -->
+        <div id="tab-expense" class="tab-content hidden space-y-6">
+          
+          <!-- Year & Month Filter Toolbar -->
+          <div class="glass-card p-4 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <span class="text-xs font-black text-amber-900 flex items-center gap-1.5">
+                <i class="fa-solid fa-calendar-days text-amber-600"></i>
+                <span>账目周期选择:</span>
+              </span>
+
+              <!-- Year Input (Support Direct Typing of Any Year) -->
+              <div class="flex items-center bg-white border-2 border-amber-300 rounded-xl px-2 py-1 shadow-sm">
+                <input id="exp-select-year" type="number" min="1970" max="2099" step="1" onchange="USAGI_APP.setExpenseYear(this.value)" class="w-16 font-black text-stone-800 text-xs bg-transparent focus:outline-none text-center" title="直接输入任意年份" />
+                <span class="text-xs font-black text-amber-900 select-none">年</span>
+              </div>
+
+              <!-- Month Picker -->
+              <select id="exp-select-month" onchange="USAGI_APP.setExpenseMonth(this.value)" class="px-3 py-1.5 border-2 border-amber-300 rounded-xl font-black text-stone-800 text-xs bg-white shadow-sm focus:outline-none cursor-pointer">
+                <option value="all">📅 查看整年汇总</option>
+                <option value="1">01 月</option>
+                <option value="2">02 月</option>
+                <option value="3">03 月</option>
+                <option value="4">04 月</option>
+                <option value="5">05 月</option>
+                <option value="6">06 月</option>
+                <option value="7">07 月</option>
+                <option value="8">08 月</option>
+                <option value="9">09 月</option>
+                <option value="10">10 月</option>
+                <option value="11">11 月</option>
+                <option value="12">12 月</option>
+              </select>
+
+              <!-- Fast Quick Prev / Current / Next Buttons -->
+              <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-amber-200 shadow-sm">
+                <button type="button" onclick="USAGI_APP.prevExpenseMonth()" class="px-2.5 py-1 text-xs font-bold text-stone-700 hover:text-amber-800 hover:bg-amber-100 rounded-lg transition-all" title="查看上一月">
+                  <i class="fa-solid fa-chevron-left mr-0.5"></i> 上月
+                </button>
+                <button type="button" onclick="USAGI_APP.resetExpenseToCurrentMonth()" class="px-2.5 py-1 text-xs font-bold text-amber-900 bg-amber-200/80 hover:bg-amber-300 rounded-lg transition-all shadow-xs">
+                  本月
+                </button>
+                <button type="button" onclick="USAGI_APP.nextExpenseMonth()" class="px-2.5 py-1 text-xs font-bold text-stone-700 hover:text-amber-800 hover:bg-amber-100 rounded-lg transition-all" title="查看下一月">
+                  下月 <i class="fa-solid fa-chevron-right ml-0.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Current Period Indicator Badge & Export Button -->
+            <div class="flex items-center gap-2 flex-wrap">
+              <button type="button" onclick="openExportExcelModal('expense')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs shadow-sm transition-all cursor-pointer" title="导出当前或自选周期的 Excel 账单">
+                <i class="fa-solid fa-file-excel"></i> <span>导出 Excel</span>
+              </button>
+              <div id="exp-period-badge" class="badge-kawaii bg-amber-400 text-stone-900 font-black text-xs py-1.5 px-3.5 shadow-sm">
+                2026年 11月 账目
+              </div>
+            </div>
+          </div>
+
+          <!-- Month Stats Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="glass-card p-5 bg-gradient-to-br from-rose-50 to-orange-50 border border-rose-200">
+              <div id="exp-label-out" class="text-xs font-bold text-rose-600">所选周期支出</div>
+              <div id="exp-month-out" class="text-2xl font-black text-rose-800 mt-1">RM 0.0</div>
+            </div>
+            <div class="glass-card p-5 bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200">
+              <div id="exp-label-in" class="text-xs font-bold text-emerald-600">所选周期收入</div>
+              <div id="exp-month-in" class="text-2xl font-black text-emerald-800 mt-1">RM 0.0</div>
+            </div>
+            <div class="glass-card p-5 bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200">
+              <div id="exp-label-bal" class="text-xs font-bold text-amber-700">所选周期结余</div>
+              <div id="exp-month-balance" class="text-2xl font-black text-amber-900 mt-1">RM 0.0</div>
+            </div>
+          </div>
+
+          <!-- Add Transaction & Budget Setting -->
+          <div class="glass-card p-5 bg-white/80">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                <span>🪙</span> <span>记一笔新开销 / 收入</span>
+              </h4>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="font-bold text-stone-500">月预算 (RM):</span>
+                <input id="exp-budget-val" type="number" class="w-20 px-2 py-1 border rounded text-center text-xs font-bold" />
+                <button onclick="USAGI_APP.saveBudget()" class="btn-usagi text-xs py-1 px-3">更新</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">类型</label>
+                <select id="exp-input-type" class="w-full p-2 border border-stone-200 rounded-xl">
+                  <option value="expense">支出 (Expense)</option>
+                  <option value="income">收入 (Income)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">消费分类</label>
+                <select id="exp-input-cat" class="w-full p-2 border border-stone-200 rounded-xl">
+                  <option value="餐饮美食">🍔 餐饮美食</option>
+                  <option value="购物消费">🛍️ 购物消费</option>
+                  <option value="日用百货">🧻 日用百货</option>
+                  <option value="休闲娱乐">🎮 休闲娱乐</option>
+                  <option value="交通出行">🚇 交通出行</option>
+                  <option value="美妆护肤">💄 美妆护肤</option>
+                  <option value="医疗健康">💊 医疗健康</option>
+                  <option value="兼职工资">💰 兼职工资</option>
+                  <option value="其他分类">✨ 其他分类</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">金额 (RM)</label>
+                <input id="exp-input-amount" type="number" step="0.01" placeholder="0.00" class="w-full p-2 border border-stone-200 rounded-xl font-bold" />
+              </div>
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">日期</label>
+                <input id="exp-input-date" type="date" class="w-full p-2 border border-stone-200 rounded-xl" />
+              </div>
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">备注说明</label>
+                <input id="exp-input-note" type="text" placeholder="例如: 奶茶与蛋挞" class="w-full p-2 border border-stone-200 rounded-xl" />
+              </div>
+            </div>
+
+            <div class="mt-3 flex justify-end">
+              <button onclick="handleAddExpenseSubmit()" class="btn-usagi text-xs py-2 px-6">
+                记入账本 💸
+              </button>
+            </div>
+          </div>
+
+          <!-- Chart & Expense Log List -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <div class="md:col-span-5 glass-card p-5 bg-white/80">
+              <h4 class="font-bold text-stone-800 text-sm mb-2">支出分类占比图</h4>
+              <div class="h-60 flex items-center justify-center">
+                <canvas id="expense-pie-chart"></canvas>
+              </div>
+            </div>
+
+            <div class="md:col-span-7 glass-card p-5 bg-white/80">
+              <h4 class="font-bold text-stone-800 text-sm mb-3">记账流水记录</h4>
+              <div id="expense-list-container" class="space-y-2 max-h-96 overflow-y-auto pr-1"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             4. TAB: 健康与身体状态 (WATER, SLEEP & WEIGHT)
+             ======================================================== -->
+        <div id="tab-health" class="tab-content hidden space-y-6">
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Water Intake Section -->
+            <div class="glass-card p-5 bg-blue-50/50 border border-blue-200 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between">
+                  <h4 class="font-bold text-blue-900 text-sm flex items-center gap-2">
+                    <span>💧</span> <span>今日饮水打卡</span>
+                  </h4>
+                  <span class="badge-kawaii bg-blue-200 text-blue-800">目标 4 杯 (2000ml · 500ml/杯)</span>
+                </div>
+                
+                <div class="flex items-center justify-around my-6">
+                  <!-- Animated Water Cup -->
+                  <div class="water-cup">
+                    <div id="water-glass-fill" class="water-fill" style="height: 0%">
+                      <div class="water-wave" style="background: radial-gradient(circle, #fff 10%, transparent 20%);"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div id="health-water-count" class="text-3xl font-black text-blue-800">0 / 4 杯</div>
+                    <div id="health-water-ml" class="text-sm font-bold text-blue-600 mt-1">0 ml</div>
+                    <div class="text-xs text-stone-500 mt-2">每次喝水点击一下打卡</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex gap-2">
+                <button onclick="USAGI_APP.drinkWater()" class="btn-usagi flex-1 text-xs py-2.5 bg-blue-400 text-stone-900 border-blue-500">
+                  +1 杯水 (500ml) 💧
+                </button>
+                <button onclick="USAGI_APP.resetWater()" class="btn-secondary text-xs py-2.5">
+                  重置
+                </button>
+              </div>
+            </div>
+
+            <!-- Sleep & Rest Section -->
+            <div class="glass-card p-5 bg-indigo-50/50 border border-indigo-200">
+              <h4 class="font-bold text-indigo-900 text-sm mb-3 flex items-center gap-2">
+                <span>🌙</span> <span>作息与睡眠记录</span>
+              </h4>
+
+              <div class="grid grid-cols-3 gap-2 text-xs mb-3">
+                <div>
+                  <label class="block font-bold text-stone-600 mb-1">入睡时间</label>
+                  <input id="sleep-input-sleep" type="time" value="23:30" class="w-full p-2 border border-stone-200 rounded-xl" />
+                </div>
+                <div>
+                  <label class="block font-bold text-stone-600 mb-1">起床时间</label>
+                  <input id="sleep-input-wake" type="time" value="07:30" class="w-full p-2 border border-stone-200 rounded-xl" />
+                </div>
+                <div>
+                  <label class="block font-bold text-stone-600 mb-1">睡眠感受</label>
+                  <select id="sleep-input-quality" class="w-full p-2 border border-stone-200 rounded-xl">
+                    <option value="great">极好 😴✨</option>
+                    <option value="good" selected>良好 🌙</option>
+                    <option value="fair">一般 🥱</option>
+                    <option value="poor">欠佳 😣</option>
+                  </select>
+                </div>
+              </div>
+              <input id="sleep-input-note" type="text" placeholder="睡眠日记备注（如：睡前泡脚、做了一个关于乌萨奇的美梦）" class="w-full p-2 text-xs border border-stone-200 rounded-xl mb-3" />
+              <button onclick="handleAddSleepSubmit()" class="btn-usagi w-full text-xs py-2 font-bold">
+                保存今日作息记录 🛌
+              </button>
+            </div>
+          </div>
+
+          <!-- Sleep History List -->
+          <div class="glass-card p-5 bg-white/80">
+            <h4 class="font-bold text-stone-800 text-sm mb-3">近期睡眠记录</h4>
+            <div id="sleep-history-list" class="space-y-2"></div>
+          </div>
+
+          <!-- Weight & Fitness Trends -->
+          <div class="glass-card p-5 bg-white/80">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+              <div>
+                <h4 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                  <span>⚖️</span> <span>体重与运动趋势</span>
+                </h4>
+                <p class="text-xs text-stone-500 mt-0.5">观察体重与经期前后的变化曲线</p>
+              </div>
+
+              <div class="flex items-center gap-2 text-xs">
+                <input id="weight-input-val" type="number" step="0.1" placeholder="体重(kg)" class="w-24 p-2 border border-stone-200 rounded-xl" />
+                <input id="weight-input-exercise" type="text" placeholder="运动类型(如跑步/瑜伽)" class="w-32 p-2 border border-stone-200 rounded-xl" />
+                <input id="weight-input-duration" type="number" placeholder="分钟" class="w-16 p-2 border border-stone-200 rounded-xl" />
+                <button onclick="handleAddWeightSubmit()" class="btn-pink text-xs py-2 px-3 font-bold">打卡</button>
+              </div>
+            </div>
+
+            <div class="h-64">
+              <canvas id="weight-trend-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             5. TAB: 情绪与症状日记 (MOOD & SYMPTOMS)
+             ======================================================== -->
+        <div id="tab-mood" class="tab-content hidden space-y-6">
+          <div class="glass-card p-6 bg-gradient-to-r from-yellow-50 to-amber-50 border border-amber-200">
+            <h3 class="font-black text-stone-800 text-lg mb-1 flex items-center gap-2">
+              <span>🎭</span> <span>情绪与身体规律摸索日记</span>
+            </h3>
+            <p class="text-xs text-stone-500 mb-4">每天选一个代表今天状态的乌萨奇心情，记录身体症状，掌握生理周期与情绪规律！</p>
+
+            <!-- Mood Buttons -->
+            <label class="block text-xs font-bold text-stone-600 mb-2">今天的心情是：</label>
+            <div id="mood-picker" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2 mb-4">
+              <button type="button" onclick="selectMood('yaha')" class="mood-btn p-3 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-400 text-center transition-all" data-mood="yaha">
+                <div class="text-3xl">🥳</div>
+                <div class="text-xs font-bold mt-1">呀哈!</div>
+              </button>
+              <button type="button" onclick="selectMood('ura')" class="mood-btn p-3 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-400 text-center transition-all" data-mood="ura">
+                <div class="text-3xl">🤩</div>
+                <div class="text-xs font-bold mt-1">活力!</div>
+              </button>
+              <button type="button" onclick="selectMood('happy')" class="mood-btn p-3 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-400 text-center transition-all" data-mood="happy">
+                <div class="text-3xl">🥰</div>
+                <div class="text-xs font-bold mt-1">开心</div>
+              </button>
+              <button type="button" onclick="selectMood('calm')" class="mood-btn p-3 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-400 text-center transition-all" data-mood="calm">
+                <div class="text-3xl">😌</div>
+                <div class="text-xs font-bold mt-1">平静</div>
+              </button>
+              <button type="button" onclick="selectMood('tired')" class="mood-btn p-3 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-400 text-center transition-all" data-mood="tired">
+                <div class="text-3xl">🥱</div>
+                <div class="text-xs font-bold mt-1">疲惫</div>
+              </button>
+              <button type="button" onclick="selectMood('emo')" class="mood-btn p-3 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-400 text-center transition-all" data-mood="emo">
+                <div class="text-3xl">🥺</div>
+                <div class="text-xs font-bold mt-1">Emo</div>
+              </button>
+              <button type="button" onclick="selectMood('angry')" class="mood-btn p-3 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-400 text-center transition-all" data-mood="angry">
+                <div class="text-3xl">😤</div>
+                <div class="text-xs font-bold mt-1">暴躁</div>
+              </button>
+            </div>
+
+            <!-- Symptoms Checkboxes -->
+            <label class="block text-xs font-bold text-stone-600 mb-2">今天身体有这些小反应吗？（可多选）</label>
+            <div id="symptoms-group" class="flex flex-wrap gap-2 mb-4 text-xs">
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer">
+                <input type="checkbox" value="痛经/腹胀" class="checkbox-kawaii" />
+                <span>痛经/腹胀 🌸</span>
+              </label>
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer">
+                <input type="checkbox" value="长痘痘" class="checkbox-kawaii" />
+                <span>长痘痘 🩹</span>
+              </label>
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer">
+                <input type="checkbox" value="偏头痛" class="checkbox-kawaii" />
+                <span>偏头痛 🤕</span>
+              </label>
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer">
+                <input type="checkbox" value="精力充沛" class="checkbox-kawaii" />
+                <span>精力充沛 ⚡</span>
+              </label>
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer">
+                <input type="checkbox" value="食欲暴增" class="checkbox-kawaii" />
+                <span>食欲暴增 🍰</span>
+              </label>
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer">
+                <input type="checkbox" value="水肿" class="checkbox-kawaii" />
+                <span>轻微水肿 💦</span>
+              </label>
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer">
+                <input type="checkbox" value="容易犯困" class="checkbox-kawaii" />
+                <span>容易犯困 💤</span>
+              </label>
+            </div>
+
+            <textarea id="mood-input-note" rows="2" placeholder="写一句悄悄话：今天遇到了什么事情触动了你？" class="w-full p-2.5 text-xs border border-stone-200 rounded-xl mb-3"></textarea>
+
+            <button onclick="handleAddMoodSubmit()" class="btn-usagi w-full py-2.5 text-sm font-bold">
+              记录今日心情与症状 📝
+            </button>
+          </div>
+
+          <!-- History Mood Logs -->
+          <div class="glass-card p-5 bg-white/80">
+            <h4 class="font-bold text-stone-800 text-sm mb-3">心情与身体日记流</h4>
+            <div id="mood-history-list" class="space-y-3"></div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             6. TAB: 习惯养成与热力图 (HABIT TRACKER & HEATMAP)
+             ======================================================== -->
+        <div id="tab-habits" class="tab-content hidden space-y-6">
+          <!-- Heatmap Card (GitHub-like) -->
+          <div class="glass-card p-6 bg-white/85">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-black text-stone-800 text-base flex items-center gap-2">
+                <span>🟩</span> <span>习惯达成贡献热力图 (Past 140 Days)</span>
+              </h3>
+              <div class="flex items-center gap-1 text-xs text-stone-500">
+                <span>少</span>
+                <span class="w-3 h-3 rounded-sm bg-[#F1ECE4] inline-block"></span>
+                <span class="w-3 h-3 rounded-sm bg-[#D8F3DC] inline-block"></span>
+                <span class="w-3 h-3 rounded-sm bg-[#95D5B2] inline-block"></span>
+                <span class="w-3 h-3 rounded-sm bg-[#52B788] inline-block"></span>
+                <span class="w-3 h-3 rounded-sm bg-[#2D6A4F] inline-block"></span>
+                <span>多</span>
+              </div>
+            </div>
+            <p class="text-xs text-stone-500 mb-4">每一格绿色都是你自律的印记，连成一片特别有成就感！</p>
+            
+            <div class="overflow-x-auto pb-2">
+              <div id="heatmap-grid" class="flex flex-wrap max-w-full"></div>
+            </div>
+          </div>
+
+          <!-- Habits List & Add New Habit -->
+          <div class="glass-card p-6 bg-white/80">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="font-bold text-stone-800 text-sm">今日习惯打卡清单</h4>
+              <div class="flex items-center gap-2 text-xs">
+                <input id="habit-new-icon" type="text" placeholder="图标(如✨)" class="w-16 p-2 border border-stone-200 rounded-xl text-center" />
+                <input id="habit-new-name" type="text" placeholder="输入新习惯名称..." class="w-48 p-2 border border-stone-200 rounded-xl" />
+                <button onclick="handleAddHabitSubmit()" class="btn-usagi text-xs py-2 px-3">添加习惯</button>
+              </div>
+            </div>
+            <div id="habit-items-container" class="space-y-2.5"></div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             7. TAB: 碎片灵感备忘录 (QUICK NOTES)
+             ======================================================== -->
+        <div id="tab-notes" class="tab-content hidden space-y-6">
+          <div class="glass-card p-5 bg-amber-50/70 border border-amber-200">
+            <h4 class="font-bold text-stone-800 text-sm mb-2 flex items-center gap-2">
+              <span>💡</span> <span>随时随地记下突然冒出来的点子</span>
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2 text-xs">
+              <div class="md:col-span-3">
+                <input id="note-input-title" type="text" placeholder="便签标题（如：新点子、金句、临时灵感）" class="w-full p-2 border border-stone-200 rounded-xl" />
+              </div>
+              <div>
+                <select id="note-input-tag" class="w-full p-2 border border-stone-200 rounded-xl">
+                  <option value="灵感">💡 灵感</option>
+                  <option value="金句">📖 金句</option>
+                  <option value="备忘">📝 备忘</option>
+                  <option value="愿望">🌟 愿望</option>
+                </select>
+              </div>
+            </div>
+            <textarea id="note-input-content" rows="3" placeholder="写下你的想法..." class="w-full p-2.5 text-xs border border-stone-200 rounded-xl mb-2"></textarea>
+            <div class="flex justify-end">
+              <button onclick="handleAddNoteSubmit()" class="btn-usagi text-xs py-2 px-5">保存便签 📌</button>
+            </div>
+          </div>
+
+          <!-- Notes Masonry Grid -->
+          <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- ========================================================
+             8. TAB: 待办清单与倒数日 (TO-DO & COUNTDOWNS)
+             ======================================================== -->
+        <div id="tab-todos" class="tab-content hidden space-y-6">
+          
+          <!-- Countdown Section -->
+          <div class="glass-card p-5 bg-white/80">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+              <div>
+                <h4 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                  <span>⏳</span> <span>重要纪念日 & 倒数天数</span>
+                </h4>
+                <p class="text-xs text-stone-500">考试周、旅行、发薪日、重要纪念日倒数</p>
+              </div>
+
+              <div class="flex items-center gap-2 text-xs">
+                <input id="cd-input-icon" type="text" placeholder="图标" value="🎉" class="w-12 p-2 border border-stone-200 rounded-xl text-center" />
+                <input id="cd-input-title" type="text" placeholder="事件标题(如发薪日)" class="w-32 p-2 border border-stone-200 rounded-xl" />
+                <input id="cd-input-date" type="date" class="p-2 border border-stone-200 rounded-xl" />
+                <button onclick="handleAddCountdownSubmit()" class="btn-usagi text-xs py-2 px-3">添加倒数</button>
+              </div>
+            </div>
+
+            <div id="countdown-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+          </div>
+
+          <!-- To-Do Section -->
+          <div class="glass-card p-5 bg-white/80">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+              <div>
+                <h4 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                  <span>✍️</span> <span>待办核心清单 (To-Do List)</span>
+                </h4>
+                <p class="text-xs text-stone-500">记录今天一定要做的小事</p>
+              </div>
+
+              <div class="flex items-center gap-2 text-xs">
+                <input id="todo-input-text" type="text" placeholder="输入待办事项..." class="w-48 p-2 border border-stone-200 rounded-xl" />
+                <select id="todo-input-pri" class="p-2 border border-stone-200 rounded-xl">
+                  <option value="high">重要 🔥</option>
+                  <option value="medium" selected>适中 ⚡</option>
+                  <option value="low">轻松 🍃</option>
+                </select>
+                <input id="todo-input-due" type="date" class="p-2 border border-stone-200 rounded-xl" />
+                <button onclick="handleAddTodoSubmit()" class="btn-usagi text-xs py-2 px-3">添加任务</button>
+              </div>
+            </div>
+
+            <div id="todo-list-container" class="space-y-2"></div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             9. TAB: 书影音 / 探店 / 购物冷静期 (WATCHLIST & WISHLIST)
+             ======================================================== -->
+        <div id="tab-watchlist" class="tab-content hidden space-y-6">
+          <div class="glass-card p-5 bg-white/80">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+              <div>
+                <h4 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                  <span>🎬</span> <span>书影音 · 探店 · 购物冷静期清单</span>
+                </h4>
+                <p class="text-xs text-stone-500">购物欲清单：记下来冷静三天再决定买不买，帮你省下大笔银子！</p>
+              </div>
+
+              <div class="flex items-center gap-2 text-xs flex-wrap">
+                <select id="wl-input-type" class="p-2 border border-stone-200 rounded-xl">
+                  <option value="movie">🎬 电影/剧集</option>
+                  <option value="food">🍰 探店美食</option>
+                  <option value="cooling_shop">🧊 购物冷静期(3天)</option>
+                </select>
+                <input id="wl-input-title" type="text" placeholder="名称/片名/商品" class="w-36 p-2 border border-stone-200 rounded-xl" />
+                <input id="wl-input-price" type="number" placeholder="价格(RM)" class="w-20 p-2 border border-stone-200 rounded-xl" />
+                <button onclick="handleAddWatchlistSubmit()" class="btn-usagi text-xs py-2 px-3">添加心愿</button>
+              </div>
+            </div>
+
+            <div id="watchlist-items-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             10. TAB: 感恩日记 / 每日高光 (DAILY HIGHLIGHT)
+             ======================================================== -->
+        <div id="tab-highlights" class="tab-content hidden space-y-6">
+          <div class="glass-card p-6 bg-gradient-to-br from-amber-50 via-rose-50 to-pink-50 border border-amber-200">
+            <h3 class="font-black text-stone-800 text-lg mb-1 flex items-center gap-2">
+              <span>✨</span> <span>感恩日记 / 每日高光 (Daily Highlight)</span>
+            </h3>
+            <p class="text-xs text-stone-500 mb-4">睡前用一句话写“今天发生的一件好事”，非常适合提升幸福感与内啡肽！</p>
+
+            <div class="space-y-3">
+              <input id="hl-input-text" type="text" placeholder="今天最开心或最受触动的一件事是..." class="w-full p-3 text-sm border-2 border-amber-200 rounded-2xl bg-white/90" />
+              <input id="hl-input-grat" type="text" placeholder="我想感谢的人或事物（例如：感谢阳光、感谢努力的自己）" class="w-full p-2.5 text-xs border border-amber-200 rounded-xl bg-white/90" />
+              <div class="flex justify-end">
+                <button onclick="handleAddHighlightSubmit()" class="btn-usagi text-xs py-2.5 px-6 font-bold">
+                  存入幸福高光墙 💖
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card p-6 bg-white/80">
+            <h4 class="font-bold text-stone-800 text-sm mb-3">幸福记忆高光墙</h4>
+            <div id="highlights-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+    <!-- ========================================================
+         MODAL: CALENDAR DAY DETAIL & ENTRY EDITOR
+         ======================================================== -->
+    <div id="calendar-day-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm hidden modal-overlay">
+      <div class="modal-content glass-card max-w-lg w-full p-6 relative bg-white/95 border-4 border-amber-300 max-h-[90vh] overflow-y-auto">
+        
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-stone-200 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">📅</span>
+            <div>
+              <h3 id="cal-modal-date-display" class="font-black text-stone-800 text-lg">手账与日程记录</h3>
+              <p class="text-xs text-stone-500">为这一天留下记录或添加待办事项</p>
+            </div>
+          </div>
+          <button onclick="USAGI_APP.closeCalendarDayModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center text-sm transition-all" title="关闭">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Day Summary (Expenses, Period) -->
+        <div class="bg-amber-50/70 p-3 rounded-2xl border border-amber-200 mb-4 flex items-center justify-between flex-wrap gap-2">
+          <div class="text-xs flex items-center gap-2 flex-wrap">
+            <span class="font-bold text-stone-700">当日账目支出:</span>
+            <span id="cal-modal-day-expenses"></span>
+          </div>
+          <button onclick="USAGI_APP.switchTab('expense'); USAGI_APP.closeCalendarDayModal();" class="text-xs text-amber-700 font-bold hover:underline">
+            去记一笔 💸
+          </button>
+        </div>
+
+        <!-- Events List on this Date -->
+        <div class="mb-5">
+          <h4 class="font-bold text-stone-800 text-xs mb-2 flex items-center justify-between">
+            <span>当日日程与随笔备忘</span>
+            <span class="text-stone-400 font-normal">勾选即可标记完成</span>
+          </h4>
+          <div id="cal-modal-events-list" class="space-y-2"></div>
+        </div>
+
+        <!-- Add New Event / Memo Form -->
+        <div class="bg-stone-50/90 p-4 rounded-2xl border border-stone-200">
+          <h4 class="font-bold text-stone-800 text-xs mb-2.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-plus-circle text-amber-500"></i>
+            <span>在这天记一笔新日程 / 随笔日记</span>
+          </h4>
+
+          <input type="hidden" id="cal-new-date" />
+
+          <div class="space-y-2.5 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div class="sm:col-span-2">
+                <input id="cal-new-title" type="text" placeholder="事项标题（如：看演出、背单词、闺蜜约饭）" class="w-full p-2 border border-stone-200 rounded-xl focus:border-amber-400 outline-none" />
+              </div>
+              <div>
+                <select id="cal-new-category" class="w-full p-2 border border-stone-200 rounded-xl focus:border-amber-400 outline-none">
+                  <option value="生活">🌱 生活日常</option>
+                  <option value="待办">📌 核心待办</option>
+                  <option value="约会">☕ 聚会约会</option>
+                  <option value="纪念日">🎂 纪念生日</option>
+                  <option value="出行">✈️ 旅行出行</option>
+                  <option value="学习">📖 学习考试</option>
+                  <option value="健康">💊 身体健康</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] font-bold text-stone-500 mb-1">具体时间 (可选)</label>
+                <input id="cal-new-time" type="time" class="w-full p-2 border border-stone-200 rounded-xl focus:border-amber-400 outline-none" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-stone-500 mb-1">颜色标签</label>
+                <select id="cal-new-color" class="w-full p-2 border border-stone-200 rounded-xl focus:border-amber-400 outline-none">
+                  <option value="amber">💛 暖阳黄 (Amber)</option>
+                  <option value="pink">💖 樱花粉 (Pink)</option>
+                  <option value="emerald">💚 抹茶绿 (Emerald)</option>
+                  <option value="blue">💙 天空蓝 (Blue)</option>
+                  <option value="purple">💜 薰衣紫 (Purple)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <textarea id="cal-new-content" rows="2" placeholder="写一句详细备忘、心情随笔或日记..." class="w-full p-2 border border-stone-200 rounded-xl focus:border-amber-400 outline-none"></textarea>
+            </div>
+
+            <div class="flex justify-end pt-1">
+              <button onclick="handleAddCalendarEventSubmit()" class="btn-usagi py-2 px-5 text-xs font-bold">
+                保存到这一天 🥕
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL: CLOUD DATABASE CONNECTION (SUPABASE)
+         ======================================================== -->
+    <div id="modal-cloud-db" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm hidden modal-overlay">
+      <div class="modal-content glass-card max-w-lg w-full p-6 relative bg-white/95 border-4 border-amber-300 max-h-[90vh] overflow-y-auto">
+        
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-stone-200 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">☁️</span>
+            <div>
+              <h3 class="font-black text-stone-800 text-lg">云端数据库设置与跨端同步</h3>
+              <p class="text-xs text-stone-500">连接 Supabase 免费云数据库，手机与电脑实时互通</p>
+            </div>
+          </div>
+          <button onclick="closeCloudDbModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center text-sm transition-all" title="关闭">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Mode Explanation -->
+        <div class="space-y-3 mb-5 text-xs text-stone-600">
+          <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200">
+            <div class="font-bold text-amber-900 text-sm mb-1 flex items-center gap-1.5">
+              <span>💡 两种数据存储模式说明：</span>
+            </div>
+            <p class="leading-relaxed">
+              <strong>1. 默认本地模式：</strong>无需任何配置，数据直接保存在当前设备/浏览器内，100% 隐私安全、离线可用。<br />
+              <strong>2. 云端数据库模式 (Supabase)：</strong>配置免费的 Supabase 后，每次记账、记录经期与日程都会<strong>秒速自动备份同步到云端</strong>，换手机或换电脑登录同一账号即可查看所有数据！
+            </p>
+          </div>
+        </div>
+
+        <!-- Supabase Config Form -->
+        <div class="space-y-3.5 mb-5 text-xs">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Supabase Project URL (项目网址)</label>
+            <input id="cloud-input-url" type="text" value="https://rlbovlevaddvbuchsxwz.supabase.co" placeholder="https://xxxxxxxx.supabase.co" class="w-full p-2.5 border border-stone-200 rounded-xl focus:border-amber-400 outline-none font-mono text-xs" />
+          </div>
+
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Supabase Anon Public API Key (公钥)</label>
+            <input id="cloud-input-key" type="text" value="sb_publishable_v-jwAI5rZT3nq_kHRfHv5Q_8CdXbbjz" placeholder="sb_publishable_..." class="w-full p-2.5 border border-stone-200 rounded-xl focus:border-amber-400 outline-none font-mono text-xs" />
+          </div>
+
+          <div class="flex items-center gap-2 pt-1">
+            <button onclick="handleSaveCloudConfig()" class="btn-usagi flex-1 py-2.5 text-xs font-bold">
+              保存配置并连接云端 🥕
+            </button>
+            <button onclick="handleClearCloudConfig()" class="btn-secondary py-2.5 text-xs">
+              重置为本地模式
+            </button>
+          </div>
+        </div>
+
+        <!-- Cloud Actions (Sync, Pull) -->
+        <div class="p-3.5 bg-stone-50 rounded-2xl border border-stone-200 space-y-2 mb-4">
+          <div class="font-bold text-stone-800 text-xs">⚡ 双向数据同步操作</div>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <button onclick="handleSyncToCloud()" class="py-2 px-3 rounded-xl bg-amber-100 hover:bg-amber-200 font-bold text-amber-900 border border-amber-300 transition-all flex items-center justify-center gap-1">
+              <i class="fa-solid fa-cloud-arrow-up"></i> 推送本地到云端
+            </button>
+            <button onclick="handlePullFromCloud()" class="py-2 px-3 rounded-xl bg-blue-100 hover:bg-blue-200 font-bold text-blue-900 border border-blue-300 transition-all flex items-center justify-center gap-1">
+              <i class="fa-solid fa-cloud-arrow-down"></i> 从云端拉取到本地
+            </button>
+          </div>
+        </div>
+
+        <!-- 1-Minute Tutorial Accordion -->
+        <details class="text-xs text-stone-500 bg-amber-50/50 p-3 rounded-2xl border border-amber-200">
+          <summary class="font-bold text-amber-900 cursor-pointer">
+            📖 怎么免费注册并获取 Supabase 密钥？(点击展开教程)
+          </summary>
+          <div class="mt-2.5 space-y-2 text-stone-600 leading-relaxed">
+            <p>1. 打开 <a href="https://supabase.com" target="_blank" class="text-amber-700 font-bold underline">supabase.com</a> 免费注册一个账号并点击 <strong>New Project</strong>。</p>
+            <p>2. 在左侧菜单点击 <strong>SQL Editor</strong>，点击 <strong>New query</strong>，将项目根目录下的 <code>database.sql</code> 内容全选复制粘贴进去，点击 <strong>Run</strong> 执行建表。</p>
+            <p>3. 在左侧菜单点击 <strong>Project Settings -> API</strong>，复制 <strong>Project URL</strong> 和 <strong>anon public key</strong>，粘贴到上方输入框保存即可！</p>
+          </div>
+        </details>
+
+      </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL: EXCEL EXPORT (导出月度/全年手账与财务 Excel 表格)
+         ======================================================== -->
+    <div id="modal-export-excel" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm hidden modal-overlay">
+      <div class="modal-content glass-card max-w-md w-full p-6 relative bg-white/95 border-4 border-amber-300 shadow-xl">
+        
+        <div class="flex items-center justify-between border-b border-stone-200 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">📊</span>
+            <div>
+              <h3 class="font-black text-stone-800 text-lg">导出 Excel 报表</h3>
+              <p class="text-xs text-stone-500">自由选择任意单月或全年总览数据</p>
+            </div>
+          </div>
+          <button onclick="closeExportExcelModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center text-sm transition-all" title="关闭">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="space-y-4 text-xs">
+          <!-- Year Selection -->
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">选择/输入年份</label>
+            <div class="flex items-center gap-2">
+              <input id="excel-export-year" type="number" min="1970" max="2099" class="w-28 p-2.5 border-2 border-stone-200 focus:border-amber-400 rounded-xl font-bold font-mono outline-none text-sm text-center" />
+              <span class="text-stone-600 font-bold">年</span>
+            </div>
+          </div>
+
+          <!-- Range / Month Selection -->
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">导出时间范围 (具体单月或全年)</label>
+            <select id="excel-export-month" class="w-full p-2.5 border-2 border-stone-200 focus:border-amber-400 rounded-xl font-bold outline-none text-xs bg-white">
+              <option value="all">📅 【全年总览】导出整年 1~12 月所有数据</option>
+              <option value="1">01 月账目与记录</option>
+              <option value="2">02 月账目与记录</option>
+              <option value="3">03 月账目与记录</option>
+              <option value="4">04 月账目与记录</option>
+              <option value="5">05 月账目与记录</option>
+              <option value="6">06 月账目与记录</option>
+              <option value="7">07 月账目与记录</option>
+              <option value="8">08 月账目与记录</option>
+              <option value="9">09 月账目与记录</option>
+              <option value="10">10 月账目与记录</option>
+              <option value="11">11 月账目与记录</option>
+              <option value="12">12 月账目与记录</option>
+            </select>
+          </div>
+
+          <!-- Content Type Selection -->
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">选择导出数据类型</label>
+            <select id="excel-export-type" class="w-full p-2.5 border-2 border-stone-200 focus:border-amber-400 rounded-xl font-bold outline-none text-xs bg-white">
+              <option value="expense">💰 日常开销财务对账单 (支出/收入/分类/RM金额/结余汇总)</option>
+              <option value="calendar">📅 手账生活日历日程表 (日期/时间/分类/日程内容/完成状态)</option>
+              <option value="health">🌙 健康与睡眠作息打卡表 (入睡/起床/睡眠时长/质量/随笔)</option>
+              <option value="all_overview">🌟 全功能生活手账多维综合总表 (含财务对账、日程、健康作息)</option>
+            </select>
+          </div>
+
+          <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-stone-600 text-[11px] leading-relaxed">
+            💡 <strong>说明：</strong>导出的文件为标准带 UTF-8 BOM 签名的 Excel 表格文件（.csv），支持使用 Microsoft Excel、WPS Office 或 Numbers 直接双击打开，中文绝不乱码，金额单位已自动格式化为 <strong>RM</strong>！
+          </div>
+
+          <div class="flex items-center gap-2 pt-2">
+            <button onclick="handleConfirmExportExcel()" class="btn-usagi flex-1 py-3 text-sm font-black flex items-center justify-center gap-2">
+              <i class="fa-solid fa-file-excel"></i> 下载 Excel 文件 (.csv)
+            </button>
+            <button onclick="closeExportExcelModal()" class="btn-secondary py-3 px-4 text-xs font-bold">
+              取消
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Floating Interactive Usagi Mascot with Image 1 Character -->
+    <div class="usagi-mascot-float select-none flex flex-col items-center" onclick="handleUsagiClick()">
+      <div id="usagi-speech-bubble" class="speech-bubble text-center">
+        呀哈！点我加油！✨
+      </div>
+      <img src="assets/usagi_character.png" alt="乌萨奇" class="w-24 h-28 object-contain filter drop-shadow-xl animate-bounce cursor-pointer hover:scale-110 transition-transform" />
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/sound.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Inline Helper Scripts for UI Glue -->
+  <script>
+    let currentAuthMode = 'login';
+    let currentSelectedMood = 'yaha';
+
+    function switchAuthTab(mode) {
+      currentAuthMode = mode;
+      UsagiSound.pop();
+      const loginForm = document.getElementById('form-login');
+      const regForm = document.getElementById('form-register');
+      if (mode === 'login') {
+        if (loginForm) { loginForm.classList.remove('hidden'); loginForm.style.display = 'block'; }
+        if (regForm) { regForm.classList.add('hidden'); regForm.style.display = 'none'; }
+        document.getElementById('tab-btn-login').className = 'flex-1 py-2 text-sm font-bold rounded-lg transition-all bg-amber-400 text-stone-900 shadow-sm';
+        document.getElementById('tab-btn-register').className = 'flex-1 py-2 text-sm font-bold rounded-lg transition-all text-stone-600 hover:text-amber-700';
+      } else {
+        if (loginForm) { loginForm.classList.add('hidden'); loginForm.style.display = 'none'; }
+        if (regForm) { regForm.classList.remove('hidden'); regForm.style.display = 'block'; }
+        document.getElementById('tab-btn-register').className = 'flex-1 py-2 text-sm font-bold rounded-lg transition-all bg-amber-400 text-stone-900 shadow-sm';
+        document.getElementById('tab-btn-login').className = 'flex-1 py-2 text-sm font-bold rounded-lg transition-all text-stone-600 hover:text-amber-700';
+      }
+    }
+
+    function fillDemoAccount() {
+      // Ensure demo account exists
+      const users = USAGI_APP.getUsers();
+      if (!users['usagi']) {
+        users['usagi'] = { username: 'usagi', password: '123', nickname: '乌萨奇本兔', createdAt: new Date().toISOString() };
+        USAGI_APP.saveUsers(users);
+      }
+      document.getElementById('login-username').value = 'usagi';
+      document.getElementById('login-password').value = '123';
+      USAGI_APP.login('usagi', '123');
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const u = document.getElementById('login-username').value;
+      const p = document.getElementById('login-password').value;
+      USAGI_APP.login(u, p);
+    }
+
+    function handleRegisterSubmit(e) {
+      e.preventDefault();
+      const u = document.getElementById('reg-username').value;
+      const p = document.getElementById('reg-password').value;
+      const n = document.getElementById('reg-nickname').value;
+      USAGI_APP.register(u, p, n);
+    }
+
+    function handleToggleSound() {
+      const muted = UsagiSound.toggleMute();
+      const btn = document.getElementById('btn-sound-toggle');
+      btn.innerHTML = muted ? '<i class="fa-solid fa-volume-xmark text-stone-400"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+      if (!muted) UsagiSound.pop();
+    }
+
+    function handleToggleParticles() {
+      const state = window.toggleParticles();
+      const btn = document.getElementById('btn-particle-toggle');
+      btn.style.opacity = state ? '1' : '0.5';
+      UsagiSound.pop();
+    }
+
+    const USAGI_QUOTES = [
+      "呀哈！今天也要元气满满！🥕",
+      "冲冲冲！今天也要好好加油！✨",
+      "咕噜咕噜，记得多喝温开水哦~ 💧",
+      "记账冷静一下，冲动消费退散！🪙",
+      "睡前写下一件小确幸，做个好梦~ 🌙",
+      "呀哈！乌萨奇在为你撑腰！🥕"
+    ];
+
+    function handleUsagiClick() {
+      UsagiSound.yaha();
+      confettiRain(25);
+      const bubble = document.getElementById('usagi-speech-bubble');
+      const randomQuote = USAGI_QUOTES[Math.floor(Math.random() * USAGI_QUOTES.length)];
+      bubble.innerText = randomQuote;
+      bubble.classList.remove('animate-pulse');
+      void bubble.offsetWidth; // trigger reflow
+      bubble.classList.add('animate-pulse');
+    }
+
+    // Tab Event Forwarders
+    function handleAddPeriodRecord() {
+      const s = document.getElementById('period-new-start').value;
+      const e = document.getElementById('period-new-end').value;
+      const f = document.getElementById('period-new-flow').value;
+      const p = document.getElementById('period-new-pain').value;
+      const n = document.getElementById('period-new-notes').value;
+      USAGI_APP.addPeriodRecord(s, e, f, p, n);
+      document.getElementById('period-new-notes').value = '';
+    }
+
+    function handleAddExpenseSubmit() {
+      const type = document.getElementById('exp-input-type').value;
+      const cat = document.getElementById('exp-input-cat').value;
+      const amount = document.getElementById('exp-input-amount').value;
+      const date = document.getElementById('exp-input-date').value || new Date().toISOString().split('T')[0];
+      const note = document.getElementById('exp-input-note').value;
+      USAGI_APP.addExpense(type, cat, amount, date, note);
+      document.getElementById('exp-input-amount').value = '';
+      document.getElementById('exp-input-note').value = '';
+    }
+
+    function handleAddSleepSubmit() {
+      const sleep = document.getElementById('sleep-input-sleep').value;
+      const wake = document.getElementById('sleep-input-wake').value;
+      const qual = document.getElementById('sleep-input-quality').value;
+      const note = document.getElementById('sleep-input-note').value;
+      USAGI_APP.addSleepLog(sleep, wake, qual, note);
+      document.getElementById('sleep-input-note').value = '';
+    }
+
+    function handleAddWeightSubmit() {
+      const w = document.getElementById('weight-input-val').value;
+      const ex = document.getElementById('weight-input-exercise').value;
+      const dur = document.getElementById('weight-input-duration').value;
+      USAGI_APP.addWeightLog(w, ex, dur);
+      document.getElementById('weight-input-val').value = '';
+      document.getElementById('weight-input-exercise').value = '';
+      document.getElementById('weight-input-duration').value = '';
+    }
+
+    function selectMood(mood) {
+      currentSelectedMood = mood;
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        if (btn.getAttribute('data-mood') === mood) {
+          btn.classList.add('border-amber-400', 'bg-amber-100', 'scale-105');
+        } else {
+          btn.classList.remove('border-amber-400', 'bg-amber-100', 'scale-105');
+        }
+      });
+      UsagiSound.pop();
+    }
+
+    function handleAddMoodSubmit() {
+      const symptoms = [];
+      document.querySelectorAll('#symptoms-group input[type="checkbox"]:checked').forEach(c => {
+        symptoms.push(c.value);
+      });
+      const note = document.getElementById('mood-input-note').value;
+      USAGI_APP.addMood(currentSelectedMood, symptoms, note);
+      document.getElementById('mood-input-note').value = '';
+      document.querySelectorAll('#symptoms-group input[type="checkbox"]').forEach(c => c.checked = false);
+    }
+
+    function handleAddHabitSubmit() {
+      const icon = document.getElementById('habit-new-icon').value;
+      const name = document.getElementById('habit-new-name').value;
+      USAGI_APP.addHabit(name, icon);
+      document.getElementById('habit-new-name').value = '';
+      document.getElementById('habit-new-icon').value = '';
+    }
+
+    function handleAddNoteSubmit() {
+      const title = document.getElementById('note-input-title').value;
+      const tag = document.getElementById('note-input-tag').value;
+      const content = document.getElementById('note-input-content').value;
+      USAGI_APP.addNote(title, content, tag);
+      document.getElementById('note-input-title').value = '';
+      document.getElementById('note-input-content').value = '';
+    }
+
+    function handleAddCountdownSubmit() {
+      const icon = document.getElementById('cd-input-icon').value;
+      const title = document.getElementById('cd-input-title').value;
+      const date = document.getElementById('cd-input-date').value;
+      USAGI_APP.addCountdown(title, date, icon);
+      document.getElementById('cd-input-title').value = '';
+    }
+
+    function handleAddTodoSubmit() {
+      const text = document.getElementById('todo-input-text').value;
+      const pri = document.getElementById('todo-input-pri').value;
+      const due = document.getElementById('todo-input-due').value;
+      USAGI_APP.addTodo(text, pri, due);
+      document.getElementById('todo-input-text').value = '';
+    }
+
+    function handleAddWatchlistSubmit() {
+      const type = document.getElementById('wl-input-type').value;
+      const title = document.getElementById('wl-input-title').value;
+      const price = document.getElementById('wl-input-price').value;
+      USAGI_APP.addWatchlist(title, type, 5, price, '');
+      document.getElementById('wl-input-title').value = '';
+      document.getElementById('wl-input-price').value = '';
+    }
+
+    function handleAddHighlightSubmit() {
+      const text = document.getElementById('hl-input-text').value;
+      const grat = document.getElementById('hl-input-grat').value;
+      USAGI_APP.addHighlight(text, grat);
+      document.getElementById('hl-input-text').value = '';
+      document.getElementById('hl-input-grat').value = '';
+    }
+
+    function handleAddCalendarEventSubmit() {
+      const date = document.getElementById('cal-new-date').value;
+      const title = document.getElementById('cal-new-title').value;
+      const cat = document.getElementById('cal-new-category').value;
+      const time = document.getElementById('cal-new-time').value;
+      const color = document.getElementById('cal-new-color').value;
+      const content = document.getElementById('cal-new-content').value;
+
+      USAGI_APP.addCalendarEvent(date, title, cat, time, content, color);
+
+      document.getElementById('cal-new-title').value = '';
+      document.getElementById('cal-new-content').value = '';
+    }
+
+    // Cloud Database Helpers
+    function openCloudDbModal() {
+      const modal = document.getElementById('modal-cloud-db');
+      if (modal) {
+        document.getElementById('cloud-input-url').value = localStorage.getItem('usagi_cloud_url') || 'https://rlbovlevaddvbuchsxwz.supabase.co';
+        document.getElementById('cloud-input-key').value = localStorage.getItem('usagi_cloud_key') || 'sb_publishable_v-jwAI5rZT3nq_kHRfHv5Q_8CdXbbjz';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        modal.style.display = 'flex';
+        UsagiSound.pop();
+      }
+    }
+
+    function closeCloudDbModal() {
+      const modal = document.getElementById('modal-cloud-db');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        modal.style.display = 'none';
+        UsagiSound.pop();
+      }
+    }
+
+    function handleSaveCloudConfig() {
+      const u = document.getElementById('cloud-input-url').value;
+      const k = document.getElementById('cloud-input-key').value;
+      USAGI_APP.cloud.saveConfig(u, k);
+    }
+
+    function handleClearCloudConfig() {
+      if (confirm("确定要切换回纯本地存储模式吗？")) {
+        USAGI_APP.cloud.saveConfig('', '');
+        document.getElementById('cloud-input-url').value = '';
+        document.getElementById('cloud-input-key').value = '';
+      }
+    }
+
+    async function handleSyncToCloud() {
+      if (!USAGI_APP.cloud.isConnected) {
+        alert("请先填写并保存 Supabase 数据库配置哦！☁️");
+        return;
+      }
+      if (!USAGI_APP.currentUser || !USAGI_APP.data) {
+        alert("请先登录账号！");
+        return;
+      }
+      const users = USAGI_APP.getUsers();
+      const pwd = users[USAGI_APP.currentUser] ? users[USAGI_APP.currentUser].password : '';
+      const nick = (USAGI_APP.data.profile && USAGI_APP.data.profile.nickname) ? USAGI_APP.data.profile.nickname : USAGI_APP.currentUser;
+      await USAGI_APP.cloud.syncDataToCloud(USAGI_APP.currentUser, USAGI_APP.data, pwd, nick);
+      alert("本地所有手账数据已成功推送至 Supabase 云数据库！🎉");
+      UsagiSound.sparkle();
+      confettiRain();
+    }
+
+    async function handlePullFromCloud() {
+      if (!USAGI_APP.cloud.isConnected) {
+        alert("请先填写并保存 Supabase 数据库配置哦！☁️");
+        return;
+      }
+      if (!USAGI_APP.currentUser) {
+        alert("请先登录账号！");
+        return;
+      }
+      const record = await USAGI_APP.cloud.pullDataFromCloud(USAGI_APP.currentUser);
+      if (record && record.data) {
+        if (confirm("从云端拉取将覆盖当前本地未同步的数据，确定要拉取吗？")) {
+          USAGI_APP.data = record.data;
+          USAGI_APP.saveData();
+          USAGI_APP.renderAll();
+          alert("已从云数据库成功拉取并同步最新手账数据！✨");
+          UsagiSound.yaha();
+          confettiRain();
+        }
+      } else {
+        alert("云端暂未查询到该账号的数据记录，您可以先点击【推送本地到云端】！🥕");
+      }
+    }
+
+    // Excel Export Modal Helpers
+    function openExportExcelModal(defaultType = 'expense') {
+      const modal = document.getElementById('modal-export-excel');
+      if (modal) {
+        const curYear = USAGI_APP.currentExpenseYear || new Date().getFullYear();
+        const curMonth = USAGI_APP.currentExpenseMonth || (new Date().getMonth() + 1);
+        const yearInput = document.getElementById('excel-export-year');
+        if (yearInput) yearInput.value = curYear;
+        const monthSelect = document.getElementById('excel-export-month');
+        if (monthSelect) monthSelect.value = String(curMonth);
+        const typeSelect = document.getElementById('excel-export-type');
+        if (typeSelect) typeSelect.value = defaultType;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        modal.style.display = 'flex';
+        UsagiSound.pop();
+      }
+    }
+
+    function closeExportExcelModal() {
+      const modal = document.getElementById('modal-export-excel');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        modal.style.display = 'none';
+        UsagiSound.pop();
+      }
+    }
+
+    function handleConfirmExportExcel() {
+      const year = document.getElementById('excel-export-year').value;
+      const month = document.getElementById('excel-export-month').value;
+      const type = document.getElementById('excel-export-type').value;
+      USAGI_APP.exportToExcel(year, month, type);
+      closeExportExcelModal();
+    }
+  </script>
+</body>
+</html>
