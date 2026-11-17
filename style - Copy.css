@@ -1,0 +1,1651 @@
+/* ============================================================
+   USAGI LIFE DASHBOARD - BESPOKE STYLES & KAWAII AESTHETICS
+   ============================================================ */
+
+:root {
+  --primary-yellow: #FFD43F;
+  --primary-yellow-light: #FFF4C2;
+  --primary-yellow-dark: #F5B800;
+  --accent-pink: #FF8FA3;
+  --accent-pink-light: #FFF0F3;
+  --accent-green: #95D5B2;
+  --accent-blue: #A2D2FF;
+  --accent-purple: #CDB4DB;
+  --bg-cream: #FCF9F2;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --border-color: #F1E5D1;
+  --text-main: #4A3E3D;
+  --text-muted: #8E7D7A;
+  --radius-card: 24px;
+  --radius-button: 16px;
+  --shadow-soft: 0 10px 25px -5px rgba(255, 183, 3, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 20px 30px -10px rgba(255, 183, 3, 0.25), 0 10px 15px -5px rgba(0, 0, 0, 0.07);
+}
+
+/* ============================================================
+   KAWAII USAGI CUSTOM CURSORS (乌萨奇专属萌兔光标)
+   ============================================================ */
+/* Default Usagi Arrow Cursor */
+*, html, body {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cellipse cx='9' cy='6' rx='2.8' ry='5.5' fill='%23FFE875' stroke='%234A3E3D' stroke-width='1.5' transform='rotate(-10 9 6)'/%3E%3Cellipse cx='9' cy='6' rx='1.2' ry='3.5' fill='%23FFB4B4' transform='rotate(-10 9 6)'/%3E%3Cellipse cx='17' cy='6' rx='2.8' ry='5.5' fill='%23FFE875' stroke='%234A3E3D' stroke-width='1.5' transform='rotate(10 17 6)'/%3E%3Cellipse cx='17' cy='6' rx='1.2' ry='3.5' fill='%23FFB4B4' transform='rotate(10 17 6)'/%3E%3Cellipse cx='13' cy='17' rx='8.5' ry='7.5' fill='%23FFE875' stroke='%234A3E3D' stroke-width='1.5'/%3E%3Cellipse cx='8.5' cy='18' rx='1.8' ry='1.2' fill='%23FF8FA3'/%3E%3Cellipse cx='17.5' cy='18' rx='1.8' ry='1.2' fill='%23FF8FA3'/%3E%3Ccircle cx='10' cy='15' r='1.3' fill='%234A3E3D'/%3E%3Ccircle cx='10.4' cy='14.6' r='0.4' fill='%23FFFFFF'/%3E%3Ccircle cx='16' cy='15' r='1.3' fill='%234A3E3D'/%3E%3Ccircle cx='16.4' cy='14.6' r='0.4' fill='%23FFFFFF'/%3E%3Cpath d='M11.5 18 Q13 19.5 14.5 18' stroke='%234A3E3D' stroke-width='1.3' fill='%23FF6B8B' stroke-linecap='round'/%3E%3Cpolygon points='2,2 8,14 11,10 16,9' fill='%23FFD43F' stroke='%234A3E3D' stroke-width='1.2'/%3E%3C/svg%3E") 2 2, auto;
+}
+
+/* Usagi Hover Pointer Cursor for clickable elements */
+button, a, input, select, textarea, [onclick], .cursor-pointer, .nav-pill, .btn-usagi, .btn-secondary, .mobile-nav-btn, .heatmap-cell, .calendar-day-cell, .mascot-toggle-btn, .usagi-mascot-float, label, audio, [role="button"] {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Cpolygon points='4,2 14,14 10,16 2,6' fill='%23FF8A00' stroke='%234A3E3D' stroke-width='1.5'/%3E%3Cpath d='M2,6 L0,2 M4,2 L1,0 M4,4 L1,2' stroke='%2322C55E' stroke-width='1.5' stroke-linecap='round'/%3E%3Cellipse cx='18' cy='10' rx='2.8' ry='6' fill='%23FFE875' stroke='%234A3E3D' stroke-width='1.5' transform='rotate(-12 18 10)'/%3E%3Cellipse cx='18' cy='10' rx='1.2' ry='3.8' fill='%23FF8FA3' transform='rotate(-12 18 10)'/%3E%3Cellipse cx='27' cy='10' rx='2.8' ry='6' fill='%23FFE875' stroke='%234A3E3D' stroke-width='1.5' transform='rotate(12 27 10)'/%3E%3Cellipse cx='27' cy='10' rx='1.2' ry='3.8' fill='%23FF8FA3' transform='rotate(12 27 10)'/%3E%3Cellipse cx='22.5' cy='22' rx='9' ry='8' fill='%23FFE875' stroke='%234A3E3D' stroke-width='1.5'/%3E%3Cellipse cx='17' cy='23' rx='2' ry='1.2' fill='%23FF4D6D'/%3E%3Cellipse cx='28' cy='23' rx='2' ry='1.2' fill='%23FF4D6D'/%3E%3Ccircle cx='19' cy='20' r='1.5' fill='%234A3E3D'/%3E%3Ccircle cx='19.5' cy='19.5' r='0.5' fill='%23FFFFFF'/%3E%3Ccircle cx='26' cy='20' r='1.5' fill='%234A3E3D'/%3E%3Ccircle cx='26.5' cy='19.5' r='0.5' fill='%23FFFFFF'/%3E%3Cpath d='M20.5 23 Q22.5 26.5 24.5 23 Z' fill='%23FF4D6D' stroke='%234A3E3D' stroke-width='1.2'/%3E%3Cpolygon points='32,4 33,7 36,8 33,9 32,12 31,9 28,8 31,7' fill='%23FFD700'/%3E%3C/svg%3E") 4 2, pointer !important;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Fredoka', 'Quicksand', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+
+/* Force hidden utilities to override flex and grid display modes */
+.hidden {
+  display: none !important;
+}
+
+#auth-modal.hidden {
+  display: none !important;
+}
+
+#modal-cloud-db.hidden,
+#modal-export-excel.hidden,
+#calendar-day-modal.hidden,
+#modal-love-pill.hidden {
+  display: none !important;
+}
+
+body {
+  background-color: var(--bg-cream);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: clip;
+  position: relative;
+  background-image: 
+    radial-gradient(#FFE58F 1.2px, transparent 1.2px),
+    radial-gradient(#FFC6D9 1.2px, #FCF9F2 1.2px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+}
+
+/* Background Canvas for Floating Particles */
+#bg-particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Glassmorphism Cards - Hardware Accelerated */
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius-card);
+  box-shadow: 0 4px 15px rgba(255, 183, 3, 0.1);
+  transition: transform 0.18s ease, border-color 0.18s ease;
+  transform: translateZ(0);
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 212, 63, 0.8);
+  transform: translateY(-2px) translateZ(0);
+}
+
+/* Usagi Buttons */
+.btn-usagi {
+  background: linear-gradient(135deg, #FFE066 0%, #FFB703 100%);
+  color: #5C3D00;
+  font-weight: 700;
+  border-radius: var(--radius-button);
+  padding: 0.65rem 1.4rem;
+  border: 2px solid #EAA000;
+  box-shadow: 0 4px 0 #D88E00, 0 8px 15px rgba(255, 183, 3, 0.3);
+  transition: all 0.15s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.btn-usagi:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #D88E00, 0 12px 20px rgba(255, 183, 3, 0.4);
+  background: linear-gradient(135deg, #FFE785 0%, #FFBE1A 100%);
+}
+
+.btn-usagi:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #D88E00, 0 4px 6px rgba(255, 183, 3, 0.2);
+}
+
+.btn-pink {
+  background: linear-gradient(135deg, #FFB3C6 0%, #FF758F 100%);
+  color: #5C0015;
+  border: 2px solid #E6506E;
+  box-shadow: 0 4px 0 #C93452, 0 8px 15px rgba(255, 117, 143, 0.3);
+}
+.btn-pink:hover {
+  background: linear-gradient(135deg, #FFC2D1 0%, #FF859D 100%);
+  box-shadow: 0 6px 0 #C93452, 0 12px 20px rgba(255, 117, 143, 0.4);
+}
+.btn-pink:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #C93452, 0 4px 6px rgba(255, 117, 143, 0.2);
+}
+
+.btn-secondary {
+  background: #FFFDF8;
+  color: #6C584C;
+  border: 2px solid #E6D5C3;
+  border-radius: var(--radius-button);
+  padding: 0.65rem 1.2rem;
+  box-shadow: 0 3px 0 #D8C2AD;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+.btn-secondary:hover {
+  background: #FDF4E7;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #D8C2AD;
+}
+.btn-secondary:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #D8C2AD;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F5EBE0;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #FFD43F;
+  border-radius: 10px;
+  border: 2px solid #F5EBE0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FFB703;
+}
+
+/* Heatmap Grid */
+.heatmap-cell {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  margin: 2px;
+  transition: transform 0.2s, filter 0.2s;
+  cursor: pointer;
+}
+.heatmap-cell:hover {
+  transform: scale(1.4);
+  z-index: 10;
+  filter: brightness(1.1);
+}
+.level-0 { background-color: #F1ECE4; }
+.level-1 { background-color: #D8F3DC; }
+.level-2 { background-color: #95D5B2; }
+.level-3 { background-color: #52B788; }
+.level-4 { background-color: #2D6A4F; }
+
+/* Usagi Ears Mascot Badge */
+.usagi-ears {
+  position: relative;
+}
+.usagi-ears::before, .usagi-ears::after {
+  content: '';
+  position: absolute;
+  top: -14px;
+  width: 14px;
+  height: 22px;
+  background: #FFF;
+  border: 2px solid #5C3D00;
+  border-radius: 14px 14px 0 0;
+  z-index: 1;
+}
+.usagi-ears::before {
+  left: 20%;
+  transform: rotate(-12deg);
+}
+.usagi-ears::after {
+  right: 20%;
+  transform: rotate(12deg);
+}
+
+/* Floating mascot */
+.usagi-mascot-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 30;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.usagi-mascot-float:hover {
+  transform: scale(1.05);
+}
+.usagi-mascot-float.minimized {
+  transform: translate(50px, 35px) scale(0.6);
+  opacity: 0.55;
+}
+.usagi-mascot-float.minimized:hover {
+  transform: translate(10px, 5px) scale(0.85);
+  opacity: 1;
+}
+.usagi-mascot-float.minimized .speech-bubble,
+.usagi-mascot-float.minimized .usagi-assistant-dock {
+  display: none !important;
+}
+
+.mascot-toggle-btn {
+  position: absolute;
+  top: -6px;
+  right: -4px;
+  width: 22px;
+  height: 22px;
+  background: #FFF;
+  border: 1.5px solid #F472B6;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 900;
+  color: #DB2777;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 40;
+  transition: all 0.2s ease;
+}
+.mascot-toggle-btn:hover {
+  background: #F472B6;
+  color: #FFF;
+  transform: scale(1.15);
+}
+
+.speech-bubble {
+  pointer-events: none !important; /* 点击穿透，绝不阻挡背后的任何按钮操作 */
+  position: absolute;
+  bottom: 100%;
+  margin-bottom: 14px;
+  background: #FFFFFF !important;
+  color: #4A3E3D !important;
+  opacity: 1 !important;
+  font-weight: 700;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  padding: 9px 15px;
+  border-radius: 18px;
+  border: 2px solid #FFD43F;
+  box-shadow: 0 10px 28px rgba(245, 158, 11, 0.22), 0 4px 12px rgba(0, 0, 0, 0.12);
+  white-space: normal !important; /* 彻底解决文字太长不换行截断问题，自动优雅换行 */
+  word-break: break-word !important; /* 避免长句或标点截断 */
+  width: max-content;
+  max-width: min(290px, calc(100vw - 40px));
+  z-index: 60;
+  text-align: left;
+  animation: bubbleFloatBreathe 2.8s infinite ease-in-out;
+}
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 7px;
+  border-style: solid;
+  border-color: #FFD43F transparent transparent transparent;
+}
+.speech-bubble.bubble-align-right::after {
+  left: auto;
+  right: 36px;
+  transform: none;
+}
+.speech-bubble.bubble-align-left::after {
+  left: 36px;
+  right: auto;
+  transform: none;
+}
+
+@keyframes bubbleFloatBreathe {
+  0%, 100% {
+    margin-bottom: 14px;
+  }
+  50% {
+    margin-bottom: 20px;
+  }
+}
+
+/* Water glass animation */
+.water-cup {
+  position: relative;
+  width: 90px;
+  height: 120px;
+  border: 4px solid #A2D2FF;
+  border-top: none;
+  border-radius: 0 0 25px 25px;
+  background: rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+  box-shadow: inset 0 0 15px rgba(162, 210, 255, 0.3);
+}
+.water-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, #A2D2FF 0%, #70A9FF 100%);
+  transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 0 20px 20px;
+}
+.water-wave {
+  position: absolute;
+  top: -8px;
+  left: 0;
+  width: 200%;
+  height: 16px;
+  background-repeat: repeat-x;
+  background-size: 50% 100%;
+  opacity: 0.6;
+  animation: waveMotion 2.5s linear infinite;
+}
+
+@keyframes waveMotion {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Nav Item Pill */
+.nav-pill {
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+.nav-pill:hover {
+  background-color: rgba(255, 224, 102, 0.35);
+  transform: translateX(4px);
+}
+.nav-pill.active {
+  background: linear-gradient(135deg, #FFE066 0%, #FFD13B 100%);
+  color: #4A3E3D;
+  font-weight: 700;
+  border-color: #EAA000;
+  box-shadow: 0 4px 12px rgba(255, 183, 3, 0.25);
+}
+
+/* Badge tags */
+.badge-kawaii {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Shake / Bounce animation */
+@keyframes cuteBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+.animate-cute-bounce {
+  animation: cuteBounce 0.3s ease;
+}
+
+/* Period Phase Cycle Indicator Ring */
+.cycle-ring {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+/* Cooling-off stamp */
+.stamp-cooling {
+  border: 2px dashed #FF758F;
+  border-radius: 12px;
+  background: #FFF0F3;
+  color: #C93452;
+  font-weight: bold;
+}
+
+/* Modal animation */
+.modal-overlay {
+  animation: fadeIn 0.25s ease-out;
+}
+.modal-content {
+  animation: popScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes popScale {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Checkbox kawaii style */
+.checkbox-kawaii {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #FFB703;
+  border-radius: 6px;
+  outline: none;
+  background-color: #FFF;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  transition: all 0.2s ease;
+}
+.checkbox-kawaii:checked {
+  background-color: #FFB703;
+  border-color: #D88E00;
+}
+.checkbox-kawaii:checked::before {
+  content: "✔";
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Calendar Grid & Day Cells */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+.calendar-day-cell {
+  min-height: 95px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1.5px solid #F1E5D1;
+  border-radius: 16px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.calendar-day-cell:hover {
+  background: #FFFDF5;
+  border-color: #FFD43F;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(255, 183, 3, 0.2);
+  z-index: 5;
+}
+.calendar-day-cell.today {
+  border: 2.5px solid #FFB703;
+  background: #FFF9E6;
+  box-shadow: 0 4px 12px rgba(255, 183, 3, 0.25);
+}
+.calendar-day-cell.other-month {
+  opacity: 0.35;
+  background: rgba(245, 245, 245, 0.4);
+}
+.calendar-event-pill {
+  font-size: 10px;
+  line-height: 1.25;
+  padding: 2px 5px;
+  border-radius: 6px;
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 700;
+}
+
+/* Music Vinyl Record & Visualizer Animation */
+@keyframes spinDisc {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.vinyl-disc {
+  animation: spinDisc 8s linear infinite;
+  will-change: transform;
+}
+.vinyl-paused {
+  animation-play-state: paused !important;
+}
+@keyframes eqBounce {
+  0%, 100% { height: 6px; }
+  50% { height: 26px; }
+}
+.eq-bar {
+  animation: eqBounce 0.8s ease-in-out infinite;
+  will-change: height;
+}
+.eq-bar:nth-child(2) { animation-delay: 0.15s; }
+.eq-bar:nth-child(3) { animation-delay: 0.3s; }
+.eq-bar:nth-child(4) { animation-delay: 0.45s; }
+.eq-bar:nth-child(5) { animation-delay: 0.2s; }
+
+/* ============================================================
+   USAGI DANCING & INTERACTIVE EMOTION ANIMATIONS
+   Permanent, smooth 60fps bouncing that NEVER stops!
+   ============================================================ */
+@keyframes usagiAlwaysBounce {
+  0%, 100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(-22px);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes usagiMusicHop {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  25% {
+    transform: translateY(-15px) rotate(-8deg);
+  }
+  50% {
+    transform: translateY(-24px) rotate(0deg);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+  75% {
+    transform: translateY(-15px) rotate(8deg);
+  }
+}
+
+.usagi-bounce-permanent {
+  animation: usagiAlwaysBounce 0.9s infinite !important;
+  transform-origin: bottom center;
+  will-change: transform;
+  display: inline-block;
+}
+
+.usagi-bounce-permanent.dancing {
+  animation: usagiMusicHop 0.72s infinite !important;
+}
+
+/* Click Sparkle Glow - modifies ONLY filter, never interrupts bounce */
+.usagi-click-glow {
+  filter: drop-shadow(0 0 18px rgba(244, 63, 94, 0.8)) drop-shadow(0 0 8px rgba(255, 212, 63, 0.95)) brightness(1.18) !important;
+  transition: filter 0.2s ease;
+}
+
+/* Floating Music Notes & Hearts spawning around Usagi */
+@keyframes noteFloatUp {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.6) rotate(0deg);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(calc(var(--drift-x, 0px) * 0.3), -20px) scale(1.1) rotate(calc(var(--rot, 0deg) * 0.4));
+  }
+  80% {
+    opacity: 0.9;
+    transform: translate(calc(var(--drift-x, 0px) * 0.8), -65px) scale(1.15) rotate(calc(var(--rot, 0deg) * 0.8));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--drift-x, 0px), -95px) scale(0.8) rotate(var(--rot, 0deg));
+  }
+}
+.floating-music-note {
+  position: absolute;
+  pointer-events: none;
+  font-size: 1.25rem;
+  font-weight: 900;
+  user-select: none;
+  z-index: 45;
+  animation: noteFloatUp 1.8s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+/* Interactive Click Heart Ripple Effect */
+@keyframes clickHeartRise {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.6) translateY(0);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1.2) translateY(-24px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8) translateY(-50px);
+  }
+}
+.click-heart-fx {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  font-size: 20px;
+  animation: clickHeartRise 0.8s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+/* Button Wobble on Click */
+@keyframes btnWobble {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.08) rotate(-4deg); }
+  50% { transform: scale(0.96) rotate(4deg); }
+  75% { transform: scale(1.04) rotate(-2deg); }
+}
+.btn-wobble {
+  animation: btnWobble 0.45s ease-in-out !important;
+}
+
+/* ============================================================
+   FUN KAWAII ANIMATIONS & MICRO-INTERACTIONS
+   ============================================================ */
+@keyframes kawaiiWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg) scale(1.02); }
+  75% { transform: rotate(3deg) scale(1.02); }
+}
+.animate-wiggle:hover {
+  animation: kawaiiWiggle 0.4s ease-in-out infinite;
+}
+
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); filter: drop-shadow(0 4px 10px rgba(244, 63, 94, 0.35)); }
+}
+.animate-heart-pulse {
+  animation: heartPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes rainbowGlow {
+  0% { border-color: #F472B6; box-shadow: 0 4px 16px rgba(244, 114, 182, 0.2); }
+  33% { border-color: #FBBF24; box-shadow: 0 4px 16px rgba(251, 191, 36, 0.2); }
+  66% { border-color: #34D399; box-shadow: 0 4px 16px rgba(52, 211, 153, 0.2); }
+  100% { border-color: #F472B6; box-shadow: 0 4px 16px rgba(244, 114, 182, 0.2); }
+}
+.rainbow-glow-card {
+  animation: rainbowGlow 6s linear infinite;
+}
+
+/* ============================================================
+   MOBILE RESPONSIVENESS & DUAL LAYOUT ENHANCEMENTS
+   ============================================================ */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 90px !important;
+  }
+  .usagi-mascot-float {
+    bottom: 80px !important;
+    right: 12px !important;
+    transform: scale(0.82);
+  }
+  .usagi-mascot-float:hover {
+    transform: scale(0.88);
+  }
+  .usagi-mascot-float.minimized {
+    transform: translate(45px, 20px) scale(0.55);
+  }
+  .speech-bubble {
+    max-width: 230px !important;
+    font-size: 0.75rem !important;
+    right: -6px !important;
+  }
+}
+
+/* Mobile Bottom Navigation Dock Styling */
+.mobile-nav-btn {
+  padding: 6px 12px;
+  border-radius: 14px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.mobile-nav-btn.active {
+  background: #FFF0F3;
+  color: #E11D48;
+  transform: translateY(-2px);
+}
+.mobile-nav-btn.active span:last-child {
+  color: #E11D48;
+  font-weight: 900;
+}
+.mobile-nav-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  background: #E11D48;
+  border-radius: 50%;
+}
+
+/* ============================================================
+   USAGI WANDERING ASSISTANT & ROAMING PET STYLING
+   ============================================================ */
+.usagi-mascot-float {
+  position: fixed;
+  bottom: 20px;
+  right: 24px;
+  z-index: 50;
+  transition: transform 0.2s ease;
+  pointer-events: auto;
+}
+.usagi-mascot-float.roaming {
+  right: auto !important;
+  transition: bottom 0.3s ease;
+}
+.usagi-assistant-dock {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid #FBCFE8;
+  border-radius: 9999px;
+  padding: 3px 8px;
+  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.16);
+  margin-bottom: 6px;
+  backdrop-filter: blur(8px);
+}
+.usagi-assistant-dock button {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  background: transparent;
+  color: #44403C;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+.usagi-assistant-dock button:hover {
+  background: #FFE4E6;
+  color: #E11D48;
+  transform: scale(1.06);
+}
+.usagi-assistant-dock button.active {
+  background: #F43F5E;
+  color: #FFFFFF;
+}
+
+/* ============================================================
+   USAGI EMOTION & COMPANION STATE ACCESSORIES
+   Dynamic interactive props, halos, and expressions
+   ============================================================ */
+.usagi-state-prop-container {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 2px solid #F43F5E;
+  border-radius: 9999px;
+  padding: 2px 8px;
+  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.28);
+  pointer-events: none;
+  animation: propPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.usagi-prop-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.usagi-prop-sub {
+  font-size: 10px;
+  font-weight: 900;
+  color: #E11D48;
+  white-space: nowrap;
+}
+
+@keyframes propPop {
+  0% { transform: scale(0) translateY(12px); opacity: 0; }
+  70% { transform: scale(1.18) translateY(-2px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* ============================================================
+   REAL VISIBLE PHYSICAL ANIMATED ACTIONS FOR USAGI
+   ============================================================ */
+
+/* 1. STATE: SLEEP (睡觉动作 - 身体横躺在云朵枕头上，被子盖身，闭眼均匀呼吸) */
+#usagi-bouncer.state-sleep {
+  animation: none !important; /* 停止站立跳跃 */
+}
+#usagi-bouncer.state-sleep #usagi-actor-box {
+  animation: usagiLyingDeepSleep 3s ease-in-out infinite !important;
+  transform-origin: center 70%;
+}
+@keyframes usagiLyingDeepSleep {
+  0%, 100% {
+    transform: rotate(-76deg) translate(-14px, 14px) scale(1, 0.94);
+  }
+  50% {
+    transform: rotate(-76deg) translate(-14px, 16px) scale(1.03, 1.01);
+  }
+}
+/* Fluffy Cloud Pillow */
+.act-sleep-pillow {
+  position: absolute;
+  top: 48px;
+  left: -2px;
+  font-size: 32px;
+  z-index: 5;
+  filter: drop-shadow(0 4px 8px rgba(129, 140, 248, 0.4));
+  animation: pillowSquish 3s ease-in-out infinite;
+}
+@keyframes pillowSquish {
+  0%, 100% { transform: scale(1, 0.92); }
+  50% { transform: scale(1.05, 1); }
+}
+/* Nightcap */
+.act-sleep-nightcap {
+  position: absolute;
+  top: -12px;
+  left: 32px;
+  font-size: 26px;
+  z-index: 25;
+  transform: rotate(20deg);
+  filter: drop-shadow(0 2px 6px rgba(251, 191, 36, 0.6));
+  animation: capDangle 3s ease-in-out infinite;
+}
+@keyframes capDangle {
+  0%, 100% { transform: rotate(18deg) translateY(0); }
+  50% { transform: rotate(28deg) translateY(2px); }
+}
+/* Warm Blanket */
+.act-sleep-blanket {
+  position: absolute;
+  bottom: 0px;
+  left: 12px;
+  font-size: 34px;
+  z-index: 20;
+  filter: drop-shadow(0 4px 8px rgba(244, 63, 94, 0.3));
+  animation: blanketBreathe 3s ease-in-out infinite;
+}
+@keyframes blanketBreathe {
+  0%, 100% { transform: scale(1, 0.95); }
+  50% { transform: scale(1.04, 1.02); }
+}
+.usagi-state-prop-container {
+  display: none !important;
+}
+
+@keyframes bubblePopGlow {
+  0% { transform: scale(0.96); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+.bubble-pop {
+  animation: bubblePopGlow 0.35s ease-out !important;
+}
+
+/* Closed Eyes Overlay (⌒ ⌒) with Pupil Masking */
+.act-sleep-eyes {
+  position: absolute;
+  top: 45px;
+  left: 31px;
+  width: 38px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 24;
+  pointer-events: none;
+}
+.act-sleep-eyes span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 12px;
+  background: #FFF7D1; /* Usagi fur skin tone covering black pupils */
+  border-radius: 50%;
+  font-family: monospace;
+  font-size: 15px;
+  font-weight: 900;
+  color: #372A28;
+  transform: scaleY(0.75);
+}
+/* Floating ZZZ bubbles */
+.act-sleep-zzz-group {
+  position: absolute;
+  top: -10px;
+  right: 6px;
+  z-index: 30;
+  pointer-events: none;
+}
+.act-sleep-zzz-group .z-item {
+  position: absolute;
+  font-weight: 900;
+  color: #818CF8;
+  animation: floatZzzRise 2.4s infinite ease-out;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+.act-sleep-zzz-group .z1 {
+  font-size: 13px;
+  top: 0px;
+  right: 4px;
+  animation-delay: 0s;
+}
+.act-sleep-zzz-group .z2 {
+  font-size: 17px;
+  top: -14px;
+  right: 14px;
+  animation-delay: 0.8s;
+}
+.act-sleep-zzz-group .z3 {
+  font-size: 22px;
+  top: -30px;
+  right: 22px;
+  animation-delay: 1.6s;
+}
+@keyframes floatZzzRise {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
+  30% { opacity: 1; transform: translate(-6px, -12px) scale(1); }
+  80% { opacity: 0.9; transform: translate(-14px, -28px) scale(1.2); }
+  100% { opacity: 0; transform: translate(-20px, -40px) scale(1.4); }
+}
+
+/* 2. STATE: WATER (喝水动作 - 身体后仰咕噜吞咽，奶瓶向上倾斜送水，水花溅射) */
+#usagi-bouncer.state-water {
+  animation: none !important;
+}
+#usagi-bouncer.state-water #usagi-actor-box {
+  animation: usagiGulpingDrink 1.2s ease-in-out infinite !important;
+}
+@keyframes usagiGulpingDrink {
+  0%, 100% {
+    transform: rotate(0deg) translateY(0) scale(1);
+  }
+  20% {
+    transform: rotate(-12deg) translateY(-4px) scale(1.04, 0.96); /* 仰头喝水 */
+  }
+  45% {
+    transform: rotate(-6deg) translateY(2px) scale(0.96, 1.05); /* 大口吞咽 */
+  }
+  70% {
+    transform: rotate(-14deg) translateY(-3px) scale(1.03, 0.97); /* 接着喝 */
+  }
+}
+/* Bottle prop tilting to mouth */
+.act-drink-bottle {
+  position: absolute;
+  top: 50px;
+  right: 14px;
+  font-size: 30px;
+  z-index: 22;
+  filter: drop-shadow(0 3px 6px rgba(56, 189, 248, 0.5));
+  animation: bottleTiltDrinking 1.2s ease-in-out infinite;
+}
+@keyframes bottleTiltDrinking {
+  0%, 100% {
+    transform: rotate(-25deg) translate(0, 0) scale(1);
+  }
+  30%, 70% {
+    transform: rotate(-65deg) translate(-10px, -6px) scale(1.15); /* 瓶身倒扣送入嘴巴 */
+  }
+  50% {
+    transform: rotate(-45deg) translate(-6px, -3px) scale(1.08);
+  }
+}
+/* Water droplets spraying */
+.act-drink-drops {
+  position: absolute;
+  top: 44px;
+  left: 36px;
+  z-index: 24;
+  pointer-events: none;
+}
+.act-drink-drops .d-drop {
+  position: absolute;
+  font-size: 13px;
+  animation: dropSplashOut 1.2s ease-out infinite;
+}
+.act-drink-drops .d1 { left: -8px; top: -6px; animation-delay: 0.1s; }
+.act-drink-drops .d2 { left: 8px; top: -10px; animation-delay: 0.4s; font-size: 11px; }
+.act-drink-drops .d3 { left: -14px; top: 4px; animation-delay: 0.7s; font-size: 10px; }
+@keyframes dropSplashOut {
+  0% { opacity: 0; transform: scale(0.3) translate(0, 0); }
+  40% { opacity: 1; transform: scale(1.1) translate(-6px, -10px); }
+  80% { opacity: 0.8; transform: scale(0.9) translate(-12px, -16px); }
+  100% { opacity: 0; transform: scale(0.5) translate(-16px, -20px); }
+}
+/* Gulp text ripple */
+.act-drink-gulp-text {
+  position: absolute;
+  top: 32px;
+  left: -12px;
+  font-size: 11px;
+  font-weight: 900;
+  color: #0284C7;
+  background: rgba(224, 242, 254, 0.95);
+  border: 1.5px solid #38BDF8;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  z-index: 26;
+  white-space: nowrap;
+  animation: gulpTextPop 1.2s ease-in-out infinite;
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
+}
+@keyframes gulpTextPop {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  45% { opacity: 1; transform: scale(1.15) translateY(-2px); }
+}
+/* Rosy Puffed Cheeks */
+.act-cheeks-puff {
+  position: absolute;
+  top: 60px;
+  width: 14px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FF4D6D 0%, rgba(255, 77, 109, 0) 70%);
+  z-index: 21;
+  animation: cheeksPulse 1.2s infinite ease-in-out;
+}
+.act-cheeks-puff-left { left: 22px; }
+.act-cheeks-puff-right { right: 22px; }
+@keyframes cheeksPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  45% { transform: scale(1.5); opacity: 1; }
+}
+
+/* 3. STATE: COMFORT (安慰抱抱动作 - 紧抱毛绒泰迪熊与大爱心，轻拍后背摸摸头) */
+#usagi-bouncer.state-comfort {
+  animation: none !important;
+}
+#usagi-bouncer.state-comfort #usagi-actor-box {
+  animation: usagiSqueezeHug 1.5s ease-in-out infinite !important;
+}
+@keyframes usagiSqueezeHug {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.08, 0.95) translateY(-4px); /* 俯身用力紧紧抱住 */
+  }
+}
+.act-comfort-teddy {
+  position: absolute;
+  top: 56px;
+  left: 28px;
+  font-size: 32px;
+  z-index: 22;
+  filter: drop-shadow(0 4px 8px rgba(251, 146, 60, 0.5));
+  animation: teddyHugPulse 1.5s ease-in-out infinite;
+}
+@keyframes teddyHugPulse {
+  0%, 100% { transform: scale(1) rotate(-4deg); }
+  50% { transform: scale(1.22) rotate(4deg); }
+}
+.act-comfort-heart {
+  position: absolute;
+  top: 36px;
+  right: 18px;
+  font-size: 20px;
+  z-index: 25;
+  animation: heartFloatingPulse 1.2s infinite ease-in-out;
+}
+@keyframes heartFloatingPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.35) translateY(-4px); }
+}
+.act-comfort-pat {
+  position: absolute;
+  top: 26px;
+  left: -8px;
+  font-size: 11px;
+  font-weight: 900;
+  color: #BE185D;
+  background: rgba(253, 242, 248, 0.95);
+  border: 1.5px solid #F472B6;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  z-index: 26;
+  white-space: nowrap;
+  animation: pattingGentle 1.5s ease-in-out infinite;
+}
+@keyframes pattingGentle {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(-8deg); }
+}
+
+/* 4. STATE: PERIOD CARE (经期暖水袋与揉肚肚 - 暖水袋贴肚，小爪子画圈轻揉，热气腾腾) */
+#usagi-bouncer.state-period {
+  animation: none !important;
+}
+#usagi-bouncer.state-period #usagi-actor-box {
+  animation: usagiGentleBreathe 2s ease-in-out infinite !important;
+}
+@keyframes usagiGentleBreathe {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.03, 0.97) translateY(1px); }
+}
+.act-period-bottle {
+  position: absolute;
+  top: 70px;
+  left: 32px;
+  font-size: 28px;
+  z-index: 22;
+  filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.7));
+  animation: hotBagWarmPulse 1.8s infinite ease-in-out;
+}
+@keyframes hotBagWarmPulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(244, 63, 94, 0.6)); }
+  50% { transform: scale(1.15); filter: drop-shadow(0 0 16px rgba(244, 63, 94, 0.95)); }
+}
+.act-period-paw {
+  position: absolute;
+  top: 66px;
+  left: 44px;
+  font-size: 20px;
+  z-index: 24;
+  animation: pawRubTummyCircle 2s infinite linear;
+}
+@keyframes pawRubTummyCircle {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(6px, 4px) rotate(10deg); }
+  50% { transform: translate(2px, 8px) rotate(0deg); }
+  75% { transform: translate(-4px, 4px) rotate(-10deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+.act-period-steam {
+  position: absolute;
+  z-index: 25;
+  pointer-events: none;
+  animation: steamRiseWarm 2s ease-out infinite;
+}
+.act-steam-1 { top: 52px; left: 28px; font-size: 16px; animation-delay: 0s; }
+.act-steam-2 { top: 48px; right: 28px; font-size: 14px; animation-delay: 1s; }
+@keyframes steamRiseWarm {
+  0% { opacity: 0; transform: translateY(0) scale(0.6); }
+  40% { opacity: 0.9; transform: translateY(-10px) scale(1); }
+  100% { opacity: 0; transform: translateY(-24px) scale(1.3); }
+}
+.act-period-tip {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #BE123C;
+  background: rgba(255, 241, 242, 0.95);
+  border: 1px solid #FDA4AF;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+}
+
+/* 5. STATE: GAME CHEER (游戏啦啦队超绝欢呼 - 戴金皇冠，双色彩球高高蹦跳狂甩) */
+#usagi-bouncer.state-game_cheer {
+  animation: none !important;
+}
+#usagi-bouncer.state-game_cheer #usagi-actor-box {
+  animation: usagiMegaCheerJump 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite !important;
+}
+@keyframes usagiMegaCheerJump {
+  0%, 100% {
+    transform: translateY(0) scale(1.06, 0.92);
+  }
+  35% {
+    transform: translateY(-34px) scale(0.94, 1.1) rotate(-4deg); /* 冲天高高飞跃 */
+  }
+  65% {
+    transform: translateY(-24px) scale(1.02, 0.98) rotate(4deg);
+  }
+}
+.act-cheer-crown {
+  position: absolute;
+  top: -14px;
+  left: 34px;
+  font-size: 26px;
+  z-index: 25;
+  filter: drop-shadow(0 2px 8px rgba(234, 179, 8, 0.8));
+  animation: crownShine 0.65s infinite ease-in-out;
+}
+@keyframes crownShine {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.2) rotate(8deg); }
+}
+.act-cheer-pompom {
+  position: absolute;
+  top: 40px;
+  font-size: 28px;
+  z-index: 24;
+}
+.act-pompom-l {
+  left: -12px;
+  animation: wavePomPomL 0.65s infinite ease-in-out;
+}
+.act-pompom-r {
+  right: -12px;
+  animation: wavePomPomR 0.65s infinite ease-in-out;
+}
+@keyframes wavePomPomL {
+  0%, 100% { transform: rotate(-25deg) translateY(0); }
+  50% { transform: rotate(40deg) translateY(-14px); }
+}
+@keyframes wavePomPomR {
+  0%, 100% { transform: rotate(25deg) translateY(-14px); }
+  50% { transform: rotate(-40deg) translateY(0); }
+}
+.act-cheer-ribbon {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #B45309;
+  background: #FEF3C7;
+  border: 1.5px solid #F59E0B;
+  padding: 1px 8px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
+}
+
+/* 6. STATE: HAPPY DANCING (开心旋转蹦跳) */
+#usagi-bouncer.state-happy {
+  animation: none !important;
+}
+#usagi-bouncer.state-happy #usagi-actor-box {
+  animation: usagiSpinDance 1.6s ease-in-out infinite !important;
+}
+@keyframes usagiSpinDance {
+  0% { transform: translateY(0) rotate(0deg) scale(1); }
+  25% { transform: translateY(-18px) rotate(-14deg) scale(1.08); }
+  50% { transform: translateY(0) rotate(0deg) scale(0.95, 1.05); }
+  75% { transform: translateY(-22px) rotate(14deg) scale(1.08); }
+  90% { transform: translateY(-28px) rotate(360deg) scale(1.1); }
+  100% { transform: translateY(0) rotate(360deg) scale(1); }
+}
+.act-happy-rainbow {
+  position: absolute;
+  top: -16px;
+  left: 20px;
+  font-size: 32px;
+  z-index: 25;
+  animation: rainbowFloat 1.6s infinite ease-in-out;
+}
+@keyframes rainbowFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-6px) scale(1.15); }
+}
+.act-happy-note {
+  position: absolute;
+  font-size: 16px;
+  color: #EC4899;
+  z-index: 25;
+  animation: notePopDance 1.6s infinite ease-out;
+}
+.act-happy-note.n1 { top: 20px; left: -10px; animation-delay: 0.2s; }
+.act-happy-note.n2 { top: 15px; right: -10px; animation-delay: 0.8s; }
+@keyframes notePopDance {
+  0% { opacity: 0; transform: translateY(0) scale(0.5); }
+  50% { opacity: 1; transform: translateY(-16px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(-30px) scale(1.4); }
+}
+
+/* 7. STATE: EXPENSE (金丝小眼镜快速记账) */
+#usagi-bouncer.state-expense {
+  animation: none !important;
+}
+#usagi-bouncer.state-expense #usagi-actor-box {
+  animation: usagiAccountantWorking 1.4s ease-in-out infinite !important;
+}
+@keyframes usagiAccountantWorking {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  30% { transform: rotate(4deg) translateY(2px); }
+  70% { transform: rotate(-3deg) translateY(1px); }
+}
+.act-expense-glasses {
+  position: absolute;
+  top: 40px;
+  left: 26px;
+  font-size: 26px;
+  z-index: 24;
+  filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.7));
+  animation: glassesNod 1.4s infinite ease-in-out;
+}
+@keyframes glassesNod {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08) translateY(1px); }
+}
+.act-expense-ledger {
+  position: absolute;
+  bottom: 8px;
+  left: 6px;
+  font-size: 28px;
+  z-index: 22;
+}
+.act-expense-pencil {
+  position: absolute;
+  bottom: 18px;
+  right: 12px;
+  font-size: 24px;
+  z-index: 23;
+  animation: pencilRapidScribble 0.35s infinite alternate ease-in-out;
+}
+@keyframes pencilRapidScribble {
+  0% { transform: rotate(0deg) translate(0, 0); }
+  100% { transform: rotate(-25deg) translate(-6px, 4px); }
+}
+.act-expense-coin {
+  position: absolute;
+  font-size: 16px;
+  z-index: 25;
+  animation: coinPopUp 1.4s ease-out infinite;
+}
+.act-coin-1 { top: 20px; right: -8px; animation-delay: 0.2s; }
+.act-coin-2 { top: 25px; left: -10px; animation-delay: 0.8s; }
+@keyframes coinPopUp {
+  0% { opacity: 0; transform: translateY(0) scale(0.4); }
+  50% { opacity: 1; transform: translateY(-16px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(-30px) scale(0.9); }
+}
+
+/* 8. STATE: COUNTDOWN (倒数日小飞机) */
+.act-countdown-plane {
+  position: absolute;
+  top: -14px;
+  right: -10px;
+  font-size: 26px;
+  z-index: 25;
+  animation: planeFlyOrbit 2.4s infinite ease-in-out;
+}
+@keyframes planeFlyOrbit {
+  0% { transform: translate(-10px, 10px) rotate(15deg); }
+  50% { transform: translate(14px, -12px) rotate(35deg); }
+  100% { transform: translate(-10px, 10px) rotate(15deg); }
+}
+.act-countdown-hourglass {
+  position: absolute;
+  bottom: 8px;
+  right: 6px;
+  font-size: 24px;
+  z-index: 23;
+  animation: hourglassFlip 3s infinite ease-in-out;
+}
+@keyframes hourglassFlip {
+  0%, 45% { transform: rotate(0deg); }
+  50%, 95% { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 9. STATE: HIGHLIGHT (灵感高光魔杖) */
+.act-highlight-wand {
+  position: absolute;
+  top: 35px;
+  right: 2px;
+  font-size: 26px;
+  z-index: 24;
+  animation: wandWaveMagic 1.4s infinite ease-in-out;
+}
+@keyframes wandWaveMagic {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-25deg) translateY(-4px); }
+}
+.act-highlight-star {
+  position: absolute;
+  font-size: 18px;
+  color: #F59E0B;
+  z-index: 25;
+  animation: starSparklePop 1.4s infinite ease-out;
+}
+.act-highlight-star.s1 { top: 12px; right: 18px; animation-delay: 0.2s; }
+.act-highlight-star.s2 { top: 22px; left: 10px; animation-delay: 0.7s; }
+@keyframes starSparklePop {
+  0% { opacity: 0; transform: scale(0.3) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.3) rotate(70deg); }
+  100% { opacity: 0; transform: scale(0.6) translateY(-14px) rotate(140deg); }
+}
+
+/* State-Specific Dynamic Visual Halos for Usagi Image */
+.usagi-sleeping {
+  filter: drop-shadow(0 0 16px rgba(129, 140, 248, 0.85)) brightness(0.92) !important;
+}
+
+.usagi-drinking {
+  filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.9)) brightness(1.1) !important;
+}
+
+.usagi-period-care {
+  filter: drop-shadow(0 0 18px rgba(244, 63, 94, 0.9)) brightness(1.1) !important;
+}
+
+.usagi-comforting {
+  filter: drop-shadow(0 0 18px rgba(251, 146, 60, 0.85)) brightness(1.12) !important;
+}
+
+.usagi-game-cheering {
+  filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.9)) brightness(1.18) !important;
+}
+
+.usagi-happy-dancing {
+  filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.9)) brightness(1.18) !important;
+}
+
+.usagi-bookkeeping {
+  filter: drop-shadow(0 0 18px rgba(245, 158, 11, 0.85)) brightness(1.12) !important;
+}
+
+.usagi-counting {
+  filter: drop-shadow(0 0 18px rgba(244, 63, 94, 0.85)) brightness(1.12) !important;
+}
+
+.usagi-highlighting {
+  filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.85)) brightness(1.18) !important;
+}
+
+/* Sleeping floating ZZZ bubbles */
+@keyframes zzzFloat {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.6);
+  }
+  40% {
+    opacity: 1;
+    transform: translate(8px, -18px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(16px, -38px) scale(1.3);
+  }
+}
+
+.floating-zzz-item {
+  position: absolute;
+  top: 10px;
+  right: 18px;
+  font-weight: 900;
+  color: #818CF8;
+  pointer-events: none;
+  animation: zzzFloat 2.2s ease-in-out infinite;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================================
+   KAWAII MINI-GAMES ARCADE STYLING (游乐园专属样式)
+   ============================================================ */
+/* 1. Memory Match Cards */
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  max-width: 440px;
+  margin: 0 auto;
+}
+.memory-card {
+  perspective: 1000px;
+  aspect-ratio: 1;
+  position: relative;
+  cursor: pointer;
+}
+.memory-card-inner {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  border-radius: 18px;
+}
+.memory-card.flipped .memory-card-inner {
+  transform: rotateY(180deg);
+}
+.memory-card-front, .memory-card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+.memory-card-front {
+  background: linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%);
+  border: 2px dashed #FDA4AF;
+  box-shadow: 0 4px 10px rgba(244, 63, 94, 0.08);
+}
+.memory-card-back {
+  background: #FFFFFF;
+  border: 2.5px solid #F43F5E;
+  transform: rotateY(180deg);
+  box-shadow: 0 6px 16px rgba(244, 63, 94, 0.15);
+}
+.memory-card.matched .memory-card-inner {
+  transform: rotateY(180deg) scale(0.95);
+  opacity: 0.85;
+}
+.memory-card.matched .memory-card-back {
+  border-color: #10B981;
+  background: #ECFDF5;
+}
+
+/* 2. Wooden Fish Animation */
+@keyframes meritRise {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.6);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -25px) scale(1.15);
+  }
+  80% {
+    opacity: 0.9;
+    transform: translate(-50%, -75px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -105px) scale(0.85);
+  }
+}
+.floating-merit-text {
+  position: absolute;
+  left: 50%;
+  pointer-events: none;
+  font-weight: 900;
+  font-size: 1.15rem;
+  white-space: nowrap;
+  animation: meritRise 1.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  z-index: 60;
+  text-shadow: 0 2px 8px rgba(244, 63, 94, 0.3);
+}
+
+/* 3. Whack-A-Mole */
+.mole-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+.mole-hole {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #FDE68A 0%, #F59E0B 100%);
+  border: 3px solid #D97706;
+  border-radius: 22px;
+  aspect-ratio: 1;
+  box-shadow: inset 0 6px 12px rgba(0,0,0,0.18), 0 4px 10px rgba(217, 119, 6, 0.2);
+  cursor: pointer;
+}
+.mole-inner-shadow {
+  position: absolute;
+  inset: 0;
+  border-radius: 19px;
+  background: radial-gradient(circle at 50% 120%, #78350F 0%, rgba(120, 53, 15, 0.2) 65%, transparent 70%);
+  pointer-events: none;
+}
+.mole-target {
+  position: absolute;
+  bottom: -110%;
+  left: 0;
+  right: 0;
+  height: 95%;
+  transition: bottom 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+.mole-target.up {
+  bottom: 5%;
+}
+
+/* 4. Voucher Cards */
+.voucher-card {
+  background: linear-gradient(135deg, #FFF1F2 0%, #FFFFFF 100%);
+  border: 2px dashed #F43F5E;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+.voucher-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(244, 63, 94, 0.18);
+}
+.voucher-card::before, .voucher-card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  background: #FFF5F7;
+  border-radius: 50%;
+  border: 2px dashed #F43F5E;
+}
+.voucher-card::before { left: -10px; }
+.voucher-card::after { right: -10px; }
+
+
+

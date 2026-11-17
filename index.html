@@ -1,0 +1,3491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>USAGI LIFE · 颜芷萱 (GAN TZI SHUAN) 的专属生活手账 🐰💖</title>
+
+  <!-- Google Fonts: Fredoka & Quicksand -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- Supabase Cloud DB Client (Optional Free Cloud Database) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="antialiased">
+
+  <!-- ============================================================
+       AUTH SCREEN: 方案 A 私人登录系统 (Multi-User Data Isolation)
+       ============================================================ -->
+  <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-md">
+    <div class="modal-content glass-card max-w-md w-full p-8 relative overflow-hidden bg-white/95 border-4 border-amber-300">
+      
+      <!-- Authentic Usagi Illustration from Image 1 -->
+      <div class="flex justify-center -mt-6 mb-3">
+        <img src="usagi_character.png" alt="乌萨奇" class="w-28 h-32 object-contain animate-bounce drop-shadow-md select-none" />
+      </div>
+
+      <div class="text-center mb-6">
+        <h2 class="text-2xl font-black text-stone-800 tracking-wide flex items-center justify-center gap-2">
+          <span>USAGI LIFE</span>
+          <span class="text-pink-500">·</span>
+          <span>芷萱专属手账</span>
+        </h2>
+        <p class="text-xs text-pink-700/90 font-bold mt-1 bg-pink-50 inline-block px-3.5 py-1 rounded-full border border-pink-200">
+          <i class="fa-solid fa-heart text-rose-500 mr-1"></i> 为 颜芷萱 (GAN TZI SHUAN) 独家专属定制 💖
+        </p>
+        <p class="text-xs text-stone-500 mt-2">
+          乌萨奇陪伴芷萱记录生活的每一天 · 私人数据独立隔离
+        </p>
+      </div>
+
+      <!-- Auth Tabs: Login / Register -->
+      <div class="flex rounded-xl bg-amber-50 p-1 mb-6 border border-amber-200">
+        <button id="tab-btn-login" onclick="switchAuthTab('login')" class="flex-1 py-2 text-sm font-bold rounded-lg transition-all bg-amber-400 text-stone-900 shadow-sm">
+          私人登录
+        </button>
+        <button id="tab-btn-register" onclick="switchAuthTab('register')" class="flex-1 py-2 text-sm font-bold rounded-lg transition-all text-stone-600 hover:text-amber-700">
+          注册新账号
+        </button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="form-login" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-stone-600 mb-1">账号名称 (Username)</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-3 text-stone-400 text-sm"><i class="fa-solid fa-user"></i></span>
+            <input id="login-username" type="text" placeholder="例如: gts 或 tzishuan" class="w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm transition-all" required />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-stone-600 mb-1">登录密码 (Password)</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-3 text-stone-400 text-sm"><i class="fa-solid fa-lock"></i></span>
+            <input id="login-password" type="password" placeholder="请输入密码" class="w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm transition-all" required />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 mt-2">
+          <button type="submit" class="btn-usagi w-full py-2.5 text-sm font-black">
+            私人登录 🥕
+          </button>
+          <button type="button" onclick="USAGI_APP.guestLogin()" class="btn-secondary w-full py-2.5 text-xs font-black text-pink-900 border-pink-300 bg-pink-50 hover:bg-pink-100">
+            芷萱免密一键进入 💖
+          </button>
+        </div>
+
+        <button type="button" onclick="fillDemoAccount()" class="w-full py-2 text-xs font-bold text-amber-700 bg-amber-100/60 hover:bg-amber-100 rounded-xl border border-dashed border-amber-300 transition-all flex items-center justify-center gap-1.5 mt-2">
+          <i class="fa-solid fa-heart text-rose-500"></i> 填入芷萱专属账号 (gts / 123)
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="form-register" onsubmit="handleRegisterSubmit(event)" class="space-y-3.5 hidden">
+        <div>
+          <label class="block text-xs font-bold text-stone-600 mb-1">设置用户名 (作为唯一登录凭证)</label>
+          <input id="reg-username" type="text" placeholder="字母/数字，如: my_usagi" class="w-full px-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm" required />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-stone-600 mb-1">手账昵称 (在界面显示的称呼)</label>
+          <input id="reg-nickname" type="text" placeholder="如: 乌萨奇头号饲养员" class="w-full px-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-stone-600 mb-1">设置密码</label>
+          <input id="reg-password" type="password" placeholder="不少于4位密码" class="w-full px-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm" required />
+        </div>
+        <button type="submit" class="btn-usagi w-full py-3 text-base font-black mt-2">
+          创建独立手账账号 ✨
+        </button>
+      </form>
+
+      <div class="mt-5 flex items-center justify-between text-xs text-stone-400 border-t border-stone-100 pt-3">
+        <span>数据本地隔离存储 · 独立私密</span>
+        <button type="button" onclick="localStorage.clear(); alert('本地缓存已完全重置！✨'); location.reload();" class="text-amber-600 hover:underline">
+          重置缓存
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MAIN APP CONTAINER (Rendered after Login)
+       ============================================================ -->
+  <div id="app-container" class="hidden min-h-screen flex flex-col relative z-10 pb-12">
+    
+    <!-- Top Header Sticky Wrapper -->
+    <div class="sticky top-0 z-40 w-full pt-3 pb-2 backdrop-blur-md bg-[#FCF9F2]/85 transition-all shadow-xs">
+      <div class="max-w-[1440px] w-full mx-auto px-4 sm:px-6">
+        <header class="glass-card px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 bg-white/95 shadow-md border-2 border-amber-200 rounded-3xl">
+          
+          <!-- Brand & Mascot with Authentic Usagi Artwork -->
+          <div class="flex items-center gap-3 cursor-pointer" onclick="USAGI_APP.switchTab('dashboard')">
+            <div class="w-13 h-13 bg-amber-100 rounded-2xl flex items-center justify-center p-1 border-2 border-amber-300 shadow-inner">
+              <img src="usagi_character.png" alt="乌萨奇" class="w-10 h-10 object-contain hover:scale-110 transition-transform" />
+            </div>
+            <div>
+              <h1 class="text-xl font-black text-stone-800 tracking-tight flex items-center gap-2">
+                <span>USAGI LIFE</span>
+                <span class="badge-kawaii bg-pink-100 text-pink-800 text-xs border border-pink-300">芷萱专属手账 💖</span>
+              </h1>
+              <p id="user-motto-display" class="text-xs text-amber-700 font-bold truncate max-w-xs">呀哈！芷萱今天也要开开心心！💖</p>
+            </div>
+          </div>
+
+          <!-- User Info & Interactive Controls -->
+          <div class="flex items-center gap-3">
+            <!-- User Badge -->
+            <div onclick="USAGI_APP.editProfile()" class="flex items-center gap-2 bg-amber-50 hover:bg-pink-50 px-3.5 py-1.5 rounded-full border border-amber-200 hover:border-pink-300 transition-all cursor-pointer" title="点击修改手账专属昵称与寄语 🌸">
+              <span id="user-avatar-display" class="w-6 h-6 flex items-center justify-center">
+                <img src="usagi_character.png" alt="乌萨奇" class="w-6 h-6 object-contain" />
+              </span>
+              <span id="user-nickname-display" class="text-xs font-bold text-stone-700">颜芷萱 🌸</span>
+            </div>
+
+            <!-- Music Player Quick Button -->
+            <button onclick="USAGI_APP.switchTab('music')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-pink-50 hover:bg-pink-100 border border-pink-300 text-pink-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="打开乌萨奇无广告音乐点歌台">
+              <i class="fa-solid fa-music text-pink-500 animate-pulse"></i>
+              <span class="hidden sm:inline">点歌听音乐</span>
+            </button>
+
+            <!-- Games Arcade Quick Button -->
+            <button onclick="USAGI_APP.switchTab('games')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="打开芷萱治愈小游戏乐园">
+              <i class="fa-solid fa-gamepad text-rose-500 animate-bounce"></i>
+              <span class="hidden sm:inline">游乐园 🎮</span>
+            </button>
+
+            <!-- Export Excel Button -->
+            <button onclick="openExportExcelModal('all_overview')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-emerald-50 border border-emerald-300 text-stone-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="导出 Excel 手账与财务对账单">
+              <i class="fa-solid fa-file-excel text-emerald-600"></i>
+              <span class="hidden sm:inline">导出 Excel</span>
+            </button>
+
+            <!-- Cloud DB Setting Button -->
+            <button onclick="openCloudDbModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-amber-100 border border-amber-300 text-stone-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="云端数据库设置">
+              <span id="cloud-status-dot" class="w-2.5 h-2.5 rounded-full bg-stone-300 inline-block"></span>
+              <span id="cloud-status-text" class="hidden sm:inline">数据库</span>
+              <i class="fa-solid fa-cloud text-amber-500"></i>
+            </button>
+
+            <!-- Controls: Sound, Particles, Backup, Logout -->
+            <button onclick="handleToggleSound()" id="btn-sound-toggle" class="w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 flex items-center justify-center text-stone-600 transition-all text-sm cursor-pointer" title="切换音效">
+              <i class="fa-solid fa-volume-high"></i>
+            </button>
+
+            <button onclick="handleToggleParticles()" id="btn-particle-toggle" class="w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 flex items-center justify-center text-amber-500 transition-all text-sm cursor-pointer" title="切换背景飘落动画">
+              <i class="fa-solid fa-sparkles"></i> ✨
+            </button>
+
+            <button onclick="USAGI_APP.exportDataJSON()" class="w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 flex items-center justify-center text-stone-600 transition-all text-sm cursor-pointer" title="导出备份数据 JSON">
+              <i class="fa-solid fa-download"></i>
+            </button>
+
+            <label class="w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 flex items-center justify-center text-stone-600 transition-all text-sm cursor-pointer" title="导入备份数据">
+              <i class="fa-solid fa-upload"></i>
+              <input type="file" accept=".json" onchange="USAGI_APP.importDataJSON(event)" class="hidden" />
+            </label>
+
+            <button onclick="USAGI_APP.logout()" class="w-9 h-9 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-200 flex items-center justify-center text-rose-600 transition-all text-sm cursor-pointer" title="退出私人账号">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+          </div>
+        </header>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (Perfect alignment with Header) -->
+    <div class="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-6 mt-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- Navigation Sidebar -->
+      <aside class="lg:col-span-3">
+        <div class="glass-card p-4 sticky top-24 space-y-1.5 bg-white/80 border-2 border-stone-200/60">
+          <div class="text-xs font-black text-amber-800 uppercase tracking-wider px-3 py-1.5 flex items-center justify-between">
+            <span>导航手账模块</span>
+            <span class="text-base">🥕</span>
+          </div>
+
+          <div id="nav-dashboard" onclick="USAGI_APP.switchTab('dashboard')" class="nav-pill active flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">🌟</span>
+            <span>今日总览 (Dashboard)</span>
+          </div>
+
+          <div id="nav-calendar" onclick="USAGI_APP.switchTab('calendar')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">📅</span>
+            <span>生活手账日历 (Calendar)</span>
+          </div>
+
+          <div class="pt-2 text-xs font-black text-stone-400 px-3">健康与身体</div>
+
+          <div id="nav-period" onclick="USAGI_APP.switchTab('period')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">🌸</span>
+            <span>生理期追踪 (Period)</span>
+          </div>
+
+          <div id="nav-health" onclick="USAGI_APP.switchTab('health')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">💧</span>
+            <span>饮水 · 作息 · 运动</span>
+          </div>
+
+          <div id="nav-mood" onclick="USAGI_APP.switchTab('mood')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">🎭</span>
+            <span>情绪与症状日记</span>
+          </div>
+
+          <div class="pt-2 text-xs font-black text-stone-400 px-3">财务与效率</div>
+
+          <div id="nav-expense" onclick="USAGI_APP.switchTab('expense')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">💰</span>
+            <span>日常开销 (Expense)</span>
+          </div>
+
+          <div id="nav-habits" onclick="USAGI_APP.switchTab('habits')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">🟩</span>
+            <span>习惯养成与热力图</span>
+          </div>
+
+          <div id="nav-todos" onclick="USAGI_APP.switchTab('todos')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">⏳</span>
+            <span>待办清单与倒数日</span>
+          </div>
+
+          <div id="nav-notes" onclick="USAGI_APP.switchTab('notes')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">💡</span>
+            <span>碎片灵感备忘录</span>
+          </div>
+
+          <div class="pt-2 text-xs font-black text-stone-400 px-3">娱乐与幸福感</div>
+
+          <div id="nav-music" onclick="USAGI_APP.switchTab('music')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700 cursor-pointer">
+            <span class="text-lg">🎵</span>
+            <span>乌萨奇音乐点歌台</span>
+          </div>
+
+          <div id="nav-games" onclick="USAGI_APP.switchTab('games')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700 cursor-pointer">
+            <span class="text-lg">🎮</span>
+            <span>芷萱治愈游乐园</span>
+          </div>
+
+          <div id="nav-watchlist" onclick="USAGI_APP.switchTab('watchlist')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">🎬</span>
+            <span>书影音 · 购物冷静期</span>
+          </div>
+
+          <div id="nav-highlights" onclick="USAGI_APP.switchTab('highlights')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
+            <span class="text-lg">✨</span>
+            <span>感恩日记 · 每日高光</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content Dynamic Panels -->
+      <main class="lg:col-span-9 space-y-6">
+
+        <!-- ========================================================
+             1. TAB: DASHBOARD OVERVIEW
+             ======================================================== -->
+        <div id="tab-dashboard" class="tab-content space-y-6">
+          
+          <!-- Banner: Daily Greeting & Energy with Usagi Mascot -->
+          <div class="glass-card p-6 bg-gradient-to-r from-amber-200/70 via-yellow-100/80 to-rose-100/70 border-2 border-amber-300 relative overflow-hidden">
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
+              <div class="flex items-center gap-4">
+                <img src="usagi_character.png" alt="乌萨奇" class="w-20 h-24 object-contain animate-pulse select-none" />
+                <div>
+                  <span class="badge-kawaii bg-amber-400 text-stone-900">乌萨奇今日快报 📣 · 芷萱专属 💖</span>
+                  <h2 id="dash-greeting-title" class="text-2xl font-black text-stone-800 mt-1">呀哈！欢迎回到芷萱的专属生活手账！🐰💖</h2>
+                  <p id="dash-greeting-sub" class="text-sm text-stone-600 mt-1">今天又是元气满满的一天，记得按时喝温水、完成打卡目标哦~</p>
+                </div>
+              </div>
+              <button id="hero-pat-btn" onclick="handleHeroPatUsagi(event)" class="btn-usagi px-5 py-2.5 text-sm whitespace-nowrap active:scale-95 transition-transform shadow-md" title="点我有大惊喜哦！">
+                <span>拍拍乌萨奇</span> <img src="usagi_character.png" alt="Usagi" class="w-5 h-5 inline-block object-contain" />
+              </button>
+            </div>
+            <!-- Decorative Background Graphic -->
+            <div class="absolute -right-4 -bottom-6 text-8xl opacity-10 select-none pointer-events-none">🥕</div>
+          </div>
+
+          <!-- Long-Distance Love & Care Kit (异地恋专属 · 隔空思念与男友急救站) -->
+          <div class="glass-card p-5 bg-gradient-to-r from-pink-50/90 via-rose-50/80 to-amber-50/80 border-2 border-pink-300 relative overflow-hidden shadow-sm">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-pink-100 rounded-2xl flex items-center justify-center text-2xl border border-pink-300 shadow-inner flex-shrink-0">
+                  💌
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h3 class="font-black text-stone-800 text-sm sm:text-base">异地恋专属 · 隔空思念与男友爱心急救站</h3>
+                    <span class="badge-kawaii bg-pink-200 text-pink-800 text-[11px]">相隔两地 · 爱不缺席 💖</span>
+                  </div>
+                  <p class="text-xs text-stone-600 mt-1">
+                    两座城市的风都在替我拥抱你 · 今日已向男友隔空投递 <span id="dash-love-count" class="font-black text-rose-600 font-mono text-sm">0</span> 次思念
+                  </p>
+                </div>
+              </div>
+
+              <!-- Quick Action: Send Hug -->
+              <button onclick="sendLoveHug()" class="btn-usagi px-4 py-2.5 text-xs font-black bg-rose-400 hover:bg-rose-500 text-white border-rose-500 shadow-sm flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+                <span>想你啦！隔空抱抱</span> <span>💖</span>
+              </button>
+            </div>
+
+            <!-- Emergency Care Pills Row -->
+            <div class="mt-4 pt-3 border-t border-pink-200/60 grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <button onclick="openLovePill('period')" class="p-2.5 rounded-xl bg-white/90 hover:bg-rose-50 border border-rose-200 text-left transition-all group flex items-center gap-2 cursor-pointer shadow-xs">
+                <span class="text-lg group-hover:scale-125 transition-transform">🌸</span>
+                <div>
+                  <div class="text-xs font-black text-rose-800">肚子疼/生理期</div>
+                  <div class="text-[10px] text-stone-400">男友专属保暖指南</div>
+                </div>
+              </button>
+
+              <button onclick="openLovePill('sad')" class="p-2.5 rounded-xl bg-white/90 hover:bg-amber-50 border border-amber-200 text-left transition-all group flex items-center gap-2 cursor-pointer shadow-xs">
+                <span class="text-lg group-hover:scale-125 transition-transform">🥺</span>
+                <div>
+                  <div class="text-xs font-black text-amber-800">委屈/不开心</div>
+                  <div class="text-[10px] text-stone-400">别憋着，来抱抱</div>
+                </div>
+              </button>
+
+              <button onclick="openLovePill('sleep')" class="p-2.5 rounded-xl bg-white/90 hover:bg-indigo-50 border border-indigo-200 text-left transition-all group flex items-center gap-2 cursor-pointer shadow-xs">
+                <span class="text-lg group-hover:scale-125 transition-transform">🌙</span>
+                <div>
+                  <div class="text-xs font-black text-indigo-800">失眠/睡不着</div>
+                  <div class="text-[10px] text-stone-400">数羊乌萨奇陪你</div>
+                </div>
+              </button>
+
+              <button onclick="openLovePill('stress')" class="p-2.5 rounded-xl bg-white/90 hover:bg-emerald-50 border border-emerald-200 text-left transition-all group flex items-center gap-2 cursor-pointer shadow-xs">
+                <span class="text-lg group-hover:scale-125 transition-transform">⚡</span>
+                <div>
+                  <div class="text-xs font-black text-emerald-800">压力大/好累</div>
+                  <div class="text-[10px] text-stone-400">你已经超棒了</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Metrics Row -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- Calendar Quick Card -->
+            <div onclick="USAGI_APP.switchTab('calendar')" class="glass-card p-5 cursor-pointer hover:border-amber-400 transition-all bg-white/80">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-stone-500">生活手账日历</span>
+                <span class="text-xs font-bold text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded-full">查看日历</span>
+              </div>
+              <div id="dash-cal-count" class="text-lg font-black text-amber-900 mt-2">今日 0 项手账日程</div>
+              <div id="dash-cal-sub" class="text-xs text-stone-500 mt-1 truncate">点击在日历中记录生活</div>
+            </div>
+
+            <!-- Period Status Quick Card -->
+            <div onclick="USAGI_APP.switchTab('period')" class="glass-card p-5 cursor-pointer hover:border-rose-400 transition-all bg-white/80">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-stone-500">生理期追踪</span>
+                <span id="dash-period-badge" class="badge-kawaii bg-rose-100 text-rose-700">加载中...</span>
+              </div>
+              <div id="dash-period-status" class="text-lg font-black text-rose-800 mt-2">--</div>
+              <div id="dash-period-sub" class="text-xs text-stone-500 mt-1 truncate">--</div>
+            </div>
+
+            <!-- Expense Quick Card -->
+            <div onclick="USAGI_APP.switchTab('expense')" class="glass-card p-5 cursor-pointer hover:border-amber-400 transition-all bg-white/80">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-stone-500">本月消费支出</span>
+                <span class="text-xs font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">日常记账</span>
+              </div>
+              <div id="dash-expense-spent" class="text-xl font-black text-stone-800 mt-2">RM 0.0</div>
+              <div class="w-full bg-stone-100 h-2 rounded-full overflow-hidden mt-2">
+                <div id="dash-expense-bar" class="bg-amber-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+              <div id="dash-expense-remaining" class="text-xs text-stone-500 mt-1">剩余 RM 0.0</div>
+            </div>
+
+            <!-- Water & Habits Quick Card -->
+            <div onclick="USAGI_APP.switchTab('health')" class="glass-card p-5 cursor-pointer hover:border-blue-400 transition-all bg-white/80">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-stone-500">今日饮水打卡</span>
+                <span class="text-xs font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">咕噜咕噜</span>
+              </div>
+              <div id="dash-water-text" class="text-lg font-black text-blue-800 mt-2">0 / 4 杯 (0ml)</div>
+              <div class="w-full bg-stone-100 h-2 rounded-full overflow-hidden mt-2">
+                <div id="dash-water-progress" class="bg-blue-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+              <div id="dash-habit-text" class="text-xs text-emerald-600 font-bold mt-1">0 项习惯打卡</div>
+            </div>
+          </div>
+
+          <!-- Bottom Grid: Nearest Countdowns & Quick Tasks -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Nearest Countdowns -->
+            <div class="glass-card p-5 bg-white/80">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                  <span>⏰</span> <span>倒数纪念日</span>
+                </h3>
+                <button onclick="USAGI_APP.switchTab('todos')" class="text-xs text-amber-600 font-bold hover:underline">查看全部</button>
+              </div>
+              <div id="dash-countdown-list" class="space-y-2"></div>
+            </div>
+
+            <!-- Pending To-Dos -->
+            <div class="glass-card p-5 bg-white/80">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                  <span>✍️</span> <span>待办核心清单</span>
+                </h3>
+                <span id="dash-todo-count" class="badge-kawaii bg-amber-100 text-amber-800 text-xs">0 项待完成</span>
+              </div>
+              <p class="text-xs text-stone-500 mb-3">今天最重要的小事，做完就可以无负罪感地休息啦！</p>
+              <button onclick="USAGI_APP.switchTab('todos')" class="btn-secondary w-full text-xs py-2">
+                前往待办清单进行打勾 🌸
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             1.5. TAB: 生活手账日历 (CALENDAR)
+             ======================================================== -->
+        <div id="tab-calendar" class="tab-content hidden space-y-6">
+          
+          <!-- Calendar Toolbar & Month Navigation -->
+          <div class="glass-card p-4 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <span class="text-xs font-black text-amber-900 flex items-center gap-1.5">
+                <i class="fa-solid fa-calendar text-amber-600 text-sm"></i>
+                <span>生活日历:</span>
+              </span>
+
+              <!-- Year Input (Support Direct Typing of Any Year) -->
+              <div class="flex items-center bg-white border-2 border-amber-300 rounded-xl px-2 py-1 shadow-sm">
+                <input id="cal-select-year" type="number" min="1970" max="2099" step="1" onchange="USAGI_APP.setCalendarYear(this.value)" class="w-16 font-black text-stone-800 text-xs bg-transparent focus:outline-none text-center" title="直接输入任意年份" />
+                <span class="text-xs font-black text-amber-900 select-none">年</span>
+              </div>
+
+              <!-- Month Picker -->
+              <select id="cal-select-month" onchange="USAGI_APP.setCalendarMonth(this.value)" class="px-3 py-1.5 border-2 border-amber-300 rounded-xl font-black text-stone-800 text-xs bg-white shadow-sm focus:outline-none cursor-pointer">
+                <option value="1">01 月</option>
+                <option value="2">02 月</option>
+                <option value="3">03 月</option>
+                <option value="4">04 月</option>
+                <option value="5">05 月</option>
+                <option value="6">06 月</option>
+                <option value="7">07 月</option>
+                <option value="8">08 月</option>
+                <option value="9">09 月</option>
+                <option value="10">10 月</option>
+                <option value="11">11 月</option>
+                <option value="12">12 月</option>
+              </select>
+
+              <!-- Prev / Today / Next Buttons -->
+              <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-amber-200 shadow-sm">
+                <button type="button" onclick="USAGI_APP.prevCalendarMonth()" class="px-2.5 py-1 text-xs font-bold text-stone-700 hover:text-amber-800 hover:bg-amber-100 rounded-lg transition-all" title="查看上一月">
+                  <i class="fa-solid fa-chevron-left mr-0.5"></i> 上月
+                </button>
+                <button type="button" onclick="USAGI_APP.todayCalendarMonth()" class="px-2.5 py-1 text-xs font-bold text-amber-900 bg-amber-200/80 hover:bg-amber-300 rounded-lg transition-all shadow-xs">
+                  今天
+                </button>
+                <button type="button" onclick="USAGI_APP.nextCalendarMonth()" class="px-2.5 py-1 text-xs font-bold text-stone-700 hover:text-amber-800 hover:bg-amber-100 rounded-lg transition-all" title="查看下一月">
+                  下月 <i class="fa-solid fa-chevron-right ml-0.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Current Period & Legend -->
+            <div class="flex items-center gap-3 text-xs flex-wrap">
+              <span id="cal-current-label" class="badge-kawaii bg-amber-400 text-stone-900 font-black text-xs py-1.5 px-3.5 shadow-sm">
+                2026年 11月
+              </span>
+              <div class="flex items-center gap-2 text-[11px] font-bold text-stone-600">
+                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-400 inline-block"></span> 经期</span>
+                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> 开销</span>
+                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-blue-400 inline-block"></span> 日程</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar View Card -->
+          <div class="glass-card p-5 bg-white/90">
+            <div class="flex items-center justify-between mb-3 text-xs text-stone-500">
+              <span class="font-bold flex items-center gap-1"><i class="fa-solid fa-hand-pointer text-amber-500"></i> 点击任意一天可直接记手账、安排日程或写当日便签</span>
+              <button onclick="USAGI_APP.openCalendarDayModal(new Date().toISOString().split('T')[0])" class="btn-usagi text-xs py-1.5 px-3">
+                <i class="fa-solid fa-plus mr-1"></i> 今日速记
+              </button>
+            </div>
+
+            <!-- Weekday Headers -->
+            <div class="grid grid-cols-7 gap-1.5 text-center text-xs font-black text-amber-900 bg-amber-100/60 p-2 rounded-xl mb-2">
+              <div class="text-rose-600">周日</div>
+              <div>周一</div>
+              <div>周二</div>
+              <div>周三</div>
+              <div>周四</div>
+              <div>周五</div>
+              <div class="text-amber-700">周六</div>
+            </div>
+
+            <!-- Calendar Days 7-Col Grid -->
+            <div id="calendar-days-grid" class="calendar-grid"></div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             2. TAB: 生理期追踪 (PERIOD TRACKER)
+             ======================================================== -->
+        <div id="tab-period" class="tab-content hidden space-y-6">
+          <div class="glass-card p-6 bg-rose-50/70 border-2 border-rose-200">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <span class="badge-kawaii bg-rose-200 text-rose-800">经期日记 & 预测 🌸</span>
+                <h3 id="period-status-banner" class="text-2xl font-black text-rose-900 mt-2">经期周期分析中...</h3>
+                <p id="period-tips-text" class="text-xs text-stone-600 mt-1">数据仅保存在您的专属本地分区中，安全私密</p>
+              </div>
+
+              <!-- Cycle & Duration Settings -->
+              <div class="flex items-center gap-2 bg-white/80 p-3 rounded-2xl border border-rose-200">
+                <div class="text-xs">
+                  <div class="font-bold text-stone-600">周期长度(天)</div>
+                  <input id="period-cycle-length-input" type="number" value="28" class="w-16 px-2 py-1 border rounded text-center text-sm font-bold" />
+                </div>
+                <div class="text-xs">
+                  <div class="font-bold text-stone-600">经期天数(天)</div>
+                  <input id="period-duration-input" type="number" value="5" class="w-16 px-2 py-1 border rounded text-center text-sm font-bold" />
+                </div>
+                <button onclick="USAGI_APP.savePeriodSettings()" class="btn-pink text-xs py-2 px-3">
+                  保存
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Period Form -->
+          <div class="glass-card p-5 bg-white/80 border border-rose-200">
+            <h4 class="font-bold text-rose-900 text-sm mb-3 flex items-center gap-2">
+              <i class="fa-solid fa-plus-circle text-rose-500"></i> 记录新的经期开始
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">开始日期</label>
+                <input id="period-new-start" type="date" class="w-full p-2 border border-stone-200 rounded-xl" />
+              </div>
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">结束日期 (可选)</label>
+                <input id="period-new-end" type="date" class="w-full p-2 border border-stone-200 rounded-xl" />
+              </div>
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">经血量</label>
+                <select id="period-new-flow" class="w-full p-2 border border-stone-200 rounded-xl">
+                  <option value="少">少 (Light)</option>
+                  <option value="中等" selected>中等 (Moderate)</option>
+                  <option value="多">多 (Heavy)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">痛经与身体反应</label>
+                <select id="period-new-pain" class="w-full p-2 border border-stone-200 rounded-xl">
+                  <option value="无痛经">无明显痛感 😊</option>
+                  <option value="轻微不适" selected>轻微下坠酸痛 🌸</option>
+                  <option value="中度疼痛">中度腹痛，需要暖宝宝 🥺</option>
+                  <option value="重度疼痛">重度疼痛，需要止痛药 💊</option>
+                </select>
+              </div>
+            </div>
+            <div class="mt-3">
+              <input id="period-new-notes" type="text" placeholder="随手备注（如：喝了红糖姜茶、情绪比较低落等）" class="w-full p-2 text-xs border border-stone-200 rounded-xl" />
+            </div>
+            <div class="mt-3 flex justify-end">
+              <button onclick="handleAddPeriodRecord()" class="btn-pink text-xs py-2 px-5 font-bold">
+                提交保存记录 🌸
+              </button>
+            </div>
+          </div>
+
+          <!-- History Records -->
+          <div class="glass-card p-5 bg-white/80">
+            <h4 class="font-bold text-stone-800 text-sm mb-3">历史记录一览</h4>
+            <div id="period-history-list" class="space-y-2"></div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             3. TAB: 日常记账本 (EXPENSE TRACKER)
+             ======================================================== -->
+        <div id="tab-expense" class="tab-content hidden space-y-6">
+          
+          <!-- Year & Month Filter Toolbar -->
+          <div class="glass-card p-4 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <span class="text-xs font-black text-amber-900 flex items-center gap-1.5">
+                <i class="fa-solid fa-calendar-days text-amber-600"></i>
+                <span>账目周期选择:</span>
+              </span>
+
+              <!-- Year Input (Support Direct Typing of Any Year) -->
+              <div class="flex items-center bg-white border-2 border-amber-300 rounded-xl px-2 py-1 shadow-sm">
+                <input id="exp-select-year" type="number" min="1970" max="2099" step="1" onchange="USAGI_APP.setExpenseYear(this.value)" class="w-16 font-black text-stone-800 text-xs bg-transparent focus:outline-none text-center" title="直接输入任意年份" />
+                <span class="text-xs font-black text-amber-900 select-none">年</span>
+              </div>
+
+              <!-- Month Picker -->
+              <select id="exp-select-month" onchange="USAGI_APP.setExpenseMonth(this.value)" class="px-3 py-1.5 border-2 border-amber-300 rounded-xl font-black text-stone-800 text-xs bg-white shadow-sm focus:outline-none cursor-pointer">
+                <option value="all">📅 查看整年汇总</option>
+                <option value="1">01 月</option>
+                <option value="2">02 月</option>
+                <option value="3">03 月</option>
+                <option value="4">04 月</option>
+                <option value="5">05 月</option>
+                <option value="6">06 月</option>
+                <option value="7">07 月</option>
+                <option value="8">08 月</option>
+                <option value="9">09 月</option>
+                <option value="10">10 月</option>
+                <option value="11">11 月</option>
+                <option value="12">12 月</option>
+              </select>
+
+              <!-- Fast Quick Prev / Current / Next Buttons -->
+              <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-amber-200 shadow-sm">
+                <button type="button" onclick="USAGI_APP.prevExpenseMonth()" class="px-2.5 py-1 text-xs font-bold text-stone-700 hover:text-amber-800 hover:bg-amber-100 rounded-lg transition-all" title="查看上一月">
+                  <i class="fa-solid fa-chevron-left mr-0.5"></i> 上月
+                </button>
+                <button type="button" onclick="USAGI_APP.resetExpenseToCurrentMonth()" class="px-2.5 py-1 text-xs font-bold text-amber-900 bg-amber-200/80 hover:bg-amber-300 rounded-lg transition-all shadow-xs">
+                  本月
+                </button>
+                <button type="button" onclick="USAGI_APP.nextExpenseMonth()" class="px-2.5 py-1 text-xs font-bold text-stone-700 hover:text-amber-800 hover:bg-amber-100 rounded-lg transition-all" title="查看下一月">
+                  下月 <i class="fa-solid fa-chevron-right ml-0.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Current Period Indicator Badge & Export Button -->
+            <div class="flex items-center gap-2 flex-wrap">
+              <button type="button" onclick="openExportExcelModal('expense')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs shadow-sm transition-all cursor-pointer" title="导出当前或自选周期的 Excel 账单">
+                <i class="fa-solid fa-file-excel"></i> <span>导出 Excel</span>
+              </button>
+              <div id="exp-period-badge" class="badge-kawaii bg-amber-400 text-stone-900 font-black text-xs py-1.5 px-3.5 shadow-sm">
+                2026年 11月 账目
+              </div>
+            </div>
+          </div>
+
+          <!-- Month Stats Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="glass-card p-5 bg-gradient-to-br from-rose-50 to-orange-50 border border-rose-200">
+              <div id="exp-label-out" class="text-xs font-bold text-rose-600">所选周期支出</div>
+              <div id="exp-month-out" class="text-2xl font-black text-rose-800 mt-1">RM 0.0</div>
+            </div>
+            <div class="glass-card p-5 bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200">
+              <div id="exp-label-in" class="text-xs font-bold text-emerald-600">所选周期收入</div>
+              <div id="exp-month-in" class="text-2xl font-black text-emerald-800 mt-1">RM 0.0</div>
+            </div>
+            <div class="glass-card p-5 bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200">
+              <div id="exp-label-bal" class="text-xs font-bold text-amber-700">所选周期结余</div>
+              <div id="exp-month-balance" class="text-2xl font-black text-amber-900 mt-1">RM 0.0</div>
+            </div>
+          </div>
+
+          <!-- Add Transaction & Budget Setting -->
+          <div class="glass-card p-5 bg-white/80">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                <span>🪙</span> <span>记一笔新开销 / 收入</span>
+              </h4>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="font-bold text-stone-500">月预算 (RM):</span>
+                <input id="exp-budget-val" type="number" class="w-20 px-2 py-1 border rounded text-center text-xs font-bold" />
+                <button onclick="USAGI_APP.saveBudget()" class="btn-usagi text-xs py-1 px-3">更新</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">类型</label>
+                <select id="exp-input-type" class="w-full p-2 border border-stone-200 rounded-xl">
+                  <option value="expense">支出 (Expense)</option>
+                  <option value="income">收入 (Income)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">消费分类</label>
+                <select id="exp-input-cat" class="w-full p-2 border border-stone-200 rounded-xl">
+                  <option value="餐饮美食">🍔 餐饮美食</option>
+                  <option value="购物消费">🛍️ 购物消费</option>
+                  <option value="日用百货">🧻 日用百货</option>
+                  <option value="休闲娱乐">🎮 休闲娱乐</option>
+                  <option value="交通出行">🚇 交通出行</option>
+                  <option value="美妆护肤">💄 美妆护肤</option>
+                  <option value="医疗健康">💊 医疗健康</option>
+                  <option value="兼职工资">💰 兼职工资</option>
+                  <option value="其他分类">✨ 其他分类</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">金额 (RM)</label>
+                <input id="exp-input-amount" type="number" step="0.01" placeholder="0.00" class="w-full p-2 border border-stone-200 rounded-xl font-bold" />
+              </div>
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">日期</label>
+                <input id="exp-input-date" type="date" class="w-full p-2 border border-stone-200 rounded-xl" />
+              </div>
+              <div>
+                <label class="block font-bold text-stone-600 mb-1">备注说明</label>
+                <input id="exp-input-note" type="text" placeholder="例如: 奶茶与蛋挞" class="w-full p-2 border border-stone-200 rounded-xl" />
+              </div>
+            </div>
+
+            <div class="mt-3 flex justify-end">
+              <button onclick="handleAddExpenseSubmit()" class="btn-usagi text-xs py-2 px-6">
+                记入账本 💸
+              </button>
+            </div>
+          </div>
+
+          <!-- Chart & Expense Log List -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <div class="md:col-span-5 glass-card p-5 bg-white/80">
+              <h4 class="font-bold text-stone-800 text-sm mb-2">支出分类占比图</h4>
+              <div class="h-60 flex items-center justify-center">
+                <canvas id="expense-pie-chart"></canvas>
+              </div>
+            </div>
+
+            <div class="md:col-span-7 glass-card p-5 bg-white/80">
+              <h4 class="font-bold text-stone-800 text-sm mb-3">记账流水记录</h4>
+              <div id="expense-list-container" class="space-y-2 max-h-96 overflow-y-auto pr-1"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             4. TAB: 健康与身体状态 (WATER, SLEEP & WEIGHT)
+             ======================================================== -->
+        <div id="tab-health" class="tab-content hidden space-y-6">
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Water Intake Section -->
+            <div class="glass-card p-5 bg-blue-50/50 border border-blue-200 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between">
+                  <h4 class="font-bold text-blue-900 text-sm flex items-center gap-2">
+                    <span>💧</span> <span>今日饮水打卡</span>
+                  </h4>
+                  <span class="badge-kawaii bg-blue-200 text-blue-800">目标 4 杯 (2000ml · 500ml/杯)</span>
+                </div>
+                
+                <div class="flex items-center justify-around my-6">
+                  <!-- Animated Water Cup -->
+                  <div class="water-cup">
+                    <div id="water-glass-fill" class="water-fill" style="height: 0%">
+                      <div class="water-wave" style="background: radial-gradient(circle, #fff 10%, transparent 20%);"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div id="health-water-count" class="text-3xl font-black text-blue-800">0 / 4 杯</div>
+                    <div id="health-water-ml" class="text-sm font-bold text-blue-600 mt-1">0 ml</div>
+                    <div class="text-xs text-stone-500 mt-2">每次喝水点击一下打卡</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex gap-2">
+                <button onclick="USAGI_APP.drinkWater()" class="btn-usagi flex-1 text-xs py-2.5 bg-blue-400 text-stone-900 border-blue-500">
+                  +1 杯水 (500ml) 💧
+                </button>
+                <button onclick="USAGI_APP.resetWater()" class="btn-secondary text-xs py-2.5">
+                  重置
+                </button>
+              </div>
+            </div>
+
+            <!-- Sleep & Rest Section -->
+            <div class="glass-card p-5 bg-indigo-50/50 border border-indigo-200">
+              <h4 class="font-bold text-indigo-900 text-sm mb-3 flex items-center gap-2">
+                <span>🌙</span> <span>作息与睡眠记录</span>
+              </h4>
+
+              <div class="grid grid-cols-3 gap-2 text-xs mb-3">
+                <div>
+                  <label class="block font-bold text-stone-600 mb-1">入睡时间</label>
+                  <input id="sleep-input-sleep" type="time" value="23:30" class="w-full p-2 border border-stone-200 rounded-xl" />
+                </div>
+                <div>
+                  <label class="block font-bold text-stone-600 mb-1">起床时间</label>
+                  <input id="sleep-input-wake" type="time" value="07:30" class="w-full p-2 border border-stone-200 rounded-xl" />
+                </div>
+                <div>
+                  <label class="block font-bold text-stone-600 mb-1">睡眠感受</label>
+                  <select id="sleep-input-quality" class="w-full p-2 border border-stone-200 rounded-xl">
+                    <option value="great">极好 😴✨</option>
+                    <option value="good" selected>良好 🌙</option>
+                    <option value="fair">一般 🥱</option>
+                    <option value="poor">欠佳 😣</option>
+                  </select>
+                </div>
+              </div>
+              <input id="sleep-input-note" type="text" placeholder="睡眠日记备注（如：睡前泡脚、做了一个关于乌萨奇的美梦）" class="w-full p-2 text-xs border border-stone-200 rounded-xl mb-3" />
+              <button onclick="handleAddSleepSubmit()" class="btn-usagi w-full text-xs py-2 font-bold">
+                保存今日作息记录 🛌
+              </button>
+            </div>
+          </div>
+
+          <!-- Sleep History List -->
+          <div class="glass-card p-5 bg-white/80">
+            <h4 class="font-bold text-stone-800 text-sm mb-3">近期睡眠记录</h4>
+            <div id="sleep-history-list" class="space-y-2"></div>
+          </div>
+
+          <!-- Weight & Fitness Trends -->
+          <div class="glass-card p-5 bg-white/80">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+              <div>
+                <h4 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                  <span>⚖️</span> <span>体重与运动趋势</span>
+                </h4>
+                <p class="text-xs text-stone-500 mt-0.5">观察体重与经期前后的变化曲线</p>
+              </div>
+
+              <div class="flex items-center gap-2 text-xs">
+                <input id="weight-input-val" type="number" step="0.1" placeholder="体重(kg)" class="w-24 p-2 border border-stone-200 rounded-xl" />
+                <input id="weight-input-exercise" type="text" placeholder="运动类型(如跑步/瑜伽)" class="w-32 p-2 border border-stone-200 rounded-xl" />
+                <input id="weight-input-duration" type="number" placeholder="分钟" class="w-16 p-2 border border-stone-200 rounded-xl" />
+                <button onclick="handleAddWeightSubmit()" class="btn-pink text-xs py-2 px-3 font-bold">打卡</button>
+              </div>
+            </div>
+
+            <div class="h-64">
+              <canvas id="weight-trend-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             5. TAB: 情绪与症状日记 (MOOD & SYMPTOMS)
+             ======================================================== -->
+        <div id="tab-mood" class="tab-content hidden space-y-6">
+          <div class="glass-card p-6 bg-gradient-to-r from-yellow-50 to-amber-50 border border-amber-200">
+            <h3 class="font-black text-stone-800 text-lg mb-1 flex items-center gap-2">
+              <span>🎭</span> <span>情绪与身体规律摸索日记</span>
+            </h3>
+            <p class="text-xs text-stone-500 mb-4">每天选一个代表今天状态的乌萨奇心情，记录身体症状，掌握生理周期与情绪规律！</p>
+
+            <!-- Mood Buttons -->
+            <label class="block text-xs font-bold text-stone-600 mb-2">今天的心情是：</label>
+            <div id="mood-picker" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2 mb-4">
+              <button type="button" onclick="selectMood('yaha')" class="mood-btn p-3 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-400 text-center transition-all" data-mood="yaha">
+                <div class="text-3xl">🥳</div>
+                <div class="text-xs font-bold mt-1">呀哈!</div>
+              </button>
+              <button type="button" onclick="selectMood('ura')" class="mood-btn p-3 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-400 text-center transition-all" data-mood="ura">
+                <div class="text-3xl">🤩</div>
+                <div class="text-xs font-bold mt-1">活力!</div>
+              </button>
+              <button type="button" onclick="selectMood('happy')" class="mood-btn p-3 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-400 text-center transition-all" data-mood="happy">
+                <div class="text-3xl">🥰</div>
+                <div class="text-xs font-bold mt-1">开心</div>
+              </button>
+              <button type="button" onclick="selectMood('calm')" class="mood-btn p-3 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-400 text-center transition-all" data-mood="calm">
+                <div class="text-3xl">😌</div>
+                <div class="text-xs font-bold mt-1">平静</div>
+              </button>
+              <button type="button" onclick="selectMood('tired')" class="mood-btn p-3 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-400 text-center transition-all" data-mood="tired">
+                <div class="text-3xl">🥱</div>
+                <div class="text-xs font-bold mt-1">疲惫</div>
+              </button>
+              <button type="button" onclick="selectMood('emo')" class="mood-btn p-3 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-400 text-center transition-all" data-mood="emo">
+                <div class="text-3xl">🥺</div>
+                <div class="text-xs font-bold mt-1">Emo</div>
+              </button>
+              <button type="button" onclick="selectMood('angry')" class="mood-btn p-3 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-400 text-center transition-all" data-mood="angry">
+                <div class="text-3xl">😤</div>
+                <div class="text-xs font-bold mt-1">暴躁</div>
+              </button>
+            </div>
+
+            <!-- Symptoms Checkboxes -->
+            <label class="block text-xs font-bold text-stone-600 mb-2">今天身体有这些小反应吗？（可多选）</label>
+            <div id="symptoms-group" class="flex flex-wrap gap-2 mb-4 text-xs">
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer">
+                <input type="checkbox" value="痛经/腹胀" class="checkbox-kawaii" />
+                <span>痛经/腹胀 🌸</span>
+              </label>
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer">
+                <input type="checkbox" value="长痘痘" class="checkbox-kawaii" />
+                <span>长痘痘 🩹</span>
+              </label>
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer">
+                <input type="checkbox" value="偏头痛" class="checkbox-kawaii" />
+                <span>偏头痛 🤕</span>
+              </label>
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer">
+                <input type="checkbox" value="精力充沛" class="checkbox-kawaii" />
+                <span>精力充沛 ⚡</span>
+              </label>
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer">
+                <input type="checkbox" value="食欲暴增" class="checkbox-kawaii" />
+                <span>食欲暴增 🍰</span>
+              </label>
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer">
+                <input type="checkbox" value="水肿" class="checkbox-kawaii" />
+                <span>轻微水肿 💦</span>
+              </label>
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer">
+                <input type="checkbox" value="容易犯困" class="checkbox-kawaii" />
+                <span>容易犯困 💤</span>
+              </label>
+            </div>
+
+            <textarea id="mood-input-note" rows="2" placeholder="写一句悄悄话：今天遇到了什么事情触动了你？" class="w-full p-2.5 text-xs border border-stone-200 rounded-xl mb-3"></textarea>
+
+            <button onclick="handleAddMoodSubmit()" class="btn-usagi w-full py-2.5 text-sm font-bold">
+              记录今日心情与症状 📝
+            </button>
+          </div>
+
+          <!-- History Mood Logs -->
+          <div class="glass-card p-5 bg-white/80">
+            <h4 class="font-bold text-stone-800 text-sm mb-3">心情与身体日记流</h4>
+            <div id="mood-history-list" class="space-y-3"></div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             6. TAB: 习惯养成与热力图 (HABIT TRACKER & HEATMAP)
+             ======================================================== -->
+        <div id="tab-habits" class="tab-content hidden space-y-6">
+          <!-- Heatmap Card (GitHub-like) -->
+          <div class="glass-card p-6 bg-white/85">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-black text-stone-800 text-base flex items-center gap-2">
+                <span>🟩</span> <span>习惯达成贡献热力图 (Past 140 Days)</span>
+              </h3>
+              <div class="flex items-center gap-1 text-xs text-stone-500">
+                <span>少</span>
+                <span class="w-3 h-3 rounded-sm bg-[#F1ECE4] inline-block"></span>
+                <span class="w-3 h-3 rounded-sm bg-[#D8F3DC] inline-block"></span>
+                <span class="w-3 h-3 rounded-sm bg-[#95D5B2] inline-block"></span>
+                <span class="w-3 h-3 rounded-sm bg-[#52B788] inline-block"></span>
+                <span class="w-3 h-3 rounded-sm bg-[#2D6A4F] inline-block"></span>
+                <span>多</span>
+              </div>
+            </div>
+            <p class="text-xs text-stone-500 mb-4">每一格绿色都是你自律的印记，连成一片特别有成就感！</p>
+            
+            <div class="overflow-x-auto pb-2">
+              <div id="heatmap-grid" class="flex flex-wrap max-w-full"></div>
+            </div>
+          </div>
+
+          <!-- Habits List & Add New Habit -->
+          <div class="glass-card p-6 bg-white/80">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="font-bold text-stone-800 text-sm">今日习惯打卡清单</h4>
+              <div class="flex items-center gap-2 text-xs">
+                <input id="habit-new-icon" type="text" placeholder="图标(如✨)" class="w-16 p-2 border border-stone-200 rounded-xl text-center" />
+                <input id="habit-new-name" type="text" placeholder="输入新习惯名称..." class="w-48 p-2 border border-stone-200 rounded-xl" />
+                <button onclick="handleAddHabitSubmit()" class="btn-usagi text-xs py-2 px-3">添加习惯</button>
+              </div>
+            </div>
+            <div id="habit-items-container" class="space-y-2.5"></div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             7. TAB: 碎片灵感备忘录 (QUICK NOTES)
+             ======================================================== -->
+        <div id="tab-notes" class="tab-content hidden space-y-6">
+          <div class="glass-card p-5 bg-amber-50/70 border border-amber-200">
+            <h4 class="font-bold text-stone-800 text-sm mb-2 flex items-center gap-2">
+              <span>💡</span> <span>随时随地记下突然冒出来的点子</span>
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2 text-xs">
+              <div class="md:col-span-3">
+                <input id="note-input-title" type="text" placeholder="便签标题（如：新点子、金句、临时灵感）" class="w-full p-2 border border-stone-200 rounded-xl" />
+              </div>
+              <div>
+                <select id="note-input-tag" class="w-full p-2 border border-stone-200 rounded-xl">
+                  <option value="灵感">💡 灵感</option>
+                  <option value="金句">📖 金句</option>
+                  <option value="备忘">📝 备忘</option>
+                  <option value="愿望">🌟 愿望</option>
+                </select>
+              </div>
+            </div>
+            <textarea id="note-input-content" rows="3" placeholder="写下你的想法..." class="w-full p-2.5 text-xs border border-stone-200 rounded-xl mb-2"></textarea>
+            <div class="flex justify-end">
+              <button onclick="handleAddNoteSubmit()" class="btn-usagi text-xs py-2 px-5">保存便签 📌</button>
+            </div>
+          </div>
+
+          <!-- Notes Masonry Grid -->
+          <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- ========================================================
+             8. TAB: 待办清单与倒数日 (TO-DO & COUNTDOWNS)
+             ======================================================== -->
+        <div id="tab-todos" class="tab-content hidden space-y-6">
+          
+          <!-- Countdown Section -->
+          <div class="glass-card p-5 bg-white/80">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+              <div>
+                <h4 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                  <span>⏳</span> <span>重要纪念日 & 倒数天数</span>
+                </h4>
+                <p class="text-xs text-stone-500">考试周、旅行、发薪日、重要纪念日倒数</p>
+              </div>
+
+              <div class="flex items-center gap-2 text-xs">
+                <input id="cd-input-icon" type="text" placeholder="图标" value="🎉" class="w-12 p-2 border border-stone-200 rounded-xl text-center" />
+                <input id="cd-input-title" type="text" placeholder="事件标题(如发薪日)" class="w-32 p-2 border border-stone-200 rounded-xl" />
+                <input id="cd-input-date" type="date" class="p-2 border border-stone-200 rounded-xl" />
+                <button onclick="handleAddCountdownSubmit()" class="btn-usagi text-xs py-2 px-3">添加倒数</button>
+              </div>
+            </div>
+
+            <div id="countdown-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+          </div>
+
+          <!-- To-Do Section -->
+          <div class="glass-card p-5 bg-white/80">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+              <div>
+                <h4 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                  <span>✍️</span> <span>待办核心清单 (To-Do List)</span>
+                </h4>
+                <p class="text-xs text-stone-500">记录今天一定要做的小事</p>
+              </div>
+
+              <div class="flex items-center gap-2 text-xs">
+                <input id="todo-input-text" type="text" placeholder="输入待办事项..." class="w-48 p-2 border border-stone-200 rounded-xl" />
+                <select id="todo-input-pri" class="p-2 border border-stone-200 rounded-xl">
+                  <option value="high">重要 🔥</option>
+                  <option value="medium" selected>适中 ⚡</option>
+                  <option value="low">轻松 🍃</option>
+                </select>
+                <input id="todo-input-due" type="date" class="p-2 border border-stone-200 rounded-xl" />
+                <button onclick="handleAddTodoSubmit()" class="btn-usagi text-xs py-2 px-3">添加任务</button>
+              </div>
+            </div>
+
+            <div id="todo-list-container" class="space-y-2"></div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             9. TAB: 书影音 / 探店 / 购物冷静期 (WATCHLIST & WISHLIST)
+             ======================================================== -->
+        <div id="tab-watchlist" class="tab-content hidden space-y-6">
+          <div class="glass-card p-5 bg-white/80">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+              <div>
+                <h4 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                  <span>🎬</span> <span>书影音 · 探店 · 购物冷静期清单</span>
+                </h4>
+                <p class="text-xs text-stone-500">购物欲清单：记下来冷静三天再决定买不买，帮你省下大笔银子！</p>
+              </div>
+
+              <div class="flex items-center gap-2 text-xs flex-wrap">
+                <select id="wl-input-type" class="p-2 border border-stone-200 rounded-xl">
+                  <option value="movie">🎬 电影/剧集</option>
+                  <option value="food">🍰 探店美食</option>
+                  <option value="cooling_shop">🧊 购物冷静期(3天)</option>
+                </select>
+                <input id="wl-input-title" type="text" placeholder="名称/片名/商品" class="w-36 p-2 border border-stone-200 rounded-xl" />
+                <input id="wl-input-price" type="number" placeholder="价格(RM)" class="w-20 p-2 border border-stone-200 rounded-xl" />
+                <button onclick="handleAddWatchlistSubmit()" class="btn-usagi text-xs py-2 px-3">添加心愿</button>
+              </div>
+            </div>
+
+            <div id="watchlist-items-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             10. TAB: 感恩日记 / 每日高光 (DAILY HIGHLIGHT)
+             ======================================================== -->
+        <div id="tab-highlights" class="tab-content hidden space-y-6">
+          <div class="glass-card p-6 bg-gradient-to-br from-amber-50 via-rose-50 to-pink-50 border border-amber-200">
+            <h3 class="font-black text-stone-800 text-lg mb-1 flex items-center gap-2">
+              <span>✨</span> <span>感恩日记 / 每日高光 (Daily Highlight)</span>
+            </h3>
+            <p class="text-xs text-stone-500 mb-4">睡前用一句话写“今天发生的一件好事”，非常适合提升幸福感与内啡肽！</p>
+
+            <div class="space-y-3">
+              <input id="hl-input-text" type="text" placeholder="今天最开心或最受触动的一件事是..." class="w-full p-3 text-sm border-2 border-amber-200 rounded-2xl bg-white/90" />
+              <input id="hl-input-grat" type="text" placeholder="我想感谢的人或事物（例如：感谢阳光、感谢努力的自己）" class="w-full p-2.5 text-xs border border-amber-200 rounded-xl bg-white/90" />
+              <div class="flex justify-end">
+                <button onclick="handleAddHighlightSubmit()" class="btn-usagi text-xs py-2.5 px-6 font-bold">
+                  存入幸福高光墙 💖
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card p-6 bg-white/80">
+            <h4 class="font-bold text-stone-800 text-sm mb-3">幸福记忆高光墙</h4>
+            <div id="highlights-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             12. TAB: 乌萨奇音乐点歌台 (YOUTUBE MUSIC LOUNGE)
+             ======================================================== -->
+        <div id="tab-music" class="tab-content hidden space-y-6">
+          
+          <!-- Music Banner -->
+          <div class="glass-card p-6 bg-gradient-to-r from-pink-100/90 via-rose-100/80 to-purple-100/80 border-2 border-pink-300 relative overflow-hidden">
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
+              <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-white/90 rounded-2xl flex items-center justify-center text-3xl shadow-sm border border-pink-300 flex-shrink-0">
+                  🎧
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="badge-kawaii bg-pink-400 text-stone-900 text-xs">乌萨奇治愈原声唱片机 🎵</span>
+                    <span class="badge-kawaii bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px]">
+                      <i class="fa-solid fa-compact-disc mr-1"></i> 原声秒播 · 零广告 · 零报错
+                    </span>
+                  </div>
+                  <h2 class="text-2xl font-black text-stone-800 mt-1">乌萨奇音乐点歌台 · 芷萱专属治愈电台</h2>
+                  <p class="text-xs text-stone-600 mt-1">搜索任何想听的歌曲或歌手，一边写手账、一边听浪漫好音乐~ 🌸</p>
+                </div>
+              </div>
+              <div class="text-xs text-stone-600 bg-white/90 px-3.5 py-2.5 rounded-2xl border border-pink-200 shadow-xs flex-shrink-0">
+                <span class="text-stone-400">正在播放：</span>
+                <span id="music-now-playing" class="font-bold text-pink-700">周杰伦 - 告白气球 🎈</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search & Direct Link Bar -->
+          <div class="glass-card p-5 bg-white/90 border border-pink-200 shadow-sm space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1.5 flex items-center justify-between">
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-music text-pink-500"></i> 全网点播与搜索歌曲 / 歌手 (智能检索 · 即点即播)</span>
+                <span class="text-[11px] text-pink-600 font-bold">✨ 输入歌名或歌手，立刻在手账内开播！</span>
+              </label>
+              <div class="flex gap-2">
+                <div class="relative flex-1">
+                  <span class="absolute left-3.5 top-3 text-stone-400 text-sm"><i class="fa-solid fa-magnifying-glass"></i></span>
+                  <input id="music-query-input" type="text" placeholder="输入想听的歌名或歌手，例如: time machine、玻璃、有我呢、城外、小白、郑润泽、周杰伦..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-pink-400 outline-none text-sm transition-all shadow-inner" onkeydown="if(event.key==='Enter') handleSearchMusic()" />
+                </div>
+                <button onclick="handleSearchMusic()" class="btn-usagi px-5 py-2.5 text-xs font-black bg-pink-500 hover:bg-pink-600 text-white border-pink-600 flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow-sm">
+                  <span>点歌播放</span> <i class="fa-solid fa-play"></i>
+                </button>
+              </div>
+
+              <!-- Quick Search Chips -->
+              <div class="flex items-center gap-1.5 flex-wrap pt-2 text-[11px]">
+                <span class="text-stone-400 font-bold">🔥 快捷点播：</span>
+                <button onclick="quickSearch('when it snows sarah kang')" class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold border border-sky-200 cursor-pointer transition-all hover:scale-105">❄️ When It Snows</button>
+                <button onclick="quickSearch('TINY7 浆果')" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold border border-rose-200 cursor-pointer transition-all hover:scale-105">🍓 TINY7 浆果</button>
+                <button onclick="quickSearch('time machine-mj apanay')" class="px-2.5 py-1 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 font-bold border border-pink-200 cursor-pointer transition-all hover:scale-105">⏳ Time Machine</button>
+                <button onclick="quickSearch('玻璃-gareth t')" class="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold border border-purple-200 cursor-pointer transition-all hover:scale-105">🪟 玻璃</button>
+                <button onclick="quickSearch('有我呢-郭一凡')" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold border border-rose-200 cursor-pointer transition-all hover:scale-105">🫂 有我呢</button>
+                <button onclick="quickSearch('城外-郑润泽')" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold border border-amber-200 cursor-pointer transition-all hover:scale-105">🏰 城外</button>
+                <button onclick="quickSearch('小白-郑润泽')" class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 font-bold border border-sky-200 cursor-pointer transition-all hover:scale-105">🤍 小白</button>
+                <button onclick="quickSearch('郑润泽')" class="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-black border border-amber-300 cursor-pointer transition-all hover:scale-105">🎤 郑润泽全集</button>
+                <button onclick="quickSearch('告白气球')" class="px-2.5 py-1 rounded-lg bg-pink-100 hover:bg-pink-200 text-pink-800 font-bold border border-pink-300 cursor-pointer transition-all hover:scale-105">🎈 告白气球</button>
+              </div>
+            </div>
+
+            <!-- Dynamic Search Results Dropdown List -->
+            <div id="music-search-results-box" class="hidden p-4 bg-pink-50/80 rounded-2xl border-2 border-pink-300 space-y-2">
+              <div class="flex items-center justify-between text-xs font-bold text-stone-700">
+                <span class="flex items-center gap-1.5"><span>🎶</span> <span>为你检索到的歌曲（点击直接开播）：</span></span>
+                <span id="search-result-hint" class="text-[11px] text-pink-700 font-bold"></span>
+              </div>
+              <div id="search-results-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"></div>
+            </div>
+
+            <!-- SECTION A: 芷萱心选专属歌单 -->
+            <div class="space-y-2 pt-1 border-t border-pink-100">
+              <div class="text-xs font-black text-pink-800 flex items-center justify-between">
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-heart text-rose-500"></i> 💖 芷萱专属心选 · 必听歌单 (点击立即开播)：</span>
+                <span class="text-[10px] text-pink-600 bg-pink-100 px-2 py-0.5 rounded-full font-bold">芷萱钦点 🎀</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2">
+                <button onclick="playSongById('when_it_snows')" class="p-2.5 rounded-xl bg-sky-100/70 hover:bg-sky-200 border-2 border-sky-300 text-left transition-all text-xs font-bold text-sky-900 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">❄️</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">When It Snows</p>
+                    <p class="text-[10px] text-sky-600 truncate">Sarah Kang & Sam</p>
+                  </div>
+                </button>
+                <button onclick="playSongById('jiangguo_tiny7')" class="p-2.5 rounded-xl bg-rose-100/70 hover:bg-rose-200 border-2 border-rose-300 text-left transition-all text-xs font-bold text-rose-900 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🍓</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">浆果 (Berry)</p>
+                    <p class="text-[10px] text-rose-600 truncate">TINY7</p>
+                  </div>
+                </button>
+                <button onclick="playSongById('time_machine')" class="p-2.5 rounded-xl bg-pink-100/70 hover:bg-pink-200 border-2 border-pink-300 text-left transition-all text-xs font-bold text-pink-900 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">⏳</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">Time Machine</p>
+                    <p class="text-[10px] text-pink-600 truncate">mj apanay</p>
+                  </div>
+                </button>
+                <button onclick="playSongById('boli_gareth')" class="p-2.5 rounded-xl bg-purple-100/70 hover:bg-purple-200 border-2 border-purple-300 text-left transition-all text-xs font-bold text-purple-900 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🪟</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">玻璃 (Glass)</p>
+                    <p class="text-[10px] text-purple-600 truncate">Gareth.T</p>
+                  </div>
+                </button>
+                <button onclick="playSongById('youwone_guoyifan')" class="p-2.5 rounded-xl bg-rose-100/70 hover:bg-rose-200 border-2 border-rose-300 text-left transition-all text-xs font-bold text-rose-900 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🫂</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">有我呢</p>
+                    <p class="text-[10px] text-rose-600 truncate">郭一凡</p>
+                  </div>
+                </button>
+                <button onclick="playSongById('chengwai_zrz')" class="p-2.5 rounded-xl bg-amber-100/70 hover:bg-amber-200 border-2 border-amber-300 text-left transition-all text-xs font-bold text-amber-900 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🏰</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">城外</p>
+                    <p class="text-[10px] text-amber-700 truncate">郑润泽</p>
+                  </div>
+                </button>
+                <button onclick="playSongById('xiaobai_zrz')" class="p-2.5 rounded-xl bg-sky-100/70 hover:bg-sky-200 border-2 border-sky-300 text-left transition-all text-xs font-bold text-sky-900 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🤍</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">小白</p>
+                    <p class="text-[10px] text-sky-700 truncate">郑润泽 / 罗言</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <!-- SECTION B: 郑润泽 专属热门代表作全集 -->
+            <div class="space-y-2 pt-2 border-t border-pink-100">
+              <div class="text-xs font-black text-stone-700 flex items-center justify-between">
+                <span class="flex items-center gap-1.5"><span>🎤</span> <span>郑润泽 专属热门金曲全集（点击任意一首直接开播）：</span></span>
+                <span class="text-[10px] text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full font-bold">19首超全收录 ✨</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+                <button onclick="playSongById('shun_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>✨</span> 瞬 - 郑润泽
+                </button>
+                <button onclick="playSongById('ruguo_ne_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>💭</span> 如果呢 - 郑润泽
+                </button>
+                <button onclick="playSongById('chengwai_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>🏰</span> 城外 - 郑润泽
+                </button>
+                <button onclick="playSongById('xiaobai_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>🤍</span> 小白 - 郑润泽
+                </button>
+                <button onclick="playSongById('xiaxiang_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>🌙</span> 遐想 - 郑润泽
+                </button>
+                <button onclick="playSongById('yuwen_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>☕</span> 余温 - 郑润泽
+                </button>
+                <button onclick="playSongById('date1231_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>🎆</span> 12.31 - 郑润泽
+                </button>
+                <button onclick="playSongById('cheye_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>🌃</span> 彻夜 - 郑润泽
+                </button>
+                <button onclick="playSongById('zhanfang_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>🌸</span> 绽放 - 郑润泽
+                </button>
+                <button onclick="playSongById('guanyuni_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>💌</span> 关于你 - 郑润泽
+                </button>
+                <button onclick="playSongById('xiaoweiguang_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>🌕</span> 小微光 - 郑润泽
+                </button>
+                <button onclick="playSongById('bujian_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>🤝</span> 不见不离开 - 郑润泽
+                </button>
+                <button onclick="playSongById('shikong_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>🛣️</span> 时空街区 - 郑润泽
+                </button>
+                <button onclick="playSongById('jinhuzhou_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>⚡</span> 紧箍咒 - 郑润泽
+                </button>
+                <button onclick="playSongById('lantianqi_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>🌧️</span> 烂天气 - 郑润泽
+                </button>
+                <button onclick="playSongById('xuanlihuohuo_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>✨</span> 绚丽花火 - 郑润泽
+                </button>
+                <button onclick="playSongById('guisu_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>🏠</span> 归宿 - 郑润泽
+                </button>
+                <button onclick="playSongById('pingxingxian_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>🪐</span> 平行线 - 郑润泽
+                </button>
+                <button onclick="playSongById('xuanwo_zrz')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>🌀</span> 旋涡 - 郑润泽
+                </button>
+                <button onclick="playSongById('gaobai_jay')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>🎈</span> 告白气球 - 周杰伦
+                </button>
+                <button onclick="playSongById('qingtian_jay')" class="p-2 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 text-left transition-all text-xs font-bold text-stone-800 truncate cursor-pointer shadow-2xs">
+                  <span>☀️</span> 晴天 - 周杰伦
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Stage: Pure In-Page Native Kawaii Turntable Music Lounge -->
+          <div class="glass-card p-5 sm:p-7 bg-white/95 border-2 border-pink-300 shadow-md">
+            
+            <!-- Turntable Player Header & Status -->
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-pink-100 pb-3 mb-5">
+              <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-full bg-pink-100 text-rose-600 flex items-center justify-center font-bold text-sm">🎵</span>
+                <div>
+                  <h3 class="font-black text-stone-800 text-base">芷萱的治愈原声唱片机 🌸</h3>
+                  <p class="text-xs text-stone-500">页面原生秒播 · 零广告 · 零报错 · 支持自动连播与本地歌曲导入</p>
+                </div>
+              </div>
+              <!-- Play Mode Toggle & Song Status Badge -->
+              <div class="flex items-center gap-2 flex-wrap">
+                <button id="btn-play-mode" onclick="togglePlayMode()" class="px-3.5 py-1.5 rounded-xl text-xs font-black transition-all bg-pink-100 hover:bg-pink-200 text-pink-700 border border-pink-300 cursor-pointer shadow-xs flex items-center gap-1.5" title="切换播放模式">
+                  <i class="fa-solid fa-repeat"></i> <span id="play-mode-label">🔁 列表自动连播</span>
+                </button>
+                <span class="badge-kawaii bg-emerald-100 text-emerald-800 text-xs font-bold py-1 px-3">
+                  <i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> 全部歌曲 MP3 已全量内置 · 完整无删减
+                </span>
+              </div>
+            </div>
+
+            <!-- Native Usagi Vinyl Turntable Player Stage -->
+            <div id="player-view-native" class="space-y-4">
+              <div class="flex flex-col md:flex-row items-center gap-6 p-4 sm:p-6 bg-gradient-to-br from-pink-50/80 via-rose-50/60 to-amber-50/70 rounded-3xl border-2 border-pink-200 relative overflow-hidden">
+                
+                <!-- Spinning Vinyl Record Animation -->
+                <div class="relative flex-shrink-0">
+                  <div id="vinyl-disc-wrapper" class="w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-stone-900 border-4 border-stone-800 shadow-xl flex items-center justify-center vinyl-disc vinyl-paused relative">
+                    <!-- Vinyl Grooves -->
+                    <div class="absolute inset-2 rounded-full border border-stone-700/40"></div>
+                    <div class="absolute inset-5 rounded-full border border-stone-700/40"></div>
+                    <div class="absolute inset-8 rounded-full border border-stone-700/40"></div>
+                    <!-- Center Album Artwork -->
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-pink-300 shadow-md relative z-10 bg-white">
+                      <img id="player-album-art" src="https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/b7/e8/1b/b7e81b59-e9ae-e47b-a30e-58b595dae7e3/165314330-.jpg/100x100bb.jpg" alt="专辑封面" class="w-full h-full object-cover" />
+                    </div>
+                  </div>
+                  <!-- Turntable Needle -->
+                  <div class="absolute -top-1 -right-1 text-2xl transform rotate-12 drop-shadow-md">
+                    🥕
+                  </div>
+                </div>
+
+                <!-- Song Information & Visualizer -->
+                <div class="flex-1 w-full text-center md:text-left space-y-2">
+                  <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                    <span id="player-badge-status" class="badge-kawaii bg-stone-100 text-stone-600 text-[11px]">
+                      <i class="fa-solid fa-circle-pause mr-1 text-stone-500"></i> 已就绪
+                    </span>
+                    <span class="badge-kawaii bg-pink-100 text-pink-700 text-[11px]">
+                      <i class="fa-solid fa-heart mr-1 text-rose-500"></i> 颜芷萱专属电台
+                    </span>
+                    <span class="badge-kawaii bg-amber-100 text-amber-800 text-[11px]">
+                      <i class="fa-solid fa-compact-disc mr-1 text-amber-600"></i> 100% 完整原声 · 3~5分钟全长
+                    </span>
+                  </div>
+
+                  <h3 id="player-track-name" class="text-xl sm:text-2xl font-black text-stone-800 leading-snug">
+                    郑润泽 - 城外 🏰
+                  </h3>
+                  <p id="player-artist-name" class="text-xs sm:text-sm font-bold text-pink-600">
+                    郑润泽 · 原生真声高保真输出
+                  </p>
+
+                  <!-- Dancing Equalizer Bars -->
+                  <div class="flex items-center justify-center md:justify-start gap-1.5 h-7 py-1">
+                    <span class="w-1.5 bg-pink-400 rounded-full eq-bar"></span>
+                    <span class="w-1.5 bg-rose-400 rounded-full eq-bar"></span>
+                    <span class="w-1.5 bg-amber-400 rounded-full eq-bar"></span>
+                    <span class="w-1.5 bg-pink-500 rounded-full eq-bar"></span>
+                    <span class="w-1.5 bg-rose-500 rounded-full eq-bar"></span>
+                    <span class="text-[11px] font-bold text-stone-400 ml-2">原生立体声输出 · 零广告 · 零报错</span>
+                  </div>
+
+                  <!-- Native HTML5 Audio Player Controller -->
+                  <div class="w-full pt-1 space-y-2.5">
+                    <audio id="usagi-audio-engine"
+                      class="w-full h-11 rounded-2xl shadow-inner border border-pink-200 bg-white/90 outline-none"
+                      controls
+                      preload="auto"
+                      src="song_chengwai.mp3">
+                    </audio>
+
+                    <!-- Player Extra Controls Bar: Prev, Play/Pause, Next -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-2xl bg-white/90 border border-pink-200 shadow-xs">
+                      <div class="flex items-center gap-2">
+                        <button onclick="playPrevSong()" class="btn-usagi px-3 py-1.5 text-xs font-bold bg-white hover:bg-pink-100 text-stone-700 border border-pink-200 shadow-xs" title="上一首">
+                          <i class="fa-solid fa-backward-step mr-1"></i> 上一首
+                        </button>
+                        <button onclick="toggleAudioPlay()" id="btn-toggle-play" class="btn-usagi px-4 py-1.5 text-xs font-black bg-gradient-to-r from-pink-400 to-rose-400 text-white border border-pink-500 shadow-xs" title="播放/暂停">
+                          <i class="fa-solid fa-play mr-1"></i> 播放
+                        </button>
+                        <button onclick="playNextSong()" class="btn-usagi px-3 py-1.5 text-xs font-bold bg-white hover:bg-pink-100 text-stone-700 border border-pink-200 shadow-xs" title="下一首">
+                          下一首 <i class="fa-solid fa-forward-step ml-1"></i>
+                        </button>
+                      </div>
+                      <span class="text-[11px] text-pink-600 font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-music"></i> 正在播放时，右下角乌萨奇会跟着节奏快乐跳舞哦！💃🐰
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Caring Music Guide Tip -->
+            <div class="mt-4 p-3.5 bg-gradient-to-r from-pink-50/80 via-rose-50/70 to-amber-50/80 rounded-2xl border border-pink-200 flex items-start gap-3 text-xs text-stone-600 leading-relaxed shadow-xs">
+              <span class="text-xl text-pink-500 flex-shrink-0">💖</span>
+              <div class="space-y-1">
+                <p class="font-black text-stone-800">
+                  芷萱专属音乐厅说明：
+                </p>
+                <p>
+                  全部 26 首热门歌曲的<strong>【完整 MP3 文件】已全量直接导入内置</strong>！点击任意歌曲即可秒播 3~5 分钟完整原声，无删减、零报错、零广告，歌曲播放完毕后会自动连播下一首~ 🌸🎶
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========================================================
+             12. TAB: KAWAII GAMES ARCADE (芷萱治愈游乐园)
+             ======================================================== -->
+        <div id="tab-games" class="tab-content hidden space-y-6">
+          
+          <!-- Arcade Header Banner -->
+          <div class="glass-card p-6 bg-gradient-to-r from-pink-300/85 via-rose-200/80 to-amber-200/75 border-2 border-pink-300 relative overflow-hidden shadow-md">
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
+              <div class="flex items-center gap-4 text-center md:text-left">
+                <div class="w-16 h-16 rounded-2xl bg-white/95 border-2 border-pink-300 flex items-center justify-center text-3xl shadow-sm flex-shrink-0 animate-bounce">
+                  🎮
+                </div>
+                <div>
+                  <div class="flex items-center justify-center md:justify-start gap-2 flex-wrap">
+                    <span class="badge-kawaii bg-rose-500 text-white text-xs font-black">
+                      <i class="fa-solid fa-gamepad mr-1"></i> 专属解压小游戏馆 · 畅玩不无聊 🌸
+                    </span>
+                    <span class="badge-kawaii bg-amber-400 text-amber-950 text-xs font-black">
+                      异地解闷神器 💖
+                    </span>
+                  </div>
+                  <h2 class="text-2xl font-black text-stone-800 mt-1">芷萱的治愈游乐园 🎪✨</h2>
+                  <p class="text-xs sm:text-sm text-stone-700 mt-0.5 font-medium">这里是专为你定制的解闷小天地，随时随地开启好心情，乌萨奇和男朋友一直陪着你哦！</p>
+                </div>
+              </div>
+
+              <!-- Quick Stats / Happiness Badge -->
+              <div class="bg-white/90 px-4 py-2.5 rounded-2xl border border-pink-200 shadow-xs flex items-center gap-3">
+                <div class="text-right">
+                  <p class="text-[10px] font-bold text-stone-500">今日积攒快乐值</p>
+                  <p id="arcade-total-happiness" class="text-lg font-black text-rose-600">888 🌸</p>
+                </div>
+                <span class="text-3xl animate-pulse">🍓</span>
+              </div>
+            </div>
+            <!-- Decorative Backdrop Graphic -->
+            <div class="absolute -right-6 -bottom-6 text-9xl opacity-10 select-none pointer-events-none">🎪</div>
+          </div>
+
+          <!-- Mini-Games Navigation Pills -->
+          <div class="glass-card p-2.5 bg-white/90 border border-pink-200 shadow-xs flex items-center gap-2 overflow-x-auto no-scrollbar">
+            <button onclick="switchGameSubtab('fruit')" id="game-btn-fruit" class="game-subtab-btn active px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 whitespace-nowrap bg-rose-500 text-white shadow-xs">
+              <span>🍓</span> <span>接水果大作战</span>
+            </button>
+            <button onclick="switchGameSubtab('memory')" id="game-btn-memory" class="game-subtab-btn px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 whitespace-nowrap bg-pink-50 hover:bg-pink-100 text-stone-700 border border-pink-200">
+              <span>💖</span> <span>心有灵犀翻翻乐</span>
+            </button>
+            <button onclick="switchGameSubtab('fish')" id="game-btn-fish" class="game-subtab-btn px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 whitespace-nowrap bg-pink-50 hover:bg-pink-100 text-stone-700 border border-pink-200">
+              <span>🪵</span> <span>敲木鱼解压机</span>
+            </button>
+            <button onclick="switchGameSubtab('gacha')" id="game-btn-gacha" class="game-subtab-btn px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 whitespace-nowrap bg-pink-50 hover:bg-pink-100 text-stone-700 border border-pink-200">
+              <span>🎁</span> <span>心动盲盒扭蛋机</span>
+            </button>
+            <button onclick="switchGameSubtab('whack')" id="game-btn-whack" class="game-subtab-btn px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 whitespace-nowrap bg-pink-50 hover:bg-pink-100 text-stone-700 border border-pink-200">
+              <span>🔨</span> <span>把不开心统统敲飞</span>
+            </button>
+          </div>
+
+          <!-- ==========================================
+               GAME 1: 🍓 乌萨奇接草莓与胡萝卜大作战
+               ========================================== -->
+          <div id="game-view-fruit" class="game-panel glass-card p-5 sm:p-7 bg-white/95 border-2 border-pink-300 shadow-md space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-pink-100 pb-3">
+              <div>
+                <h3 class="font-black text-stone-800 text-base flex items-center gap-2">
+                  <span>🍓</span> 乌萨奇接水果大作战
+                </h3>
+                <p class="text-xs text-stone-500">左右移动乌萨奇接住草莓、胡萝卜与爱心，避开乌云闪电！</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="badge-kawaii bg-pink-100 text-pink-700 text-xs font-bold py-1 px-3">
+                  🏆 最高纪录: <span id="fruit-high-score">0</span>
+                </span>
+                <button id="btn-start-fruit-game" onclick="FruitGame.start()" class="btn-usagi px-4 py-1.5 text-xs font-bold shadow-xs">
+                  <i class="fa-solid fa-play mr-1"></i> 开始挑战
+                </button>
+              </div>
+            </div>
+
+            <!-- Scoreboard -->
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div class="p-2.5 rounded-2xl bg-pink-50 border border-pink-200">
+                <p class="text-[11px] font-bold text-stone-500">当前得分 🍓</p>
+                <p id="fruit-current-score" class="text-xl font-black text-rose-600">0</p>
+              </div>
+              <div class="p-2.5 rounded-2xl bg-amber-50 border border-amber-200">
+                <p class="text-[11px] font-bold text-stone-500">连击数 Combo 🔥</p>
+                <p id="fruit-combo" class="text-xl font-black text-amber-600">0</p>
+              </div>
+              <div class="p-2.5 rounded-2xl bg-emerald-50 border border-emerald-200">
+                <p class="text-[11px] font-bold text-stone-500">倒计时 ⏱️</p>
+                <p id="fruit-timer" class="text-xl font-black text-emerald-600">60s</p>
+              </div>
+            </div>
+
+            <!-- Canvas Arena -->
+            <div class="relative w-full flex justify-center">
+              <canvas id="fruit-canvas" width="560" height="380" class="w-full max-w-[560px] h-[320px] sm:h-[380px] bg-gradient-to-b from-sky-100 via-rose-50 to-pink-100 rounded-3xl border-2 border-pink-300 shadow-inner block cursor-crosshair touch-none"></canvas>
+              
+              <!-- Start / Game Over Overlay -->
+              <div id="fruit-overlay" class="absolute inset-0 max-w-[560px] mx-auto rounded-3xl bg-stone-900/60 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-white text-center space-y-3">
+                <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-4xl animate-bounce">
+                  🍓
+                </div>
+                <h4 id="fruit-overlay-title" class="text-xl font-black text-amber-300">接水果大作战！准备好啦吗？</h4>
+                <p id="fruit-overlay-desc" class="text-xs text-stone-200 max-w-xs leading-relaxed">
+                  使用【鼠标滑动】、【手指触屏拖拽】或【键盘左右方向键 ← →】控制乌萨奇！
+                </p>
+                <button onclick="FruitGame.start()" class="btn-usagi px-6 py-2.5 text-sm font-black shadow-lg">
+                  🎮 立即开始游戏！
+                </button>
+              </div>
+            </div>
+
+            <!-- Fruit Rules Tip -->
+            <div class="flex flex-wrap items-center justify-center gap-4 text-xs font-bold text-stone-600 pt-1">
+              <span>🍓 浆果 +10分</span>
+              <span>🥕 胡萝卜 +15分</span>
+              <span>💖 专属爱心 +30分</span>
+              <span>⭐ 幸运星 +50分</span>
+              <span class="text-rose-600">⛈️ 闪电 -15分 (要躲开哦)</span>
+            </div>
+          </div>
+
+          <!-- ==========================================
+               GAME 2: 💖 异地恋心有灵犀 · 翻翻乐
+               ========================================== -->
+          <div id="game-view-memory" class="game-panel hidden glass-card p-5 sm:p-7 bg-white/95 border-2 border-pink-300 shadow-md space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-pink-100 pb-3">
+              <div>
+                <h3 class="font-black text-stone-800 text-base flex items-center gap-2">
+                  <span>💖</span> 异地恋心有灵犀 · 翻翻乐
+                </h3>
+                <p class="text-xs text-stone-500">翻开卡片寻找成对的专属恋爱记忆，测测你和男朋友的默契值！</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="badge-kawaii bg-pink-100 text-pink-700 text-xs font-bold py-1 px-3">
+                  步数: <span id="memory-moves">0</span> 次
+                </span>
+                <span class="badge-kawaii bg-amber-100 text-amber-800 text-xs font-bold py-1 px-3">
+                  用时: <span id="memory-timer">00:00</span>
+                </span>
+                <button onclick="MemoryGame.init()" class="btn-secondary px-3 py-1.5 text-xs font-bold">
+                  <i class="fa-solid fa-rotate-right mr-1"></i> 重新发牌
+                </button>
+              </div>
+            </div>
+
+            <!-- 4x4 Grid (16 Cards) -->
+            <div id="memory-game-grid" class="memory-grid py-2">
+              <!-- Dynamically populated via JS -->
+            </div>
+
+            <!-- Result Box -->
+            <div id="memory-win-box" class="hidden p-4 rounded-2xl bg-gradient-to-r from-pink-100 via-rose-100 to-amber-100 border-2 border-pink-300 text-center space-y-2">
+              <span class="text-3xl animate-bounce inline-block">🎉</span>
+              <h4 class="text-base font-black text-rose-700">心有灵犀特级默契证书！💖</h4>
+              <p id="memory-win-msg" class="text-xs text-stone-700 font-medium"></p>
+            </div>
+          </div>
+
+          <!-- ==========================================
+               GAME 3: 🪵 敲木鱼乌萨奇 · 烦恼功德解压机
+               ========================================== -->
+          <div id="game-view-fish" class="game-panel hidden glass-card p-5 sm:p-7 bg-white/95 border-2 border-pink-300 shadow-md space-y-5 text-center">
+            <div class="border-b border-pink-100 pb-3 flex flex-wrap items-center justify-between gap-3 text-left">
+              <div>
+                <h3 class="font-black text-stone-800 text-base flex items-center gap-2">
+                  <span>🪵</span> 敲木鱼乌萨奇 · 烦恼功德解压机
+                </h3>
+                <p class="text-xs text-stone-500">点击小木鱼，烦恼全消散，积攒快乐值与好运！有声音效超解压~</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button id="btn-auto-fish" onclick="WoodenFishGame.toggleAuto()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-pink-100 hover:bg-pink-200 text-pink-700 border border-pink-300 cursor-pointer shadow-xs transition-all">
+                  <span id="auto-fish-icon">🧘</span> <span id="auto-fish-text">自动敲击</span>
+                </button>
+                <button onclick="WoodenFishGame.reset()" class="text-xs text-stone-400 hover:text-stone-600 underline">
+                  清零
+                </button>
+              </div>
+            </div>
+
+            <!-- Happiness Score Display -->
+            <div class="py-2">
+              <p class="text-xs font-bold text-stone-500">芷萱今日积攒快乐功德</p>
+              <div class="text-4xl sm:text-5xl font-black text-rose-600 tracking-tight mt-1">
+                <span id="fish-total-count">0</span> <span class="text-2xl font-bold">🌸</span>
+              </div>
+              <p id="fish-combo-label" class="text-xs font-bold text-amber-600 mt-1 h-5">点击木鱼开启今日好运！</p>
+            </div>
+
+            <!-- Big Interactive Wooden Fish Button -->
+            <div class="relative w-64 h-56 mx-auto flex items-center justify-center">
+              <div id="merit-floating-container" class="absolute inset-0 pointer-events-none"></div>
+              
+              <button id="wooden-fish-btn" onclick="WoodenFishGame.knock(event)" class="group w-48 h-48 rounded-full bg-gradient-to-br from-amber-100 via-pink-100 to-rose-200 border-4 border-amber-300 shadow-xl flex flex-col items-center justify-center active:scale-95 transition-transform cursor-pointer relative overflow-hidden select-none outline-none">
+                <span class="text-6xl group-hover:scale-110 transition-transform">🪵</span>
+                <span class="text-xs font-black text-amber-900 mt-2 bg-white/80 px-3 py-1 rounded-full border border-amber-300 shadow-xs">
+                  敲一下 · 咚~
+                </span>
+                <div class="absolute -right-2 -bottom-2 text-4xl opacity-30">🐰</div>
+              </button>
+            </div>
+
+            <p class="text-xs text-stone-400">
+              💡 提示：也可以直接按键盘【空格键 Space】连续敲击哦！
+            </p>
+          </div>
+
+          <!-- ==========================================
+               GAME 4: 🎁 心动盲盒扭蛋机 · 男友专属特权兑换券
+               ========================================== -->
+          <div id="game-view-gacha" class="game-panel hidden glass-card p-5 sm:p-7 bg-white/95 border-2 border-pink-300 shadow-md space-y-5">
+            <div class="border-b border-pink-100 pb-3 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h3 class="font-black text-stone-800 text-base flex items-center gap-2">
+                  <span>🎁</span> 心动盲盒扭蛋机 · 男友特权兑换券
+                </h3>
+                <p class="text-xs text-stone-500">投入心动币即可扭出一颗惊喜扭蛋，抽取真实有效的专属恋爱特权卡！</p>
+              </div>
+              <span class="badge-kawaii bg-rose-100 text-rose-700 text-xs font-bold py-1 px-3">
+                🪙 心动币: 无限供应 · 芷萱专属
+              </span>
+            </div>
+
+            <!-- Gachapon Arena -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+              <!-- Gachapon Machine Visual -->
+              <div class="md:col-span-5 text-center p-6 bg-gradient-to-b from-pink-100 via-rose-50 to-amber-50 rounded-3xl border-2 border-pink-300 shadow-sm space-y-4">
+                <div id="gacha-machine-body" class="w-40 h-44 mx-auto bg-gradient-to-b from-rose-400 to-pink-500 rounded-3xl border-4 border-rose-300 shadow-lg p-3 relative flex flex-col items-center justify-between">
+                  <!-- Glass Dome with Floating Balls -->
+                  <div class="w-full h-24 bg-white/70 backdrop-blur-xs rounded-2xl border-2 border-white/80 shadow-inner flex items-center justify-center gap-1.5 flex-wrap overflow-hidden p-1">
+                    <span class="text-2xl animate-bounce">🔴</span>
+                    <span class="text-2xl animate-pulse">🟡</span>
+                    <span class="text-2xl animate-bounce">🟣</span>
+                    <span class="text-2xl animate-pulse">🟢</span>
+                    <span class="text-2xl animate-bounce">🔵</span>
+                  </div>
+                  <!-- Turning Crank Handle -->
+                  <div class="w-12 h-12 rounded-full bg-amber-300 border-2 border-amber-500 shadow-md flex items-center justify-center text-xl cursor-pointer hover:rotate-180 transition-transform">
+                    ⚙️
+                  </div>
+                </div>
+
+                <button id="btn-spin-gacha" onclick="GachaGame.spin()" class="btn-usagi px-6 py-2.5 text-sm font-black shadow-md w-full max-w-xs">
+                  <span>🪙 投入心动币 · 扭一扭！</span>
+                </button>
+              </div>
+
+              <!-- Unlocked Voucher Showcase -->
+              <div class="md:col-span-7 space-y-3">
+                <h4 class="text-xs font-black text-stone-600 flex items-center justify-between">
+                  <span>✨ 刚刚开出的特权兑换券：</span>
+                  <span id="gacha-total-unlocked" class="text-rose-600">已解锁 0 / 8 张</span>
+                </h4>
+
+                <div id="gacha-latest-card" class="voucher-card p-5 shadow-sm space-y-2 border-2 border-dashed border-rose-400">
+                  <div class="flex items-center justify-between">
+                    <span id="voucher-code" class="text-[10px] font-mono font-bold text-stone-400">NO. LOVE-2026</span>
+                    <span id="voucher-tag" class="badge-kawaii bg-rose-500 text-white text-[10px]">特权兑现中</span>
+                  </div>
+                  <h5 id="voucher-title" class="text-base font-black text-stone-800">
+                    快点击左侧【扭一扭】抽取心愿特权！
+                  </h5>
+                  <p id="voucher-desc" class="text-xs text-stone-600 leading-relaxed">
+                    抽出的所有特权卡男友均承诺 100% 兑现，包括机票见面、大餐任选、秒回哄睡等超甜特权哦~ 💖
+                  </p>
+                  <div class="pt-2 flex items-center gap-2">
+                    <button onclick="GachaGame.claimVoucher()" class="btn-usagi px-3.5 py-1.5 text-xs font-bold shadow-xs">
+                      💌 截图向男友兑现
+                    </button>
+                    <button onclick="GachaGame.toggleWallet()" class="btn-secondary px-3 py-1.5 text-xs font-bold">
+                      查看我的卡券包 📂
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Unlocked Vouchers Wallet List -->
+                <div id="gacha-wallet-list" class="max-h-48 overflow-y-auto space-y-2 pr-1 hidden">
+                  <!-- Populated via JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==========================================
+               GAME 5: 🔨 乌萨奇打地鼠 · 把不开心统统敲飞
+               ========================================== -->
+          <div id="game-view-whack" class="game-panel hidden glass-card p-5 sm:p-7 bg-white/95 border-2 border-pink-300 shadow-md space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-pink-100 pb-3">
+              <div>
+                <h3 class="font-black text-stone-800 text-base flex items-center gap-2">
+                  <span>🔨</span> 乌萨奇打地鼠 · 把不开心统统敲飞
+                </h3>
+                <p class="text-xs text-stone-500">点击冒出来的焦虑、疲惫和Emo负能量！手速要快，但千万别敲到可爱的乌萨奇哦！</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="badge-kawaii bg-pink-100 text-pink-700 text-xs font-bold py-1 px-3">
+                  得分: <span id="whack-score">0</span>
+                </span>
+                <span class="badge-kawaii bg-amber-100 text-amber-800 text-xs font-bold py-1 px-3">
+                  时间: <span id="whack-timer">30s</span>
+                </span>
+                <button id="btn-whack-start" onclick="WhackGame.start()" class="btn-usagi px-4 py-1.5 text-xs font-bold shadow-xs">
+                  <i class="fa-solid fa-play mr-1"></i> 开始敲击
+                </button>
+              </div>
+            </div>
+
+            <!-- 3x3 Grid (9 Holes) -->
+            <div id="whack-grid" class="mole-grid py-2">
+              <!-- Dynamically populated via JS -->
+            </div>
+
+            <div class="text-center text-xs text-stone-400">
+              💡 规则：敲飞【负能量怪】+10分；误敲【乌萨奇 🐰】-5分！限时30秒全力发泄吧！
+            </div>
+          </div>
+
+        </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL: CALENDAR DAY DETAIL & ENTRY EDITOR
+         ======================================================== -->
+    <div id="calendar-day-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm hidden modal-overlay">
+      <div class="modal-content glass-card max-w-lg w-full p-6 relative bg-white/95 border-4 border-amber-300 max-h-[90vh] overflow-y-auto">
+        
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-stone-200 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">📅</span>
+            <div>
+              <h3 id="cal-modal-date-display" class="font-black text-stone-800 text-lg">手账与日程记录</h3>
+              <p class="text-xs text-stone-500">为这一天留下记录或添加待办事项</p>
+            </div>
+          </div>
+          <button onclick="USAGI_APP.closeCalendarDayModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center text-sm transition-all" title="关闭">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Day Summary (Expenses, Period) -->
+        <div class="bg-amber-50/70 p-3 rounded-2xl border border-amber-200 mb-4 flex items-center justify-between flex-wrap gap-2">
+          <div class="text-xs flex items-center gap-2 flex-wrap">
+            <span class="font-bold text-stone-700">当日账目支出:</span>
+            <span id="cal-modal-day-expenses"></span>
+          </div>
+          <button onclick="USAGI_APP.switchTab('expense'); USAGI_APP.closeCalendarDayModal();" class="text-xs text-amber-700 font-bold hover:underline">
+            去记一笔 💸
+          </button>
+        </div>
+
+        <!-- Events List on this Date -->
+        <div class="mb-5">
+          <h4 class="font-bold text-stone-800 text-xs mb-2 flex items-center justify-between">
+            <span>当日日程与随笔备忘</span>
+            <span class="text-stone-400 font-normal">勾选即可标记完成</span>
+          </h4>
+          <div id="cal-modal-events-list" class="space-y-2"></div>
+        </div>
+
+        <!-- Add New Event / Memo Form -->
+        <div class="bg-stone-50/90 p-4 rounded-2xl border border-stone-200">
+          <h4 class="font-bold text-stone-800 text-xs mb-2.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-plus-circle text-amber-500"></i>
+            <span>在这天记一笔新日程 / 随笔日记</span>
+          </h4>
+
+          <input type="hidden" id="cal-new-date" />
+
+          <div class="space-y-2.5 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div class="sm:col-span-2">
+                <input id="cal-new-title" type="text" placeholder="事项标题（如：看演出、背单词、闺蜜约饭）" class="w-full p-2 border border-stone-200 rounded-xl focus:border-amber-400 outline-none" />
+              </div>
+              <div>
+                <select id="cal-new-category" class="w-full p-2 border border-stone-200 rounded-xl focus:border-amber-400 outline-none">
+                  <option value="生活">🌱 生活日常</option>
+                  <option value="待办">📌 核心待办</option>
+                  <option value="约会">☕ 聚会约会</option>
+                  <option value="纪念日">🎂 纪念生日</option>
+                  <option value="出行">✈️ 旅行出行</option>
+                  <option value="学习">📖 学习考试</option>
+                  <option value="健康">💊 身体健康</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] font-bold text-stone-500 mb-1">具体时间 (可选)</label>
+                <input id="cal-new-time" type="time" class="w-full p-2 border border-stone-200 rounded-xl focus:border-amber-400 outline-none" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-stone-500 mb-1">颜色标签</label>
+                <select id="cal-new-color" class="w-full p-2 border border-stone-200 rounded-xl focus:border-amber-400 outline-none">
+                  <option value="amber">💛 暖阳黄 (Amber)</option>
+                  <option value="pink">💖 樱花粉 (Pink)</option>
+                  <option value="emerald">💚 抹茶绿 (Emerald)</option>
+                  <option value="blue">💙 天空蓝 (Blue)</option>
+                  <option value="purple">💜 薰衣紫 (Purple)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <textarea id="cal-new-content" rows="2" placeholder="写一句详细备忘、心情随笔或日记..." class="w-full p-2 border border-stone-200 rounded-xl focus:border-amber-400 outline-none"></textarea>
+            </div>
+
+            <div class="flex justify-end pt-1">
+              <button onclick="handleAddCalendarEventSubmit()" class="btn-usagi py-2 px-5 text-xs font-bold">
+                保存到这一天 🥕
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL: CLOUD DATABASE CONNECTION (SUPABASE)
+         ======================================================== -->
+    <div id="modal-cloud-db" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm hidden modal-overlay">
+      <div class="modal-content glass-card max-w-lg w-full p-6 relative bg-white/95 border-4 border-amber-300 max-h-[90vh] overflow-y-auto">
+        
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-stone-200 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">☁️</span>
+            <div>
+              <h3 class="font-black text-stone-800 text-lg">云端数据库设置与跨端同步</h3>
+              <p class="text-xs text-stone-500">连接 Supabase 免费云数据库，手机与电脑实时互通</p>
+            </div>
+          </div>
+          <button onclick="closeCloudDbModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center text-sm transition-all" title="关闭">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Mode Explanation -->
+        <div class="space-y-3 mb-5 text-xs text-stone-600">
+          <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200">
+            <div class="font-bold text-amber-900 text-sm mb-1 flex items-center gap-1.5">
+              <span>💡 两种数据存储模式说明：</span>
+            </div>
+            <p class="leading-relaxed">
+              <strong>1. 默认本地模式：</strong>无需任何配置，数据直接保存在当前设备/浏览器内，100% 隐私安全、离线可用。<br />
+              <strong>2. 云端数据库模式 (Supabase)：</strong>配置免费的 Supabase 后，每次记账、记录经期与日程都会<strong>秒速自动备份同步到云端</strong>，换手机或换电脑登录同一账号即可查看所有数据！
+            </p>
+          </div>
+        </div>
+
+        <!-- Supabase Config Form -->
+        <div class="space-y-3.5 mb-5 text-xs">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Supabase Project URL (项目网址)</label>
+            <input id="cloud-input-url" type="text" value="https://rlbovlevaddvbuchsxwz.supabase.co" placeholder="https://xxxxxxxx.supabase.co" class="w-full p-2.5 border border-stone-200 rounded-xl focus:border-amber-400 outline-none font-mono text-xs" />
+          </div>
+
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Supabase Anon Public API Key (公钥)</label>
+            <input id="cloud-input-key" type="text" value="sb_publishable_v-jwAI5rZT3nq_kHRfHv5Q_8CdXbbjz" placeholder="sb_publishable_..." class="w-full p-2.5 border border-stone-200 rounded-xl focus:border-amber-400 outline-none font-mono text-xs" />
+          </div>
+
+          <div class="flex items-center gap-2 pt-1">
+            <button onclick="handleSaveCloudConfig()" class="btn-usagi flex-1 py-2.5 text-xs font-bold">
+              保存配置并连接云端 🥕
+            </button>
+            <button onclick="handleClearCloudConfig()" class="btn-secondary py-2.5 text-xs">
+              重置为本地模式
+            </button>
+          </div>
+        </div>
+
+        <!-- Cloud Actions (Sync, Pull) -->
+        <div class="p-3.5 bg-stone-50 rounded-2xl border border-stone-200 space-y-2 mb-4">
+          <div class="font-bold text-stone-800 text-xs">⚡ 双向数据同步操作</div>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <button onclick="handleSyncToCloud()" class="py-2 px-3 rounded-xl bg-amber-100 hover:bg-amber-200 font-bold text-amber-900 border border-amber-300 transition-all flex items-center justify-center gap-1">
+              <i class="fa-solid fa-cloud-arrow-up"></i> 推送本地到云端
+            </button>
+            <button onclick="handlePullFromCloud()" class="py-2 px-3 rounded-xl bg-blue-100 hover:bg-blue-200 font-bold text-blue-900 border border-blue-300 transition-all flex items-center justify-center gap-1">
+              <i class="fa-solid fa-cloud-arrow-down"></i> 从云端拉取到本地
+            </button>
+          </div>
+        </div>
+
+        <!-- 1-Minute Tutorial Accordion -->
+        <details class="text-xs text-stone-500 bg-amber-50/50 p-3 rounded-2xl border border-amber-200">
+          <summary class="font-bold text-amber-900 cursor-pointer">
+            📖 怎么免费注册并获取 Supabase 密钥？(点击展开教程)
+          </summary>
+          <div class="mt-2.5 space-y-2 text-stone-600 leading-relaxed">
+            <p>1. 打开 <a href="https://supabase.com" target="_blank" class="text-amber-700 font-bold underline">supabase.com</a> 免费注册一个账号并点击 <strong>New Project</strong>。</p>
+            <p>2. 在左侧菜单点击 <strong>SQL Editor</strong>，点击 <strong>New query</strong>，将项目根目录下的 <code>database.sql</code> 内容全选复制粘贴进去，点击 <strong>Run</strong> 执行建表。</p>
+            <p>3. 在左侧菜单点击 <strong>Project Settings -> API</strong>，复制 <strong>Project URL</strong> 和 <strong>anon public key</strong>，粘贴到上方输入框保存即可！</p>
+          </div>
+        </details>
+
+      </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL: EXCEL EXPORT (导出月度/全年手账与财务 Excel 表格)
+         ======================================================== -->
+    <div id="modal-export-excel" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm hidden modal-overlay">
+      <div class="modal-content glass-card max-w-md w-full p-6 relative bg-white/95 border-4 border-amber-300 shadow-xl">
+        
+        <div class="flex items-center justify-between border-b border-stone-200 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">📊</span>
+            <div>
+              <h3 class="font-black text-stone-800 text-lg">导出 Excel 报表</h3>
+              <p class="text-xs text-stone-500">自由选择任意单月或全年总览数据</p>
+            </div>
+          </div>
+          <button onclick="closeExportExcelModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center text-sm transition-all" title="关闭">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="space-y-4 text-xs">
+          <!-- Year Selection -->
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">选择/输入年份</label>
+            <div class="flex items-center gap-2">
+              <input id="excel-export-year" type="number" min="1970" max="2099" class="w-28 p-2.5 border-2 border-stone-200 focus:border-amber-400 rounded-xl font-bold font-mono outline-none text-sm text-center" />
+              <span class="text-stone-600 font-bold">年</span>
+            </div>
+          </div>
+
+          <!-- Range / Month Selection -->
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">导出时间范围 (具体单月或全年)</label>
+            <select id="excel-export-month" class="w-full p-2.5 border-2 border-stone-200 focus:border-amber-400 rounded-xl font-bold outline-none text-xs bg-white">
+              <option value="all">📅 【全年总览】导出整年 1~12 月所有数据</option>
+              <option value="1">01 月账目与记录</option>
+              <option value="2">02 月账目与记录</option>
+              <option value="3">03 月账目与记录</option>
+              <option value="4">04 月账目与记录</option>
+              <option value="5">05 月账目与记录</option>
+              <option value="6">06 月账目与记录</option>
+              <option value="7">07 月账目与记录</option>
+              <option value="8">08 月账目与记录</option>
+              <option value="9">09 月账目与记录</option>
+              <option value="10">10 月账目与记录</option>
+              <option value="11">11 月账目与记录</option>
+              <option value="12">12 月账目与记录</option>
+            </select>
+          </div>
+
+          <!-- Content Type Selection -->
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">选择导出数据类型</label>
+            <select id="excel-export-type" class="w-full p-2.5 border-2 border-stone-200 focus:border-amber-400 rounded-xl font-bold outline-none text-xs bg-white">
+              <option value="expense">💰 日常开销财务对账单 (支出/收入/分类/RM金额/结余汇总)</option>
+              <option value="calendar">📅 手账生活日历日程表 (日期/时间/分类/日程内容/完成状态)</option>
+              <option value="health">🌙 健康与睡眠作息打卡表 (入睡/起床/睡眠时长/质量/随笔)</option>
+              <option value="all_overview">🌟 全功能生活手账多维综合总表 (含财务对账、日程、健康作息)</option>
+            </select>
+          </div>
+
+          <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-stone-600 text-[11px] leading-relaxed">
+            💡 <strong>说明：</strong>导出的文件为标准带 UTF-8 BOM 签名的 Excel 表格文件（.csv），支持使用 Microsoft Excel、WPS Office 或 Numbers 直接双击打开，中文绝不乱码，金额单位已自动格式化为 <strong>RM</strong>！
+          </div>
+
+          <div class="flex items-center gap-2 pt-2">
+            <button onclick="handleConfirmExportExcel()" class="btn-usagi flex-1 py-3 text-sm font-black flex items-center justify-center gap-2">
+              <i class="fa-solid fa-file-excel"></i> 下载 Excel 文件 (.csv)
+            </button>
+            <button onclick="closeExportExcelModal()" class="btn-secondary py-3 px-4 text-xs font-bold">
+              取消
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Modal: Long-Distance Boyfriend Emergency Pill Letter -->
+    <div id="modal-love-pill" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm hidden modal-overlay">
+      <div class="glass-card max-w-lg w-full p-6 bg-white/95 border-4 border-pink-300 relative shadow-2xl rounded-3xl animate-fadeIn">
+        <div class="flex items-center justify-between pb-3 border-b border-pink-100">
+          <div class="flex items-center gap-2.5">
+            <span id="love-pill-icon" class="text-2xl">💌</span>
+            <h3 id="love-pill-title" class="font-black text-stone-800 text-base">男友爱心急救胶囊</h3>
+          </div>
+          <button onclick="closeLovePill()" class="w-8 h-8 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 flex items-center justify-center transition-all cursor-pointer">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
+
+        <div class="my-5 p-4 rounded-2xl bg-gradient-to-br from-pink-50/80 to-rose-50/80 border border-pink-200 text-sm leading-relaxed text-stone-700 whitespace-pre-line" id="love-pill-content">
+          <!-- Populated dynamically -->
+        </div>
+
+        <div class="flex items-center justify-between pt-2">
+          <span class="text-xs text-rose-500 font-bold flex items-center gap-1">
+            <span>🐰 乌萨奇陪着你</span> · <span>千里之外最爱你的人</span>
+          </span>
+          <button onclick="closeLovePill(); UsagiSound.yaha(); confettiRain(30);" class="btn-usagi px-5 py-2 text-xs font-black bg-rose-400 text-white border-rose-500 cursor-pointer">
+            抱紧男友！记住了 💖
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Romantic Sweet Footer -->
+    <footer class="mt-auto max-w-[1440px] w-full mx-auto text-center text-xs text-stone-400 py-6 border-t border-amber-200/60 flex flex-col items-center gap-1.5 px-4 sm:px-6">
+      <div class="flex items-center gap-2 text-stone-600 font-bold text-xs sm:text-sm">
+        <span>🐰 USAGI LIFE</span>
+        <span class="text-rose-500">💖</span>
+        <span>Made with love exclusively for 颜芷萱 (GAN TZI SHUAN)</span>
+      </div>
+      <p class="text-[11px] text-stone-400">愿芷萱每一天都被爱与好运包围，开开心心，元气满满！✨</p>
+    </footer>
+
+    <!-- Floating Interactive Usagi Wandering Pet & Caring Assistant -->
+    <div id="usagi-mascot-container" class="usagi-mascot-float roaming select-none flex flex-col items-center">
+      <!-- Mini Assistant Quick Action Dock -->
+      <div id="usagi-assistant-dock" class="usagi-assistant-dock shadow-md">
+        <button id="btn-pet-roam" onclick="event.stopPropagation(); UsagiPetManager.toggleRoam()" title="开启/停止底部漫步" class="active">
+          <span id="pet-roam-icon">🚶</span> <span id="pet-roam-text">漫步</span>
+        </button>
+        <button onclick="event.stopPropagation(); UsagiPetManager.triggerCategory('water')" title="喝水提醒">
+          <span>💧</span> <span>喝水</span>
+        </button>
+        <button onclick="event.stopPropagation(); UsagiPetManager.triggerCategory('sleep')" title="早睡提醒">
+          <span>🌙</span> <span>早睡</span>
+        </button>
+        <button onclick="event.stopPropagation(); UsagiPetManager.triggerCategory('love')" title="想你/专属甜言">
+          <span>💖</span> <span>爱你</span>
+        </button>
+        <button onclick="event.stopPropagation(); UsagiPetManager.toggleMinimize()" title="收起乌萨奇" class="text-stone-400 hover:text-stone-700">
+          <span id="pet-min-icon">✕</span>
+        </button>
+      </div>
+
+      <!-- Speech Bubble with Category Tag -->
+      <div id="usagi-speech-bubble" class="speech-bubble text-center" onclick="handleUsagiClick()">
+        <div class="flex items-center gap-1.5 mb-1">
+          <span id="usagi-speech-tag" class="text-[10px] font-black px-1.5 py-0.5 rounded-full bg-pink-100 text-rose-600 inline-block shadow-xs">✨ 专属陪伴</span>
+        </div>
+        <div id="usagi-speech-text">芷萱加油！呀哈！今天也是元气满满的一天~ ✨</div>
+      </div>
+
+      <!-- Mascot Bounce Container: Permanent Uninterrupted Jump -->
+      <div id="usagi-bouncer" class="usagi-bounce-permanent cursor-pointer relative" onclick="handleUsagiClick()" title="点击乌萨奇，听呀哈并解锁专属鼓励！">
+        <!-- Interactive State Prop / Accessory Badge Floating Beside Usagi -->
+        <div id="usagi-state-prop" class="usagi-state-prop-container hidden">
+          <span id="usagi-prop-icon" class="usagi-prop-icon">🌸</span>
+          <span id="usagi-prop-sub" class="usagi-prop-sub">陪伴中</span>
+        </div>
+
+        <!-- Actor Stage Box containing character and animated prop layers -->
+        <div id="usagi-actor-box" class="relative w-24 h-28 select-none">
+          <!-- The Base Character -->
+          <img id="usagi-mascot-img" src="usagi_character.png" alt="乌萨奇" class="w-24 h-28 object-contain filter drop-shadow-xl select-none pointer-events-none transition-all duration-300" />
+
+          <!-- ==============================================
+               1. ACTION: 喝水动作 (Water Drinking Action)
+               ============================================== -->
+          <div id="action-layer-water" class="usagi-action-layer hidden">
+            <!-- Animated Feeding Bottle / Water Cup lifting to mouth -->
+            <div class="act-drink-bottle">🍼</div>
+            <!-- Animated Water Droplets Splash -->
+            <div class="act-drink-drops">
+              <span class="d-drop d1">💦</span>
+              <span class="d-drop d2">💧</span>
+              <span class="d-drop d3">✨</span>
+            </div>
+            <!-- Mouth Gulp Ripple & Text -->
+            <div class="act-drink-gulp-text">咕噜咕噜~</div>
+            <!-- Rosy Puffed Cheeks -->
+            <div class="act-cheeks-puff act-cheeks-puff-left"></div>
+            <div class="act-cheeks-puff act-cheeks-puff-right"></div>
+          </div>
+
+          <!-- ==============================================
+               2. ACTION: 睡觉动作 (Sleep Lying Down Action)
+               ============================================== -->
+          <div id="action-layer-sleep" class="usagi-action-layer hidden">
+            <!-- Fluffy Soft Cloud Pillow Under Head -->
+            <div class="act-sleep-pillow">☁️</div>
+            <!-- Cute Nightcap with Moon & Star -->
+            <div class="act-sleep-nightcap">🌙</div>
+            <!-- Warm Floral Star Blanket -->
+            <div class="act-sleep-blanket">🛌</div>
+            <!-- Sleeping Closed Eyes Overlay (⌒ ⌒) -->
+            <div class="act-sleep-eyes">
+              <span class="act-eye-l">⌒</span>
+              <span class="act-eye-r">⌒</span>
+            </div>
+            <!-- Floating ZZZ bubbles rising -->
+            <div class="act-sleep-zzz-group">
+              <span class="z-item z1">z</span>
+              <span class="z-item z2">Z</span>
+              <span class="z-item z3">💤</span>
+            </div>
+          </div>
+
+          <!-- ==============================================
+               3. ACTION: 安慰抱抱动作 (Comfort & Big Hug Action)
+               ============================================== -->
+          <div id="action-layer-comfort" class="usagi-action-layer hidden">
+            <!-- Big Beating Heart & Plush Bear -->
+            <div class="act-comfort-teddy">🧸</div>
+            <div class="act-comfort-heart">💖</div>
+            <!-- Soothing Patting Paws (摸摸头/拍拍背) -->
+            <div class="act-comfort-pat">🐾 摸摸~</div>
+          </div>
+
+          <!-- ==============================================
+               4. ACTION: 经期揉肚肚与暖水袋 (Period Care Action)
+               ============================================== -->
+          <div id="action-layer-period" class="usagi-action-layer hidden">
+            <!-- Hot Water Bag on Tummy -->
+            <div class="act-period-bottle">♨️</div>
+            <!-- Paw Rubbing Tummy in Smooth Circles -->
+            <div class="act-period-paw">🐾</div>
+            <!-- Rising Warm Steam Wisps -->
+            <div class="act-period-steam act-steam-1">♨️</div>
+            <div class="act-period-steam act-steam-2">🌸</div>
+            <div class="act-period-tip">揉揉肚肚~</div>
+          </div>
+
+          <!-- ==============================================
+               5. ACTION: 游戏啦啦队超绝欢呼 (Game Cheer Action)
+               ============================================== -->
+          <div id="action-layer-game_cheer" class="usagi-action-layer hidden">
+            <!-- Shiny Golden Crown -->
+            <div class="act-cheer-crown">👑</div>
+            <!-- Dual Pom-Poms waving vigorously -->
+            <div class="act-cheer-pompom act-pompom-l">🎉</div>
+            <div class="act-cheer-pompom act-pompom-r">🎉</div>
+            <div class="act-cheer-ribbon">⭐ 芷萱MVP ⭐</div>
+          </div>
+
+          <!-- ==============================================
+               6. ACTION: 开心跳舞转圈 (Happy Dance Action)
+               ============================================== -->
+          <div id="action-layer-happy" class="usagi-action-layer hidden">
+            <div class="act-happy-rainbow">🌈</div>
+            <div class="act-happy-note n1">🎵</div>
+            <div class="act-happy-note n2">🎶</div>
+            <div class="act-happy-sparkle">✨</div>
+          </div>
+
+          <!-- ==============================================
+               7. ACTION: 认真记账小账房 (Bookkeeping Action)
+               ============================================== -->
+          <div id="action-layer-expense" class="usagi-action-layer hidden">
+            <!-- Accountant Gold Glasses -->
+            <div class="act-expense-glasses">👓</div>
+            <!-- Carrot Accounting Ledger -->
+            <div class="act-expense-ledger">📖</div>
+            <!-- Scribbling Pencil -->
+            <div class="act-expense-pencil">✏️</div>
+            <!-- Popping Shiny Gold Coins -->
+            <div class="act-expense-coin act-coin-1">💰</div>
+            <div class="act-expense-coin act-coin-2">🪙</div>
+          </div>
+
+          <!-- ==============================================
+               8. ACTION: 倒数日心动小飞机 (Countdown Action)
+               ============================================== -->
+          <div id="action-layer-countdown" class="usagi-action-layer hidden">
+            <div class="act-countdown-plane">✈️</div>
+            <div class="act-countdown-hourglass">⏳</div>
+          </div>
+
+          <!-- ==============================================
+               9. ACTION: 每日高光与灵感碎片 (Highlights Action)
+               ============================================== -->
+          <div id="action-layer-highlight" class="usagi-action-layer hidden">
+            <div class="act-highlight-wand">🪄</div>
+            <div class="act-highlight-star s1">⭐</div>
+            <div class="act-highlight-star s2">✨</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="sound.js"></script>
+  <script src="particles.js"></script>
+  <script src="app.js"></script>
+  <script src="games.js"></script>
+
+  <!-- Inline Helper Scripts for UI Glue -->
+  <script>
+    let currentAuthMode = 'login';
+    let currentSelectedMood = 'yaha';
+
+    function switchAuthTab(mode) {
+      currentAuthMode = mode;
+      UsagiSound.pop();
+      const loginForm = document.getElementById('form-login');
+      const regForm = document.getElementById('form-register');
+      if (mode === 'login') {
+        if (loginForm) { loginForm.classList.remove('hidden'); loginForm.style.display = 'block'; }
+        if (regForm) { regForm.classList.add('hidden'); regForm.style.display = 'none'; }
+        document.getElementById('tab-btn-login').className = 'flex-1 py-2 text-sm font-bold rounded-lg transition-all bg-amber-400 text-stone-900 shadow-sm';
+        document.getElementById('tab-btn-register').className = 'flex-1 py-2 text-sm font-bold rounded-lg transition-all text-stone-600 hover:text-amber-700';
+      } else {
+        if (loginForm) { loginForm.classList.add('hidden'); loginForm.style.display = 'none'; }
+        if (regForm) { regForm.classList.remove('hidden'); regForm.style.display = 'block'; }
+        document.getElementById('tab-btn-register').className = 'flex-1 py-2 text-sm font-bold rounded-lg transition-all bg-amber-400 text-stone-900 shadow-sm';
+        document.getElementById('tab-btn-login').className = 'flex-1 py-2 text-sm font-bold rounded-lg transition-all text-stone-600 hover:text-amber-700';
+      }
+    }
+
+    function fillDemoAccount() {
+      // Ensure gts account exists
+      const users = USAGI_APP.getUsers();
+      if (!users['gts']) {
+        users['gts'] = { username: 'gts', password: '123', nickname: '颜芷萱 (Tzi Shuan) 🌸', createdAt: new Date().toISOString() };
+        USAGI_APP.saveUsers(users);
+      }
+      document.getElementById('login-username').value = 'gts';
+      document.getElementById('login-password').value = '123';
+      USAGI_APP.login('gts', '123');
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const u = document.getElementById('login-username').value;
+      const p = document.getElementById('login-password').value;
+      USAGI_APP.login(u, p);
+    }
+
+    function handleRegisterSubmit(e) {
+      e.preventDefault();
+      const u = document.getElementById('reg-username').value;
+      const p = document.getElementById('reg-password').value;
+      const n = document.getElementById('reg-nickname').value;
+      USAGI_APP.register(u, p, n);
+    }
+
+    function handleToggleSound() {
+      const muted = UsagiSound.toggleMute();
+      const btn = document.getElementById('btn-sound-toggle');
+      btn.innerHTML = muted ? '<i class="fa-solid fa-volume-xmark text-stone-400"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+      if (!muted) UsagiSound.pop();
+    }
+
+    function handleToggleParticles() {
+      const state = window.toggleParticles();
+      const btn = document.getElementById('btn-particle-toggle');
+      btn.style.opacity = state ? '1' : '0.5';
+      UsagiSound.pop();
+    }
+
+    const USAGI_QUOTES = [
+      // 1-20: 异地恋温暖陪伴与隔空深情
+      "芷萱今天也是世界上最可爱的女孩子！呀哈~ 🐰💕",
+      "虽然我们隔着距离，但我的心每分每秒都和你在一起哦！💖",
+      "叮！收到一份来自远方男朋友的跨时区专属超大拥抱！🤗✨",
+      "两座城市的风，都在替我偷偷抱抱你，芷萱今天也要开心哦！🍃💕",
+      "无论距离有多远，只要你回头，我永远都在你身后支持你！🌟",
+      "今天有没有想念男朋友呀？反正男朋友超级超级想你！🥰",
+      "想你的时候我就看天空，因为我们头顶上是同一片天空呀！☁️💖",
+      "距离只是一时的考验，我们美好的未来才是永远！冲呀芷萱！🚀",
+      "无论遇到什么委屈，第一时间告诉我，我随时是你的情绪垃圾桶！👂💗",
+      "隔着屏幕也要好好生活，我在努力奔向能常常拥抱你的未来！🏃‍♂️💨",
+      "今天也是超级超级喜欢芷萱的一天，比昨天多一点，比明天少一点！💘",
+      "不在你身边的时候，乌萨奇就是我的分身，替我寸步不离保护你！🐰🛡️",
+      "不管今天遇到了什么困难，记住你背后永远有一个深爱你的依靠！🦸‍♂️",
+      "等下次见面，一定要狠狠抱你很久很久，把欠下的拥抱都补上！🫂💕",
+      "手机屏幕虽然冰凉，但我对芷萱的心永远是滚烫的哦！🔥❤️",
+      "哪怕相隔千山万水，我们的爱也跨越一切障碍！呀哈！🎉",
+      "芷萱不要觉得孤单，闭上眼睛深呼吸，我就在你的心里呀！💓",
+      "今天的想念进度条：100% (已超载，急需芷萱一个亲亲来降温) 💋",
+      "世界上有几十亿人，但我最牵挂的只有一个叫颜芷萱的仙女！🌸",
+      "隔空投递一个草莓味甜甜的吻，啪嗒印在芷萱的额头上！🍓😘",
+
+      // 21-40: 身体健康、饮食与日常作息细心叮嘱
+      "咕噜咕噜，芷萱记得喝足 500ml 大温水，多补水皮肤水灵灵！💧",
+      "一定要乖乖按时吃三餐，不要为了减肥不吃饭，你怎样都最好看！🍲",
+      "天冷了要多穿一件外套，千万千万不能着凉感冒，我会心疼的！🧣",
+      "少喝一点冰冷含糖饮料，多喝温开水，肚肚才会舒服哦~ 🍵",
+      "今晚 11 点前早点放下手机钻进被窝，做个香香甜甜的美梦！🌙😴",
+      "坐久了记得站起来活动一下、伸伸懒腰，乌萨奇陪你做操！🤸‍♀️",
+      "出门前检查一下天气预报，下雨天包包里一定要备好雨伞哦！☔",
+      "好好护肤、擦润唇膏，芷萱的小脸蛋天下第一嫩！✨🌸",
+      "晚上睡觉记得把被子盖好，特别是肚子和小脚丫不能受凉！🛏️",
+      "生理期前几天一定要忌生冷辛辣，暖宝宝和保温杯提前准备好！🌸",
+      "如果肚子不舒服就乖乖躺着休息，什么都别操心，身体最重要！🛋️",
+      "就算学业/工作再忙，也要抽空吃个水果，补充维生素 C 哦！🍎",
+      "晚上回家记得锁好门窗，注意安全，照顾好自己是我最大的心愿！🔐",
+      "少熬夜呀芷萱宝贝，熬夜会长黑眼圈，早睡早起身体棒棒！🐼",
+      "要是胃不舒服就喝点热粥，暖暖的胃才能承载快乐的一天！🥣",
+      "饭后散散步、吹吹风，放松一下眼睛和心情，别太紧绷啦！🌿",
+      "每天都要好好吃早餐，热腾腾的早餐是一整天活力的源泉！🍞🥛",
+      "生病难受了一定要及时吃药看医生，千万不要自己硬扛哦！💊",
+      "运动拉伸一下下，保持体态轻盈，今天又是健康活力美少女！🧘‍♀️",
+      "水杯空了快去接满！今天 4 杯水的目标完成了多少啦？👀💧",
+
+      // 41-60: 情绪急救、减压抚慰与无限肯定
+      "芷萱今天也辛苦啦！无论今天过得怎样，你都已经做得很棒了！👏",
+      "不开心的时候就拍拍乌萨奇，所有烦恼和焦虑统统消散退散！🪄💨",
+      "不用逼自己做一个完美的超人，累了就停下来当个被宠着的小朋友！🧸",
+      "谁敢惹我们家芷萱不高兴，乌萨奇抄起胡萝卜就去帮芷萱讲道理！🥕💥",
+      "允许自己偶尔有小情绪、偶尔摆烂，休息好了我们再重新出发！🍃",
+      "你就是你，世界上独一无二、闪闪发光的颜芷萱，谁也替代不了！✨👑",
+      "别把别人的否定放在心上，在我眼里你永远是最好、最优秀的！💯",
+      "难过的时候想哭就哭出来，哭完了深呼吸，有我在这里兜着你！🌧️🌈",
+      "慢慢来，一切都来得及，不要焦虑，好运正在悄悄向你奔来！🐢🍀",
+      "今天的不顺心只是生活里的小插曲，明天的太阳依然会为你升起！🌅",
+      "做你想做的事，成为你想成为的人，无论如何我都坚坚定定支持你！🦸‍♀️",
+      "别给自己太大压力，尽力而为就好，你的平安快乐胜过一切名次与成绩！🌼",
+      "累的时候，把头靠在抱枕上，就当是靠在男朋友宽阔的肩膀上吧！🛋️",
+      "哪怕全世界都催你长大，在我这里你永远可以做一个任性可爱的小女孩！👧",
+      "所有的烦恼都会过去，留下的全都是闪亮发光的美好回忆！⭐",
+      "今天做完所有的待办之后，一定要狠狠犒劳奖励一下努力的自己！🎁",
+      "就算今天什么都没做成也没关系，好好呼吸生活了一天就是大胜利！✌️",
+      "别去跟别人比，你有你的步调和花期，属于你的盛开一定会到来！💐",
+      "芷萱笑起来的样子最好看啦，像晴天里最灿烂的阳光一样耀眼！☀️😍",
+      "无论外面风雨多大，我心里永远有一处只为你遮风挡雨的避风港！🏡",
+
+      // 61-80: 乌萨奇 Usagi 标志性可爱元气打气
+      "呀哈！乌萨奇在为你疯狂摇旗呐喊！冲冲冲！🚩🐰",
+      "乌萨奇超强元气波发射——哔哔哔！芷萱瞬间恢复满分体力！⚡🔋",
+      "冲冲冲！乌萨奇带着满满当当的胡萝卜来给芷萱补充能量啦！🥕🚀",
+      "乌萨奇说：今天谁也不能欺负芷萱，乌萨奇大回旋飞踢！🥋🐰",
+      "乌萨奇大胜利！呀哈！今天也是战胜困难、收获满满的一天！🏆",
+      "乌萨奇跳起魔性摇摆舞，只为了博红颜芷萱一笑！💃🕺",
+      "吃饱喝足，元气十足！跟着乌萨奇一起大喊：呀哈——！📢",
+      "乌萨奇在芷萱的头顶种了一朵代表幸运与快乐的小花花！🌻",
+      "生活就像乌萨奇的耳朵一样，偶尔竖起来听八卦，偶尔软下来发呆~ 🐰",
+      "送芷萱一颗超级无敌幸运胡萝卜，吃下今天所有心愿都实现！🥕⭐",
+      "乌萨奇蹦蹦跳跳地跑过来，给了芷萱一个肉嘟嘟的脸颊贴贴！🐾🥰",
+      "呜啦啦啦！乌萨奇为你施展‘所有烦恼统统变成小饼干’的魔法！🍪",
+      "乌萨奇今天也是芷萱的头号狂热小粉丝，为你打 call 到宇宙尽头！🪐",
+      "呀哈！乌萨奇在手账里巡逻，确保芷萱今天每一分钟都顺顺利利！👮‍♂️",
+      "只要乌萨奇还在跳动，芷萱的每一天就都有无限的可爱与元气！💫",
+      "乌萨奇给你一个大大的赞！今天的芷萱也是自律独立的小仙女！👍🐰",
+      "扑哧！乌萨奇被芷萱的美貌可爱到原地摔了个大跟头！🤸‍♂️💕",
+      "乌萨奇偷偷在芷萱的口袋里塞了一颗甜甜的水果糖，记得吃掉哦！🍬",
+      "呀哈——！把所有不开心像丢保龄球一样全部打飞！🎳💥",
+      "乌萨奇说：芷萱是世界上最温柔最值得被爱的人，绝对没有之一！🥇",
+
+      // 81-100: 甜蜜理财、美好期许与未来约定
+      "记账冷静一下，把钱省下来买真正能让我们开心、提升幸福感的美物！🪙✨",
+      "认真记录每一笔收支，把生活过得井井有条，芷萱是超级理财小能手！📊",
+      "我们都在为了更好的彼此而努力，每一次的自律都是为了未来的美好生活！🏡",
+      "期待下一次见面的时候，我们可以手牵手去吃好吃的、逛喜欢的店！🍦",
+      "今天的每一点努力，都在让我们相聚的日子越来越近哦！⏳💖",
+      "生活里藏着好多微小但确定的幸福，芷萱今天发现属于你的小确幸了吗？🔎🌸",
+      "等见面了，我要把手机放下，整天整天只专心看着你可爱的脸！👀",
+      "我们一起看同一场日落、晒同一缕阳光，我们的心从来没有分开过！🌇",
+      "买东西前冷静 3 天，既能理智省钱，又能收获真正心动的珍爱！🛒🧊",
+      "芷萱手账里的每一个字，都是我们认真生活的见证，超级珍贵！📖💎",
+      "去成为一个自信、独立又温柔的女孩吧，你本身就已经足够耀眼！🌟",
+      "今天睡个好觉，明天醒来又是充满希望与惊喜的新篇章！🌅",
+      "谢谢你出现在我的生命里，成为我最温暖的牵挂和最坚定的动力！💌",
+      "不管外面的世界怎么变，我对你的喜欢和宠爱永远不变！🔒❤️",
+      "下一次旅行、下一次拥抱、下一次吃大餐，都在倒数清单里等着我们呢！🗺️",
+      "每一朵花开都有它的意义，正如每一个有你的日子都格外甜美！🌷",
+      "愿芷萱每天夜里无梦安眠，早晨醒来满心欢喜，一整天都被温柔善待！🛌✨",
+      "记账是为了心中有数，生活是为了自己开心，芷萱只管快快乐乐做自己！🌈",
+      "叮！来自男朋友的晚安吻已送达，今晚有乌萨奇和男朋友在梦里陪你哦！😴💋",
+      "芷萱，我爱你，今天爱，明天爱，未来的每一天都一直一直深爱着你！💖💯"
+    ];
+
+    function handleUsagiClick() {
+      try {
+        // If Usagi is currently sleeping, clicking wakes her up gently!
+        if (window.UsagiPetManager && UsagiPetManager.getState() === 'sleep') {
+          UsagiPetManager.clearState();
+          UsagiPetManager.speak('✨ 醒来啦', '唔~ 芷萱宝宝喊我啦？乌萨奇伸个大大的懒腰，陪你一起元气满满！呀哈！💖');
+          if (window.UsagiSound && typeof UsagiSound.yaha === 'function') UsagiSound.yaha();
+          if (typeof confettiRain === 'function') confettiRain(25);
+          return;
+        }
+
+        if (window.UsagiSound) {
+          if (typeof UsagiSound.yaha === 'function') UsagiSound.yaha();
+          else if (typeof UsagiSound.sparkle === 'function') UsagiSound.sparkle();
+        }
+      } catch (e) { console.warn("Sound fx info:", e); }
+
+      try {
+        if (typeof confettiRain === 'function') {
+          confettiRain(30);
+        } else if (typeof confetti === 'function') {
+          confetti({ particleCount: 30, spread: 70, origin: { y: 0.6 } });
+        }
+      } catch (e) { console.warn("Confetti info:", e); }
+
+      try {
+        // Mascot Click Glow (NEVER interrupts or resets continuous bounce animation!)
+        const mascotImg = document.getElementById('usagi-mascot-img');
+        if (mascotImg) {
+          mascotImg.classList.add('usagi-click-glow');
+          setTimeout(() => {
+            mascotImg.classList.remove('usagi-click-glow');
+          }, 350);
+        }
+
+        // Restore Mascot if minimized
+        const mascotContainer = document.getElementById('usagi-mascot-container');
+        if (mascotContainer && mascotContainer.classList.contains('minimized')) {
+          mascotContainer.classList.remove('minimized');
+          const icon = document.getElementById('pet-min-icon');
+          if (icon) icon.innerText = '✕';
+        }
+
+        // Rotate speech with sweet quote & companion dialogue
+        if (window.UsagiPetManager && typeof UsagiPetManager.speakRandomSweet === 'function') {
+          UsagiPetManager.speakRandomSweet();
+        } else {
+          const textEl = document.getElementById('usagi-speech-text');
+          const bubble = document.getElementById('usagi-speech-bubble');
+          if (typeof USAGI_QUOTES !== 'undefined' && USAGI_QUOTES.length > 0) {
+            const randomQuote = USAGI_QUOTES[Math.floor(Math.random() * USAGI_QUOTES.length)];
+            if (textEl) textEl.innerText = randomQuote;
+            else if (bubble) bubble.innerText = randomQuote;
+            if (bubble) {
+              bubble.classList.remove('animate-pulse');
+              void bubble.offsetWidth;
+              bubble.classList.add('animate-pulse');
+            }
+          }
+        }
+      } catch (e) { console.warn("Usagi mascot update info:", e); }
+    }
+    window.handleUsagiClick = handleUsagiClick;
+
+    function handleHeroPatUsagi(e) {
+      if (e) {
+        const btn = e.currentTarget || document.getElementById('hero-pat-btn');
+        if (btn) {
+          btn.classList.remove('btn-wobble');
+          void btn.offsetWidth;
+          btn.classList.add('btn-wobble');
+        }
+        createClickHeartFx(e.clientX, e.clientY);
+      }
+      handleUsagiClick();
+    }
+    window.handleHeroPatUsagi = handleHeroPatUsagi;
+
+    // Long-Distance Boyfriend Emergency Kit Data & Handlers
+    const LOVE_PILL_DATA = {
+      period: {
+        icon: '🌸',
+        title: '🌸 芷萱宝贝乖乖，身体最重要',
+        content: `“好心疼此时此刻不能立刻飞奔到你身边给你煮红糖水！乖乖听话：
+
+1. 赶紧把暖宝宝贴在腹部和后腰，千万别贪凉！
+2. 绝对不能碰冷水和冰饮，多喝温开水或热红糖姜茶；
+3. 穿好暖和的厚袜子，小脚丫和肚肚都要暖暖的；
+4. 任何繁琐的学业、家务和杂事都先扔一边，身体第一！
+5. 累了就窝在被窝里好好睡一觉，什么都不要操心。
+
+乌萨奇和我都隔空紧紧守着你，很快就舒服起来啦~ 💖”`
+      },
+      sad: {
+        icon: '🥺',
+        title: '🥺 谁惹我们家芷萱小仙女不高兴啦？',
+        content: `“抱抱我的宝贝，不委屈不委屈！
+
+乌萨奇已经抄起大胡萝卜去帮芷萱讲道理了！🥕💥
+有任何难过、不顺心或者小牢骚，随时给我发微信或者打电话，我 24 小时开机随时做你的专属树洞和情绪垃圾桶。
+在外面你可能需要坚强懂事，但在我这里，你永远可以任性做一个被毫无保留宠爱着的小女孩！
+
+深呼吸，所有的委屈我都在远方替你接住，亲亲额头不难过啦~ 💕”`
+      },
+      sleep: {
+        icon: '🌙',
+        title: '🌙 芷萱今晚要乖乖数羊做美梦哦',
+        content: `“睡不着不要焦虑哦，越盯着时钟越睡不着。把手机光线调暗，放在一边。
+
+闭上双眼，深呼吸，放空大脑：
+一只乌萨奇、两只乌萨奇、三只乌萨奇... 🐰🐰🐰
+想象一下我正轻轻揉着你的头发，拍着你的后背。
+不要胡思乱想啦，今晚我就在梦里飞奔过去找你！
+闭上眼睛，晚安我的全世界，做个甜甜的美梦~ 😴✨”`
+      },
+      stress: {
+        icon: '⚡',
+        title: '⚡ 芷萱，你已经做得很棒了！',
+        content: `“深呼吸三秒钟——呼——！
+
+芷萱，不用逼着自己每件事都做到完美无缺，你已经付出了百分之百的努力，你超级棒！
+今天允许自己只完成 60%，允许自己停下来吃口甜品、发发呆。
+你的价值不需要用疲惫来证明。
+无论发生什么事情，我都是你永远的后盾和避风港，我一直在你身边，永远为你骄傲！冲呀！🦸‍♀️💖”`
+      }
+    };
+
+    function openLovePill(type) {
+      const data = LOVE_PILL_DATA[type];
+      if (!data) return;
+      document.getElementById('love-pill-icon').innerText = data.icon;
+      document.getElementById('love-pill-title').innerText = data.title;
+      document.getElementById('love-pill-content').innerText = data.content;
+      const modal = document.getElementById('modal-love-pill');
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+      UsagiSound.pop();
+
+      if (window.UsagiPetManager) {
+        if (type === 'period') UsagiPetManager.reactTo('period');
+        else if (type === 'sad') UsagiPetManager.reactTo('comfort');
+        else if (type === 'sleep') UsagiPetManager.reactTo('sleep');
+        else if (type === 'stress') UsagiPetManager.reactTo('comfort');
+      }
+    }
+
+    function closeLovePill() {
+      const modal = document.getElementById('modal-love-pill');
+      modal.classList.add('hidden');
+      modal.style.display = 'none';
+      UsagiSound.pop();
+    }
+
+    function sendLoveHug() {
+      UsagiSound.yaha();
+      confettiRain(40);
+      const today = (typeof getLocalDateStr === 'function') ? getLocalDateStr() : new Date().toISOString().split('T')[0];
+      if (window.USAGI_APP && window.USAGI_APP.data) {
+        if (!window.USAGI_APP.data.loveLogs) window.USAGI_APP.data.loveLogs = {};
+        const count = (window.USAGI_APP.data.loveLogs[today] || 0) + 1;
+        window.USAGI_APP.data.loveLogs[today] = count;
+        window.USAGI_APP.saveData();
+        const el = document.getElementById('dash-love-count');
+        if (el) el.innerText = count;
+      }
+
+      if (window.UsagiPetManager) {
+        UsagiPetManager.reactTo('comfort', '收到芷萱的思念信号！男朋友隔空拥抱已光速送达~ 乌萨奇紧紧抱着你！💖🧸');
+      }
+
+      const HUG_MESSAGES = [
+        "叮！隔空拥抱已光速送达！男朋友正在千里之外紧紧抱住芷萱 10 秒钟~ 🤗💕",
+        "收到思念信号！不管距离多远，男朋友的心一直在为你扑通扑通跳动哦！💓",
+        "隔空投递一个大大的草莓味亲亲，啪嗒印在芷萱脸上啦！🍓😘",
+        "想念电波已连接！等下次见面，一定要狠狠抱很久很久不松开！🫂💖",
+        "两座城市的天空是相通的，正如我对芷萱的喜欢永远不打折！🌟🥰"
+      ];
+      const msg = HUG_MESSAGES[Math.floor(Math.random() * HUG_MESSAGES.length)];
+      alert(msg);
+    }
+
+    // --------------------------------------------------------
+    // Usagi Interactive Music Lounge & 郑润泽专属全集歌单 (Pure Native Zero-Error)
+    // --------------------------------------------------------
+    // 芷萱专属热歌与郑润泽全集精选库 (共 26 首经典，全量内置高保真 MP3，100% 极速秒播 · 完整原曲)
+    const ZHENG_RUNZE_CATALOG = [
+      // 1. 芷萱专属心选 7 首
+      {
+        id: 'when_it_snows',
+        title: 'When It Snows ❄️',
+        artist: 'Sarah Kang & Sam Ock',
+        keys: ['when it snows', 'sarah kang', 'sam ock', 'peppermint tea', 'when', 'snows', 'sarah', 'sam', 'peppermint'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/73/dc/f9/73dcf919-fbd9-8e92-3f8a-6e4411ed4d39/artwork.jpg/100x100bb.jpg',
+        audio: 'song_when_it_snows.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview112/v4/9e/0f/55/9e0f5525-d738-4a96-c153-352d9a0fb0a1/mzaf_17208019774476483705.plus.aac.p.m4a'
+      },
+      {
+        id: 'jiangguo_tiny7',
+        title: '浆果 (Berry) 🍓',
+        artist: 'TINY7',
+        keys: ['浆果', 'tiny7', 'berry', 'jiangguo', 'jiang guo', 'tiny'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/7c/9a/a8/7c9aa865-56c0-b99b-55ff-5ec30c9877d5/957925.jpg/100x100bb.jpg',
+        audio: 'song_jiangguo.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/63/22/12/63221298-52f9-4e0d-5047-5d9ca246aaad/mzaf_8489862757845675223.plus.aac.p.m4a'
+      },
+      {
+        id: 'time_machine',
+        title: 'Time Machine (feat. Aren Park)',
+        artist: 'mj apanay',
+        keys: ['time machine', 'mj apanay', 'timemachine', 'apanay', 'time'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/b9/49/84/b9498437-c58e-e6e3-0e71-73090a850e4f/231512.jpg/100x100bb.jpg',
+        audio: 'song_time_machine.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/56/f4/07/56f407df-29af-205d-0eeb-c8b428646c46/mzaf_6776510777665930994.plus.aac.p.m4a'
+      },
+      {
+        id: 'boli_gareth',
+        title: '玻璃 (Glass)',
+        artist: 'Gareth.T (汤令山)',
+        keys: ['玻璃', 'gareth t', 'gareth.t', 'glass', 'boli', '汤令山'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/1c/1a/be/1c1abe3a-2eb6-216c-9040-797bb98464d1/827568024145.jpg/100x100bb.jpg',
+        audio: 'song_boli.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/da/91/54/da9154c7-6462-cb68-5851-fd901ec06404/mzaf_594024198387560560.plus.aac.p.m4a'
+      },
+      {
+        id: 'youwone_guoyifan',
+        title: '有我呢',
+        artist: '郭一凡 (Evan Guo)',
+        keys: ['有我呢', '郭一凡', 'youwone', 'guoyifan', 'evan guo'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/13/1b/2f/131b2f43-a50b-a98e-978d-7a907ace14fb/4894944221401.jpg/100x100bb.jpg',
+        audio: 'song_youwone.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5d/60/26/5d602653-36f1-4c3c-d146-33bd74a37195/mzaf_1954084046746101688.plus.aac.p.m4a'
+      },
+      {
+        id: 'chengwai_zrz',
+        title: '城外 🏰',
+        artist: '郑润泽',
+        keys: ['城外', 'chengwai', '郑润泽', 'zrz', 'zheng runze'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/b7/e8/1b/b7e81b59-e9ae-e47b-a30e-58b595dae7e3/165314330-.jpg/100x100bb.jpg',
+        audio: 'song_chengwai.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/41/bf/50/41bf506b-e04f-49db-91dc-e7522d0f02b9/mzaf_6080668262770165562.plus.aac.p.m4a'
+      },
+      {
+        id: 'xiaobai_zrz',
+        title: '小白 🤍',
+        artist: '郑润泽 / 罗言',
+        keys: ['小白', 'xiaobai', '郑润泽', '罗言', 'zrz', 'zheng runze'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/b7/e8/1b/b7e81b59-e9ae-e47b-a30e-58b595dae7e3/165314330-.jpg/100x100bb.jpg',
+        audio: 'song_xiaobai.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/41/bf/50/41bf506b-e04f-49db-91dc-e7522d0f02b9/mzaf_6080668262770165562.plus.aac.p.m4a'
+      },
+
+      // 2. 郑润泽 专属热门金曲全集 (共 17 首)
+      {
+        id: 'shun_zrz',
+        title: '瞬',
+        artist: '郑润泽',
+        keys: ['瞬', 'shun', '郑润泽', 'zrz', 'zheng runze'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/cf/f0/88/cff08844-349c-a15f-e168-3eaa6ad2f8f6/1681206971144350.jpg/100x100bb.jpg',
+        audio: 'song_shun.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/43/99/6c/43996cc3-20c8-aa4f-6c4d-3d2521f408c1/mzaf_8539857165345449973.plus.aac.p.m4a'
+      },
+      {
+        id: 'ruguo_ne_zrz',
+        title: '如果呢',
+        artist: '郑润泽',
+        keys: ['如果呢', 'ruguone', '如果', '郑润泽', 'zrz', 'zheng runze'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/6d/84/ea/6d84ea0b-44e5-61c1-55b0-db49ac5c81a5/ruguone.jpg/100x100bb.jpg',
+        audio: 'song_ruguo_ne.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d7/25/c3/d725c325-f7b9-4e86-0706-17b812cabf03/mzaf_4825122026155330094.plus.aac.p.m4a'
+      },
+      {
+        id: 'xiaxiang_zrz',
+        title: '遐想',
+        artist: '郑润泽',
+        keys: ['遐想', 'xiaxiang', '郑润泽', 'zrz', 'zheng runze'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/cf/f0/88/cff08844-349c-a15f-e168-3eaa6ad2f8f6/1681206971144350.jpg/100x100bb.jpg',
+        audio: 'song_xiaxiang.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/43/99/6c/43996cc3-20c8-aa4f-6c4d-3d2521f408c1/mzaf_8539857165345449973.plus.aac.p.m4a'
+      },
+      {
+        id: 'yuwen_zrz',
+        title: '余温',
+        artist: '郑润泽',
+        keys: ['余温', 'yuwen', '郑润泽', 'zrz', 'zheng runze'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/02/f4/ad/02f4adfc-c8b4-6cdb-ef3b-385ed7860c49/139482556-.png/100x100bb.jpg',
+        audio: 'song_yuwen.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/8c/1b/5f/8c1b5f91-dd78-1232-564e-350a567b8166/mzaf_14825004398572077359.plus.aac.p.m4a'
+      },
+      {
+        id: 'date1231_zrz',
+        title: '12.31',
+        artist: '郑润泽',
+        keys: ['12.31', '1231', '郑润泽', 'zrz', '跨年'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/8a/a4/81/8aa48155-4a68-5492-633f-b7011812bee2/cover.jpg/100x100bb.jpg',
+        audio: 'song_date1231.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/66/dc/0e/66dc0e48-917b-c4e9-4873-d40e28167891/mzaf_16103816235038299751.plus.aac.p.m4a'
+      },
+      {
+        id: 'cheye_zrz',
+        title: '彻夜 (All Night)',
+        artist: '郑润泽',
+        keys: ['彻夜', 'cheye', 'all night', '郑润泽', 'zrz'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/d6/de/fa/d6defa17-ced7-128b-76b4-541b88b70633/cover.jpg/100x100bb.jpg',
+        audio: 'song_cheye.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/5a/ed/55/5aed5568-497a-cb82-c343-40503bde1107/mzaf_8877591015559191513.plus.aac.p.m4a'
+      },
+      {
+        id: 'zhanfang_zrz',
+        title: '绽放',
+        artist: '郑润泽',
+        keys: ['绽放', 'zhanfang', '郑润泽', 'zrz'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/cf/f0/88/cff08844-349c-a15f-e168-3eaa6ad2f8f6/1681206971144350.jpg/100x100bb.jpg',
+        audio: 'song_zhanfang.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/69/18/00/691800b1-2064-dd9b-bfe1-96aebceb5889/mzaf_7886883161590401791.plus.aac.p.m4a'
+      },
+      {
+        id: 'guanyuni_zrz',
+        title: '关于你',
+        artist: '郑润泽',
+        keys: ['关于你', 'guanyuni', '你', '郑润泽', 'zrz'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/6f/6d/74/6f6d74ed-3fd2-9a31-a978-dded76f26afc/1701167582289223.jpg/100x100bb.jpg',
+        audio: 'song_guanyuni.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b9/e9/4b/b9e94bb2-1233-060a-c6b4-eb13fb28f1fe/mzaf_7444351722840026131.plus.aac.p.m4a'
+      },
+      {
+        id: 'xiaoweiguang_zrz',
+        title: '小微光',
+        artist: '郑润泽',
+        keys: ['小微光', 'xiaoweiguang', '微光', '电影穿过月亮的旅行', '郑润泽', 'zrz'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/88/a2/ab/88a2ab4d-b196-a003-b462-8418520da8ce/cover.jpg/100x100bb.jpg',
+        audio: 'song_xiaoweiguang.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/df/3d/8b/df3d8b37-643a-f80c-319c-e64359cc691e/mzaf_14224256789073621759.plus.aac.p.m4a'
+      },
+      {
+        id: 'bujian_zrz',
+        title: '不见不离开 (feat. 队长)',
+        artist: '郑润泽 / 队长',
+        keys: ['不见不离开', '队长', 'young captain', 'bujian', '郑润泽', 'zrz'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/cf/f0/88/cff08844-349c-a15f-e168-3eaa6ad2f8f6/1681206971144350.jpg/100x100bb.jpg',
+        audio: 'song_bujian.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/96/44/50/964450fd-e6f7-7ecb-4f54-a4b2b0d3ed9b/mzaf_2236936092895700943.plus.aac.p.m4a'
+      },
+      {
+        id: 'shikong_zrz',
+        title: '时空街区',
+        artist: '郑润泽',
+        keys: ['时空街区', 'shikong', '平行线', '郑润泽', 'zrz'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/8d/81/b0/8d81b004-2e4f-32ff-64e2-e012b6861ebc/IMG_2702.jpg/100x100bb.jpg',
+        audio: 'song_shikong.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e1/bf/33/e1bf3318-f224-2420-4a83-cf15fc6682d3/mzaf_734862628971159370.plus.aac.p.m4a'
+      },
+      {
+        id: 'jinhuzhou_zrz',
+        title: '紧箍咒',
+        artist: '郑润泽',
+        keys: ['紧箍咒', 'jinhuzhou', '郑润泽', 'zrz'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/cf/f0/88/cff08844-349c-a15f-e168-3eaa6ad2f8f6/1681206971144350.jpg/100x100bb.jpg',
+        audio: 'song_jinhuzhou.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/66/dc/0e/66dc0e48-917b-c4e9-4873-d40e28167891/mzaf_16103816235038299751.plus.aac.p.m4a'
+      },
+      {
+        id: 'lantianqi_zrz',
+        title: '烂天气',
+        artist: '郑润泽',
+        keys: ['烂天气', 'lantianqi', '郑润泽', 'zrz'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/d6/de/fa/d6defa17-ced7-128b-76b4-541b88b70633/cover.jpg/100x100bb.jpg',
+        audio: 'song_lantianqi.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/5a/ed/55/5aed5568-497a-cb82-c343-40503bde1107/mzaf_8877591015559191513.plus.aac.p.m4a'
+      },
+      {
+        id: 'xuanlihuohuo_zrz',
+        title: '绚丽花火',
+        artist: '郑润泽',
+        keys: ['绚丽花火', '花火', 'xuanlihuohuo', '郑润泽', 'zrz'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/b7/e8/1b/b7e81b59-e9ae-e47b-a30e-58b595dae7e3/165314330-.jpg/100x100bb.jpg',
+        audio: 'song_xuanlihuohuo.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/41/bf/50/41bf506b-e04f-49db-91dc-e7522d0f02b9/mzaf_6080668262770165562.plus.aac.p.m4a'
+      },
+      {
+        id: 'guisu_zrz',
+        title: '归宿',
+        artist: '郑润泽',
+        keys: ['归宿', 'guisu', '归帆', '郑润泽', 'zrz'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/4b/ec/40/4bec40d6-499c-3742-2212-4e655e4cf68b/cover.jpg/100x100bb.jpg',
+        audio: 'song_guisu.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8b/34/64/8b3464b0-aa82-2f02-4cfd-25e03789d6c4/mzaf_14435893647623860508.plus.aac.p.m4a'
+      },
+      {
+        id: 'pingxingxian_zrz',
+        title: '平行线',
+        artist: '郑润泽',
+        keys: ['平行线', 'pingxingxian', '郑润泽', 'zrz'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/8d/81/b0/8d81b004-2e4f-32ff-64e2-e012b6861ebc/IMG_2702.jpg/100x100bb.jpg',
+        audio: 'song_pingxingxian.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e1/bf/33/e1bf3318-f224-2420-4a83-cf15fc6682d3/mzaf_734862628971159370.plus.aac.p.m4a'
+      },
+      {
+        id: 'xuanwo_zrz',
+        title: '旋涡',
+        artist: '郑润泽',
+        keys: ['旋涡', 'xuanwo', '郑润泽', 'zrz'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/cf/f0/88/cff08844-349c-a15f-e168-3eaa6ad2f8f6/1681206971144350.jpg/100x100bb.jpg',
+        audio: 'song_xuanwo.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/43/99/6c/43996cc3-20c8-aa4f-6c4d-3d2521f408c1/mzaf_8539857165345449973.plus.aac.p.m4a'
+      },
+
+      // 3. 经典浪漫情歌
+      {
+        id: 'gaobai_jay',
+        title: '告白气球 🎈',
+        artist: '周杰伦',
+        keys: ['告白气球', 'gaobai', '周杰伦', 'jay', 'jay chou'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/58/8d/6d/588d6d61-fbac-148a-86bd-0030ce076ac1/23UM1IM57281.rgb.jpg/100x100bb.jpg',
+        audio: 'song_gaobai.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/df/7b/58/df7b58dd-26e0-36d2-2676-5540bbd4da8a/mzaf_12065474052561498062.plus.aac.p.m4a'
+      },
+      {
+        id: 'qingtian_jay',
+        title: '晴天 ☀️',
+        artist: '周杰伦',
+        keys: ['晴天', 'qingtian', '周杰伦', 'jay', 'jay chou'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/58/8d/6d/588d6d61-fbac-148a-86bd-0030ce076ac1/23UM1IM57281.rgb.jpg/100x100bb.jpg',
+        audio: 'song_qingtian.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/96/dd/a1/96dda1b7-d113-111b-7f7f-4df7cfaaed49/mzaf_3832701054590122093.plus.aac.p.m4a'
+      }
+    ];
+
+    let currentPlaylistIndex = 5; // Default: 郑润泽 - 城外
+    let playMode = 'list'; // 'list' = 自动连播下一首; 'single' = 单曲循环
+    let danceNotesInterval = null;
+
+    // Toggle Play Mode between List & Single
+    function togglePlayMode() {
+      const label = document.getElementById('play-mode-label');
+      if (playMode === 'list') {
+        playMode = 'single';
+        if (label) label.innerText = '🔂 单曲循环';
+      } else {
+        playMode = 'list';
+        if (label) label.innerText = '🔁 列表自动连播';
+      }
+      UsagiSound.pop();
+    }
+
+    // Toggle Audio Play / Pause
+    function toggleAudioPlay() {
+      const audio = document.getElementById('usagi-audio-engine');
+      if (!audio) return;
+      if (audio.paused) {
+        audio.play().catch(e => console.log('Audio play info:', e));
+      } else {
+        audio.pause();
+      }
+    }
+
+    // Direct Song Playback from Catalog by ID
+    function playSongById(id) {
+      const idx = ZHENG_RUNZE_CATALOG.findIndex(s => s.id === id);
+      if (idx !== -1) {
+        playSongByIndex(idx);
+      }
+    }
+
+    // Play Song By Catalog Index
+    function playSongByIndex(idx) {
+      if (idx < 0) idx = ZHENG_RUNZE_CATALOG.length - 1;
+      if (idx >= ZHENG_RUNZE_CATALOG.length) idx = 0;
+      currentPlaylistIndex = idx;
+      const song = ZHENG_RUNZE_CATALOG[idx];
+      playSearchedTrack(song.audio, song.title, song.artist, song.cover);
+    }
+
+    // Next Track
+    function playNextSong() {
+      playSongByIndex(currentPlaylistIndex + 1);
+    }
+
+    // Previous Track
+    function playPrevSong() {
+      playSongByIndex(currentPlaylistIndex - 1);
+    }
+
+    // Play Any Audio Track Directly Inside The Page
+    function playSearchedTrack(previewUrl, trackName, artistName, artworkUrl) {
+      const audio = document.getElementById('usagi-audio-engine');
+      const trackNameEl = document.getElementById('player-track-name');
+      const artistNameEl = document.getElementById('player-artist-name');
+      const albumArtEl = document.getElementById('player-album-art');
+      const nowPlayingHeader = document.getElementById('music-now-playing');
+      const statusPill = document.getElementById('player-badge-status');
+
+      if (trackNameEl) trackNameEl.innerText = trackName || '浪漫音乐';
+      if (artistNameEl) artistNameEl.innerText = (artistName || '芷萱专属点播') + ' · 原生真声输出';
+      if (albumArtEl) albumArtEl.src = artworkUrl || 'usagi_character.png';
+      if (nowPlayingHeader) nowPlayingHeader.innerText = `${trackName || '好音乐'} 🎶`;
+      if (statusPill) {
+        statusPill.innerHTML = '<i class="fa-solid fa-circle-play mr-1 text-emerald-600"></i> 正在播放';
+        statusPill.className = 'badge-kawaii bg-emerald-100 text-emerald-800 text-[11px] animate-pulse';
+      }
+
+      if (audio && previewUrl) {
+        audio.src = previewUrl;
+        audio.play().catch(e => console.log('Audio autoplay info:', e));
+      }
+
+      UsagiSound.water();
+      confettiRain(25);
+    }
+
+    // Handle Local User MP3 Upload for 100% Uncut Full Songs
+    function handleLocalAudioUpload(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const objectUrl = URL.createObjectURL(file);
+      const cleanTitle = file.name.replace(/\.[^/.]+$/, '');
+      playSearchedTrack(objectUrl, cleanTitle, '本地高保真 100% 完整原曲', 'usagi_character.png');
+      alert(`已成功加载完整本地歌曲【${cleanTitle}】，正在无删减完整原声播放！🐰💖`);
+    }
+
+    // Quick Search Helper for Clickable Search Chips
+    function quickSearch(queryText) {
+      const input = document.getElementById('music-query-input');
+      if (input) input.value = queryText;
+      handleSearchMusic();
+    }
+
+    // Mascot Collapsible Minimize
+    function toggleUsagiMinimize() {
+      if (window.UsagiPetManager && typeof UsagiPetManager.toggleMinimize === 'function') {
+        UsagiPetManager.toggleMinimize();
+      } else {
+        const mascot = document.getElementById('usagi-mascot-container');
+        if (mascot) {
+          mascot.classList.toggle('minimized');
+        }
+      }
+    }
+
+    // Super Robust Search Engine
+    async function handleSearchMusic() {
+      const input = document.getElementById('music-query-input');
+      const rawQuery = input ? input.value.trim() : '';
+      if (!rawQuery) {
+        alert("请输入想听的歌名或歌手（例如：time machine、玻璃、有我呢、城外、小白、郑润泽、周杰伦等）~ 🎵");
+        return;
+      }
+
+      const resultsBox = document.getElementById('music-search-results-box');
+      const resultsList = document.getElementById('search-results-list');
+      const hintEl = document.getElementById('search-result-hint');
+
+      if (resultsBox) resultsBox.classList.remove('hidden');
+      if (hintEl) hintEl.innerText = '正在检索曲库中...';
+
+      const cleanQuery = rawQuery.replace(/[-—_/\.,+~&·]/g, ' ').toLowerCase().trim();
+      const rawWords = cleanQuery.split(/\s+/).filter(Boolean);
+      const stopWords = new Set(['所有', '的', '歌曲', '歌', '全部', '全集', '首', '请', '播放', '听', '放']);
+      const meaningfulWords = rawWords.filter(w => !stopWords.has(w));
+      const searchWords = meaningfulWords.length > 0 ? meaningfulWords : rawWords;
+
+      // 1. Search local catalog first (Zero delay, 100% reliable)
+      const localMatches = ZHENG_RUNZE_CATALOG.filter(song => {
+        const songFull = (song.title + ' ' + song.artist + ' ' + (song.keys || []).join(' ')).toLowerCase();
+        if (songFull.includes(cleanQuery) || cleanQuery.includes(song.title.toLowerCase())) return true;
+        if (searchWords.length > 0 && searchWords.every(word => songFull.includes(word))) return true;
+        if (searchWords.length >= 2) {
+          const matchCount = searchWords.filter(w => songFull.includes(w)).length;
+          if (matchCount >= 2 && matchCount >= searchWords.length - 1) return true;
+        }
+        if (searchWords.length === 1 && songFull.includes(searchWords[0])) return true;
+        return false;
+      });
+
+      if (localMatches.length > 0) {
+        if (hintEl) hintEl.innerText = `为你找到 ${localMatches.length} 首匹配好歌，点击直接播放：`;
+        if (resultsList) {
+          resultsList.innerHTML = '';
+          localMatches.forEach(song => {
+            const card = document.createElement('div');
+            card.className = 'p-2.5 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 transition-all cursor-pointer flex items-center gap-2.5 shadow-xs hover:scale-[1.01]';
+            card.onclick = () => playSongById(song.id);
+            card.innerHTML = `
+              <img src="${song.cover || 'usagi_character.png'}" alt="cover" class="w-10 h-10 rounded-lg object-cover flex-shrink-0 shadow-xs border border-pink-200" />
+              <div class="flex-1 min-w-0">
+                <p class="text-xs font-black text-stone-800 truncate">${song.title}</p>
+                <p class="text-[11px] text-pink-600 truncate">${song.artist}</p>
+              </div>
+              <span class="text-xs text-rose-500 font-bold flex-shrink-0"><i class="fa-solid fa-play"></i></span>
+            `;
+            resultsList.appendChild(card);
+          });
+        }
+        playSongById(localMatches[0].id);
+        return;
+      }
+
+      // 2. Online Search API (Apple iTunes search with error handling)
+      try {
+        const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(cleanQuery)}&country=MY&entity=song&limit=6`);
+        const data = await res.json();
+        if (data && data.results && data.results.length > 0) {
+          const songs = data.results;
+          if (hintEl) hintEl.innerText = `全网找到 ${songs.length} 首歌曲：`;
+          if (resultsList) {
+            resultsList.innerHTML = '';
+            songs.forEach(song => {
+              const card = document.createElement('div');
+              card.className = 'p-2.5 rounded-xl bg-white hover:bg-pink-100 border border-pink-200 transition-all cursor-pointer flex items-center gap-2.5 shadow-xs hover:scale-[1.01]';
+              card.onclick = () => playSearchedTrack(song.previewUrl, song.trackName, song.artistName, song.artworkUrl100);
+              card.innerHTML = `
+                <img src="${song.artworkUrl100 || 'usagi_character.png'}" alt="cover" class="w-10 h-10 rounded-lg object-cover flex-shrink-0 shadow-xs border border-pink-200" />
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-black text-stone-800 truncate">${song.trackName}</p>
+                  <p class="text-[11px] text-pink-600 truncate">${song.artistName}</p>
+                </div>
+                <span class="text-xs text-rose-500 font-bold flex-shrink-0"><i class="fa-solid fa-play"></i></span>
+              `;
+              resultsList.appendChild(card);
+            });
+          }
+          playSearchedTrack(songs[0].previewUrl, songs[0].trackName, songs[0].artistName, songs[0].artworkUrl100);
+          return;
+        }
+      } catch (e) {
+        console.warn('Online API search failed, falling back:', e);
+      }
+
+      // 3. Fallback: play Zheng Runze 城外
+      if (hintEl) hintEl.innerText = '未在外部曲库检索到结果，已为你播放专属推荐：';
+      playSongById('chengwai_zrz');
+    }
+
+    // Boyfriend Curated Instant Song Handler
+    async function playCuratedSong(type) {
+      if (type === 'gaobai') {
+        playSongById('gaobai_jay');
+      } else if (type === 'qingtian') {
+        playSongById('qingtian_jay');
+      } else if (type === 'lofi') {
+        playSearchedTrack(
+          'https://streams.ilovemusic.de/iloveradio17.mp3',
+          '24/7 Lofi Girl 治愈学习电台 ☕',
+          'Lofi Records · 陪伴芷萱温习写手账',
+          'usagi_character.png'
+        );
+      } else if (type === 'sleep') {
+        playSearchedTrack(
+          'https://ice5.somafm.com/groovesalad-128-mp3',
+          '晚安深度睡眠 · 舒缓轻音乐 🌙',
+          'SomaFM · 舒缓身心安心入眠',
+          'usagi.png'
+        );
+      } else if (type === 'usagi') {
+        playSearchedTrack(
+          'https://ice1.somafm.com/dronezone-128-mp3',
+          '乌萨奇 & 吉伊卡哇 元气电台 🐰',
+          'Usagi Energy · 今天也要元气满满',
+          'usagi_character.png'
+        );
+      } else if (type === 'rain') {
+        playSearchedTrack(
+          'https://ice5.somafm.com/groovesalad-128-mp3',
+          '治愈下雨深度睡眠白噪音 🌧️',
+          'Nature Vibes · 听雨发呆放空',
+          'usagi.png'
+        );
+      }
+    }
+
+    // Usagi Realtime Dancing Controller
+    function startUsagiDancing() {
+      const bouncer = document.getElementById('usagi-bouncer');
+      const disc = document.getElementById('vinyl-disc-wrapper');
+      const btnToggle = document.getElementById('btn-toggle-play');
+      const statusPill = document.getElementById('player-badge-status');
+
+      if (bouncer && !bouncer.classList.contains('dancing')) {
+        bouncer.classList.add('dancing');
+      }
+      if (disc) disc.classList.remove('vinyl-paused');
+      if (btnToggle) btnToggle.innerHTML = '<i class="fa-solid fa-pause mr-1"></i> 暂停';
+      if (statusPill) {
+        statusPill.innerHTML = '<i class="fa-solid fa-circle-play mr-1 text-emerald-600"></i> 正在播放';
+        statusPill.className = 'badge-kawaii bg-emerald-100 text-emerald-800 text-[11px] animate-pulse';
+      }
+    }
+
+    function stopUsagiDancing() {
+      const bouncer = document.getElementById('usagi-bouncer');
+      const disc = document.getElementById('vinyl-disc-wrapper');
+      const btnToggle = document.getElementById('btn-toggle-play');
+      const statusPill = document.getElementById('player-badge-status');
+
+      if (bouncer) {
+        bouncer.classList.remove('dancing');
+      }
+      if (disc) disc.classList.add('vinyl-paused');
+      if (btnToggle) btnToggle.innerHTML = '<i class="fa-solid fa-play mr-1"></i> 播放';
+      if (statusPill) {
+        statusPill.innerHTML = '<i class="fa-solid fa-circle-pause mr-1 text-stone-500"></i> 已暂停';
+        statusPill.className = 'badge-kawaii bg-stone-100 text-stone-600 text-[11px]';
+      }
+    }
+
+    // Global Click Heart Ripple Effect
+    function createClickHeartFx(x, y) {
+      try {
+        const heart = document.createElement('div');
+        heart.className = 'click-heart-fx';
+        const icons = ['💖', '✨', '🌸', '🐰', '⭐', '🍓', '🥕', '💕'];
+        heart.innerText = icons[Math.floor(Math.random() * icons.length)];
+        heart.style.left = `${x}px`;
+        heart.style.top = `${y}px`;
+        document.body.appendChild(heart);
+        setTimeout(() => {
+          if (heart.parentNode) heart.parentNode.removeChild(heart);
+        }, 850);
+      } catch (e) { console.warn(e); }
+    }
+
+    window.addEventListener('pointerdown', (e) => {
+      // Create heart on interactive elements click
+      if (e.target && e.target.closest && e.target.closest('button, a, .cursor-pointer, .nav-pill, .glass-card, [onclick]')) {
+        createClickHeartFx(e.clientX, e.clientY);
+      }
+    });
+
+    // Auto-sync Vinyl Spin & Usagi Dancing State with Audio Engine
+    window.addEventListener('DOMContentLoaded', () => {
+      const audio = document.getElementById('usagi-audio-engine');
+      if (audio) {
+        audio.addEventListener('play', () => {
+          startUsagiDancing();
+        });
+        audio.addEventListener('pause', () => {
+          stopUsagiDancing();
+        });
+        audio.addEventListener('ended', () => {
+          if (playMode === 'list') {
+            playNextSong();
+          } else {
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log(e));
+          }
+        });
+        audio.addEventListener('error', (e) => {
+          console.warn('Audio playback error, attempting fallback:', e);
+          if (currentPlaylistIndex >= 0 && currentPlaylistIndex < ZHENG_RUNZE_CATALOG.length) {
+            const song = ZHENG_RUNZE_CATALOG[currentPlaylistIndex];
+            if (song && song.fallbackAudio && !audio.src.includes(song.fallbackAudio)) {
+              console.log('Falling back to online stream:', song.fallbackAudio);
+              audio.src = song.fallbackAudio;
+              audio.play().catch(err => console.log(err));
+            }
+          }
+        });
+      }
+    });
+
+    // Tab Event Forwarders
+    function handleAddPeriodRecord() {
+      const s = document.getElementById('period-new-start').value;
+      const e = document.getElementById('period-new-end').value;
+      const f = document.getElementById('period-new-flow').value;
+      const p = document.getElementById('period-new-pain').value;
+      const n = document.getElementById('period-new-notes').value;
+      USAGI_APP.addPeriodRecord(s, e, f, p, n);
+      document.getElementById('period-new-notes').value = '';
+    }
+
+    function handleAddExpenseSubmit() {
+      const type = document.getElementById('exp-input-type').value;
+      const cat = document.getElementById('exp-input-cat').value;
+      const amount = document.getElementById('exp-input-amount').value;
+      const date = document.getElementById('exp-input-date').value || new Date().toISOString().split('T')[0];
+      const note = document.getElementById('exp-input-note').value;
+      USAGI_APP.addExpense(type, cat, amount, date, note);
+      document.getElementById('exp-input-amount').value = '';
+      document.getElementById('exp-input-note').value = '';
+    }
+
+    function handleAddSleepSubmit() {
+      const sleep = document.getElementById('sleep-input-sleep').value;
+      const wake = document.getElementById('sleep-input-wake').value;
+      const qual = document.getElementById('sleep-input-quality').value;
+      const note = document.getElementById('sleep-input-note').value;
+      USAGI_APP.addSleepLog(sleep, wake, qual, note);
+      document.getElementById('sleep-input-note').value = '';
+    }
+
+    function handleAddWeightSubmit() {
+      const w = document.getElementById('weight-input-val').value;
+      const ex = document.getElementById('weight-input-exercise').value;
+      const dur = document.getElementById('weight-input-duration').value;
+      USAGI_APP.addWeightLog(w, ex, dur);
+      document.getElementById('weight-input-val').value = '';
+      document.getElementById('weight-input-exercise').value = '';
+      document.getElementById('weight-input-duration').value = '';
+    }
+
+    function selectMood(mood) {
+      currentSelectedMood = mood;
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        if (btn.getAttribute('data-mood') === mood) {
+          btn.classList.add('border-amber-400', 'bg-amber-100', 'scale-105');
+        } else {
+          btn.classList.remove('border-amber-400', 'bg-amber-100', 'scale-105');
+        }
+      });
+      UsagiSound.pop();
+
+      if (window.UsagiPetManager) {
+        if (['happy', 'yaha', 'ura'].includes(mood)) {
+          UsagiPetManager.reactTo('happy');
+        } else if (['emo', 'angry', 'tired'].includes(mood)) {
+          UsagiPetManager.reactTo('comfort');
+        } else if (mood === 'calm') {
+          UsagiPetManager.reactTo('highlight', '平淡安静的小日子也格外温柔~ 乌萨奇静静陪着芷萱 🍃🍵');
+        }
+      }
+    }
+
+    function handleAddMoodSubmit() {
+      const symptoms = [];
+      document.querySelectorAll('#symptoms-group input[type="checkbox"]:checked').forEach(c => {
+        symptoms.push(c.value);
+      });
+      const note = document.getElementById('mood-input-note').value;
+      USAGI_APP.addMood(currentSelectedMood, symptoms, note);
+      document.getElementById('mood-input-note').value = '';
+      document.querySelectorAll('#symptoms-group input[type="checkbox"]').forEach(c => c.checked = false);
+    }
+
+    function handleAddHabitSubmit() {
+      const icon = document.getElementById('habit-new-icon').value;
+      const name = document.getElementById('habit-new-name').value;
+      USAGI_APP.addHabit(name, icon);
+      document.getElementById('habit-new-name').value = '';
+      document.getElementById('habit-new-icon').value = '';
+    }
+
+    function handleAddNoteSubmit() {
+      const title = document.getElementById('note-input-title').value;
+      const tag = document.getElementById('note-input-tag').value;
+      const content = document.getElementById('note-input-content').value;
+      USAGI_APP.addNote(title, content, tag);
+      document.getElementById('note-input-title').value = '';
+      document.getElementById('note-input-content').value = '';
+    }
+
+    function handleAddCountdownSubmit() {
+      const icon = document.getElementById('cd-input-icon').value;
+      const title = document.getElementById('cd-input-title').value;
+      const date = document.getElementById('cd-input-date').value;
+      USAGI_APP.addCountdown(title, date, icon);
+      document.getElementById('cd-input-title').value = '';
+    }
+
+    function handleAddTodoSubmit() {
+      const text = document.getElementById('todo-input-text').value;
+      const pri = document.getElementById('todo-input-pri').value;
+      const due = document.getElementById('todo-input-due').value;
+      USAGI_APP.addTodo(text, pri, due);
+      document.getElementById('todo-input-text').value = '';
+    }
+
+    function handleAddWatchlistSubmit() {
+      const type = document.getElementById('wl-input-type').value;
+      const title = document.getElementById('wl-input-title').value;
+      const price = document.getElementById('wl-input-price').value;
+      USAGI_APP.addWatchlist(title, type, 5, price, '');
+      document.getElementById('wl-input-title').value = '';
+      document.getElementById('wl-input-price').value = '';
+    }
+
+    function handleAddHighlightSubmit() {
+      const text = document.getElementById('hl-input-text').value;
+      const grat = document.getElementById('hl-input-grat').value;
+      USAGI_APP.addHighlight(text, grat);
+      document.getElementById('hl-input-text').value = '';
+      document.getElementById('hl-input-grat').value = '';
+    }
+
+    function handleAddCalendarEventSubmit() {
+      const date = document.getElementById('cal-new-date').value;
+      const title = document.getElementById('cal-new-title').value;
+      const cat = document.getElementById('cal-new-category').value;
+      const time = document.getElementById('cal-new-time').value;
+      const color = document.getElementById('cal-new-color').value;
+      const content = document.getElementById('cal-new-content').value;
+
+      USAGI_APP.addCalendarEvent(date, title, cat, time, content, color);
+
+      document.getElementById('cal-new-title').value = '';
+      document.getElementById('cal-new-content').value = '';
+    }
+
+    // Cloud Database Helpers
+    function openCloudDbModal() {
+      const modal = document.getElementById('modal-cloud-db');
+      if (modal) {
+        document.getElementById('cloud-input-url').value = localStorage.getItem('usagi_cloud_url') || 'https://rlbovlevaddvbuchsxwz.supabase.co';
+        document.getElementById('cloud-input-key').value = localStorage.getItem('usagi_cloud_key') || 'sb_publishable_v-jwAI5rZT3nq_kHRfHv5Q_8CdXbbjz';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        modal.style.display = 'flex';
+        UsagiSound.pop();
+      }
+    }
+
+    function closeCloudDbModal() {
+      const modal = document.getElementById('modal-cloud-db');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        modal.style.display = 'none';
+        UsagiSound.pop();
+      }
+    }
+
+    function handleSaveCloudConfig() {
+      const u = document.getElementById('cloud-input-url').value;
+      const k = document.getElementById('cloud-input-key').value;
+      USAGI_APP.cloud.saveConfig(u, k);
+    }
+
+    function handleClearCloudConfig() {
+      if (confirm("确定要切换回纯本地存储模式吗？")) {
+        USAGI_APP.cloud.saveConfig('', '');
+        document.getElementById('cloud-input-url').value = '';
+        document.getElementById('cloud-input-key').value = '';
+      }
+    }
+
+    async function handleSyncToCloud() {
+      if (!USAGI_APP.cloud.isConnected) {
+        alert("请先填写并保存 Supabase 数据库配置哦！☁️");
+        return;
+      }
+      if (!USAGI_APP.currentUser || !USAGI_APP.data) {
+        alert("请先登录账号！");
+        return;
+      }
+      const users = USAGI_APP.getUsers();
+      const pwd = users[USAGI_APP.currentUser] ? users[USAGI_APP.currentUser].password : '';
+      const nick = (USAGI_APP.data.profile && USAGI_APP.data.profile.nickname) ? USAGI_APP.data.profile.nickname : USAGI_APP.currentUser;
+      await USAGI_APP.cloud.syncDataToCloud(USAGI_APP.currentUser, USAGI_APP.data, pwd, nick);
+      alert("本地所有手账数据已成功推送至 Supabase 云数据库！🎉");
+      UsagiSound.sparkle();
+      confettiRain();
+    }
+
+    async function handlePullFromCloud() {
+      if (!USAGI_APP.cloud.isConnected) {
+        alert("请先填写并保存 Supabase 数据库配置哦！☁️");
+        return;
+      }
+      if (!USAGI_APP.currentUser) {
+        alert("请先登录账号！");
+        return;
+      }
+      const record = await USAGI_APP.cloud.pullDataFromCloud(USAGI_APP.currentUser);
+      if (record && record.data) {
+        if (confirm("从云端拉取将覆盖当前本地未同步的数据，确定要拉取吗？")) {
+          USAGI_APP.data = record.data;
+          USAGI_APP.saveData();
+          USAGI_APP.renderAll();
+          alert("已从云数据库成功拉取并同步最新手账数据！✨");
+          UsagiSound.yaha();
+          confettiRain();
+        }
+      } else {
+        alert("云端暂未查询到该账号的数据记录，您可以先点击【推送本地到云端】！🥕");
+      }
+    }
+
+    // Excel Export Modal Helpers
+    function openExportExcelModal(defaultType = 'expense') {
+      const modal = document.getElementById('modal-export-excel');
+      if (modal) {
+        const curYear = USAGI_APP.currentExpenseYear || new Date().getFullYear();
+        const curMonth = USAGI_APP.currentExpenseMonth || (new Date().getMonth() + 1);
+        const yearInput = document.getElementById('excel-export-year');
+        if (yearInput) yearInput.value = curYear;
+        const monthSelect = document.getElementById('excel-export-month');
+        if (monthSelect) monthSelect.value = String(curMonth);
+        const typeSelect = document.getElementById('excel-export-type');
+        if (typeSelect) typeSelect.value = defaultType;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        modal.style.display = 'flex';
+        UsagiSound.pop();
+      }
+    }
+
+    function closeExportExcelModal() {
+      const modal = document.getElementById('modal-export-excel');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        modal.style.display = 'none';
+        UsagiSound.pop();
+      }
+    }
+
+    function handleConfirmExportExcel() {
+      const year = document.getElementById('excel-export-year').value;
+      const month = document.getElementById('excel-export-month').value;
+      const type = document.getElementById('excel-export-type').value;
+      USAGI_APP.exportToExcel(year, month, type);
+      closeExportExcelModal();
+    }
+  </script>
+  <!-- 📱 手机专属底部快捷导航栏 (Mobile Bottom Navigation Dock) -->
+  <nav id="mobile-bottom-dock" class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t-2 border-pink-200 shadow-2xl py-1.5 px-3 flex items-center justify-around md:hidden">
+    <button onclick="USAGI_APP.switchTab('dashboard')" class="mobile-nav-btn active flex flex-col items-center gap-0.5 text-stone-600 focus:outline-none" data-tab="dashboard">
+      <span class="text-xl">🏠</span>
+      <span class="text-[10px] font-black">今日</span>
+    </button>
+    <button onclick="USAGI_APP.switchTab('calendar')" class="mobile-nav-btn flex flex-col items-center gap-0.5 text-stone-600 focus:outline-none" data-tab="calendar">
+      <span class="text-xl">📅</span>
+      <span class="text-[10px] font-black">日历</span>
+    </button>
+    <button onclick="USAGI_APP.switchTab('period')" class="mobile-nav-btn flex flex-col items-center gap-0.5 text-stone-600 focus:outline-none" data-tab="period">
+      <span class="text-xl">💖</span>
+      <span class="text-[10px] font-black">经期</span>
+    </button>
+    <button onclick="USAGI_APP.switchTab('expense')" class="mobile-nav-btn flex flex-col items-center gap-0.5 text-stone-600 focus:outline-none" data-tab="expense">
+      <span class="text-xl">💰</span>
+      <span class="text-[10px] font-black">记账</span>
+    </button>
+    <button onclick="USAGI_APP.switchTab('music')" class="mobile-nav-btn flex flex-col items-center gap-0.5 text-stone-600 focus:outline-none" data-tab="music">
+      <span class="text-xl">🎵</span>
+      <span class="text-[10px] font-black">点歌</span>
+    </button>
+    <button onclick="USAGI_APP.switchTab('games')" class="mobile-nav-btn flex flex-col items-center gap-0.5 text-stone-600 focus:outline-none" data-tab="games">
+      <span class="text-xl">🎮</span>
+      <span class="text-[10px] font-black">游乐园</span>
+    </button>
+  </nav>
+
+</body>
+</html>
