@@ -717,17 +717,17 @@ body {
    ============================================================ */
 @media (max-width: 768px) {
   body {
-    padding-bottom: 110px !important;
+    padding-bottom: 120px !important;
   }
   .usagi-mascot-float {
-    bottom: calc(96px + env(safe-area-inset-bottom, 16px)) !important;
+    bottom: calc(76px + env(safe-area-inset-bottom, 12px)) !important;
     right: 12px !important;
-    transform: scale(0.85);
+    transform: scale(0.88);
     transform-origin: bottom right;
-    z-index: 9999 !important;
+    z-index: 9990 !important;
   }
   .usagi-mascot-float.roaming {
-    bottom: calc(96px + env(safe-area-inset-bottom, 16px)) !important;
+    bottom: calc(76px + env(safe-area-inset-bottom, 12px)) !important;
   }
   .usagi-mascot-float:hover {
     transform: scale(0.90);
@@ -2696,35 +2696,274 @@ body {
 }
 
 @media (max-width: 768px) {
-  /* Extra mobile optimization for phones */
+  /* ============================================================
+     MOBILE UI/UX REDESIGN: 专为手机优化 · 清晰好读 · 舒适单手操作
+     ============================================================ */
+
+  /* Global mobile viewport & spacing */
+  html, body {
+    overflow-x: hidden !important;
+    font-size: 15px !important;
+    padding-bottom: 125px !important;
+  }
+
+  /* Full-bleed comfortable margins */
+  .max-w-\[1440px\],
+  .max-w-7xl,
+  .container {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* Glass cards mobile refinement */
   .glass-card {
-    padding: 0.95rem !important;
-    border-radius: 1.15rem !important;
+    padding: 1rem !important;
+    border-radius: 1.25rem !important;
+    border-width: 2px !important;
+    box-shadow: 0 4px 18px rgba(244, 114, 182, 0.08) !important;
   }
 
-  /* Mascot Actor & Image scaling on mobile */
-  #usagi-actor-box {
-    width: 5rem !important;
-    height: 6rem !important;
+  /* Mobile Top App Header */
+  header.glass-card {
+    padding: 8px 12px !important;
+    border-radius: 1.25rem !important;
+    gap: 6px !important;
   }
-  #usagi-mascot-img {
-    width: 5rem !important;
-    height: 6rem !important;
+  header.glass-card h1 {
+    font-size: 1.05rem !important;
+  }
+  #user-motto-display {
+    display: none !important;
   }
 
-  /* Speech Bubble mobile adaptation */
-  .speech-bubble {
-    max-width: min(320px, calc(100vw - 32px)) !important;
-    padding: 10px 14px !important;
-    font-size: 0.825rem !important;
+  /* Mobile Horizontal Tab Navigation Bar */
+  .mobile-tab-bar {
+    display: flex !important;
+    padding: 8px 6px !important;
+    gap: 8px !important;
+    border-radius: 1.25rem !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    box-shadow: 0 4px 16px rgba(244, 114, 182, 0.12) !important;
+    margin-bottom: 12px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
   }
-  .speech-bubble .speech-tag {
-    font-size: 0.7rem !important;
+  .mobile-tab-pill {
+    padding: 8px 14px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    border-radius: 9999px !important;
+    border: 1.5px solid #fbcfe8 !important;
+    background: #ffffff !important;
+    color: #4b5563 !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
   }
-  .speech-bubble .bubble-dock-grid {
+  .mobile-tab-pill.active {
+    background: linear-gradient(135deg, #f472b6, #fb7185) !important;
+    color: #ffffff !important;
+    border-color: #f43f5e !important;
+    box-shadow: 0 4px 12px rgba(244, 114, 182, 0.45) !important;
+    transform: scale(1.03) !important;
+  }
+
+  /* Dashboard Greeting Banner */
+  #tab-dashboard .glass-card:first-child {
+    padding: 14px !important;
+    border-radius: 1.25rem !important;
+  }
+  #dash-greeting-title {
+    font-size: 1.15rem !important;
+    line-height: 1.35 !important;
+  }
+  #dash-greeting-sub {
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+  }
+  #hero-pat-btn {
+    width: 100% !important;
+    margin-top: 10px !important;
+    padding: 10px 16px !important;
+    font-size: 0.88rem !important;
+    justify-content: center !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  /* Long-Distance Love & Boyfriend Emergency Care Kit (2x2 Grid) */
+  #tab-dashboard .mt-4.pt-3.border-t.border-pink-200\/60 {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 6px !important;
+    gap: 8px !important;
+  }
+  #tab-dashboard .mt-4.pt-3.border-t.border-pink-200\/60 button {
+    padding: 10px 8px !important;
+    min-height: 58px !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  #tab-dashboard .mt-4.pt-3.border-t.border-pink-200\/60 button .text-lg {
+    font-size: 1.35rem !important;
+  }
+  #tab-dashboard .mt-4.pt-3.border-t.border-pink-200\/60 button .text-xs {
+    font-size: 0.82rem !important;
+    font-weight: 800 !important;
+  }
+  #tab-dashboard .mt-4.pt-3.border-t.border-pink-200\/60 button .text-\[10px\] {
+    font-size: 0.72rem !important;
+  }
+
+  /* Dashboard Quick Metrics: Clean 2x2 Grid with Big Readable Numbers */
+  #tab-dashboard > .grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-4 {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  #tab-dashboard > .grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-4 > .glass-card {
+    padding: 12px 14px !important;
+    border-radius: 1.15rem !important;
+  }
+  #dash-cal-count,
+  #dash-period-status,
+  #dash-water-text {
+    font-size: 1.05rem !important;
+    font-weight: 900 !important;
+    line-height: 1.3 !important;
+  }
+  #dash-expense-spent {
+    font-size: 1.3rem !important;
+    font-weight: 900 !important;
+    color: #e11d48 !important;
+    line-height: 1.2 !important;
+  }
+  #dash-cal-sub,
+  #dash-period-sub,
+  #dash-expense-remaining,
+  #dash-habit-text {
+    font-size: 0.78rem !important;
+    margin-top: 4px !important;
+  }
+
+  /* Dashboard Countdown & Todos Stacked */
+  #tab-dashboard > .grid.grid-cols-1.md\:grid-cols-2 {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  #tab-dashboard > .grid.grid-cols-1.md\:grid-cols-2 > .glass-card {
+    padding: 14px !important;
+    border-radius: 1.25rem !important;
+  }
+
+  /* Dedicated Mobile Bottom App Bar (#mobile-bottom-dock) */
+  #mobile-bottom-dock {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 64px !important;
+    padding-bottom: calc(4px + env(safe-area-inset-bottom, 8px)) !important;
+    background: rgba(255, 255, 255, 0.97) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-top: 2px solid #fbcfe8 !important;
+    box-shadow: 0 -8px 25px rgba(244, 114, 182, 0.22) !important;
+    z-index: 9995 !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+  }
+  .mobile-nav-btn {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 6px 0 !important;
+    color: #6b7280 !important;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    position: relative !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+  }
+  .mobile-nav-btn .text-xl {
+    font-size: 1.35rem !important;
+    line-height: 1 !important;
+    transition: transform 0.2s !important;
+  }
+  .mobile-nav-btn .text-\[10px\] {
+    font-size: 0.74rem !important;
+    font-weight: 800 !important;
+    margin-top: 2px !important;
+  }
+  .mobile-nav-btn.active {
+    color: #db2777 !important;
+  }
+  .mobile-nav-btn.active .text-xl {
+    transform: scale(1.18) translateY(-2px) !important;
+  }
+  .mobile-nav-btn.active::after {
+    content: '' !important;
+    display: block !important;
+    width: 20px !important;
+    height: 3px !important;
+    background: #db2777 !important;
+    border-radius: 9999px !important;
+    margin-top: 2px !important;
+  }
+
+  /* Usagi Mascot elevated cleanly above the Mobile App Dock */
+  .usagi-mascot-float {
+    bottom: calc(76px + env(safe-area-inset-bottom, 12px)) !important;
+    right: 12px !important;
+    z-index: 9990 !important;
+  }
+  #usagi-actor-box {
+    width: 4.8rem !important;
+    height: 5.6rem !important;
+  }
+  #usagi-mascot-img {
+    width: 4.8rem !important;
+    height: 5.6rem !important;
+  }
+
+  /* Speech Bubble mobile styling: Crisp, big and perfectly readable */
+  .speech-bubble {
+    max-width: calc(100vw - 28px) !important;
+    padding: 10px 14px !important;
+    font-size: 0.88rem !important;
+    line-height: 1.4 !important;
+    font-weight: 700 !important;
+    color: #292524 !important;
+    border: 2px solid #f472b6 !important;
+    border-radius: 18px !important;
+    box-shadow: 0 8px 24px rgba(244, 114, 182, 0.25) !important;
+  }
+  .speech-bubble #usagi-speech-text {
+    font-size: 0.86rem !important;
+    font-weight: 700 !important;
+  }
+  .speech-bubble #usagi-speech-tag {
+    font-size: 0.74rem !important;
+  }
+
+  /* Assistant Dock: Thumb-friendly buttons */
+  .usagi-assistant-dock {
+    padding: 4px 8px !important;
+    border-radius: 9999px !important;
+    gap: 4px !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1.5px solid #fbcfe8 !important;
+  }
+  .usagi-assistant-dock button {
+    padding: 4px 8px !important;
+    font-size: 0.76rem !important;
+    font-weight: 800 !important;
   }
 
   /* Heatmap touch scroll */

@@ -378,8 +378,9 @@ const UsagiPetManager = (function () {
       }, 500);
     } else {
       setTimeout(() => {
-        speak('✨ 专属陪伴', '芷萱今天也要开开心心，元气满满！呀哈！💖');
-      }, 1200);
+        // 开屏默认进入今日总览，立即挥舞金光魔杖热情迎接！
+        reactTo('dashboard');
+      }, 500);
     }
   }
 
@@ -445,7 +446,7 @@ const UsagiPetManager = (function () {
     if (!container) return;
 
     const isMobile = (window.innerWidth < 768);
-    container.style.bottom = isMobile ? 'calc(96px + env(safe-area-inset-bottom, 16px))' : '24px';
+    container.style.bottom = isMobile ? 'calc(76px + env(safe-area-inset-bottom, 12px))' : '24px';
 
     if (isMinimized) {
       container.style.left = 'auto';
@@ -667,7 +668,7 @@ const UsagiPetManager = (function () {
         'state-watchlist', 'state-music',
         'state-game_cheer', 'state-happy', 'state-yaha', 'state-ura', 'state-mood',
         'state-expense', 'state-countdown',
-        'state-love_hug', 'state-calm'
+        'state-love_hug', 'state-calm', 'state-dashboard'
       ];
       allBouncerStates.forEach(cls => bouncer.classList.remove(cls));
       bouncer.classList.add(`state-${stateName}`);
@@ -697,7 +698,7 @@ const UsagiPetManager = (function () {
         'usagi-watchlist', 'usagi-music',
         'usagi-game-cheering', 'usagi-happy-dancing',
         'usagi-yaha-party', 'usagi-ura-energy', 'usagi-mood-station',
-        'usagi-bookkeeping', 'usagi-counting', 'usagi-calm'
+        'usagi-bookkeeping', 'usagi-counting', 'usagi-calm', 'usagi-dashboard-welcome'
       ];
       allStateClasses.forEach(cls => mascotImg.classList.remove(cls));
       if (config.imgClass) mascotImg.classList.add(config.imgClass);
@@ -756,7 +757,7 @@ const UsagiPetManager = (function () {
         'state-watchlist', 'state-music',
         'state-game_cheer', 'state-happy', 'state-yaha', 'state-ura', 'state-mood',
         'state-expense', 'state-countdown',
-        'state-love_hug', 'state-calm'
+        'state-love_hug', 'state-calm', 'state-dashboard'
       ];
       allBouncerStates.forEach(cls => bouncer.classList.remove(cls));
     }
@@ -773,7 +774,7 @@ const UsagiPetManager = (function () {
         'usagi-watchlist', 'usagi-music',
         'usagi-game-cheering', 'usagi-happy-dancing',
         'usagi-yaha-party', 'usagi-ura-energy', 'usagi-mood-station',
-        'usagi-bookkeeping', 'usagi-counting', 'usagi-calm'
+        'usagi-bookkeeping', 'usagi-counting', 'usagi-calm', 'usagi-dashboard-welcome'
       ];
       allStateClasses.forEach(cls => mascotImg.classList.remove(cls));
     }
@@ -789,7 +790,7 @@ const UsagiPetManager = (function () {
   }
 
   function reactTo(event, data = null) {
-    } else if (['dashboard', 'overview'].includes(event)) {
+    if (['dashboard', 'overview'].includes(event)) {
       setState('dashboard', data);
     } else if (event === 'sleep') {
       setState('sleep', data);

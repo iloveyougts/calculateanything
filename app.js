@@ -462,6 +462,12 @@ window.USAGI_APP = {
       const targetTab = urlParams.get('tab');
       if (targetTab) {
         this.switchTab(targetTab);
+      } else {
+        setTimeout(() => {
+          if (window.UsagiPetManager && typeof UsagiPetManager.reactTo === 'function') {
+            UsagiPetManager.reactTo('dashboard');
+          }
+        }, 350);
       }
       const targetSong = urlParams.get('song');
       if (targetSong && typeof window.playSongById === 'function') {
@@ -641,6 +647,30 @@ window.USAGI_APP = {
       }
     });
 
+    // 乌萨奇智能随场景切换专属状态与对话互动 (保证优先响应，绝不受后续渲染影响)
+    try {
+      if (window.UsagiPetManager && typeof UsagiPetManager.reactTo === 'function') {
+        if (tabName === 'dashboard') UsagiPetManager.reactTo('dashboard');
+        else if (tabName === 'period') UsagiPetManager.reactTo('period');
+        else if (tabName === 'calendar') UsagiPetManager.reactTo('calendar');
+        else if (tabName === 'habits') UsagiPetManager.reactTo('habit');
+        else if (tabName === 'expense') UsagiPetManager.reactTo('expense', '乌萨奇小账房戴上眼镜上线啦！快把今天的收支告诉乌萨奇吧~ 💰🥕');
+        else if (tabName === 'todos') UsagiPetManager.reactTo('countdown', '乌萨奇正在认真帮芷萱数着每一个期待的心愿倒数哦！⏳💖');
+        else if (tabName === 'notes') UsagiPetManager.reactTo('note', '这里是芷萱的灵感秘密花园~ 脑门小灯泡亮起来啦！💡📜');
+        else if (tabName === 'highlights') UsagiPetManager.reactTo('highlight', '睡前写下一件今天发生的好事吧~ 魔法星星装进许愿瓶！✨🫙');
+        else if (tabName === 'watchlist') UsagiPetManager.reactTo('watchlist', '乌萨奇戴上3D眼镜抱好大桶爆米花啦！芷萱想看什么电影呀~ 🍿🎬');
+        else if (tabName === 'cinema') {
+          UsagiPetManager.reactTo('watchlist', '乌萨奇戴上3D眼镜抱好大桶爆米花啦！芷萱今天想看什么戏呀~ 🍿🎬');
+          const audio = document.getElementById('usagi-audio-engine');
+          if (audio && !audio.paused) audio.pause();
+        }
+        else if (tabName === 'music') UsagiPetManager.reactTo('music', '乌萨奇戴上粉色猫耳耳机啦！跟着旋律一起摇摆~ 🎧🎶');
+        else if (tabName === 'games') UsagiPetManager.reactTo('game', '芷萱的治愈游乐园开张啦！乌萨奇在旁边全程为你加油助威！🎮🎉');
+        else if (tabName === 'health') UsagiPetManager.reactTo('water');
+        else if (tabName === 'mood') UsagiPetManager.reactTo('mood', '这里是芷萱的心情与规律树洞~ 无论今天是什么心情，乌萨奇都在这里认真倾听你！🎭💖');
+      }
+    } catch (e) { console.warn("Pet tab react error:", e); }
+
     // Trigger tab-specific renders safely
     try {
       if (tabName === 'dashboard') this.renderDashboard();
@@ -659,30 +689,6 @@ window.USAGI_APP = {
           if (!activeBtn) switchGameSubtab('fruit');
         }
       }
-
-      // 乌萨奇智能随场景切换专属状态与对话互动
-      try {
-        if (window.UsagiPetManager && typeof UsagiPetManager.reactTo === 'function') {
-          if (tabName === 'dashboard') UsagiPetManager.reactTo('dashboard');
-          else if (tabName === 'period') UsagiPetManager.reactTo('period');
-          else if (tabName === 'calendar') UsagiPetManager.reactTo('calendar');
-          else if (tabName === 'habits') UsagiPetManager.reactTo('habit');
-          else if (tabName === 'expense') UsagiPetManager.reactTo('expense', '乌萨奇小账房戴上眼镜上线啦！快把今天的收支告诉乌萨奇吧~ 💰🥕');
-          else if (tabName === 'todos') UsagiPetManager.reactTo('countdown', '乌萨奇正在认真帮芷萱数着每一个期待的心愿倒数哦！⏳💖');
-          else if (tabName === 'notes') UsagiPetManager.reactTo('note', '这里是芷萱的灵感秘密花园~ 脑门小灯泡亮起来啦！💡📜');
-          else if (tabName === 'highlights') UsagiPetManager.reactTo('highlight', '睡前写下一件今天发生的好事吧~ 魔法星星装进许愿瓶！✨🫙');
-          else if (tabName === 'watchlist') UsagiPetManager.reactTo('watchlist', '乌萨奇戴上3D眼镜抱好大桶爆米花啦！芷萱想看什么电影呀~ 🍿🎬');
-          else if (tabName === 'cinema') {
-            UsagiPetManager.reactTo('watchlist', '乌萨奇戴上3D眼镜抱好大桶爆米花啦！芷萱今天想看什么戏呀~ 🍿🎬');
-            const audio = document.getElementById('usagi-audio-engine');
-            if (audio && !audio.paused) audio.pause();
-          }
-          else if (tabName === 'music') UsagiPetManager.reactTo('music', '乌萨奇戴上粉色猫耳耳机啦！跟着旋律一起摇摆~ 🎧🎶');
-          else if (tabName === 'games') UsagiPetManager.reactTo('game', '芷萱的治愈游乐园开张啦！乌萨奇在旁边全程为你加油助威！🎮🎉');
-          else if (tabName === 'health') UsagiPetManager.reactTo('water');
-          else if (tabName === 'mood') UsagiPetManager.reactTo('mood', '这里是芷萱的心情与规律树洞~ 无论今天是什么心情，乌萨奇都在这里认真倾听你！🎭💖');
-        }
-      } catch (e) { console.warn("Pet tab react error:", e); }
     } catch (err) {
       console.warn(`Tab render error for ${tabName}:`, err);
     }
@@ -1194,7 +1200,9 @@ window.USAGI_APP = {
   // 2. 生理期追踪 (Period Tracker)
   // --------------------------------------------------------------------------
   calculatePeriodStatus: function () {
-    const records = this.data.period.records;
+    if (!this.data) this.data = {};
+    if (!this.data.period) this.data.period = { records: [], cycleLength: 28, duration: 5 };
+    const records = this.data.period.records || [];
     if (!records || records.length === 0) {
       return {
         statusText: '暂无记录',
@@ -2606,6 +2614,12 @@ window.USAGI_APP = {
       const targetTab = urlParams.get('tab');
       if (targetTab) {
         this.switchTab(targetTab);
+      } else {
+        setTimeout(() => {
+          if (window.UsagiPetManager && typeof UsagiPetManager.reactTo === 'function') {
+            UsagiPetManager.reactTo('dashboard');
+          }
+        }, 350);
       }
       const targetSong = urlParams.get('song');
       if (targetSong && typeof window.playSongById === 'function') {

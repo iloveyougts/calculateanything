@@ -178,44 +178,44 @@
               <span class="hidden sm:inline">游乐园 🎮</span>
             </button>
 
-            <!-- Export Excel Button -->
-            <button onclick="openExportExcelModal('all_overview')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-emerald-50 border border-emerald-300 text-stone-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="导出 Excel 手账与财务对账单">
+            <!-- Export Excel Button (Desktop / Tablet) -->
+            <button onclick="openExportExcelModal('all_overview')" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-emerald-50 border border-emerald-300 text-stone-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="导出 Excel 手账与财务对账单">
               <i class="fa-solid fa-file-excel text-emerald-600"></i>
-              <span class="hidden sm:inline">导出 Excel</span>
+              <span class="hidden md:inline">导出 Excel</span>
             </button>
 
             <!-- Cloud DB Setting Button -->
-            <button onclick="openCloudDbModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-amber-100 border border-amber-300 text-stone-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="云端数据库设置">
+            <button onclick="openCloudDbModal()" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white hover:bg-amber-100 border border-amber-300 text-stone-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="云端数据库设置">
               <span id="cloud-status-dot" class="w-2.5 h-2.5 rounded-full bg-stone-300 inline-block"></span>
               <span id="cloud-status-text" class="hidden sm:inline">数据库</span>
               <i class="fa-solid fa-cloud text-amber-500"></i>
             </button>
 
             <!-- Mascot On/Off Toggle Button in Header -->
-            <button onclick="UsagiPetManager.toggleMinimize()" id="btn-pet-toggle-header" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 transition-all text-xs font-bold shadow-xs cursor-pointer" title="开启/收起乌萨奇助手">
+            <button onclick="UsagiPetManager.toggleMinimize()" id="btn-pet-toggle-header" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 transition-all text-xs font-bold shadow-xs cursor-pointer" title="开启/收起乌萨奇助手">
               <span>🐰</span>
               <span id="header-pet-toggle-text" class="hidden sm:inline">收起乌萨奇</span>
             </button>
 
             <!-- Controls: Sound, Particles, Backup, Logout -->
-            <button onclick="handleToggleSound()" id="btn-sound-toggle" class="w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 flex items-center justify-center text-stone-600 transition-all text-sm cursor-pointer" title="切换音效">
+            <button onclick="handleToggleSound()" id="btn-sound-toggle" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 flex items-center justify-center text-stone-600 transition-all text-xs sm:text-sm cursor-pointer" title="切换音效">
               <i class="fa-solid fa-volume-high"></i>
             </button>
 
-            <button onclick="handleToggleParticles()" id="btn-particle-toggle" class="w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 flex items-center justify-center text-amber-500 transition-all text-sm cursor-pointer" title="切换背景飘落动画">
+            <button onclick="handleToggleParticles()" id="btn-particle-toggle" class="hidden sm:flex w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 items-center justify-center text-amber-500 transition-all text-sm cursor-pointer" title="切换背景飘落动画">
               <i class="fa-solid fa-sparkles"></i> ✨
             </button>
 
-            <button onclick="USAGI_APP.exportDataJSON()" class="w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 flex items-center justify-center text-stone-600 transition-all text-sm cursor-pointer" title="导出备份数据 JSON">
+            <button onclick="USAGI_APP.exportDataJSON()" class="hidden sm:flex w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 items-center justify-center text-stone-600 transition-all text-sm cursor-pointer" title="导出备份数据 JSON">
               <i class="fa-solid fa-download"></i>
             </button>
 
-            <label class="w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 flex items-center justify-center text-stone-600 transition-all text-sm cursor-pointer" title="导入备份数据">
+            <label class="hidden sm:flex w-9 h-9 rounded-full bg-white hover:bg-amber-100 border border-stone-200 items-center justify-center text-stone-600 transition-all text-sm cursor-pointer" title="导入备份数据">
               <i class="fa-solid fa-upload"></i>
               <input type="file" accept=".json" onchange="USAGI_APP.importDataJSON(event)" class="hidden" />
             </label>
 
-            <button onclick="USAGI_APP.logout()" class="w-9 h-9 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-200 flex items-center justify-center text-rose-600 transition-all text-sm cursor-pointer" title="退出私人账号">
+            <button onclick="USAGI_APP.logout()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-200 flex items-center justify-center text-rose-600 transition-all text-xs sm:text-sm cursor-pointer" title="退出私人账号">
               <i class="fa-solid fa-right-from-bracket"></i>
             </button>
           </div>
@@ -3979,7 +3979,7 @@
       if (placeholder) placeholder.classList.add('hidden');
       if (iframe) {
         iframe.classList.remove('hidden');
-        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+        iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&enablejsapi=1`;
       }
       if (titleEl) {
         titleEl.innerHTML = `<i class="fa-solid fa-circle-play text-rose-500 animate-pulse"></i> 正在放映: ${title || '精选视频'} ${author ? `· ${author}` : ''} ✨`;
@@ -4034,11 +4034,38 @@
       const heading = document.getElementById('youtube-results-heading');
       if (loading) loading.classList.remove('hidden');
       if (queryLabel) queryLabel.innerText = query;
-      if (heading) heading.innerHTML = `正在全网搜索【<span class="text-rose-600">${escapeHtml(query)}</span>】候选结果列表...`;
+      if (heading) heading.innerHTML = `正在检索【<span class="text-rose-600 font-black">${escapeHtml(query)}</span>】候选视频列表...`;
+
+      // 1. Check curated library first for instantaneous (0ms) response
+      const lower = query.toLowerCase();
+      let matchedCurated = null;
+      if (lower.includes('fein') || lower.includes('dj') || lower.includes('booyah') || lower.includes('travis')) {
+        matchedCurated = YOUTUBE_CURATED_LIBRARY.fein;
+      } else if (lower.includes('cortis') || lower.includes('코르티스') || lower.includes('what you want') || lower.includes('fashion') || lower.includes('joyride')) {
+        matchedCurated = YOUTUBE_CURATED_LIBRARY.cortis;
+      } else if (lower.includes('chii') || lower.includes('乌萨奇') || lower.includes('吉伊卡哇') || lower.includes('兔兔')) {
+        matchedCurated = YOUTUBE_CURATED_LIBRARY.chiikawa;
+      } else if (lower.includes('韩剧') || lower.includes('甜宠') || lower.includes('kdrama') || lower.includes('剧')) {
+        matchedCurated = YOUTUBE_CURATED_LIBRARY.kdrama;
+      } else if (lower.includes('lofi') || lower.includes('学习') || lower.includes('助眠')) {
+        matchedCurated = YOUTUBE_CURATED_LIBRARY.lofi;
+      } else if (lower.includes('周杰伦') || lower.includes('晴天') || lower.includes('告白气球')) {
+        matchedCurated = YOUTUBE_CURATED_LIBRARY.jay;
+      } else if (lower.includes('郑润泽') || lower.includes('城外') || lower.includes('瞬')) {
+        matchedCurated = YOUTUBE_CURATED_LIBRARY.zrz;
+      }
+
+      if (matchedCurated && matchedCurated.length > 0) {
+        if (loading) loading.classList.add('hidden');
+        renderYouTubeResults(matchedCurated, query);
+        const first = matchedCurated[0];
+        playSelectedYouTubeVideo(first.videoId, first.title, first.author, document.querySelector('.yt-result-card'));
+        return;
+      }
 
       let results = [];
 
-      // 2. Try fetching real YouTube search results via high-speed Invidious API
+      // 2. Fetch real YouTube search results via Invidious API
       const searchApis = [
         `https://yt.chocolatemoo53.com/api/v1/search?q=${encodeURIComponent(query)}&type=video`,
         `https://invidious.nerdvpn.de/api/v1/search?q=${encodeURIComponent(query)}&type=video`,
@@ -4048,7 +4075,7 @@
       for (const api of searchApis) {
         try {
           const controller = new AbortController();
-          const timer = setTimeout(() => controller.abort(), 3200);
+          const timer = setTimeout(() => controller.abort(), 2000);
           const res = await fetch(api, { signal: controller.signal });
           clearTimeout(timer);
           if (res.ok) {
@@ -4073,32 +4100,14 @@
         }
       }
 
-      // 3. Fallback to Curated Library if network/API was slow or blocked
+      // 3. Fallback to General dynamic candidates if network API was unreachable
       if (results.length === 0) {
-        const lower = query.toLowerCase();
-        if (lower.includes('fein') || lower.includes('dj') || lower.includes('travis')) {
-          results = YOUTUBE_CURATED_LIBRARY.fein;
-        } else if (lower.includes('cortis') || lower.includes('코르티스') || lower.includes('what you want')) {
-          results = YOUTUBE_CURATED_LIBRARY.cortis;
-        } else if (lower.includes('chii') || lower.includes('乌萨奇') || lower.includes('吉伊卡哇') || lower.includes('兔兔')) {
-          results = YOUTUBE_CURATED_LIBRARY.chiikawa;
-        } else if (lower.includes('韩剧') || lower.includes('甜宠') || lower.includes('kdrama')) {
-          results = YOUTUBE_CURATED_LIBRARY.kdrama;
-        } else if (lower.includes('lofi') || lower.includes('学习') || lower.includes('助眠')) {
-          results = YOUTUBE_CURATED_LIBRARY.lofi;
-        } else if (lower.includes('周杰伦') || lower.includes('晴天') || lower.includes('告白气球')) {
-          results = YOUTUBE_CURATED_LIBRARY.jay;
-        } else if (lower.includes('郑润泽') || lower.includes('城外') || lower.includes('瞬')) {
-          results = YOUTUBE_CURATED_LIBRARY.zrz;
-        } else {
-          // General dynamic fallback
-          results = [
-            { videoId: 'bsytWBV3XVo', title: `【${query}】精选高燃舞台 / 现场版`, author: '音乐精选频道', duration: '3:15', viewsText: '热门推荐' },
-            { videoId: 'e2OpbOv_JiQ', title: `【${query}】官方高清 MV / 原曲首播`, author: '官方影视频道', duration: '3:40', viewsText: '官方发布' },
-            { videoId: 'B9synWjqBn8', title: `【${query}】超清 4K 特别现场版`, author: 'Live Stage', duration: '3:30', viewsText: '高清精选' },
-            { videoId: 'mszKrG8qEd0', title: `【${query}】治愈剪辑与特别高光赏析`, author: '手账影院推荐', duration: '5:20', viewsText: '特别推荐' }
-          ];
-        }
+        results = [
+          { videoId: 'bsytWBV3XVo', title: `【${query}】精选高燃舞台 / 现场版`, author: '音乐精选频道', duration: '3:15', viewsText: '热门推荐' },
+          { videoId: 'e2OpbOv_JiQ', title: `【${query}】官方高清 MV / 原曲首播`, author: '官方影视频道', duration: '3:40', viewsText: '官方发布' },
+          { videoId: 'B9synWjqBn8', title: `【${query}】超清 4K 特别现场版`, author: 'Live Stage', duration: '3:30', viewsText: '高清精选' },
+          { videoId: 'mszKrG8qEd0', title: `【${query}】治愈剪辑与特别高光赏析`, author: '手账影院推荐', duration: '5:20', viewsText: '特别推荐' }
+        ];
       }
 
       if (loading) loading.classList.add('hidden');
@@ -4182,8 +4191,6 @@
     }
 
     function quickYouTube(term) {
-      handleSearchYouTubeCinema(term);
-    }
       handleSearchYouTubeCinema(term);
     }
 
