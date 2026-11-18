@@ -49,6 +49,58 @@ button, a, input, select, textarea, [onclick], .cursor-pointer, .nav-pill, .btn-
   display: none !important;
 }
 
+/* ============================================================
+   LUXURY KAWAII PINK LOGIN SANCTUARY (粉色专属梦幻登录界面)
+   ============================================================ */
+#auth-modal:not(.hidden) {
+  display: flex !important;
+  background: radial-gradient(120% 120% at 50% 10%, rgba(255, 228, 230, 0.96) 0%, rgba(253, 242, 248, 0.97) 40%, rgba(254, 205, 211, 0.94) 80%, rgba(244, 114, 182, 0.8) 100%) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  animation: authFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes authFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+#auth-modal .modal-content {
+  box-shadow: 0 25px 60px -15px rgba(244, 63, 94, 0.28), 0 0 40px rgba(251, 113, 133, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+  animation: modalCardPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2) !important;
+}
+
+@keyframes modalCardPop {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Pulsing pink glow ring around mascot pod */
+.usagi-mascot-pod-halo {
+  animation: mascotHaloPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes mascotHaloPulse {
+  0% {
+    box-shadow: 0 0 16px rgba(244, 63, 94, 0.25), inset 0 0 12px rgba(255, 255, 255, 0.85);
+  }
+  100% {
+    box-shadow: 0 0 28px rgba(244, 114, 182, 0.5), inset 0 0 20px rgba(255, 228, 230, 0.95);
+  }
+}
+
 #modal-cloud-db.hidden,
 #modal-export-excel.hidden,
 #calendar-day-modal.hidden,

@@ -34,94 +34,163 @@
   <!-- ============================================================
        AUTH SCREEN: 方案 A 私人登录系统 (Multi-User Data Isolation)
        ============================================================ -->
-  <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-md">
-    <div class="modal-content glass-card max-w-md w-full p-8 relative overflow-hidden bg-white/95 border-4 border-amber-300">
+  <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+    
+    <!-- Ambient Floating Dreamy Glow Orbs -->
+    <div class="fixed -top-24 -left-24 w-80 sm:w-96 h-80 sm:h-96 rounded-full bg-pink-400/25 blur-3xl pointer-events-none animate-pulse"></div>
+    <div class="fixed -bottom-24 -right-24 w-80 sm:w-96 h-80 sm:h-96 rounded-full bg-rose-400/25 blur-3xl pointer-events-none animate-pulse" style="animation-delay: 1.5s;"></div>
+    <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-amber-200/20 blur-3xl pointer-events-none"></div>
+
+    <!-- Main Glassmorphic Pink Luxury Card -->
+    <div class="modal-content relative max-w-md w-full p-6 sm:p-8 rounded-[32px] sm:rounded-[36px] bg-white/92 backdrop-blur-2xl border-2 border-pink-200/90 shadow-[0_20px_60px_-15px_rgba(244,63,94,0.25),0_0_35px_rgba(251,113,133,0.18)] overflow-hidden transition-all my-auto select-none">
       
-      <!-- Authentic Usagi Illustration from Image 1 -->
-      <div class="flex justify-center -mt-6 mb-3">
-        <img src="usagi_character.png" alt="乌萨奇" class="w-28 h-32 object-contain animate-bounce drop-shadow-md select-none" />
+      <!-- Top Decorative Pink Ribbon Gradient Accent Bar -->
+      <div class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-pink-400 via-rose-500 to-amber-300"></div>
+
+      <!-- Usagi Mascot Stage Pod with Dreamy Halo -->
+      <div class="relative flex flex-col items-center pt-2 mb-3">
+        <!-- Soft Radial Halo Glow -->
+        <div class="usagi-mascot-pod-halo relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-pink-200/80 via-rose-100 to-amber-100/70 p-2 shadow-inner flex items-center justify-center border-2 border-white/80">
+          <img src="usagi_character.png" alt="乌萨奇" class="w-24 h-24 sm:w-28 sm:h-28 object-contain animate-bounce drop-shadow-md select-none" />
+          
+          <!-- Cute floating sparkle badges -->
+          <span class="absolute -top-1 -right-1 text-base sm:text-lg animate-pulse" title="✨">✨</span>
+          <span class="absolute -bottom-1 -left-1 text-base sm:text-lg animate-bounce" style="animation-delay: 0.6s;" title="🌸">🌸</span>
+        </div>
+
+        <!-- Mini Sweet Greeting Bubble -->
+        <div class="mt-2.5 px-3 py-1 rounded-full bg-gradient-to-r from-pink-50 to-rose-50 border border-pink-200/80 shadow-2xs flex items-center gap-1.5 text-[11px] font-black text-rose-700">
+          <span class="animate-pulse">🐰</span>
+          <span>呀哈！芷萱，欢迎回到温馨小家~</span>
+          <span>💖</span>
+        </div>
       </div>
 
-      <div class="text-center mb-6">
-        <h2 class="text-2xl font-black text-stone-800 tracking-wide flex items-center justify-center gap-2">
-          <span>USAGI LIFE</span>
-          <span class="text-pink-500">·</span>
-          <span>芷萱专属手账</span>
+      <!-- Header Title & Sweet Subtitle -->
+      <div class="text-center mb-5">
+        <h2 class="text-2xl sm:text-3xl font-black tracking-tight flex items-center justify-center gap-2">
+          <span class="bg-gradient-to-r from-rose-600 via-pink-600 to-rose-400 bg-clip-text text-transparent">USAGI LIFE</span>
+          <span class="text-pink-400 text-lg">·</span>
+          <span class="text-stone-800">芷萱专属手账</span>
         </h2>
-        <p class="text-xs text-pink-700/90 font-bold mt-1 bg-pink-50 inline-block px-3.5 py-1 rounded-full border border-pink-200">
-          <i class="fa-solid fa-heart text-rose-500 mr-1"></i> 为 颜芷萱 (GAN TZI SHUAN) 独家专属定制 💖
-        </p>
-        <p class="text-xs text-stone-500 mt-2">
-          乌萨奇陪伴芷萱记录生活的每一天 · 私人数据独立隔离
+        <div class="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 border border-rose-200/90 text-xs font-bold text-rose-700 shadow-2xs">
+          <i class="fa-solid fa-heart text-rose-500 text-[10px] animate-pulse"></i>
+          <span>为 颜芷萱 (GAN TZI SHUAN) 独家专属浪漫定制</span>
+          <i class="fa-solid fa-sparkles text-amber-500 text-[10px]"></i>
+        </div>
+        <p class="text-[11px] text-stone-500 mt-1.5 font-medium">
+          乌萨奇陪伴芷萱记录生活的每一天 · 私人数据安全隔离
         </p>
       </div>
 
-      <!-- Auth Tabs: Login / Register -->
-      <div class="flex rounded-xl bg-amber-50 p-1 mb-6 border border-amber-200">
-        <button id="tab-btn-login" onclick="switchAuthTab('login')" class="flex-1 py-2 text-sm font-bold rounded-lg transition-all bg-amber-400 text-stone-900 shadow-sm">
-          私人登录
+      <!-- Auth Tabs: iOS Style Luxury Segmented Control -->
+      <div class="flex rounded-2xl bg-pink-100/70 p-1 mb-5 border border-pink-200/80">
+        <button id="tab-btn-login" onclick="switchAuthTab('login')" class="flex-1 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-md shadow-rose-300/50 cursor-pointer">
+          <i class="fa-solid fa-lock-open mr-1"></i> 私人登录
         </button>
-        <button id="tab-btn-register" onclick="switchAuthTab('register')" class="flex-1 py-2 text-sm font-bold rounded-lg transition-all text-stone-600 hover:text-amber-700">
-          注册新账号
+        <button id="tab-btn-register" onclick="switchAuthTab('register')" class="flex-1 py-2.5 text-xs sm:text-sm font-bold rounded-xl transition-all text-stone-600 hover:text-rose-600 cursor-pointer">
+          <i class="fa-solid fa-user-plus mr-1"></i> 注册新账号
         </button>
       </div>
 
       <!-- Login Form -->
-      <form id="form-login" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+      <form id="form-login" onsubmit="handleLoginSubmit(event)" class="space-y-3.5">
         <div>
-          <label class="block text-xs font-bold text-stone-600 mb-1">账号名称 (Username)</label>
+          <label class="flex items-center gap-1.5 text-xs font-black text-rose-900/90 mb-1.5">
+            <i class="fa-solid fa-circle-user text-rose-400 text-sm"></i>
+            <span>账号名称 (Username)</span>
+          </label>
           <div class="relative">
-            <span class="absolute left-3.5 top-3 text-stone-400 text-sm"><i class="fa-solid fa-user"></i></span>
-            <input id="login-username" type="text" placeholder="例如: gts 或 tzishuan" class="w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm transition-all" required />
+            <input id="login-username" type="text" placeholder="例如: GANTZISHUAN 或 gts" class="w-full pl-4 pr-10 py-3 rounded-2xl border-2 border-pink-200/90 bg-pink-50/40 hover:bg-white focus:bg-white focus:border-rose-400 focus:ring-4 focus:ring-rose-200/40 outline-none text-sm font-bold text-stone-800 placeholder-pink-300 transition-all shadow-inner" required />
+            <span class="absolute right-3.5 top-3.5 text-pink-400 text-sm">
+              <i class="fa-solid fa-signature"></i>
+            </span>
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-stone-600 mb-1">登录密码 (Password)</label>
+          <label class="flex items-center gap-1.5 text-xs font-black text-rose-900/90 mb-1.5">
+            <i class="fa-solid fa-key text-rose-400 text-sm"></i>
+            <span>登录密码 (Password)</span>
+          </label>
           <div class="relative">
-            <span class="absolute left-3.5 top-3 text-stone-400 text-sm"><i class="fa-solid fa-lock"></i></span>
-            <input id="login-password" type="password" placeholder="请输入密码" class="w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm transition-all" required />
+            <input id="login-password" type="password" placeholder="请输入密码" class="w-full pl-4 pr-11 py-3 rounded-2xl border-2 border-pink-200/90 bg-pink-50/40 hover:bg-white focus:bg-white focus:border-rose-400 focus:ring-4 focus:ring-rose-200/40 outline-none text-sm font-bold text-stone-800 placeholder-pink-300 transition-all shadow-inner" required />
+            <button type="button" onclick="togglePasswordVisibility('login-password', this)" class="absolute right-3 top-2.5 p-1 rounded-lg text-pink-400 hover:text-rose-600 transition-colors cursor-pointer" title="显示/隐藏密码">
+              <i class="fa-solid fa-eye text-sm"></i>
+            </button>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2 mt-2">
-          <button type="submit" class="btn-usagi w-full py-2.5 text-sm font-black">
-            私人登录 🥕
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+          <button type="submit" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-rose-400 hover:from-rose-600 hover:to-pink-600 active:scale-[0.98] text-white font-black text-sm shadow-md shadow-rose-300/50 hover:shadow-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+            <i class="fa-solid fa-heart text-pink-200 animate-pulse text-xs"></i>
+            <span>私人安全登录 🥕</span>
           </button>
-          <button type="button" onclick="USAGI_APP.guestLogin()" class="btn-secondary w-full py-2.5 text-xs font-black text-pink-900 border-pink-300 bg-pink-50 hover:bg-pink-100">
-            芷萱免密一键进入 💖
+          <button type="button" onclick="USAGI_APP.guestLogin()" class="w-full py-3 px-4 rounded-2xl bg-white hover:bg-rose-50 active:scale-[0.98] border-2 border-rose-300 text-rose-600 font-black text-xs sm:text-sm shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer" title="无需输入密码，一键秒进芷萱手账">
+            <span>芷萱免密一键进入 💖</span>
           </button>
         </div>
 
-        <button type="button" onclick="fillDemoAccount()" class="w-full py-2 text-xs font-bold text-amber-700 bg-amber-100/60 hover:bg-amber-100 rounded-xl border border-dashed border-amber-300 transition-all flex items-center justify-center gap-1.5 mt-2">
-          <i class="fa-solid fa-heart text-rose-500"></i> 填入芷萱专属账号 (gts / 123)
-        </button>
+        <!-- Quick One-Click Fill Chips -->
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <button type="button" onclick="fillCloudAccount()" class="py-2 px-2.5 text-[11px] font-black text-rose-700 bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 rounded-xl border border-pink-300 transition-all flex items-center justify-center gap-1 shadow-2xs cursor-pointer truncate" title="快速填入云端数据库账号 GANTZISHUAN">
+            <span>☁️ GANTZISHUAN</span>
+          </button>
+          <button type="button" onclick="fillDemoAccount()" class="py-2 px-2.5 text-[11px] font-black text-amber-800 bg-gradient-to-r from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100 rounded-xl border border-amber-300 transition-all flex items-center justify-center gap-1 shadow-2xs cursor-pointer truncate" title="快速填入专属账号 gts / 123">
+            <span>🐰 gts (专属账号)</span>
+          </button>
+        </div>
       </form>
 
       <!-- Register Form -->
       <form id="form-register" onsubmit="handleRegisterSubmit(event)" class="space-y-3.5 hidden">
         <div>
-          <label class="block text-xs font-bold text-stone-600 mb-1">设置用户名 (作为唯一登录凭证)</label>
-          <input id="reg-username" type="text" placeholder="字母/数字，如: my_usagi" class="w-full px-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm" required />
+          <label class="flex items-center gap-1.5 text-xs font-black text-rose-900/90 mb-1.5">
+            <i class="fa-solid fa-circle-user text-rose-400 text-sm"></i>
+            <span>设置用户名 (唯一登录凭证)</span>
+          </label>
+          <input id="reg-username" type="text" placeholder="字母/数字，如: GANTZISHUAN" class="w-full px-4 py-3 rounded-2xl border-2 border-pink-200/90 bg-pink-50/40 hover:bg-white focus:bg-white focus:border-rose-400 focus:ring-4 focus:ring-rose-200/40 outline-none text-sm font-bold text-stone-800 placeholder-pink-300 transition-all shadow-inner" required />
         </div>
         <div>
-          <label class="block text-xs font-bold text-stone-600 mb-1">手账昵称 (在界面显示的称呼)</label>
-          <input id="reg-nickname" type="text" placeholder="如: 乌萨奇头号饲养员" class="w-full px-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm" />
+          <label class="flex items-center gap-1.5 text-xs font-black text-rose-900/90 mb-1.5">
+            <i class="fa-solid fa-wand-magic-sparkles text-rose-400 text-sm"></i>
+            <span>手账专属昵称</span>
+          </label>
+          <input id="reg-nickname" type="text" placeholder="如: 颜芷萱 (Tzi Shuan) 🌸" class="w-full px-4 py-3 rounded-2xl border-2 border-pink-200/90 bg-pink-50/40 hover:bg-white focus:bg-white focus:border-rose-400 focus:ring-4 focus:ring-rose-200/40 outline-none text-sm font-bold text-stone-800 placeholder-pink-300 transition-all shadow-inner" />
         </div>
         <div>
-          <label class="block text-xs font-bold text-stone-600 mb-1">设置密码</label>
-          <input id="reg-password" type="password" placeholder="不少于4位密码" class="w-full px-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-amber-400 outline-none text-sm" required />
+          <label class="flex items-center gap-1.5 text-xs font-black text-rose-900/90 mb-1.5">
+            <i class="fa-solid fa-key text-rose-400 text-sm"></i>
+            <span>设置密码</span>
+          </label>
+          <div class="relative">
+            <input id="reg-password" type="password" placeholder="请输入密码" class="w-full pl-4 pr-11 py-3 rounded-2xl border-2 border-pink-200/90 bg-pink-50/40 hover:bg-white focus:bg-white focus:border-rose-400 focus:ring-4 focus:ring-rose-200/40 outline-none text-sm font-bold text-stone-800 placeholder-pink-300 transition-all shadow-inner" required />
+            <button type="button" onclick="togglePasswordVisibility('reg-password', this)" class="absolute right-3 top-2.5 p-1 rounded-lg text-pink-400 hover:text-rose-600 transition-colors cursor-pointer" title="显示/隐藏密码">
+              <i class="fa-solid fa-eye text-sm"></i>
+            </button>
+          </div>
         </div>
-        <button type="submit" class="btn-usagi w-full py-3 text-base font-black mt-2">
-          创建独立手账账号 ✨
+        <button type="submit" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-rose-400 hover:from-rose-600 hover:to-pink-600 active:scale-[0.98] text-white font-black text-sm shadow-md shadow-rose-300/50 hover:shadow-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer mt-2">
+          <i class="fa-solid fa-sparkles text-amber-200"></i>
+          <span>创建专属手账账号 ✨</span>
         </button>
       </form>
 
-      <div class="mt-5 flex items-center justify-between text-xs text-stone-400 border-t border-stone-100 pt-3">
-        <span>数据本地隔离存储 · 独立私密</span>
-        <button type="button" onclick="localStorage.clear(); alert('本地缓存已完全重置！✨'); location.reload();" class="text-amber-600 hover:underline">
-          重置缓存
-        </button>
+      <!-- Footer Info & Actions -->
+      <div class="mt-5 pt-3 border-t border-pink-100 flex items-center justify-between text-[11px] text-stone-400 flex-wrap gap-2">
+        <span class="flex items-center gap-1 text-pink-700/80 font-medium">
+          <i class="fa-solid fa-shield-heart text-rose-400"></i> 独立私密分区 · 零泄露
+        </span>
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="openCloudDbModal()" class="text-rose-500 hover:text-rose-700 font-bold hover:underline cursor-pointer flex items-center gap-1">
+            <i class="fa-solid fa-cloud"></i> 云数据库
+          </button>
+          <span class="text-pink-200">|</span>
+          <button type="button" onclick="localStorage.clear(); alert('本地缓存已完全重置！✨'); location.reload();" class="text-stone-400 hover:text-rose-600 hover:underline cursor-pointer">
+            重置缓存
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -2809,20 +2878,41 @@
 
     function switchAuthTab(mode) {
       currentAuthMode = mode;
-      UsagiSound.pop();
+      if (window.UsagiSound && UsagiSound.pop) UsagiSound.pop();
       const loginForm = document.getElementById('form-login');
       const regForm = document.getElementById('form-register');
+      const btnLogin = document.getElementById('tab-btn-login');
+      const btnReg = document.getElementById('tab-btn-register');
       if (mode === 'login') {
         if (loginForm) { loginForm.classList.remove('hidden'); loginForm.style.display = 'block'; }
         if (regForm) { regForm.classList.add('hidden'); regForm.style.display = 'none'; }
-        document.getElementById('tab-btn-login').className = 'flex-1 py-2 text-sm font-bold rounded-lg transition-all bg-amber-400 text-stone-900 shadow-sm';
-        document.getElementById('tab-btn-register').className = 'flex-1 py-2 text-sm font-bold rounded-lg transition-all text-stone-600 hover:text-amber-700';
+        if (btnLogin) btnLogin.className = 'flex-1 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-md shadow-rose-300/50 cursor-pointer';
+        if (btnReg) btnReg.className = 'flex-1 py-2.5 text-xs sm:text-sm font-bold rounded-xl transition-all text-stone-600 hover:text-rose-600 cursor-pointer';
       } else {
         if (loginForm) { loginForm.classList.add('hidden'); loginForm.style.display = 'none'; }
         if (regForm) { regForm.classList.remove('hidden'); regForm.style.display = 'block'; }
-        document.getElementById('tab-btn-register').className = 'flex-1 py-2 text-sm font-bold rounded-lg transition-all bg-amber-400 text-stone-900 shadow-sm';
-        document.getElementById('tab-btn-login').className = 'flex-1 py-2 text-sm font-bold rounded-lg transition-all text-stone-600 hover:text-amber-700';
+        if (btnReg) btnReg.className = 'flex-1 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-md shadow-rose-300/50 cursor-pointer';
+        if (btnLogin) btnLogin.className = 'flex-1 py-2.5 text-xs sm:text-sm font-bold rounded-xl transition-all text-stone-600 hover:text-rose-600 cursor-pointer';
       }
+    }
+
+    function togglePasswordVisibility(inputId, btnEl) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const isPass = input.type === 'password';
+      input.type = isPass ? 'text' : 'password';
+      const icon = btnEl.querySelector('i');
+      if (icon) {
+        icon.className = isPass ? 'fa-solid fa-eye-slash text-rose-500 text-sm' : 'fa-solid fa-eye text-pink-400 text-sm';
+      }
+    }
+
+    function fillCloudAccount() {
+      const u = document.getElementById('login-username');
+      const p = document.getElementById('login-password');
+      if (u) u.value = 'GANTZISHUAN';
+      if (p) p.value = '520GANTZISHUAN';
+      if (window.UsagiSound && UsagiSound.sparkle) UsagiSound.sparkle();
     }
 
     function fillDemoAccount() {
@@ -2832,9 +2922,11 @@
         users['gts'] = { username: 'gts', password: '123', nickname: '颜芷萱 (Tzi Shuan) 🌸', createdAt: new Date().toISOString() };
         USAGI_APP.saveUsers(users);
       }
-      document.getElementById('login-username').value = 'gts';
-      document.getElementById('login-password').value = '123';
-      USAGI_APP.login('gts', '123');
+      const u = document.getElementById('login-username');
+      const p = document.getElementById('login-password');
+      if (u) u.value = 'gts';
+      if (p) p.value = '123';
+      if (window.UsagiSound && UsagiSound.sparkle) UsagiSound.sparkle();
     }
 
     function handleLoginSubmit(e) {
