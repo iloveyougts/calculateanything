@@ -202,6 +202,19 @@ const UsagiPetManager = (function () {
         "音乐一响，烦恼全忘！呀哈！乌萨奇和芷萱一起当音乐电台的超级大明星！📻✨"
       ]
     },
+    social: {
+      propIcon: '📱',
+      propSub: '💬 刷手机',
+      imgClass: 'usagi-social-chat',
+      sound: 'pop',
+      tag: '📱 乌萨奇狂刷手机中',
+      quotes: [
+        "乌萨奇两只小短手捧着手机在狂刷呢！给男朋友发了好多句悄悄话~ 💬💖",
+        "叮咚！消息响个不停！乌萨奇在偷偷看芷萱今天种草了什么好吃的和漂亮美甲~ 📱✨",
+        "手指飞快敲屏幕中！乌萨奇也在跟芷萱一起享受甜蜜互动好时光呢！🐰🌸",
+        "好忙好忙~ 乌萨奇一边刷手机一边摇耳朵，今天也是社交小达人！💬🥰"
+      ]
+    },
     game_cheer: {
       propIcon: '🎉',
       propSub: '👑 棒!',
@@ -665,7 +678,7 @@ const UsagiPetManager = (function () {
         'state-sleep', 'state-water', 'state-period',
         'state-comfort', 'state-tired', 'state-emo', 'state-angry',
         'state-calendar', 'state-habit', 'state-note', 'state-highlight',
-        'state-watchlist', 'state-music',
+        'state-watchlist', 'state-music', 'state-social',
         'state-game_cheer', 'state-happy', 'state-yaha', 'state-ura', 'state-mood',
         'state-expense', 'state-countdown',
         'state-love_hug', 'state-calm', 'state-dashboard'
@@ -754,7 +767,7 @@ const UsagiPetManager = (function () {
         'state-sleep', 'state-water', 'state-period',
         'state-comfort', 'state-tired', 'state-emo', 'state-angry',
         'state-calendar', 'state-habit', 'state-note', 'state-highlight',
-        'state-watchlist', 'state-music',
+        'state-watchlist', 'state-music', 'state-social',
         'state-game_cheer', 'state-happy', 'state-yaha', 'state-ura', 'state-mood',
         'state-expense', 'state-countdown',
         'state-love_hug', 'state-calm', 'state-dashboard'

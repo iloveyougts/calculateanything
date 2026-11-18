@@ -1356,14 +1356,18 @@
           <!-- Multi-Tab Switcher Bar (一面一面切换导航) -->
           <div class="flex items-center justify-between gap-3 bg-white/90 p-2.5 rounded-2xl border-2 border-stone-200 shadow-xs">
             <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 w-full sm:w-auto scrollbar-none flex-nowrap" id="social-tab-navs">
-              <button id="btn-subtab-xhs" onclick="switchSocialSubTab('xhs')" class="social-subtab-btn active px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shrink-0 transition-all flex items-center gap-2 shadow-xs bg-red-500 text-white">
-                <span class="text-base">📕</span>
-                <span>小红书网页版</span>
+              <button id="btn-subtab-lovechat" onclick="switchSocialSubTab('lovechat')" class="social-subtab-btn active px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shrink-0 transition-all flex items-center gap-2 shadow-xs bg-pink-500 text-white">
+                <span class="text-base">💬</span>
+                <span>恋爱免跳出直聊</span>
                 <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
               </button>
               <button id="btn-subtab-wechat" onclick="switchSocialSubTab('wechat')" class="social-subtab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shrink-0 transition-all flex items-center gap-2 bg-stone-100 text-stone-700 hover:bg-green-50 hover:text-green-700">
                 <i class="fa-brands fa-weixin text-green-600 text-base"></i>
                 <span>微信网页版</span>
+              </button>
+              <button id="btn-subtab-xhs" onclick="switchSocialSubTab('xhs')" class="social-subtab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shrink-0 transition-all flex items-center gap-2 bg-stone-100 text-stone-700 hover:bg-red-50 hover:text-red-700">
+                <span class="text-base">📕</span>
+                <span>小红书网页版</span>
               </button>
               <button id="btn-subtab-whatsapp" onclick="switchSocialSubTab('whatsapp')" class="social-subtab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shrink-0 transition-all flex items-center gap-2 bg-stone-100 text-stone-700 hover:bg-emerald-50 hover:text-emerald-700">
                 <i class="fa-brands fa-whatsapp text-emerald-600 text-base"></i>
@@ -1381,16 +1385,105 @@
 
             <!-- View Status Tip -->
             <div class="hidden lg:flex items-center gap-2 text-xs text-stone-500 font-medium shrink-0">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span id="social-current-status-tip">小红书实时探索视窗 · 点击右上角可登录账号</span>
+              <span class="w-2 h-2 rounded-full bg-pink-500"></span>
+              <span id="social-current-status-tip">恋爱免跳出直聊舱 · 100%在手账内收发消息</span>
             </div>
           </div>
 
           <!-- Main Workstation View Area -->
           <div id="social-workstation-container" class="relative transition-all duration-300">
             
+            <!-- VIEW 0: 💬 恋爱免跳出直聊舱 (IN-APP LOVE CHATROOM - 100% 本站直接发信息发情话) -->
+            <div id="social-view-lovechat" class="social-view-panel space-y-3">
+              <!-- Chatroom Header Card -->
+              <div class="glass-card p-4 bg-gradient-to-r from-pink-100 via-rose-50 to-pink-50 border-2 border-pink-300 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl shadow-xs">
+                <div class="flex items-center gap-3">
+                  <div class="relative">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-400 to-rose-500 text-white flex items-center justify-center text-2xl shadow-sm">
+                      💖
+                    </div>
+                    <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
+                  </div>
+                  <div>
+                    <h3 class="font-black text-stone-800 text-sm sm:text-base flex items-center gap-2">
+                      <span>颜芷萱 & 男友 · 恋爱私密直聊舱</span>
+                      <span class="badge-kawaii bg-pink-500 text-white text-[10px] py-0.5 px-2">免跳App · 站内直聊</span>
+                    </h3>
+                    <p class="text-xs text-stone-600 mt-0.5 font-medium">在这个网站直接打字、发爱心、选撒娇情话！绝不跳出微信或任何其他App，记录实时保存在手账中！</p>
+                  </div>
+                </div>
+
+                <!-- Chat Settings & Identity Switcher -->
+                <div class="flex items-center gap-2 bg-white/90 p-1.5 rounded-xl border border-pink-200">
+                  <span class="text-xs font-bold text-stone-500 pl-1">发送身份:</span>
+                  <button id="btn-chat-role-tzishuan" onclick="setLoveChatSender('tzishuan')" class="px-2.5 py-1 rounded-lg text-xs font-black transition-all bg-pink-500 text-white shadow-xs">
+                    🌸 芷萱
+                  </button>
+                  <button id="btn-chat-role-boyfriend" onclick="setLoveChatSender('boyfriend')" class="px-2.5 py-1 rounded-lg text-xs font-black transition-all bg-stone-100 text-stone-600 hover:bg-emerald-50 hover:text-emerald-700">
+                    👦 男友
+                  </button>
+                  <button onclick="clearLoveChatHistory()" class="p-1 px-2 rounded-lg text-[11px] text-stone-400 hover:text-red-500 hover:bg-red-50 transition-all" title="清空聊天记录">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Message Stream Box -->
+              <div class="glass-card p-4 bg-white/95 rounded-3xl border-2 border-pink-200 shadow-md flex flex-col space-y-3">
+                <div id="lovechat-stream-box" class="h-[380px] sm:h-[460px] overflow-y-auto space-y-3.5 pr-2 scrollbar-thin">
+                  <!-- Messages rendered here dynamically -->
+                </div>
+
+                <!-- Sweet Romance Quick Presets (一键免打字秒发) -->
+                <div class="pt-2 border-t border-pink-100">
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[11px] font-black text-pink-700 flex items-center gap-1">
+                      <span>💌 恋爱撒娇快捷气泡（点击一秒直发）：</span>
+                    </span>
+                    <span class="text-[10px] text-stone-400">免切屏即点即送</span>
+                  </div>
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-xs">
+                    <button onclick="sendLoveChatMessage('💖 想你啦老公~ 今天也是最爱你的一天！')" class="p-2 rounded-xl bg-pink-50/80 hover:bg-pink-100 border border-pink-200 text-pink-900 font-bold transition-all text-left truncate shadow-2xs">💖 想你啦老公~</button>
+                    <button onclick="sendLoveChatMessage('🍰 今天超想吃好吃的甜品/大餐，快带我去！')" class="p-2 rounded-xl bg-amber-50/80 hover:bg-amber-100 border border-amber-200 text-amber-900 font-bold transition-all text-left truncate shadow-2xs">🍰 想吃大餐甜品！</button>
+                    <button onclick="sendLoveChatMessage('🥺 肚子有点酸酸难受，要抱抱呼呼~')" class="p-2 rounded-xl bg-rose-50/80 hover:bg-rose-100 border border-rose-200 text-rose-900 font-bold transition-all text-left truncate shadow-2xs">🥺 肚子酸酸要抱抱~</button>
+                    <button onclick="sendLoveChatMessage('🚗 下班/到家记得报备哦，注意安全！')" class="p-2 rounded-xl bg-blue-50/80 hover:bg-blue-100 border border-blue-200 text-blue-900 font-bold transition-all text-left truncate shadow-2xs">🚗 到家记得报备！</button>
+                    <button onclick="sendLoveChatMessage('✨ 晚上要不要一起连麦看电影呀？')" class="p-2 rounded-xl bg-purple-50/80 hover:bg-purple-100 border border-purple-200 text-purple-900 font-bold transition-all text-left truncate shadow-2xs">✨ 晚上连麦看电影</button>
+                    <button onclick="sendLoveChatMessage('🐰 呀哈！今天也是元气满满的芷萱！')" class="p-2 rounded-xl bg-yellow-50/80 hover:bg-yellow-100 border border-yellow-200 text-yellow-900 font-bold transition-all text-left truncate shadow-2xs">🐰 呀哈元气满满！</button>
+                    <button onclick="sendLoveChatMessage('🥰 收到老公满满的爱意啦，超级开心！')" class="p-2 rounded-xl bg-emerald-50/80 hover:bg-emerald-100 border border-emerald-200 text-emerald-900 font-bold transition-all text-left truncate shadow-2xs">🥰 收到满满爱意！</button>
+                    <button onclick="sendLoveChatMessage('💤 困困啦，晚安好梦，梦里也要找我哦~')" class="p-2 rounded-xl bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200 text-indigo-900 font-bold transition-all text-left truncate shadow-2xs">💤 困困啦晚安好梦</button>
+                  </div>
+                </div>
+
+                <!-- Typing & Input Row -->
+                <div class="pt-2 border-t border-pink-100 flex flex-col gap-2">
+                  <!-- Quick Emojis -->
+                  <div class="flex items-center gap-1.5 text-base overflow-x-auto pb-1 scrollbar-none">
+                    <span class="text-xs font-bold text-stone-400 shrink-0">表情:</span>
+                    <button onclick="insertLoveChatEmoji('🥰')" class="p-1 hover:bg-pink-100 rounded-lg transition-all">🥰</button>
+                    <button onclick="insertLoveChatEmoji('🥺')" class="p-1 hover:bg-pink-100 rounded-lg transition-all">🥺</button>
+                    <button onclick="insertLoveChatEmoji('💖')" class="p-1 hover:bg-pink-100 rounded-lg transition-all">💖</button>
+                    <button onclick="insertLoveChatEmoji('🍰')" class="p-1 hover:bg-pink-100 rounded-lg transition-all">🍰</button>
+                    <button onclick="insertLoveChatEmoji('🐰')" class="p-1 hover:bg-pink-100 rounded-lg transition-all">🐰</button>
+                    <button onclick="insertLoveChatEmoji('✨')" class="p-1 hover:bg-pink-100 rounded-lg transition-all">✨</button>
+                    <button onclick="insertLoveChatEmoji('🌸')" class="p-1 hover:bg-pink-100 rounded-lg transition-all">🌸</button>
+                    <button onclick="insertLoveChatEmoji('🍓')" class="p-1 hover:bg-pink-100 rounded-lg transition-all">🍓</button>
+                    <button onclick="insertLoveChatEmoji('💌')" class="p-1 hover:bg-pink-100 rounded-lg transition-all">💌</button>
+                    <button onclick="insertLoveChatEmoji('🎉')" class="p-1 hover:bg-pink-100 rounded-lg transition-all">🎉</button>
+                  </div>
+                  <!-- Text Input Box -->
+                  <div class="flex items-center gap-2">
+                    <input id="lovechat-input-text" type="text" placeholder="输入想对彼此说的话... (按 Enter 立即发送)" class="flex-1 p-2.5 px-4 text-xs sm:text-sm border-2 border-pink-300 rounded-2xl bg-white outline-none focus:ring-2 focus:ring-pink-200 transition-all font-medium" onkeydown="if(event.key==='Enter') submitLoveChatForm()" />
+                    <button onclick="submitLoveChatForm()" class="px-5 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:opacity-95 text-white font-black text-xs sm:text-sm rounded-2xl shadow-sm transition-all flex items-center gap-1.5 shrink-0 active:scale-95">
+                      <span>发送</span>
+                      <i class="fa-solid fa-paper-plane text-xs"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- VIEW 1: 📕 小红书 (Xiaohongshu) -->
-            <div id="social-view-xhs" class="social-view-panel space-y-3">
+            <div id="social-view-xhs" class="social-view-panel hidden space-y-3">
               <!-- XHS Toolbar -->
               <div class="glass-card p-3.5 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 flex flex-col md:flex-row items-center justify-between gap-3 rounded-2xl">
                 <div class="flex items-center gap-2.5 w-full md:w-auto">
@@ -1400,7 +1493,7 @@
                       <span>小红书官方探索视窗</span>
                       <span class="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold">免跳出 · 直接刷</span>
                     </div>
-                    <p class="text-[11px] text-stone-500">点击内嵌页面右上角【登录】，可使用小红书 App 扫码或验证码登录！</p>
+                    <p class="text-[11px] text-stone-500">提示：在内嵌页面点【登录】推荐选择【手机验证码登录】，或点右侧【独立大视窗】可秒出二维码扫码登录！</p>
                   </div>
                 </div>
                 <!-- XHS Search & Actions -->
@@ -1411,11 +1504,8 @@
                       <i class="fa-solid fa-magnifying-glass"></i> <span>搜索</span>
                     </button>
                   </div>
-                  <button onclick="openXiaohongshuApp()" class="p-1.5 px-2.5 rounded-xl bg-red-100 hover:bg-red-200 text-red-800 text-xs font-bold transition-all flex items-center gap-1">
-                    <span>📱 唤起手机App</span>
-                  </button>
-                  <button onclick="openStandaloneApp('https://www.xiaohongshu.com/explore', 'XiaohongshuApp')" class="p-1.5 px-2.5 rounded-xl bg-white hover:bg-stone-100 border border-red-200 text-red-700 text-xs font-bold transition-all flex items-center gap-1">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>独立大视窗</span>
+                  <button onclick="openStandaloneApp('https://www.xiaohongshu.com/explore', 'XiaohongshuApp')" class="p-1.5 px-3 rounded-xl bg-red-500 hover:bg-red-600 text-white text-xs font-bold transition-all flex items-center gap-1 shadow-xs">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>独立大视窗 (扫码秒出)</span>
                   </button>
                 </div>
               </div>
@@ -1437,7 +1527,7 @@
               </div>
             </div>
 
-            <!-- VIEW 2: 💚 微信网页版 (WeChat Web) -->
+            <!-- VIEW 2: 💚 微信网页版 (WeChat Web - 手机扫码登录，全程在本站内收发信息) -->
             <div id="social-view-wechat" class="social-view-panel hidden space-y-3">
               <!-- WeChat Toolbar -->
               <div class="glass-card p-3.5 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 flex flex-col md:flex-row items-center justify-between gap-3 rounded-2xl">
@@ -1445,21 +1535,18 @@
                   <i class="fa-brands fa-weixin text-green-600 text-2xl"></i>
                   <div>
                     <div class="text-xs font-black text-green-900 flex items-center gap-1.5">
-                      <span>微信官方网页版 (WeChat Web) · 扫码直连</span>
-                      <span class="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">手机扫码即登</span>
+                      <span>微信官方网页版 (WeChat Web) · 全程站内使用</span>
+                      <span class="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">扫码即登 · 不跳App</span>
                     </div>
-                    <p class="text-[11px] text-stone-500">拿出手机微信「扫一扫」视窗中央的大二维码，确认后即可直接在网页里聊天发表情包！</p>
+                    <p class="text-[11px] text-stone-600">拿出手机微信「扫一扫」下方大二维码确认登录，即可<b>直接在本手账网页内发消息聊天</b>，无需跳去微信手机App！</p>
                   </div>
                 </div>
                 <div class="flex items-center gap-2 flex-wrap">
                   <button onclick="refreshWeChatIframe()" class="p-1.5 px-3 rounded-xl bg-green-600 hover:bg-green-700 text-white text-xs font-bold transition-all flex items-center gap-1 shadow-xs">
                     <i class="fa-solid fa-rotate-right"></i> <span>刷新二维码</span>
                   </button>
-                  <button onclick="openWeChatApp()" class="p-1.5 px-3 rounded-xl bg-green-100 hover:bg-green-200 text-green-900 text-xs font-bold transition-all flex items-center gap-1">
-                    <i class="fa-brands fa-weixin"></i> <span>唤起手机微信</span>
-                  </button>
                   <button onclick="openStandaloneApp('https://wx.qq.com', 'WeChatWebWindow')" class="p-1.5 px-3 rounded-xl bg-white hover:bg-stone-100 border border-green-300 text-green-800 text-xs font-bold transition-all flex items-center gap-1">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>独立无边框视窗</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>独立无边框大视窗</span>
                   </button>
                 </div>
               </div>
@@ -3148,11 +3235,56 @@
           <!-- ==============================================
                13. ACTION: 音乐点歌台 (Music Action)
                ============================================== -->
+          <!-- ==============================================
+               13. ACTION: 音乐点歌台 (Music Action - 戴粉色猫耳耳机)
+               ============================================== -->
           <div id="action-layer-music" class="usagi-action-layer hidden">
-            <div class="act-music-headphones">🎧</div>
+            <!-- Custom Pink Cat-Ear DJ Headset perfectly fitted on Usagi's head -->
+            <div class="act-music-headphones-box">
+              <svg class="act-cat-headset-svg" viewBox="0 0 88 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Headband Arch linking earcups over ears -->
+                <path d="M 12 36 C 14 10, 74 10, 76 36" stroke="#fb7185" stroke-width="5" stroke-linecap="round"/>
+                <path d="M 15 34 C 18 14, 70 14, 73 34" stroke="#fda4af" stroke-width="2" stroke-linecap="round"/>
+                <!-- Left Pink Cat Ear with glow -->
+                <polygon points="23,16 13,3 32,10" fill="#f43f5e" stroke="#fda4af" stroke-width="1.5" stroke-linejoin="round"/>
+                <polygon points="22,15 16,6 29,11" fill="#ffe4e6"/>
+                <!-- Right Pink Cat Ear with glow -->
+                <polygon points="65,16 75,3 56,10" fill="#f43f5e" stroke="#fda4af" stroke-width="1.5" stroke-linejoin="round"/>
+                <polygon points="66,15 72,6 59,11" fill="#ffe4e6"/>
+                <!-- Left Earmuff / Cushion snugly on left ear -->
+                <rect x="4" y="24" width="16" height="26" rx="8" fill="#f43f5e" stroke="#ffe4e6" stroke-width="2"/>
+                <rect x="7" y="27" width="10" height="20" rx="5" fill="#fda4af"/>
+                <circle cx="12" cy="37" r="2.5" fill="#ffffff"/>
+                <!-- Right Earmuff / Cushion snugly on right ear -->
+                <rect x="68" y="24" width="16" height="26" rx="8" fill="#f43f5e" stroke="#ffe4e6" stroke-width="2"/>
+                <rect x="71" y="27" width="10" height="20" rx="5" fill="#fda4af"/>
+                <circle cx="76" cy="37" r="2.5" fill="#ffffff"/>
+              </svg>
+            </div>
             <div class="act-music-note mn1">🎶</div>
             <div class="act-music-note mn2">🎵</div>
             <div class="act-music-tag">旋律摇摆中~</div>
+          </div>
+
+          <!-- ==============================================
+               13.5. ACTION: 常用社交 (Social Action - 乌萨奇玩手机)
+               ============================================== -->
+          <div id="action-layer-social" class="usagi-action-layer hidden">
+            <!-- Cute Pink Smartphone held by Usagi -->
+            <div class="act-social-phone-box">
+              <div class="act-social-phone">
+                <div class="phone-screen">
+                  <div class="phone-chat-bar"></div>
+                  <div class="phone-chat-bubble b1"></div>
+                  <div class="phone-chat-bubble b2"></div>
+                </div>
+              </div>
+            </div>
+            <!-- Floating Heart & Message Bubbles -->
+            <div class="act-social-bubble sb1">💬</div>
+            <div class="act-social-bubble sb2">💖</div>
+            <div class="act-social-bubble sb3">✨</div>
+            <div class="act-social-tag">超忙刷手机中~</div>
           </div>
 
           <!-- ==============================================
@@ -4848,7 +4980,126 @@
     // ==========================================
     // 常用社交与爱用物 · 网页版全能工作台逻辑
     // ==========================================
-    let currentActiveSocialApp = 'xhs';
+    let currentActiveSocialApp = 'lovechat';
+    let currentLoveChatSender = 'tzishuan'; // 'tzishuan' or 'boyfriend'
+
+    const DEFAULT_LOVE_MESSAGES = [
+      { id: 1, sender: 'boyfriend', text: '早安呀芷萱小宝贝！今天也是超级超级爱你的一天~ 💖', time: '09:20' },
+      { id: 2, sender: 'tzishuan', text: '呀哈！老公早安~ 记得按时吃元气早餐哦！🍰✨', time: '09:25' },
+      { id: 3, sender: 'boyfriend', text: '两座城市的风都在替我拥抱你，今晚连麦想听你讲讲今天遇到的开心事~ 🐰🌸', time: '12:00' }
+    ];
+
+    function getLoveChatMessages() {
+      try {
+        const raw = localStorage.getItem('usagi_love_chat_msgs');
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      return DEFAULT_LOVE_MESSAGES;
+    }
+
+    function saveLoveChatMessages(msgs) {
+      try {
+        localStorage.setItem('usagi_love_chat_msgs', JSON.stringify(msgs));
+      } catch (e) {}
+    }
+
+    function renderLoveChatMessages() {
+      const box = document.getElementById('lovechat-stream-box');
+      if (!box) return;
+      const msgs = getLoveChatMessages();
+      let html = '';
+      msgs.forEach(m => {
+        const isTzishuan = m.sender === 'tzishuan';
+        const senderName = isTzishuan ? '颜芷萱 (Tzi Shuan) 🌸' : '男朋友 (老公) 👦';
+        const alignClass = isTzishuan ? 'justify-end' : 'justify-start';
+        const bubbleBg = isTzishuan
+          ? 'bg-gradient-to-r from-pink-500 to-rose-400 text-white rounded-2xl rounded-tr-xs shadow-xs'
+          : 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-2xl rounded-tl-xs shadow-xs';
+        const badgeBg = isTzishuan ? 'text-pink-600' : 'text-emerald-700';
+
+        html += `
+          <div class="flex ${alignClass} items-end gap-2 group">
+            ${!isTzishuan ? '<div class="w-8 h-8 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center text-sm shadow-2xs shrink-0">👦</div>' : ''}
+            <div class="max-w-[85%] sm:max-w-[70%] space-y-1">
+              <div class="text-[10px] ${badgeBg} font-bold px-1 flex items-center ${isTzishuan ? 'justify-end' : 'justify-start'} gap-1.5">
+                <span>${senderName}</span>
+                <span class="text-stone-400 font-normal text-[9px]">${m.time || ''}</span>
+              </div>
+              <div class="p-3 px-3.5 text-xs sm:text-sm font-medium leading-relaxed ${bubbleBg}">
+                ${m.text}
+              </div>
+            </div>
+            ${isTzishuan ? '<div class="w-8 h-8 rounded-full bg-pink-100 border border-pink-300 flex items-center justify-center text-sm shadow-2xs shrink-0">🌸</div>' : ''}
+          </div>
+        `;
+      });
+      box.innerHTML = html;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function setLoveChatSender(role) {
+      currentLoveChatSender = role;
+      const btnT = document.getElementById('btn-chat-role-tzishuan');
+      const btnB = document.getElementById('btn-chat-role-boyfriend');
+      if (role === 'tzishuan') {
+        if (btnT) btnT.className = 'px-2.5 py-1 rounded-lg text-xs font-black transition-all bg-pink-500 text-white shadow-xs';
+        if (btnB) btnB.className = 'px-2.5 py-1 rounded-lg text-xs font-black transition-all bg-stone-100 text-stone-600 hover:bg-emerald-50 hover:text-emerald-700';
+      } else {
+        if (btnT) btnT.className = 'px-2.5 py-1 rounded-lg text-xs font-black transition-all bg-stone-100 text-stone-600 hover:bg-pink-50 hover:text-pink-700';
+        if (btnB) btnB.className = 'px-2.5 py-1 rounded-lg text-xs font-black transition-all bg-emerald-600 text-white shadow-xs';
+      }
+      if (window.UsagiSound && UsagiSound.pop) UsagiSound.pop();
+    }
+
+    function sendLoveChatMessage(msgText) {
+      const text = (msgText || '').trim();
+      if (!text) return;
+      const msgs = getLoveChatMessages();
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      msgs.push({
+        id: Date.now(),
+        sender: currentLoveChatSender,
+        text: text,
+        time: timeStr
+      });
+      saveLoveChatMessages(msgs);
+      renderLoveChatMessages();
+
+      if (window.UsagiSound && UsagiSound.sparkle) UsagiSound.sparkle();
+      if (window.UsagiPetManager && UsagiPetManager.reactTo) {
+        UsagiPetManager.reactTo('social', currentLoveChatSender === 'tzishuan' ? '芷萱发来新情话啦！乌萨奇的小红心怦怦直跳~ 💖🐰' : '男朋友发来甜蜜关心啦！芷萱快看屏幕~ 💌✨');
+      }
+      if (window.USAGI_APP && USAGI_APP.saveToStorage) USAGI_APP.saveToStorage();
+    }
+
+    function submitLoveChatForm() {
+      const input = document.getElementById('lovechat-input-text');
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) {
+        alert('请输入想发给对方的话哦~ 💖');
+        return;
+      }
+      sendLoveChatMessage(val);
+      input.value = '';
+    }
+
+    function insertLoveChatEmoji(emoji) {
+      const input = document.getElementById('lovechat-input-text');
+      if (input) {
+        input.value += emoji;
+        input.focus();
+      }
+    }
+
+    function clearLoveChatHistory() {
+      if (confirm('确定要清空手账聊天记录吗？清空后将恢复初始问候~ 🌸')) {
+        saveLoveChatMessages(DEFAULT_LOVE_MESSAGES);
+        renderLoveChatMessages();
+        if (window.UsagiSound && UsagiSound.trash) UsagiSound.trash();
+      }
+    }
 
     function switchSocialSubTab(appName) {
       currentActiveSocialApp = appName;
@@ -4856,8 +5107,9 @@
       
       // Update tab buttons appearance
       const tabs = [
-        { id: 'btn-subtab-xhs', name: 'xhs', activeClass: 'bg-red-500 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-red-50 hover:text-red-700' },
+        { id: 'btn-subtab-lovechat', name: 'lovechat', activeClass: 'bg-pink-500 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-pink-50 hover:text-pink-700' },
         { id: 'btn-subtab-wechat', name: 'wechat', activeClass: 'bg-green-600 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-green-50 hover:text-green-700' },
+        { id: 'btn-subtab-xhs', name: 'xhs', activeClass: 'bg-red-500 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-red-50 hover:text-red-700' },
         { id: 'btn-subtab-whatsapp', name: 'whatsapp', activeClass: 'bg-emerald-600 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-emerald-50 hover:text-emerald-700' },
         { id: 'btn-subtab-instagram', name: 'instagram', activeClass: 'bg-gradient-to-r from-purple-600 via-pink-500 to-rose-500 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-purple-50 hover:text-purple-700' },
         { id: 'btn-subtab-grid', name: 'grid', activeClass: 'bg-amber-500 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-amber-50 hover:text-amber-800' }
@@ -4874,7 +5126,7 @@
       });
 
       // Show/hide view panels
-      const panels = ['xhs', 'wechat', 'whatsapp', 'instagram', 'grid'];
+      const panels = ['lovechat', 'wechat', 'xhs', 'whatsapp', 'instagram', 'grid'];
       panels.forEach(p => {
         const el = document.getElementById(`social-view-${p}`);
         if (el) {
@@ -4885,21 +5137,25 @@
 
       // Update status tip & Pet Mascot reaction
       const tip = document.getElementById('social-current-status-tip');
-      if (appName === 'xhs') {
-        if (tip) tip.innerText = '小红书官方探索视窗 · 点击右上角登录账号';
-        if (window.USAGI_APP && USAGI_APP.showMascotSpeech) USAGI_APP.showMascotSpeech('小红书网页版已就绪！快去看看今天有哪些神仙穿搭和甜品探店吧~ 📕✨');
+      if (appName === 'lovechat') {
+        if (tip) tip.innerText = '恋爱免跳出直聊舱 · 100%在手账内收发消息';
+        renderLoveChatMessages();
+        if (window.UsagiPetManager && UsagiPetManager.reactTo) UsagiPetManager.reactTo('social', '乌萨奇狂刷手机中！快给男友发一句甜甜的悄悄话吧~ 💬💖');
+      } else if (appName === 'xhs') {
+        if (tip) tip.innerText = '小红书官方探索视窗 · 可直接搜穿搭看推荐';
+        if (window.UsagiPetManager && UsagiPetManager.reactTo) UsagiPetManager.reactTo('social', '小红书网页版已就绪！快去看看今天有哪些神仙穿搭和甜品探店吧~ 📕✨');
       } else if (appName === 'wechat') {
-        if (tip) tip.innerText = '微信官方网页版 · 手机扫码即可直接聊天';
-        if (window.USAGI_APP && USAGI_APP.showMascotSpeech) USAGI_APP.showMascotSpeech('微信网页版已就绪！拿起手机微信扫一扫上方二维码即可开始聊天~ 💚');
+        if (tip) tip.innerText = '微信官方网页版 · 手机扫码即可直接在此页面聊天';
+        if (window.UsagiPetManager && UsagiPetManager.reactTo) UsagiPetManager.reactTo('social', '微信网页版已就绪！直接在页面扫码登录，全程在本站内发消息~ 💚');
       } else if (appName === 'whatsapp') {
         if (tip) tip.innerText = 'WhatsApp 网页版 · 官方直通视窗与情话直达';
-        if (window.USAGI_APP && USAGI_APP.showMascotSpeech) USAGI_APP.showMascotSpeech('WhatsApp 专属视窗已就绪！给男朋友发个可爱的撒娇气泡吧~ 💬💖');
+        if (window.UsagiPetManager && UsagiPetManager.reactTo) UsagiPetManager.reactTo('social', 'WhatsApp 专属视窗已就绪！给男朋友发个可爱的撒娇气泡吧~ 💬💖');
       } else if (appName === 'instagram') {
         if (tip) tip.innerText = 'Instagram 网页版 · 刷动态、Reels 与 Direct 私信';
-        if (window.USAGI_APP && USAGI_APP.showMascotSpeech) USAGI_APP.showMascotSpeech('Instagram 视窗已就绪！打卡、拍照与看 Reels 视频超开心~ 📸🌸');
+        if (window.UsagiPetManager && UsagiPetManager.reactTo) UsagiPetManager.reactTo('social', 'Instagram 视窗已就绪！打卡、拍照与看 Reels 视频超开心~ 📸🌸');
       } else if (appName === 'grid') {
         if (tip) tip.innerText = '四合一分屏视图 · 多任务并列开启';
-        if (window.USAGI_APP && USAGI_APP.showMascotSpeech) USAGI_APP.showMascotSpeech('哇！四合一多视窗开启！一边聊天一边刷种草，手账超强大！🪟🎉');
+        if (window.UsagiPetManager && UsagiPetManager.reactTo) UsagiPetManager.reactTo('social', '哇！四合一多视窗开启！一边聊天一边刷种草，手账超强大！🪟🎉');
       }
     }
 
