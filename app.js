@@ -655,8 +655,8 @@ window.USAGI_APP = {
         const savedPhone = localStorage.getItem('usagi_wa_phone');
         const input = document.getElementById('wa-phone-number');
         if (input && savedPhone && !input.value) input.value = savedPhone;
-        if (typeof switchSocialSubTab === 'function' && typeof currentActiveSocialApp !== 'undefined') {
-          switchSocialSubTab(currentActiveSocialApp || 'xhs');
+        if (typeof switchSocialSubTab === 'function') {
+          switchSocialSubTab((typeof currentActiveSocialApp !== 'undefined' && currentActiveSocialApp) ? currentActiveSocialApp : 'wechat');
         }
       }
       if (tabName === 'games') {
