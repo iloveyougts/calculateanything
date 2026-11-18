@@ -400,37 +400,8 @@ window.USAGI_APP = {
         localStorage.setItem(userKey, JSON.stringify(userData));
       }
 
-      // Ensure together & anniversary & birthday countdowns exist and are exact
-      if (!userData.countdowns || !Array.isArray(userData.countdowns)) userData.countdowns = [];
-      userData.countdowns.forEach(c => {
-        if (c.title && c.title.includes('生日')) {
-          c.title = '🎂 芷萱小仙女生日 (11月6日)';
-          c.targetDate = '2027-11-06';
-          c.icon = '🎂';
-        }
-        if (c.title && (c.title.includes('一周年') || c.id === 'c_anniversary')) {
-          c.title = '💖 恋爱一周年纪念日';
-          c.targetDate = '2027-09-05';
-          c.icon = '💑';
-        }
-        if (c.title && (c.title.includes('在一起') || c.id === 'c_together')) {
-          c.title = '💑 我们在一起的日子 (2026-09-05)';
-          c.targetDate = '2026-09-05';
-          c.icon = '❤️';
-        }
-      });
-      const hasTogether = userData.countdowns.some(c => c.targetDate === '2026-09-05' || (c.title && c.title.includes('在一起')));
-      if (!hasTogether) {
-        userData.countdowns.unshift({ id: 'c_together', title: '💑 我们在一起的日子 (2026-09-05)', targetDate: '2026-09-05', category: '纪念日', icon: '❤️' });
-      }
-      const hasAnniversary = userData.countdowns.some(c => c.targetDate === '2027-09-05' || (c.title && c.title.includes('一周年')));
-      if (!hasAnniversary) {
-        userData.countdowns.push({ id: 'c_anniversary', title: '💖 恋爱一周年纪念日', targetDate: '2027-09-05', category: '纪念日', icon: '💑' });
-      }
-      const hasBirthday = userData.countdowns.some(c => c.targetDate === '2027-11-06' || (c.title && c.title.includes('生日')));
-      if (!hasBirthday) {
-        userData.countdowns.push({ id: 'c_birthday', title: '🎂 芷萱小仙女生日 (11月6日)', targetDate: '2027-11-06', category: '生日', icon: '🎂' });
-      }
+      // Ensure together & anniversary & birthday countdowns exist and are deduplicated
+      userData.countdowns = this.deduplicateCountdowns(userData.countdowns);
 
       // Ensure calendarEvents array exists (Clean: No mock events injected)
       if (!userData.calendarEvents || !Array.isArray(userData.calendarEvents)) {
@@ -561,36 +532,8 @@ window.USAGI_APP = {
         }
         cleaned.profile.avatar = 'usagi_character.png';
       }
-      if (!cleaned.countdowns || !Array.isArray(cleaned.countdowns)) cleaned.countdowns = [];
-      cleaned.countdowns.forEach(c => {
-        if (c.title && c.title.includes('生日')) {
-          c.title = '🎂 芷萱小仙女生日 (11月6日)';
-          c.targetDate = '2027-11-06';
-          c.icon = '🎂';
-        }
-        if (c.title && (c.title.includes('一周年') || c.id === 'c_anniversary')) {
-          c.title = '💖 恋爱一周年纪念日';
-          c.targetDate = '2027-09-05';
-          c.icon = '💑';
-        }
-        if (c.title && (c.title.includes('在一起') || c.id === 'c_together')) {
-          c.title = '💑 我们在一起的日子 (2026-09-05)';
-          c.targetDate = '2026-09-05';
-          c.icon = '❤️';
-        }
-      });
-      const hasTogether = cleaned.countdowns.some(c => c.targetDate === '2026-09-05' || (c.title && c.title.includes('在一起')));
-      if (!hasTogether) {
-        cleaned.countdowns.unshift({ id: 'c_together', title: '💑 我们在一起的日子 (2026-09-05)', targetDate: '2026-09-05', category: '纪念日', icon: '❤️' });
-      }
-      const hasAnniversary = cleaned.countdowns.some(c => c.targetDate === '2027-09-05' || (c.title && c.title.includes('一周年')));
-      if (!hasAnniversary) {
-        cleaned.countdowns.push({ id: 'c_anniversary', title: '💖 恋爱一周年纪念日', targetDate: '2027-09-05', category: '纪念日', icon: '💑' });
-      }
-      const hasBirthday = cleaned.countdowns.some(c => c.targetDate === '2027-11-06' || (c.title && c.title.includes('生日')));
-      if (!hasBirthday) {
-        cleaned.countdowns.push({ id: 'c_birthday', title: '🎂 芷萱小仙女生日 (11月6日)', targetDate: '2027-11-06', category: '生日', icon: '🎂' });
-      }
+      // Deduplicate countdowns cleanly and ensure core 3 dates exist
+      cleaned.countdowns = this.deduplicateCountdowns(cleaned.countdowns);
       return cleaned;
     } catch (e) {
       return obj;
@@ -688,6 +631,7 @@ window.USAGI_APP = {
           const audio = document.getElementById('usagi-audio-engine');
           if (audio && !audio.paused) audio.pause();
         }
+        else if (tabName === 'social') UsagiPetManager.reactTo('social', '乌萨奇社交通信小天线启动！网页版小红书、微信、WhatsApp与Instagram已就绪~ 📱🌸');
         else if (tabName === 'music') UsagiPetManager.reactTo('music', '乌萨奇戴上粉色猫耳耳机啦！跟着旋律一起摇摆~ 🎧🎶');
         else if (tabName === 'games') UsagiPetManager.reactTo('game', '芷萱的治愈游乐园开张啦！乌萨奇在旁边全程为你加油助威！🎮🎉');
         else if (tabName === 'health') UsagiPetManager.reactTo('water');
@@ -707,6 +651,14 @@ window.USAGI_APP = {
       if (tabName === 'todos') this.renderTodos();
       if (tabName === 'watchlist') this.renderWatchlist();
       if (tabName === 'highlights') this.renderHighlights();
+      if (tabName === 'social') {
+        const savedPhone = localStorage.getItem('usagi_wa_phone');
+        const input = document.getElementById('wa-phone-number');
+        if (input && savedPhone && !input.value) input.value = savedPhone;
+        if (typeof switchSocialSubTab === 'function' && typeof currentActiveSocialApp !== 'undefined') {
+          switchSocialSubTab(currentActiveSocialApp || 'xhs');
+        }
+      }
       if (tabName === 'games') {
         if (typeof switchGameSubtab === 'function') {
           const activeBtn = document.querySelector('.game-subtab-btn.active');
@@ -849,6 +801,7 @@ window.USAGI_APP = {
   },
 
   renderDashboardCountdowns: function () {
+    this.data.countdowns = this.deduplicateCountdowns(this.data.countdowns || []);
     const container = document.getElementById('dash-countdown-list');
     container.innerHTML = '';
     const now = new Date();
@@ -1317,7 +1270,7 @@ window.USAGI_APP = {
           <div class="flex items-center gap-2">
             <span class="font-bold text-rose-900">${r.startDate} ${r.endDate ? '~ ' + r.endDate : '(进行中)'}</span>
             <span class="badge-kawaii bg-rose-200 text-rose-800">${r.flow || '正常'}</span>
-            <span class="badge-kawaii bg-amber-100 text-amber-800">${r.pain || '轻微'}</span>
+            <span class="badge-kawaii bg-amber-100 text-amber-800">${escapeHtml(r.pain || '轻微')}</span>
           </div>
           <div class="text-xs text-stone-500 mt-1">${escapeHtml(r.notes || '无特殊症状')}</div>
         </div>
@@ -2120,6 +2073,77 @@ window.USAGI_APP = {
   // --------------------------------------------------------------------------
   // 8. 待办清单与倒数日 (To-Do & Countdowns)
   // --------------------------------------------------------------------------
+  deduplicateCountdowns: function (list) {
+    if (!Array.isArray(list)) return [];
+    const seen = new Set();
+    const result = [];
+    let hasTogether = false;
+    let hasAnniversary = false;
+    let hasBirthday = false;
+
+    list.forEach((c, idx) => {
+      if (!c) return;
+      const isTogether = c.id === 'c_together' || c.targetDate === '2026-09-05' || (c.title && c.title.includes('在一起'));
+      const isAnniv = c.id === 'c_anniversary' || (c.title && c.title.includes('一周年'));
+      const isBday = c.id === 'c_birthday' || (c.title && (c.title.includes('芷萱') || c.title.includes('小仙女')) && c.title.includes('生日')) || (c.targetDate === '2027-11-06' && c.title && c.title.includes('生日'));
+
+      if (isTogether) {
+        if (!hasTogether) {
+          hasTogether = true;
+          c.id = 'c_together';
+          c.title = '💑 我们在一起的日子 (2026-09-05)';
+          c.targetDate = '2026-09-05';
+          c.icon = '❤️';
+          result.push(c);
+        }
+        return;
+      }
+      if (isAnniv) {
+        if (!hasAnniversary) {
+          hasAnniversary = true;
+          c.id = 'c_anniversary';
+          c.title = '💖 恋爱一周年纪念日';
+          c.targetDate = '2027-09-05';
+          c.icon = '💑';
+          result.push(c);
+        }
+        return;
+      }
+      if (isBday) {
+        if (!hasBirthday) {
+          hasBirthday = true;
+          c.id = 'c_birthday';
+          c.title = '🎂 芷萱小仙女生日 (11月6日)';
+          c.targetDate = '2027-11-06';
+          c.icon = '🎂';
+          result.push(c);
+        }
+        return; // Drop any duplicate birthday!
+      }
+
+      // Custom user countdown:
+      const safeId = c.id || ('c_' + Date.now() + '_' + idx);
+      c.id = safeId;
+      const key = (c.title || '').trim() + '::' + (c.targetDate || '').trim();
+      if (!seen.has(key)) {
+        seen.add(key);
+        result.push(c);
+      }
+    });
+
+    if (!hasTogether) {
+      result.unshift({ id: 'c_together', title: '💑 我们在一起的日子 (2026-09-05)', targetDate: '2026-09-05', category: '纪念日', icon: '❤️' });
+    }
+    if (!hasAnniversary) {
+      result.push({ id: 'c_anniversary', title: '💖 恋爱一周年纪念日', targetDate: '2027-09-05', category: '纪念日', icon: '💑' });
+    }
+    if (!hasBirthday) {
+      result.push({ id: 'c_birthday', title: '🎂 芷萱小仙女生日 (11月6日)', targetDate: '2027-11-06', category: '生日', icon: '🎂' });
+    }
+
+    return result;
+  },
+
   renderTodos: function () {
     const list = document.getElementById('todo-list-container');
     list.innerHTML = '';
@@ -2151,12 +2175,13 @@ window.USAGI_APP = {
       });
     }
 
-    // Render Countdowns
+    // Render Countdowns (clean & deduplicated)
+    this.data.countdowns = this.deduplicateCountdowns(this.data.countdowns || []);
     const cList = document.getElementById('countdown-list-container');
     cList.innerHTML = '';
     const now = new Date();
 
-    (this.data.countdowns || []).forEach(c => {
+    this.data.countdowns.forEach((c, idx) => {
       const diff = Math.ceil((new Date(c.targetDate) - now) / (1000 * 60 * 60 * 24));
       const card = document.createElement('div');
       const isPast = diff < 0;
@@ -2178,13 +2203,13 @@ window.USAGI_APP = {
             <div class="text-xs text-stone-500 mt-0.5">目标日: ${c.targetDate}</div>
           </div>
         </div>
-        <div class="flex items-center gap-3 shrink-0">
+        <div class="flex items-center gap-2 shrink-0">
           <div class="text-right whitespace-nowrap">
             <span class="text-xl font-black ${isTogether ? 'text-pink-600' : diff < 0 ? 'text-stone-500' : 'text-amber-700'}">${numVal}</span>
             <span class="text-xs block ${isTogether ? 'text-pink-500 font-bold' : diff < 0 ? 'text-stone-400' : 'text-amber-600'}">${suffix}</span>
           </div>
           ${(c.id === 'c_together' || c.id === 'c_anniversary' || c.id === 'c_birthday') ? '' : `
-          <button onclick="USAGI_APP.deleteCountdown('${c.id}')" class="text-stone-300 hover:text-red-500 text-sm">
+          <button onclick="USAGI_APP.deleteCountdown('${c.id}', ${idx})" class="p-2 -mr-1 text-stone-400 hover:text-red-500 active:text-red-600 rounded-xl hover:bg-red-50 transition-all text-base cursor-pointer" title="删除此项倒数">
             <i class="fa-solid fa-trash-can"></i>
           </button>`}
         </div>
@@ -2256,9 +2281,13 @@ window.USAGI_APP = {
     }
   },
 
-  deleteCountdown: function (id) {
+  deleteCountdown: function (id, index) {
     if (!confirm("确定要删除这个倒数日纪念日吗？此操作无法撤销哦！🐰")) return;
-    this.data.countdowns = this.data.countdowns.filter(x => x.id !== id);
+    if (id && id !== 'undefined' && id !== 'null') {
+      this.data.countdowns = (this.data.countdowns || []).filter((x, idx) => x.id !== id && idx !== index);
+    } else if (typeof index === 'number' && index >= 0) {
+      this.data.countdowns.splice(index, 1);
+    }
     this.saveData();
     this.renderTodos();
     this.renderDashboard();
@@ -2284,7 +2313,9 @@ window.USAGI_APP = {
 
       let typeBadge = '🎬 电影/番剧';
       if (w.type === 'food') typeBadge = '🍰 探店美食';
-      if (w.type === 'cooling_shop') typeBadge = '🧊 购物冷静期';
+      else if (w.type === 'cooling_shop') typeBadge = '🧊 购物冷静期';
+      else if (w.type === 'other' || w.customType) typeBadge = `✨ ${escapeHtml(w.customType || '自定义心愿')}`;
+      else if (w.type && w.type !== 'movie') typeBadge = `✨ ${escapeHtml(w.type)}`;
 
       card.innerHTML = `
         <div>
@@ -2318,7 +2349,7 @@ window.USAGI_APP = {
     });
   },
 
-  addWatchlist: function (title, type, rating, price, notes) {
+  addWatchlist: function (title, type, rating, price, notes, customType) {
     if (!title.trim()) {
       alert("请输入心愿名称！🎬");
       return;
@@ -2327,6 +2358,7 @@ window.USAGI_APP = {
       id: 'w_' + Date.now(),
       title: title.trim(),
       type: type || 'movie',
+      customType: customType || '',
       rating: parseInt(rating) || 5,
       price: price ? parseFloat(price) : null,
       coolingDaysLeft: type === 'cooling_shop' ? 3 : 0,

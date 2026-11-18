@@ -241,6 +241,12 @@
               <span>随身看戏 🍿</span>
             </button>
 
+            <!-- Social Apps Hub Quick Button (Desktop / Tablet) -->
+            <button onclick="USAGI_APP.switchTab('social')" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 transition-all text-xs font-bold shadow-xs cursor-pointer" title="打开常用社交与爱用物魔术坞 (微信/WhatsApp/小红书/IG)">
+              <i class="fa-solid fa-comments text-emerald-600"></i>
+              <span>爱用App 📱</span>
+            </button>
+
             <!-- Games Arcade Quick Button (Desktop / Tablet) -->
             <button onclick="USAGI_APP.switchTab('games')" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 transition-all text-xs font-bold shadow-xs cursor-pointer" title="打开芷萱治愈小游戏乐园">
               <i class="fa-solid fa-gamepad text-amber-600 animate-bounce"></i>
@@ -364,6 +370,11 @@
             <span>芷萱随身小影院</span>
           </div>
 
+          <div id="nav-social" onclick="USAGI_APP.switchTab('social')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700 cursor-pointer">
+            <span class="text-lg">📱</span>
+            <span>常用社交 · 爱用物坞</span>
+          </div>
+
           <div id="nav-games" onclick="USAGI_APP.switchTab('games')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700 cursor-pointer">
             <span class="text-lg">🎮</span>
             <span>芷萱治愈游乐园</span>
@@ -418,6 +429,9 @@
           </button>
           <button onclick="USAGI_APP.switchTab('cinema')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="cinema">
             <span>🍿</span> <span>随身看戏</span>
+          </button>
+          <button onclick="USAGI_APP.switchTab('social')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="social">
+            <span>📱</span> <span>爱用App</span>
           </button>
           <button onclick="USAGI_APP.switchTab('games')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="games">
             <span>🎮</span> <span>游乐园</span>
@@ -733,12 +747,16 @@
               </div>
               <div>
                 <label class="block font-bold text-stone-600 mb-1">痛经与身体反应</label>
-                <select id="period-new-pain" class="w-full p-2 border border-stone-200 rounded-xl">
+                <select id="period-new-pain" class="w-full p-2 border border-stone-200 rounded-xl" onchange="togglePeriodPainOtherInput()">
                   <option value="无痛经">无明显痛感 😊</option>
                   <option value="轻微不适" selected>轻微下坠酸痛 🌸</option>
                   <option value="中度疼痛">中度腹痛，需要暖宝宝 🥺</option>
                   <option value="重度疼痛">重度疼痛，需要止痛药 💊</option>
+                  <option value="其他">✨ 其他身体反应 (自定义)</option>
                 </select>
+                <div id="period-new-pain-other-box" class="hidden mt-2">
+                  <input id="period-new-pain-other" type="text" placeholder="输入身体小反应（如：腰酸难耐、胸胀微痛、怕冷手脚冰凉等）" class="w-full p-2 text-xs border border-rose-300 rounded-xl bg-rose-50/50 focus:bg-white outline-none" />
+                </div>
               </div>
             </div>
             <div class="mt-3">
@@ -858,7 +876,7 @@
               </div>
               <div>
                 <label class="block font-bold text-stone-600 mb-1">消费分类</label>
-                <select id="exp-input-cat" class="w-full p-2 border border-stone-200 rounded-xl">
+                <select id="exp-input-cat" class="w-full p-2 border border-stone-200 rounded-xl" onchange="toggleExpenseOtherInput()">
                   <option value="餐饮美食">🍔 餐饮美食</option>
                   <option value="购物消费">🛍️ 购物消费</option>
                   <option value="日用百货">🧻 日用百货</option>
@@ -867,8 +885,11 @@
                   <option value="美妆护肤">💄 美妆护肤</option>
                   <option value="医疗健康">💊 医疗健康</option>
                   <option value="兼职工资">💰 兼职工资</option>
-                  <option value="其他分类">✨ 其他分类</option>
+                  <option value="其他分类">✨ 其他分类 (自定义)</option>
                 </select>
+                <div id="exp-input-cat-other-box" class="hidden mt-2">
+                  <input id="exp-input-cat-other" type="text" placeholder="输入自定义分类（如：猫粮、买花等）" class="w-full p-2 text-xs border border-amber-300 rounded-xl bg-amber-50/50 focus:bg-white outline-none" />
+                </div>
               </div>
               <div>
                 <label class="block font-bold text-stone-600 mb-1">金额 (RM)</label>
@@ -1084,6 +1105,15 @@
                 <input type="checkbox" value="容易犯困" class="checkbox-kawaii" />
                 <span>容易犯困 💤</span>
               </label>
+              <label class="symptom-tag flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 cursor-pointer hover:border-pink-300">
+                <input type="checkbox" id="symptom-other-checkbox" value="其他" class="checkbox-kawaii" onchange="toggleCustomSymptomInput()" />
+                <span class="font-bold text-rose-500">其他反应 ✨</span>
+              </label>
+            </div>
+
+            <!-- Custom Symptom Input Box (Revealed when '其他' is checked) -->
+            <div id="symptom-other-container" class="hidden mb-3">
+              <input id="mood-input-symptom-other" type="text" placeholder="输入身体其他小反应（如：腰酸、胃胀、失眠、胸胀微痛等）" class="w-full p-2.5 text-xs border border-pink-300 rounded-xl bg-pink-50/40 focus:bg-white outline-none" />
             </div>
 
             <textarea id="mood-input-note" rows="2" placeholder="写一句悄悄话：今天遇到了什么事情触动了你？" class="w-full p-2.5 text-xs border border-stone-200 rounded-xl mb-3"></textarea>
@@ -1238,11 +1268,13 @@
               </div>
 
               <div class="flex items-center gap-2 text-xs flex-wrap">
-                <select id="wl-input-type" class="p-2 border border-stone-200 rounded-xl">
+                <select id="wl-input-type" class="p-2 border border-stone-200 rounded-xl" onchange="toggleWatchlistOtherInput()">
                   <option value="movie">🎬 电影/剧集</option>
                   <option value="food">🍰 探店美食</option>
                   <option value="cooling_shop">🧊 购物冷静期(3天)</option>
+                  <option value="other">✨ 其他类型 (自定义)</option>
                 </select>
+                <input id="wl-input-type-other" type="text" placeholder="自定义类型（如：想读的书、展览、手作等）" class="w-36 p-2 border border-pink-300 rounded-xl bg-pink-50/50 focus:bg-white hidden" />
                 <input id="wl-input-title" type="text" placeholder="名称/片名/商品" class="w-36 p-2 border border-stone-200 rounded-xl" />
                 <input id="wl-input-price" type="number" placeholder="价格(RM)" class="w-20 p-2 border border-stone-200 rounded-xl" />
                 <button onclick="handleAddWatchlistSubmit()" class="btn-usagi text-xs py-2 px-3">添加心愿</button>
@@ -1278,6 +1310,375 @@
             <h4 class="font-bold text-stone-800 text-sm mb-3">幸福记忆高光墙</h4>
             <div id="highlights-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
           </div>
+        </div>
+
+        <!-- ========================================================
+             11.5. TAB: 常用社交与爱用物网页版全能工作台 (SOCIAL & APPS WEB SUITE)
+             ======================================================== -->
+        <div id="tab-social" class="tab-content hidden space-y-6">
+          
+          <!-- Top Banner -->
+          <div class="glass-card p-6 bg-gradient-to-r from-pink-100/90 via-purple-100/80 to-emerald-100/80 border-2 border-pink-300 relative overflow-hidden shadow-md">
+            <div class="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-4">
+              <div class="flex items-center gap-4 text-center lg:text-left">
+                <div class="w-16 h-16 rounded-2xl bg-white/95 border-2 border-pink-300 flex items-center justify-center text-3xl shadow-sm flex-shrink-0 animate-bounce">
+                  📱
+                </div>
+                <div>
+                  <div class="flex items-center justify-center lg:justify-start gap-2 flex-wrap">
+                    <span class="badge-kawaii bg-pink-500 text-white text-xs font-black">
+                      <i class="fa-solid fa-window-restore mr-1"></i> 实时网页版视窗 · 一面一面独立开
+                    </span>
+                    <span class="badge-kawaii bg-emerald-500 text-white text-xs font-black">
+                      🟢 账号登录即用
+                    </span>
+                  </div>
+                  <h2 class="text-2xl font-black text-stone-800 mt-1">芷萱专属 · 社交与种草网页版工作台 🌸✨</h2>
+                  <p class="text-xs sm:text-sm text-stone-700 mt-0.5 font-medium">小红书刷穿搭探店、微信扫码聊天、WhatsApp 传情、Instagram 动态打卡，直接在页面里登录使用！</p>
+                </div>
+              </div>
+
+              <!-- Top Global Quick Tools -->
+              <div class="flex items-center gap-2 flex-wrap justify-center">
+                <button onclick="refreshActiveSocialIframe()" class="px-3 py-1.5 rounded-full bg-white hover:bg-stone-50 text-stone-700 border border-stone-200 text-xs font-bold shadow-xs transition-all flex items-center gap-1.5" title="刷新当前视窗">
+                  <i class="fa-solid fa-rotate-right text-pink-500"></i> <span>刷新网页</span>
+                </button>
+                <button onclick="toggleSocialFullscreen()" class="px-3 py-1.5 rounded-full bg-white hover:bg-stone-50 text-stone-700 border border-stone-200 text-xs font-bold shadow-xs transition-all flex items-center gap-1.5" title="网页全屏沉浸展开">
+                  <i class="fa-solid fa-expand text-purple-500"></i> <span>全屏沉浸</span>
+                </button>
+                <button onclick="openActiveAppStandalone()" class="px-3 py-1.5 rounded-full bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1.5" title="以独立纯净App视窗打开">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>独立App视窗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Multi-Tab Switcher Bar (一面一面切换导航) -->
+          <div class="flex items-center justify-between gap-3 bg-white/90 p-2.5 rounded-2xl border-2 border-stone-200 shadow-xs">
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 w-full sm:w-auto scrollbar-none flex-nowrap" id="social-tab-navs">
+              <button id="btn-subtab-xhs" onclick="switchSocialSubTab('xhs')" class="social-subtab-btn active px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shrink-0 transition-all flex items-center gap-2 shadow-xs bg-red-500 text-white">
+                <span class="text-base">📕</span>
+                <span>小红书网页版</span>
+                <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+              </button>
+              <button id="btn-subtab-wechat" onclick="switchSocialSubTab('wechat')" class="social-subtab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shrink-0 transition-all flex items-center gap-2 bg-stone-100 text-stone-700 hover:bg-green-50 hover:text-green-700">
+                <i class="fa-brands fa-weixin text-green-600 text-base"></i>
+                <span>微信网页版</span>
+              </button>
+              <button id="btn-subtab-whatsapp" onclick="switchSocialSubTab('whatsapp')" class="social-subtab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shrink-0 transition-all flex items-center gap-2 bg-stone-100 text-stone-700 hover:bg-emerald-50 hover:text-emerald-700">
+                <i class="fa-brands fa-whatsapp text-emerald-600 text-base"></i>
+                <span>WhatsApp 网页版</span>
+              </button>
+              <button id="btn-subtab-instagram" onclick="switchSocialSubTab('instagram')" class="social-subtab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shrink-0 transition-all flex items-center gap-2 bg-stone-100 text-stone-700 hover:bg-purple-50 hover:text-purple-700">
+                <i class="fa-brands fa-instagram text-pink-600 text-base"></i>
+                <span>Instagram 网页版</span>
+              </button>
+              <button id="btn-subtab-grid" onclick="switchSocialSubTab('grid')" class="social-subtab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shrink-0 transition-all flex items-center gap-1.5 bg-stone-100 text-stone-700 hover:bg-amber-50 hover:text-amber-800">
+                <i class="fa-solid fa-table-cells text-amber-500"></i>
+                <span>四合一分屏</span>
+              </button>
+            </div>
+
+            <!-- View Status Tip -->
+            <div class="hidden lg:flex items-center gap-2 text-xs text-stone-500 font-medium shrink-0">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span id="social-current-status-tip">小红书实时探索视窗 · 点击右上角可登录账号</span>
+            </div>
+          </div>
+
+          <!-- Main Workstation View Area -->
+          <div id="social-workstation-container" class="relative transition-all duration-300">
+            
+            <!-- VIEW 1: 📕 小红书 (Xiaohongshu) -->
+            <div id="social-view-xhs" class="social-view-panel space-y-3">
+              <!-- XHS Toolbar -->
+              <div class="glass-card p-3.5 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 flex flex-col md:flex-row items-center justify-between gap-3 rounded-2xl">
+                <div class="flex items-center gap-2.5 w-full md:w-auto">
+                  <span class="text-xl">📕</span>
+                  <div>
+                    <div class="text-xs font-black text-red-900 flex items-center gap-1.5">
+                      <span>小红书官方探索视窗</span>
+                      <span class="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold">免跳出 · 直接刷</span>
+                    </div>
+                    <p class="text-[11px] text-stone-500">点击内嵌页面右上角【登录】，可使用小红书 App 扫码或验证码登录！</p>
+                  </div>
+                </div>
+                <!-- XHS Search & Actions -->
+                <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
+                  <div class="flex gap-1.5 flex-1 md:w-64">
+                    <input id="xhs-live-search-input" type="text" placeholder="搜穿搭、美甲、探店..." class="flex-1 p-1.5 px-3 text-xs border border-red-300 rounded-xl bg-white outline-none focus:ring-2 focus:ring-red-200" onkeydown="if(event.key==='Enter') executeXhsLiveSearch()" />
+                    <button onclick="executeXhsLiveSearch()" class="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1">
+                      <i class="fa-solid fa-magnifying-glass"></i> <span>搜索</span>
+                    </button>
+                  </div>
+                  <button onclick="openXiaohongshuApp()" class="p-1.5 px-2.5 rounded-xl bg-red-100 hover:bg-red-200 text-red-800 text-xs font-bold transition-all flex items-center gap-1">
+                    <span>📱 唤起手机App</span>
+                  </button>
+                  <button onclick="openStandaloneApp('https://www.xiaohongshu.com/explore', 'XiaohongshuApp')" class="p-1.5 px-2.5 rounded-xl bg-white hover:bg-stone-100 border border-red-200 text-red-700 text-xs font-bold transition-all flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>独立大视窗</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Hot Tags -->
+              <div class="flex items-center gap-1.5 flex-wrap px-1 text-xs">
+                <span class="text-stone-400 font-bold text-[11px]">快捷直达：</span>
+                <button onclick="setXhsSearch('情侣日常穿搭')" class="px-2.5 py-1 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 border border-pink-200 font-semibold transition-all">👗 情侣穿搭</button>
+                <button onclick="setXhsSearch('仙女法式美甲')" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-semibold transition-all">💅 仙女美甲</button>
+                <button onclick="setXhsSearch('情侣约会探店咖啡馆')" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 font-semibold transition-all">🍰 约会探店</button>
+                <button onclick="setXhsSearch('情侣旅行拍照姿势')" class="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-semibold transition-all">✈️ 拍照攻略</button>
+                <button onclick="setXhsSearch('减脂高颜值快手便当')" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-semibold transition-all">🍳 减脂便当</button>
+                <button onclick="setXhsSearch('乌萨奇可爱周边')" class="px-2.5 py-1 rounded-lg bg-yellow-50 hover:bg-yellow-100 text-yellow-700 border border-yellow-200 font-semibold transition-all">🎀 乌萨奇周边</button>
+              </div>
+
+              <!-- Iframe Container -->
+              <div class="relative w-full rounded-3xl overflow-hidden border-2 border-red-200 shadow-md bg-stone-100" style="height: 760px; min-height: 520px;">
+                <iframe id="social-iframe-xhs" src="https://www.xiaohongshu.com/explore" class="w-full h-full border-0 bg-white" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+              </div>
+            </div>
+
+            <!-- VIEW 2: 💚 微信网页版 (WeChat Web) -->
+            <div id="social-view-wechat" class="social-view-panel hidden space-y-3">
+              <!-- WeChat Toolbar -->
+              <div class="glass-card p-3.5 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 flex flex-col md:flex-row items-center justify-between gap-3 rounded-2xl">
+                <div class="flex items-center gap-2.5">
+                  <i class="fa-brands fa-weixin text-green-600 text-2xl"></i>
+                  <div>
+                    <div class="text-xs font-black text-green-900 flex items-center gap-1.5">
+                      <span>微信官方网页版 (WeChat Web) · 扫码直连</span>
+                      <span class="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">手机扫码即登</span>
+                    </div>
+                    <p class="text-[11px] text-stone-500">拿出手机微信「扫一扫」视窗中央的大二维码，确认后即可直接在网页里聊天发表情包！</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <button onclick="refreshWeChatIframe()" class="p-1.5 px-3 rounded-xl bg-green-600 hover:bg-green-700 text-white text-xs font-bold transition-all flex items-center gap-1 shadow-xs">
+                    <i class="fa-solid fa-rotate-right"></i> <span>刷新二维码</span>
+                  </button>
+                  <button onclick="openWeChatApp()" class="p-1.5 px-3 rounded-xl bg-green-100 hover:bg-green-200 text-green-900 text-xs font-bold transition-all flex items-center gap-1">
+                    <i class="fa-brands fa-weixin"></i> <span>唤起手机微信</span>
+                  </button>
+                  <button onclick="openStandaloneApp('https://wx.qq.com', 'WeChatWebWindow')" class="p-1.5 px-3 rounded-xl bg-white hover:bg-stone-100 border border-green-300 text-green-800 text-xs font-bold transition-all flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>独立无边框视窗</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- WeChat Love Memo Quick Copier -->
+              <div class="bg-green-50/70 p-3 rounded-2xl border border-green-200 flex items-center gap-2 flex-wrap">
+                <span class="text-xs font-bold text-green-900 shrink-0">💌 传情快捷写：</span>
+                <input id="wechat-memo-live-text" type="text" placeholder="写一句想在微信发给男朋友的悄悄话..." class="flex-1 min-w-[200px] p-1.5 px-3 text-xs border border-green-300 rounded-xl bg-white outline-none focus:ring-2 focus:ring-green-300" />
+                <button onclick="copyMemoForWeChat()" class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1">
+                  <i class="fa-solid fa-copy"></i> <span>一键复制</span>
+                </button>
+              </div>
+
+              <!-- Iframe Container -->
+              <div class="relative w-full rounded-3xl overflow-hidden border-2 border-green-300 shadow-md bg-stone-100" style="height: 760px; min-height: 520px;">
+                <iframe id="social-iframe-wechat" src="https://wx.qq.com" class="w-full h-full border-0 bg-white" allow="camera; microphone; clipboard-read; clipboard-write; autoplay; fullscreen" allowfullscreen></iframe>
+              </div>
+            </div>
+
+            <!-- VIEW 3: 💬 WhatsApp 网页版 (WhatsApp Web) -->
+            <div id="social-view-whatsapp" class="social-view-panel hidden space-y-3">
+              <!-- WhatsApp Toolbar -->
+              <div class="glass-card p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 flex flex-col md:flex-row items-center justify-between gap-3 rounded-2xl">
+                <div class="flex items-center gap-2.5">
+                  <i class="fa-brands fa-whatsapp text-emerald-600 text-2xl"></i>
+                  <div>
+                    <div class="text-xs font-black text-emerald-900 flex items-center gap-1.5">
+                      <span>WhatsApp 网页版 · 官方直连视窗</span>
+                      <span class="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">扫码永久记忆</span>
+                    </div>
+                    <p class="text-[11px] text-stone-500">支持独立纯净 App 级弹窗，免切浏览器，登录一次永久保持在线！</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <button onclick="openStandaloneApp('https://web.whatsapp.com', 'WhatsAppAppWindow')" class="p-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+                    <i class="fa-solid fa-rocket"></i> <span>🚀 启动 WhatsApp 专属纯净视窗 (推荐)</span>
+                  </button>
+                  <button onclick="openWhatsAppWeb()" class="p-1.5 px-3 rounded-xl bg-white hover:bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-bold transition-all flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>网页新标签</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Phone & Sweet Romance Quick Send Bar -->
+              <div class="bg-emerald-50/70 p-3.5 rounded-2xl border border-emerald-200 space-y-2.5">
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                  <div class="flex items-center gap-2 flex-1 min-w-[240px]">
+                    <span class="text-xs font-bold text-emerald-900 shrink-0">📱 对方号码:</span>
+                    <input id="wa-phone-number" type="tel" placeholder="例如: 60123456789" class="p-1.5 px-3 text-xs border border-emerald-300 rounded-xl bg-white font-mono outline-none flex-1 max-w-[200px]" oninput="saveWhatsAppPhone()" />
+                    <button onclick="saveWhatsAppPhone(true)" class="px-2.5 py-1.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700">保存</button>
+                  </div>
+                  <div class="flex items-center gap-2 flex-1 min-w-[260px]">
+                    <input id="wa-custom-msg" type="text" placeholder="输入自定义悄悄话..." class="p-1.5 px-3 text-xs border border-emerald-300 rounded-xl bg-white outline-none flex-1" />
+                    <button onclick="sendWhatsAppCustom()" class="px-3 py-1.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 shrink-0 flex items-center gap-1">
+                      <i class="fa-brands fa-whatsapp"></i> <span>发送</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Sweet Presets -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1.5 text-xs">
+                  <button onclick="sendWhatsAppQuick('💖 想你啦老公~ 今天也是最爱你的一天！')" class="p-2 rounded-xl bg-white hover:bg-pink-50 border border-pink-200 text-pink-900 font-bold transition-all text-center truncate shadow-2xs">💖 想你啦老公</button>
+                  <button onclick="sendWhatsAppQuick('🍰 今天超想吃好吃的甜品/大餐，快带我去！')" class="p-2 rounded-xl bg-white hover:bg-amber-50 border border-amber-200 text-amber-900 font-bold transition-all text-center truncate shadow-2xs">🍰 想吃大餐甜品</button>
+                  <button onclick="sendWhatsAppQuick('🥺 肚子有点酸酸难受，要抱抱呼呼~')" class="p-2 rounded-xl bg-white hover:bg-rose-50 border border-rose-200 text-rose-900 font-bold transition-all text-center truncate shadow-2xs">🥺 要抱抱呼呼</button>
+                  <button onclick="sendWhatsAppQuick('🚗 下班/到家记得报备哦，注意安全！')" class="p-2 rounded-xl bg-white hover:bg-blue-50 border border-blue-200 text-blue-900 font-bold transition-all text-center truncate shadow-2xs">🚗 到家记得报备</button>
+                  <button onclick="sendWhatsAppQuick('✨ 晚上要不要一起连麦看电影呀？')" class="p-2 rounded-xl bg-white hover:bg-purple-50 border border-purple-200 text-purple-900 font-bold transition-all text-center truncate shadow-2xs">✨ 晚上连麦看剧</button>
+                  <button onclick="sendWhatsAppQuick('🐰 呀哈！今天也是元气满满的芷萱！')" class="p-2 rounded-xl bg-white hover:bg-yellow-50 border border-yellow-200 text-yellow-900 font-bold transition-all text-center truncate shadow-2xs">🐰 呀哈元气满满</button>
+                </div>
+              </div>
+
+              <!-- Iframe & Standalone Fallback Container -->
+              <div class="relative w-full rounded-3xl overflow-hidden border-2 border-emerald-300 shadow-md bg-stone-50 flex flex-col items-center justify-center p-6 text-center" style="height: 600px; min-height: 480px;">
+                <iframe id="social-iframe-wa" src="https://web.whatsapp.com" class="absolute inset-0 w-full h-full border-0 bg-white" allow="camera; microphone; clipboard-read; clipboard-write; autoplay; fullscreen" allowfullscreen></iframe>
+                
+                <!-- Gentle in-frame overlay for blocked browser environments -->
+                <div class="relative z-10 max-w-md bg-white/95 backdrop-blur-md p-6 rounded-3xl border-2 border-emerald-300 shadow-xl space-y-4">
+                  <div class="w-16 h-16 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-3xl mx-auto shadow-md">
+                    <i class="fa-brands fa-whatsapp"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-base font-black text-stone-800">WhatsApp 网页版专属工作台</h3>
+                    <p class="text-xs text-stone-600 mt-1 leading-relaxed">
+                      若你的浏览器安全策略阻止了内嵌加载，点击下方按钮一秒呼出<b>【App级纯净独立视窗】</b>，扫码登录后永久保持在线，聊天发图完全不受限制！
+                    </p>
+                  </div>
+                  <div class="flex flex-col gap-2">
+                    <button onclick="openStandaloneApp('https://web.whatsapp.com', 'WhatsAppAppWindow')" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-md transition-all flex items-center justify-center gap-2">
+                      <i class="fa-solid fa-rocket"></i> <span>🚀 立即启动 WhatsApp 专属纯净视窗</span>
+                    </button>
+                    <button onclick="refreshWhatsAppIframe()" class="w-full py-2 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs border border-emerald-300 transition-all flex items-center justify-center gap-1.5">
+                      <i class="fa-solid fa-rotate-right"></i> <span>重试在内嵌视窗中加载</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- VIEW 4: 📸 Instagram 网页版 (Instagram Web) -->
+            <div id="social-view-instagram" class="social-view-panel hidden space-y-3">
+              <!-- Instagram Toolbar -->
+              <div class="glass-card p-3.5 bg-gradient-to-r from-purple-50 via-pink-50 to-amber-50 border border-purple-200 flex flex-col md:flex-row items-center justify-between gap-3 rounded-2xl">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 text-white flex items-center justify-center text-lg shadow-sm">
+                    <i class="fa-brands fa-instagram"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-black text-purple-900 flex items-center gap-1.5">
+                      <span>Instagram 官方网页版 · 实时视窗</span>
+                      <span class="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-bold">刷帖子 · 聊私信</span>
+                    </div>
+                    <p class="text-[11px] text-stone-500">登录账号即可浏览好友动态、发 Story、看 Reels 视频与 Direct 私聊！</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <button onclick="openStandaloneApp('https://www.instagram.com', 'InstagramAppWindow')" class="p-2 px-4 rounded-xl bg-gradient-to-r from-purple-600 via-pink-500 to-rose-500 hover:opacity-95 text-white text-xs font-black transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+                    <i class="fa-solid fa-rocket"></i> <span>🚀 启动 Instagram 专属纯净视窗 (推荐)</span>
+                  </button>
+                  <button onclick="openInstagramDirect()" class="p-1.5 px-3 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 text-xs font-bold transition-all flex items-center gap-1">
+                    <i class="fa-solid fa-paper-plane text-purple-600"></i> <span>打开 Direct 私信</span>
+                  </button>
+                  <button onclick="openInstagramApp()" class="p-1.5 px-3 rounded-xl bg-white hover:bg-purple-50 border border-purple-300 text-purple-800 text-xs font-bold transition-all flex items-center gap-1">
+                    <span>📱 唤起手机App</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Hot Tag Suggestions -->
+              <div class="flex items-center gap-1.5 flex-wrap px-1 text-xs">
+                <span class="text-stone-400 font-bold text-[11px]">灵感话题：</span>
+                <a href="https://www.instagram.com/explore/tags/chiikawa/" target="_blank" class="px-2.5 py-1 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 border border-pink-200 font-semibold transition-all">🐰 #Chiikawa</a>
+                <a href="https://www.instagram.com/explore/tags/couplesgoals/" target="_blank" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-semibold transition-all">💑 #情侣日常</a>
+                <a href="https://www.instagram.com/explore/tags/cafehopping/" target="_blank" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 font-semibold transition-all">☕ #探店打卡</a>
+                <a href="https://www.instagram.com/explore/tags/ootd/" target="_blank" class="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 font-semibold transition-all">👗 #OOTD每日穿搭</a>
+              </div>
+
+              <!-- Iframe & Standalone Fallback Container -->
+              <div class="relative w-full rounded-3xl overflow-hidden border-2 border-purple-300 shadow-md bg-stone-50 flex flex-col items-center justify-center p-6 text-center" style="height: 600px; min-height: 480px;">
+                <iframe id="social-iframe-ig" src="https://www.instagram.com" class="absolute inset-0 w-full h-full border-0 bg-white" allow="camera; microphone; clipboard-read; clipboard-write; autoplay; fullscreen" allowfullscreen></iframe>
+                
+                <!-- Gentle in-frame overlay for blocked browser environments -->
+                <div class="relative z-10 max-w-md bg-white/95 backdrop-blur-md p-6 rounded-3xl border-2 border-purple-300 shadow-xl space-y-4">
+                  <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 text-white flex items-center justify-center text-3xl mx-auto shadow-md">
+                    <i class="fa-brands fa-instagram"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-base font-black text-stone-800">Instagram 官方网页版视窗</h3>
+                    <p class="text-xs text-stone-600 mt-1 leading-relaxed">
+                      若你的浏览器拦截了内嵌加载，点击下方按钮秒开<b>【App级纯净独立视窗】</b>，直接登录你的 Instagram 账号正常刷帖看快拍！
+                    </p>
+                  </div>
+                  <div class="flex flex-col gap-2">
+                    <button onclick="openStandaloneApp('https://www.instagram.com', 'InstagramAppWindow')" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-purple-600 via-pink-500 to-rose-500 hover:opacity-95 text-white font-black text-xs shadow-md transition-all flex items-center justify-center gap-2">
+                      <i class="fa-solid fa-rocket"></i> <span>🚀 立即启动 Instagram 专属纯净视窗</span>
+                    </button>
+                    <button onclick="refreshInstagramIframe()" class="w-full py-2 px-3 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-900 font-bold text-xs border border-purple-300 transition-all flex items-center justify-center gap-1.5">
+                      <i class="fa-solid fa-rotate-right"></i> <span>重试在内嵌视窗中加载</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- VIEW 5: 🪟 四合一分屏视图 (Split-Screen 4-in-1 View) -->
+            <div id="social-view-grid" class="social-view-panel hidden space-y-4">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <!-- Grid 1: XHS -->
+                <div class="glass-card p-3 rounded-3xl border-2 border-red-200 bg-white shadow-md flex flex-col" style="height: 580px;">
+                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-red-100 text-xs font-black text-red-900">
+                    <span class="flex items-center gap-1.5"><span>📕</span> 小红书网页版</span>
+                    <button onclick="switchSocialSubTab('xhs')" class="text-red-500 hover:underline">单视窗大屏 ↗</button>
+                  </div>
+                  <iframe src="https://www.xiaohongshu.com/explore" class="w-full flex-1 rounded-2xl border-0 bg-stone-50" allowfullscreen></iframe>
+                </div>
+
+                <!-- Grid 2: WeChat -->
+                <div class="glass-card p-3 rounded-3xl border-2 border-green-200 bg-white shadow-md flex flex-col" style="height: 580px;">
+                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-green-100 text-xs font-black text-green-900">
+                    <span class="flex items-center gap-1.5"><i class="fa-brands fa-weixin text-green-600"></i> 微信网页版</span>
+                    <button onclick="switchSocialSubTab('wechat')" class="text-green-600 hover:underline">单视窗大屏 ↗</button>
+                  </div>
+                  <iframe src="https://wx.qq.com" class="w-full flex-1 rounded-2xl border-0 bg-stone-50" allowfullscreen></iframe>
+                </div>
+
+                <!-- Grid 3: WhatsApp -->
+                <div class="glass-card p-3 rounded-3xl border-2 border-emerald-200 bg-white shadow-md flex flex-col justify-between" style="height: 580px;">
+                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-emerald-100 text-xs font-black text-emerald-900">
+                    <span class="flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-emerald-600"></i> WhatsApp 网页版</span>
+                    <button onclick="switchSocialSubTab('whatsapp')" class="text-emerald-600 hover:underline">单视窗大屏 ↗</button>
+                  </div>
+                  <div class="flex-1 rounded-2xl border border-emerald-100 bg-emerald-50/50 flex flex-col items-center justify-center p-4 text-center space-y-3">
+                    <i class="fa-brands fa-whatsapp text-5xl text-emerald-500"></i>
+                    <h4 class="font-black text-stone-800 text-sm">WhatsApp 专属独立视窗</h4>
+                    <p class="text-xs text-stone-500 max-w-xs">一键开启纯净免切屏视窗，扫码一次永久登录聊天！</p>
+                    <button onclick="openStandaloneApp('https://web.whatsapp.com', 'WhatsAppAppWindow')" class="py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs">
+                      🚀 立即打开 WhatsApp 视窗
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Grid 4: Instagram -->
+                <div class="glass-card p-3 rounded-3xl border-2 border-purple-200 bg-white shadow-md flex flex-col justify-between" style="height: 580px;">
+                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-purple-100 text-xs font-black text-purple-900">
+                    <span class="flex items-center gap-1.5"><i class="fa-brands fa-instagram text-pink-600"></i> Instagram 网页版</span>
+                    <button onclick="switchSocialSubTab('instagram')" class="text-purple-600 hover:underline">单视窗大屏 ↗</button>
+                  </div>
+                  <div class="flex-1 rounded-2xl border border-purple-100 bg-purple-50/50 flex flex-col items-center justify-center p-4 text-center space-y-3">
+                    <i class="fa-brands fa-instagram text-5xl text-pink-500"></i>
+                    <h4 class="font-black text-stone-800 text-sm">Instagram 专属独立视窗</h4>
+                    <p class="text-xs text-stone-500 max-w-xs">登录账号刷精选动态、Reels 视频与私信！</p>
+                    <button onclick="openStandaloneApp('https://www.instagram.com', 'InstagramAppWindow')" class="py-2 px-4 rounded-xl bg-gradient-to-r from-purple-600 via-pink-500 to-rose-500 text-white font-bold text-xs shadow-xs">
+                      🚀 立即打开 Instagram 视窗
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
         </div>
 
         <!-- ========================================================
@@ -2301,7 +2702,7 @@
                 <input id="cal-new-title" type="text" placeholder="事项标题（如：看演出、背单词、闺蜜约饭）" class="w-full p-2 border border-stone-200 rounded-xl focus:border-amber-400 outline-none" />
               </div>
               <div>
-                <select id="cal-new-category" class="w-full p-2 border border-stone-200 rounded-xl focus:border-amber-400 outline-none">
+                <select id="cal-new-category" class="w-full p-2 border border-stone-200 rounded-xl focus:border-amber-400 outline-none" onchange="toggleCalCategoryOther()">
                   <option value="生活">🌱 生活日常</option>
                   <option value="待办">📌 核心待办</option>
                   <option value="约会">☕ 聚会约会</option>
@@ -2309,7 +2710,12 @@
                   <option value="出行">✈️ 旅行出行</option>
                   <option value="学习">📖 学习考试</option>
                   <option value="健康">💊 身体健康</option>
+                  <option value="假期">🏖️ 放假假期</option>
+                  <option value="其他">✨ 其他 (自定义)</option>
                 </select>
+                <div id="cal-new-category-other-box" class="hidden mt-2">
+                  <input id="cal-new-category-other" type="text" placeholder="输入自定义日程分类（如：看演唱会、做美甲等）" class="w-full p-2 text-xs border border-amber-300 rounded-xl bg-amber-50/50 focus:bg-white outline-none" />
+                </div>
               </div>
             </div>
 
@@ -4417,26 +4823,337 @@
       closeYouTubePip();
     }
 
+    // ============================================================
+    // 📱 常用社交与爱用物魔术坞 HELPERS (WhatsApp, WeChat, Xiaohongshu, Instagram)
+    // ============================================================
+    function scrollToSocialApp(appKey) {
+      USAGI_APP.switchTab('social');
+      const target = document.getElementById(`social-app-${appKey}`);
+      if (target) {
+        setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+      }
+    }
+
+    function saveWhatsAppPhone(notify = false) {
+      const input = document.getElementById('wa-phone-number');
+      if (input) {
+        const val = input.value.trim().replace(/[^0-9]/g, '');
+        localStorage.setItem('usagi_wa_phone', val);
+        if (notify) {
+          alert('号码已保存记忆！🐰 以后发送私聊气泡将自动直达此号码~');
+        }
+      }
+    }
+
+    // ==========================================
+    // 常用社交与爱用物 · 网页版全能工作台逻辑
+    // ==========================================
+    let currentActiveSocialApp = 'xhs';
+
+    function switchSocialSubTab(appName) {
+      currentActiveSocialApp = appName;
+      if (window.UsagiSound && UsagiSound.click) UsagiSound.click();
+      
+      // Update tab buttons appearance
+      const tabs = [
+        { id: 'btn-subtab-xhs', name: 'xhs', activeClass: 'bg-red-500 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-red-50 hover:text-red-700' },
+        { id: 'btn-subtab-wechat', name: 'wechat', activeClass: 'bg-green-600 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-green-50 hover:text-green-700' },
+        { id: 'btn-subtab-whatsapp', name: 'whatsapp', activeClass: 'bg-emerald-600 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-emerald-50 hover:text-emerald-700' },
+        { id: 'btn-subtab-instagram', name: 'instagram', activeClass: 'bg-gradient-to-r from-purple-600 via-pink-500 to-rose-500 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-purple-50 hover:text-purple-700' },
+        { id: 'btn-subtab-grid', name: 'grid', activeClass: 'bg-amber-500 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-amber-50 hover:text-amber-800' }
+      ];
+
+      tabs.forEach(t => {
+        const btn = document.getElementById(t.id);
+        if (!btn) return;
+        if (t.name === appName) {
+          btn.className = `social-subtab-btn active px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shrink-0 transition-all flex items-center gap-2 ${t.activeClass}`;
+        } else {
+          btn.className = `social-subtab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shrink-0 transition-all flex items-center gap-2 ${t.normalClass}`;
+        }
+      });
+
+      // Show/hide view panels
+      const panels = ['xhs', 'wechat', 'whatsapp', 'instagram', 'grid'];
+      panels.forEach(p => {
+        const el = document.getElementById(`social-view-${p}`);
+        if (el) {
+          if (p === appName) el.classList.remove('hidden');
+          else el.classList.add('hidden');
+        }
+      });
+
+      // Update status tip & Pet Mascot reaction
+      const tip = document.getElementById('social-current-status-tip');
+      if (appName === 'xhs') {
+        if (tip) tip.innerText = '小红书官方探索视窗 · 点击右上角登录账号';
+        if (window.USAGI_APP && USAGI_APP.showMascotSpeech) USAGI_APP.showMascotSpeech('小红书网页版已就绪！快去看看今天有哪些神仙穿搭和甜品探店吧~ 📕✨');
+      } else if (appName === 'wechat') {
+        if (tip) tip.innerText = '微信官方网页版 · 手机扫码即可直接聊天';
+        if (window.USAGI_APP && USAGI_APP.showMascotSpeech) USAGI_APP.showMascotSpeech('微信网页版已就绪！拿起手机微信扫一扫上方二维码即可开始聊天~ 💚');
+      } else if (appName === 'whatsapp') {
+        if (tip) tip.innerText = 'WhatsApp 网页版 · 官方直通视窗与情话直达';
+        if (window.USAGI_APP && USAGI_APP.showMascotSpeech) USAGI_APP.showMascotSpeech('WhatsApp 专属视窗已就绪！给男朋友发个可爱的撒娇气泡吧~ 💬💖');
+      } else if (appName === 'instagram') {
+        if (tip) tip.innerText = 'Instagram 网页版 · 刷动态、Reels 与 Direct 私信';
+        if (window.USAGI_APP && USAGI_APP.showMascotSpeech) USAGI_APP.showMascotSpeech('Instagram 视窗已就绪！打卡、拍照与看 Reels 视频超开心~ 📸🌸');
+      } else if (appName === 'grid') {
+        if (tip) tip.innerText = '四合一分屏视图 · 多任务并列开启';
+        if (window.USAGI_APP && USAGI_APP.showMascotSpeech) USAGI_APP.showMascotSpeech('哇！四合一多视窗开启！一边聊天一边刷种草，手账超强大！🪟🎉');
+      }
+    }
+
+    function openStandaloneApp(url, windowName) {
+      if (window.UsagiSound && UsagiSound.click) UsagiSound.click();
+      const w = 1120;
+      const h = 820;
+      const left = Math.max(0, (window.screen.width - w) / 2);
+      const top = Math.max(0, (window.screen.height - h) / 2);
+      window.open(url, windowName || '_blank', `width=${w},height=${h},top=${top},left=${left},menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes`);
+    }
+
+    function openActiveAppStandalone() {
+      if (currentActiveSocialApp === 'xhs') openStandaloneApp('https://www.xiaohongshu.com/explore', 'XiaohongshuApp');
+      else if (currentActiveSocialApp === 'wechat') openStandaloneApp('https://wx.qq.com', 'WeChatWebApp');
+      else if (currentActiveSocialApp === 'whatsapp') openStandaloneApp('https://web.whatsapp.com', 'WhatsAppApp');
+      else if (currentActiveSocialApp === 'instagram') openStandaloneApp('https://www.instagram.com', 'InstagramApp');
+      else openStandaloneApp('https://www.xiaohongshu.com/explore', 'XiaohongshuApp');
+    }
+
+    function refreshActiveSocialIframe() {
+      if (window.UsagiSound && UsagiSound.click) UsagiSound.click();
+      if (currentActiveSocialApp === 'xhs') {
+        const el = document.getElementById('social-iframe-xhs');
+        if (el) el.src = el.src;
+      } else if (currentActiveSocialApp === 'wechat') {
+        refreshWeChatIframe();
+      } else if (currentActiveSocialApp === 'whatsapp') {
+        refreshWhatsAppIframe();
+      } else if (currentActiveSocialApp === 'instagram') {
+        refreshInstagramIframe();
+      }
+    }
+
+    function refreshWeChatIframe() {
+      const el = document.getElementById('social-iframe-wechat');
+      if (el) el.src = 'https://wx.qq.com?' + Date.now();
+    }
+
+    function refreshWhatsAppIframe() {
+      const el = document.getElementById('social-iframe-wa');
+      if (el) el.src = 'https://web.whatsapp.com?' + Date.now();
+    }
+
+    function refreshInstagramIframe() {
+      const el = document.getElementById('social-iframe-ig');
+      if (el) el.src = 'https://www.instagram.com?' + Date.now();
+    }
+
+    function toggleSocialFullscreen() {
+      if (window.UsagiSound && UsagiSound.sparkle) UsagiSound.sparkle();
+      const c = document.getElementById('social-workstation-container');
+      if (!c) return;
+      if (c.classList.contains('fixed')) {
+        c.classList.remove('fixed', 'inset-0', 'z-[1000]', 'bg-stone-100', 'p-4', 'overflow-y-auto');
+      } else {
+        c.classList.add('fixed', 'inset-0', 'z-[1000]', 'bg-stone-100', 'p-4', 'overflow-y-auto');
+      }
+    }
+
+    function executeXhsLiveSearch(kw) {
+      const term = kw || (document.getElementById('xhs-live-search-input')?.value || '').trim();
+      const iframe = document.getElementById('social-iframe-xhs');
+      if (!term) {
+        if (iframe) iframe.src = 'https://www.xiaohongshu.com/explore';
+        return;
+      }
+      if (iframe) iframe.src = `https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(term)}`;
+    }
+
+    function setXhsSearch(term) {
+      const input = document.getElementById('xhs-live-search-input');
+      if (input) input.value = term;
+      executeXhsLiveSearch(term);
+    }
+
+    function copyMemoForWeChat() {
+      const txt = (document.getElementById('wechat-memo-live-text')?.value || '').trim();
+      if (!txt) {
+        alert('请先输入想发给男友的悄悄话哦~ 💚');
+        return;
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(() => {
+          alert('已成功复制到剪贴板！可以直接在右侧/下方微信聊天窗口长按粘贴发送啦~ 💚💌');
+        }).catch(() => {
+          alert('已复制：' + txt);
+        });
+      } else {
+        alert('已复制：' + txt);
+      }
+    }
+
+    function getCleanWaPhone() {
+      let phone = (document.getElementById('wa-phone-number')?.value || '').trim();
+      if (!phone) phone = localStorage.getItem('usagi_wa_phone') || '';
+      return phone.replace(/[^0-9]/g, '');
+    }
+
+    function sendWhatsAppQuick(presetText) {
+      const phone = getCleanWaPhone();
+      const encoded = encodeURIComponent(presetText);
+      const url = phone ? `https://wa.me/${phone}?text=${encoded}` : `https://wa.me/?text=${encoded}`;
+      if (window.UsagiSound && UsagiSound.sparkle) UsagiSound.sparkle();
+      window.open(url, '_blank');
+    }
+
+    function sendWhatsAppCustom() {
+      const input = document.getElementById('wa-custom-msg');
+      const text = input ? input.value.trim() : '';
+      if (!text) {
+        alert('请输入想对男友发送的心里话哦！🐰💬');
+        return;
+      }
+      sendWhatsAppQuick(text);
+      if (input) input.value = '';
+    }
+
+    function openWhatsAppWeb() {
+      const phone = getCleanWaPhone();
+      const url = phone ? `https://web.whatsapp.com/send?phone=${phone}` : 'https://web.whatsapp.com';
+      window.open(url, '_blank');
+    }
+
+    function openWeChatApp() {
+      window.location.href = 'weixin://';
+    }
+
+    function openWeChatWeb() {
+      window.open('https://wx.qq.com', '_blank');
+    }
+
+    function openXiaohongshuApp() {
+      window.location.href = 'xhsdiscover://';
+      setTimeout(() => {
+        window.open('https://www.xiaohongshu.com', '_blank');
+      }, 1500);
+    }
+
+    function openInstagramApp() {
+      window.location.href = 'instagram://app';
+      setTimeout(() => {
+        window.open('https://www.instagram.com', '_blank');
+      }, 1500);
+    }
+
+    function openInstagramDirect() {
+      window.open('https://ig.me/m/', '_blank');
+    }
+
+    // Toggle Helpers for Custom "其他" Inputs
+    function togglePeriodPainOtherInput() {
+      const p = document.getElementById('period-new-pain')?.value;
+      const box = document.getElementById('period-new-pain-other-box');
+      if (box) {
+        if (p === '其他') {
+          box.classList.remove('hidden');
+          document.getElementById('period-new-pain-other')?.focus();
+        } else {
+          box.classList.add('hidden');
+        }
+      }
+    }
+
+    function toggleExpenseOtherInput() {
+      const cat = document.getElementById('exp-input-cat')?.value;
+      const box = document.getElementById('exp-input-cat-other-box');
+      if (box) {
+        if (cat === '其他分类') {
+          box.classList.remove('hidden');
+          document.getElementById('exp-input-cat-other')?.focus();
+        } else {
+          box.classList.add('hidden');
+        }
+      }
+    }
+
+    function toggleCustomSymptomInput() {
+      const chk = document.getElementById('symptom-other-checkbox');
+      const box = document.getElementById('symptom-other-container');
+      if (box && chk) {
+        if (chk.checked) {
+          box.classList.remove('hidden');
+          document.getElementById('mood-input-symptom-other')?.focus();
+        } else {
+          box.classList.add('hidden');
+        }
+      }
+    }
+
+    function toggleWatchlistOtherInput() {
+      const type = document.getElementById('wl-input-type')?.value;
+      const otherInput = document.getElementById('wl-input-type-other');
+      if (otherInput) {
+        if (type === 'other') {
+          otherInput.classList.remove('hidden');
+          otherInput.focus();
+        } else {
+          otherInput.classList.add('hidden');
+        }
+      }
+    }
+
+    function toggleCalCategoryOther() {
+      const cat = document.getElementById('cal-new-category')?.value;
+      const box = document.getElementById('cal-new-category-other-box');
+      if (box) {
+        if (cat === '其他') {
+          box.classList.remove('hidden');
+          document.getElementById('cal-new-category-other')?.focus();
+        } else {
+          box.classList.add('hidden');
+        }
+      }
+    }
+
     // Tab Event Forwarders
     function handleAddPeriodRecord() {
       const s = document.getElementById('period-new-start').value;
       const e = document.getElementById('period-new-end').value;
       const f = document.getElementById('period-new-flow').value;
-      const p = document.getElementById('period-new-pain').value;
+      let p = document.getElementById('period-new-pain').value;
+      if (p === '其他') {
+        const customPain = (document.getElementById('period-new-pain-other')?.value || '').trim();
+        p = customPain ? customPain : '✨ 其他身体反应';
+      }
       const n = document.getElementById('period-new-notes').value;
       USAGI_APP.addPeriodRecord(s, e, f, p, n);
       document.getElementById('period-new-notes').value = '';
+      if (document.getElementById('period-new-pain-other')) {
+        document.getElementById('period-new-pain-other').value = '';
+      }
+      document.getElementById('period-new-pain').value = '轻微不适';
+      togglePeriodPainOtherInput();
     }
 
     function handleAddExpenseSubmit() {
       const type = document.getElementById('exp-input-type').value;
-      const cat = document.getElementById('exp-input-cat').value;
+      let cat = document.getElementById('exp-input-cat').value;
+      if (cat === '其他分类') {
+        const customCat = (document.getElementById('exp-input-cat-other')?.value || '').trim();
+        cat = customCat ? customCat : '✨ 其他分类';
+      }
       const amount = document.getElementById('exp-input-amount').value;
       const date = document.getElementById('exp-input-date').value || new Date().toISOString().split('T')[0];
       const note = document.getElementById('exp-input-note').value;
       USAGI_APP.addExpense(type, cat, amount, date, note);
       document.getElementById('exp-input-amount').value = '';
       document.getElementById('exp-input-note').value = '';
+      if (document.getElementById('exp-input-cat-other')) {
+        document.getElementById('exp-input-cat-other').value = '';
+      }
+      document.getElementById('exp-input-cat').value = '餐饮美食';
+      toggleExpenseOtherInput();
     }
 
     function handleAddSleepSubmit() {
@@ -4495,12 +5212,21 @@
     function handleAddMoodSubmit() {
       const symptoms = [];
       document.querySelectorAll('#symptoms-group input[type="checkbox"]:checked').forEach(c => {
-        symptoms.push(c.value);
+        if (c.value === '其他') {
+          const customVal = (document.getElementById('mood-input-symptom-other')?.value || '').trim();
+          symptoms.push(customVal ? customVal : '✨ 其他小反应');
+        } else {
+          symptoms.push(c.value);
+        }
       });
       const note = document.getElementById('mood-input-note').value;
       USAGI_APP.addMood(currentSelectedMood, symptoms, note);
       document.getElementById('mood-input-note').value = '';
       document.querySelectorAll('#symptoms-group input[type="checkbox"]').forEach(c => c.checked = false);
+      if (document.getElementById('mood-input-symptom-other')) {
+        document.getElementById('mood-input-symptom-other').value = '';
+      }
+      toggleCustomSymptomInput();
 
       if (window.UsagiPetManager) {
         if (UsagiPetManager.isMinimized && UsagiPetManager.isMinimized()) {
@@ -4544,12 +5270,23 @@
     }
 
     function handleAddWatchlistSubmit() {
-      const type = document.getElementById('wl-input-type').value;
+      const typeSelect = document.getElementById('wl-input-type').value;
+      let type = typeSelect;
+      let customType = '';
+      if (type === 'other') {
+        customType = (document.getElementById('wl-input-type-other')?.value || '').trim();
+        if (!customType) customType = '心愿小项';
+      }
       const title = document.getElementById('wl-input-title').value;
       const price = document.getElementById('wl-input-price').value;
-      USAGI_APP.addWatchlist(title, type, 5, price, '');
+      USAGI_APP.addWatchlist(title, type, 5, price, '', customType);
       document.getElementById('wl-input-title').value = '';
       document.getElementById('wl-input-price').value = '';
+      if (document.getElementById('wl-input-type-other')) {
+        document.getElementById('wl-input-type-other').value = '';
+      }
+      document.getElementById('wl-input-type').value = 'movie';
+      toggleWatchlistOtherInput();
     }
 
     function handleAddHighlightSubmit() {
@@ -4563,7 +5300,11 @@
     function handleAddCalendarEventSubmit() {
       const date = document.getElementById('cal-new-date').value;
       const title = document.getElementById('cal-new-title').value;
-      const cat = document.getElementById('cal-new-category').value;
+      let cat = document.getElementById('cal-new-category').value;
+      if (cat === '其他') {
+        const customCat = (document.getElementById('cal-new-category-other')?.value || '').trim();
+        cat = customCat ? customCat : '✨ 自定义日程';
+      }
       const time = document.getElementById('cal-new-time').value;
       const color = document.getElementById('cal-new-color').value;
       const content = document.getElementById('cal-new-content').value;
@@ -4572,6 +5313,11 @@
 
       document.getElementById('cal-new-title').value = '';
       document.getElementById('cal-new-content').value = '';
+      if (document.getElementById('cal-new-category-other')) {
+        document.getElementById('cal-new-category-other').value = '';
+      }
+      document.getElementById('cal-new-category').value = '生活';
+      toggleCalCategoryOther();
     }
 
     // Cloud Database Helpers
