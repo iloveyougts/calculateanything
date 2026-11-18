@@ -134,11 +134,11 @@
 
         <!-- Quick One-Click Fill Chips -->
         <div class="grid grid-cols-2 gap-2 pt-1">
-          <button type="button" onclick="fillCloudAccount()" class="py-2 px-2.5 text-[11px] font-black text-rose-700 bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 rounded-xl border border-pink-300 transition-all flex items-center justify-center gap-1 shadow-2xs cursor-pointer truncate" title="快速填入云端数据库账号 GANTZISHUAN">
-            <span>☁️ GANTZISHUAN</span>
+          <button type="button" onclick="fillCloudAccount()" class="py-2 px-2.5 text-[11px] font-black text-rose-700 bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 rounded-xl border border-pink-300 transition-all flex items-center justify-center gap-1 shadow-2xs cursor-pointer truncate" title="快速填入女友正式专属账号 GANTZISHUAN / 520GANTZISHUAN">
+            <span>💖 GANTZISHUAN (芷萱正式)</span>
           </button>
-          <button type="button" onclick="fillDemoAccount()" class="py-2 px-2.5 text-[11px] font-black text-amber-800 bg-gradient-to-r from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100 rounded-xl border border-amber-300 transition-all flex items-center justify-center gap-1 shadow-2xs cursor-pointer truncate" title="快速填入专属账号 gts / 123">
-            <span>🐰 gts (专属账号)</span>
+          <button type="button" onclick="fillDemoAccount()" class="py-2 px-2.5 text-[11px] font-black text-amber-800 bg-gradient-to-r from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100 rounded-xl border border-amber-300 transition-all flex items-center justify-center gap-1 shadow-2xs cursor-pointer truncate" title="快速填入专属测试账号 gts / 123">
+            <span>🐰 gts (Kim测试账号)</span>
           </button>
         </div>
       </form>
@@ -1184,12 +1184,16 @@
                 <input id="note-input-title" type="text" placeholder="便签标题（如：新点子、金句、临时灵感）" class="w-full p-2 border border-stone-200 rounded-xl" />
               </div>
               <div>
-                <select id="note-input-tag" class="w-full p-2 border border-stone-200 rounded-xl">
+                <select id="note-input-tag" class="w-full p-2 border border-stone-200 rounded-xl" onchange="toggleNoteTagOther()">
                   <option value="灵感">💡 灵感</option>
                   <option value="金句">📖 金句</option>
                   <option value="备忘">📝 备忘</option>
                   <option value="愿望">🌟 愿望</option>
+                  <option value="其他">✨ 其他 (自定义)</option>
                 </select>
+                <div id="note-input-tag-other-box" class="hidden mt-2">
+                  <input id="note-input-tag-other" type="text" placeholder="输入自定义便签标签（如：随笔、秘密、菜谱等）" class="w-full p-2 text-xs border border-amber-300 rounded-xl bg-amber-50/50 focus:bg-white outline-none" />
+                </div>
               </div>
             </div>
             <textarea id="note-input-content" rows="3" placeholder="写下你的想法..." class="w-full p-2.5 text-xs border border-stone-200 rounded-xl mb-2"></textarea>
@@ -1373,10 +1377,6 @@
                 <i class="fa-brands fa-instagram text-pink-600 text-base"></i>
                 <span>Instagram 直通站</span>
               </button>
-              <button id="btn-subtab-grid" onclick="switchSocialSubTab('grid')" class="social-subtab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shrink-0 transition-all flex items-center gap-1.5 bg-stone-100 text-stone-700 hover:bg-amber-50 hover:text-amber-800">
-                <i class="fa-solid fa-table-cells text-amber-500"></i>
-                <span>四合一分屏</span>
-              </button>
             </div>
 
             <!-- View Status Tip -->
@@ -1416,9 +1416,6 @@
                   </button>
                   <button onclick="openStandaloneApp('https://www.xiaohongshu.com/explore', 'XiaohongshuExplore')" class="p-2 px-3 rounded-xl bg-white hover:bg-red-50 border border-red-300 text-red-800 text-xs font-bold transition-all flex items-center gap-1 shadow-2xs">
                     <i class="fa-solid fa-compass"></i> <span>探索穿搭</span>
-                  </button>
-                  <button onclick="toggleSocialIframe('xhs')" class="p-2 px-3 rounded-xl bg-red-100 hover:bg-red-200 text-red-900 text-xs font-bold transition-all flex items-center gap-1">
-                    <i class="fa-solid fa-window-maximize"></i> <span>展开内嵌视窗</span>
                   </button>
                 </div>
               </div>
@@ -1510,20 +1507,20 @@
                         </div>
                       </div>
 
-                      <div onclick="toggleSocialIframe('xhs')" class="cursor-pointer p-3.5 rounded-xl bg-amber-50 hover:bg-amber-100/80 border border-amber-200 transition-all flex items-center gap-3">
+                      <div onclick="openXiaohongshuApp()" class="cursor-pointer p-3.5 rounded-xl bg-amber-50 hover:bg-amber-100/80 border border-amber-200 transition-all flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-base shrink-0">
-                          <i class="fa-solid fa-window-maximize"></i>
+                          <i class="fa-solid fa-mobile-screen"></i>
                         </div>
                         <div>
-                          <div class="text-xs font-bold text-amber-900">展开/收起内嵌视窗</div>
-                          <div class="text-[10px] text-stone-500">在当前手账页面内直接内嵌刷帖</div>
+                          <div class="text-xs font-bold text-amber-900">手机 App 秒开</div>
+                          <div class="text-[10px] text-stone-500">直跳手机小红书客户端互动</div>
                         </div>
                       </div>
                     </div>
 
                     <div class="text-[11px] text-stone-500 bg-stone-50 p-2.5 rounded-xl border border-stone-200 flex items-center gap-2">
                       <span class="text-base">💡</span>
-                      <span>电脑使用推荐按<b>【启动小红书官方登录页】</b>输入手机号登录；手机使用按<b>【打开手机小红书 App】</b>秒开！</span>
+                      <span>电脑使用推荐按<b>【启动官方登录页】</b>输入手机号登录；手机使用按<b>【打开手机小红书 App】</b>秒开！</span>
                     </div>
                   </div>
                 </div>
@@ -1544,23 +1541,6 @@
                     <button onclick="setXhsSearch('情侣旅行拍照姿势')" class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold transition-all flex items-center gap-1">✈️ #情侣旅行拍照</button>
                     <button onclick="setXhsSearch('减脂高颜值快手便当')" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold transition-all flex items-center gap-1">🍳 #减脂快手便当</button>
                     <button onclick="setXhsSearch('乌萨奇可爱周边')" class="px-3 py-1.5 rounded-xl bg-yellow-50 hover:bg-yellow-100 text-yellow-800 border border-yellow-200 font-bold transition-all flex items-center gap-1">🎀 #乌萨奇可爱周边</button>
-                  </div>
-                </div>
-
-                <!-- Collapsible Inline Iframe Container -->
-                <div id="xhs-inline-iframe-wrap" class="hidden space-y-3 pt-3 border-t border-red-200">
-                  <div class="flex items-center justify-between p-3 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-950">
-                    <span class="font-bold flex items-center gap-1.5">
-                      <span>👁️</span> <span>小红书内嵌网页视窗（登录后可直接在本页浏览与互动）</span>
-                    </span>
-                    <div class="flex items-center gap-2">
-                      <button onclick="setXhsMode('login')" class="px-2.5 py-1 rounded-lg bg-red-200 hover:bg-red-300 font-bold">账号登录</button>
-                      <button onclick="setXhsMode('explore')" class="px-2.5 py-1 rounded-lg bg-pink-200 hover:bg-pink-300 font-bold">探索穿搭</button>
-                      <button onclick="toggleSocialIframe('xhs')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-stone-100 font-bold border border-red-300">收起视窗</button>
-                    </div>
-                  </div>
-                  <div class="relative w-full rounded-3xl overflow-hidden border-2 border-red-200 shadow-md bg-stone-100" style="height: 720px; min-height: 480px;">
-                    <iframe id="social-iframe-xhs" src="" data-src="https://www.xiaohongshu.com/login" class="w-full h-full border-0 bg-white" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                   </div>
                 </div>
 
@@ -1592,9 +1572,6 @@
                   </button>
                   <button onclick="openStandaloneApp('https://filehelper.weixin.qq.com', 'WeChatHelperWindow')" class="p-2 px-3 rounded-xl bg-white hover:bg-green-50 border border-green-300 text-green-800 text-xs font-bold transition-all flex items-center gap-1 shadow-2xs">
                     <i class="fa-solid fa-folder-open"></i> <span>传输助手(秒登)</span>
-                  </button>
-                  <button onclick="toggleSocialIframe('wechat')" class="p-2 px-3 rounded-xl bg-green-100 hover:bg-green-200 text-green-900 text-xs font-bold transition-all flex items-center gap-1">
-                    <i class="fa-solid fa-window-maximize"></i> <span>展开内嵌视窗</span>
                   </button>
                 </div>
               </div>
@@ -1686,20 +1663,20 @@
                         </div>
                       </div>
 
-                      <div onclick="toggleSocialIframe('wechat')" class="cursor-pointer p-3.5 rounded-xl bg-amber-50 hover:bg-amber-100/80 border border-amber-200 transition-all flex items-center gap-3">
+                      <div onclick="openWeChatApp()" class="cursor-pointer p-3.5 rounded-xl bg-amber-50 hover:bg-amber-100/80 border border-amber-200 transition-all flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-base shrink-0">
-                          <i class="fa-solid fa-window-maximize"></i>
+                          <i class="fa-solid fa-mobile-screen"></i>
                         </div>
                         <div>
-                          <div class="text-xs font-bold text-amber-900">展开/收起内嵌视窗</div>
-                          <div class="text-[10px] text-stone-500">在当前手账页面内直接内嵌聊天</div>
+                          <div class="text-xs font-bold text-amber-900">手机微信 App 秒开</div>
+                          <div class="text-[10px] text-stone-500">直跳手机微信与老公聊天</div>
                         </div>
                       </div>
                     </div>
 
                     <div class="text-[11px] text-stone-500 bg-stone-50 p-2.5 rounded-xl border border-stone-200 flex items-center gap-2">
                       <span class="text-base">💡</span>
-                      <span>电脑使用按<b>【启动微信网页版扫码】</b>显示官方二维码；手机若提示需在电脑打开，可开启【桌面版网站】或使用<b>【网页传输助手】</b>秒登！</span>
+                      <span>电脑使用按<b>【启动微信网页版扫码】</b>显示官方二维码；手机若提示需在电脑打开，可使用<b>【网页传输助手】</b>秒登！</span>
                     </div>
                   </div>
                 </div>
@@ -1727,24 +1704,6 @@
                     <button onclick="copyWeChatPreset('🍰 今晚下班带好吃的来找我好不好呀~ 抱抱！')" class="p-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-bold transition-all truncate text-left shadow-2xs">🍰 今晚带好吃的来</button>
                     <button onclick="copyWeChatPreset('🥺 肚子有点酸酸难受，要老公抱抱呼呼~')" class="p-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-900 border border-rose-200 font-bold transition-all truncate text-left shadow-2xs">🥺 要老公抱抱呼呼</button>
                     <button onclick="copyWeChatPreset('✨ 晚上记得给我打电话连麦哦，想听你的声音！')" class="p-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 font-bold transition-all truncate text-left shadow-2xs">✨ 晚上连麦打电话</button>
-                  </div>
-                </div>
-
-                <!-- Collapsible Inline Iframe Container -->
-                <div id="wechat-inline-iframe-wrap" class="hidden space-y-3 pt-3 border-t border-green-200">
-                  <div class="flex items-center justify-between p-3 rounded-2xl bg-green-50 border border-green-200 text-xs text-green-950">
-                    <span class="font-bold flex items-center gap-1.5">
-                      <span>👁️</span> <span>微信内嵌网页视窗（手机扫码后直接在本页内聊天）</span>
-                    </span>
-                    <div class="flex items-center gap-2">
-                      <button onclick="setWeChatMode('wx')" class="px-2.5 py-1 rounded-lg bg-green-200 hover:bg-green-300 font-bold">微信网页版</button>
-                      <button onclick="setWeChatMode('helper')" class="px-2.5 py-1 rounded-lg bg-teal-200 hover:bg-teal-300 font-bold">文件传输助手</button>
-                      <button onclick="refreshWeChatIframe()" class="px-2.5 py-1 rounded-lg bg-amber-200 hover:bg-amber-300 font-bold">刷新二维码</button>
-                      <button onclick="toggleSocialIframe('wechat')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-stone-100 font-bold border border-green-300">收起视窗</button>
-                    </div>
-                  </div>
-                  <div class="relative w-full rounded-3xl overflow-hidden border-2 border-green-300 shadow-md bg-stone-100" style="height: 720px; min-height: 480px;">
-                    <iframe id="social-iframe-wechat" src="" data-src="https://wx.qq.com" class="w-full h-full border-0 bg-white" allow="camera; microphone; clipboard-read; clipboard-write; autoplay; fullscreen" allowfullscreen></iframe>
                   </div>
                 </div>
 
@@ -2069,175 +2028,6 @@
               </div>
             </div>
 
-            <!-- VIEW 5: 🪟 四合一分屏视图 (Split-Screen 4-in-1 View) -->
-            <div id="social-view-grid" class="social-view-panel hidden space-y-4">
-              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <!-- Grid 1: XHS Dedicated Mini Card -->
-                <div class="glass-card p-4 rounded-3xl border-2 border-red-200 bg-gradient-to-b from-white to-red-50/40 shadow-md flex flex-col justify-between" style="min-height: 520px;">
-                  <div>
-                    <div class="flex items-center justify-between pb-2 mb-3 border-b border-red-100 text-xs font-black text-red-950">
-                      <span class="flex items-center gap-1.5"><span class="text-base">📕</span> 小红书直通站</span>
-                      <button onclick="switchSocialSubTab('xhs')" class="text-red-600 font-bold hover:underline">单视窗大屏 ↗</button>
-                    </div>
-
-                    <div class="flex items-center gap-3 p-3 bg-red-50/70 rounded-2xl border border-red-200 mb-3">
-                      <img src="usagi_xhs.png" alt="Usagi XHS" class="w-16 h-16 object-contain shrink-0 animate-bounce" style="animation-duration: 2.5s;" onerror="this.src='assets/images/usagi_xhs.png'; this.onerror=function(){this.src='usagi_character.png';};" />
-                      <div>
-                        <div class="text-xs font-black text-red-950 flex items-center gap-1">
-                          <span>乌萨奇 · 种草时尚博主</span>
-                          <span class="text-[9px] bg-red-100 text-red-700 px-1.5 py-0.2 rounded-full font-bold">每日上新</span>
-                        </div>
-                        <p class="text-[11px] text-stone-600 mt-0.5">“贝雷帽配小香风，跟芷萱仙子一起搜罗全网甜妹穿搭与浪漫约会好店！🐰✨”</p>
-                      </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2 mb-3">
-                      <button onclick="openXiaohongshuApp()" class="p-2.5 rounded-xl bg-gradient-to-r from-red-500 to-rose-600 hover:opacity-95 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs">
-                        <i class="fa-solid fa-mobile-screen"></i> <span>打开手机 App</span>
-                      </button>
-                      <button onclick="openStandaloneApp('https://www.xiaohongshu.com/login', 'XiaohongshuApp')" class="p-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:opacity-95 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs">
-                        <i class="fa-solid fa-rocket"></i> <span>启动官方登录页</span>
-                      </button>
-                    </div>
-
-                    <div class="text-[11px] font-bold text-red-950 mb-1.5">🎀 浪漫种草精选标签：</div>
-                    <div class="grid grid-cols-2 gap-1.5 text-xs">
-                      <button onclick="setXhsSearch('情侣日常穿搭')" class="p-2 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-800 font-bold border border-pink-200 truncate text-left">👗 #情侣日常穿搭</button>
-                      <button onclick="setXhsSearch('仙女法式美甲')" class="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 font-bold border border-rose-200 truncate text-left">💅 #仙女法式美甲</button>
-                      <button onclick="setXhsSearch('情侣约会探店咖啡馆')" class="p-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold border border-amber-200 truncate text-left">🍰 #约会探店咖啡馆</button>
-                      <button onclick="setXhsSearch('乌萨奇可爱周边')" class="p-2 rounded-xl bg-yellow-50 hover:bg-yellow-100 text-yellow-800 font-bold border border-yellow-200 truncate text-left">🎀 #乌萨奇可爱周边</button>
-                    </div>
-                  </div>
-
-                  <div class="p-2.5 rounded-xl bg-white border border-red-200 text-[11px] text-stone-500 flex items-center justify-between mt-3">
-                    <button onclick="openStandaloneApp('https://www.xiaohongshu.com/explore', 'XiaohongshuExplore')" class="text-red-700 font-bold hover:underline">🧭 探索穿搭灵感 ↗</button>
-                    <button onclick="switchSocialSubTab('xhs')" class="text-rose-600 font-bold hover:underline">切换小红书大屏 ↗</button>
-                  </div>
-                </div>
-
-                <!-- Grid 2: WeChat Dedicated Mini Card -->
-                <div class="glass-card p-4 rounded-3xl border-2 border-green-200 bg-gradient-to-b from-white to-green-50/40 shadow-md flex flex-col justify-between" style="min-height: 520px;">
-                  <div>
-                    <div class="flex items-center justify-between pb-2 mb-3 border-b border-green-100 text-xs font-black text-green-950">
-                      <span class="flex items-center gap-1.5"><i class="fa-brands fa-weixin text-green-600 text-base"></i> 微信官方直通站</span>
-                      <button onclick="switchSocialSubTab('wechat')" class="text-green-600 font-bold hover:underline">单视窗大屏 ↗</button>
-                    </div>
-
-                    <div class="flex items-center gap-3 p-3 bg-green-50/70 rounded-2xl border border-green-200 mb-3">
-                      <img src="usagi_wechat.png" alt="Usagi WeChat" class="w-16 h-16 object-contain shrink-0 animate-bounce" style="animation-duration: 2.5s;" onerror="this.src='assets/images/usagi_wechat.png'; this.onerror=function(){this.src='usagi_character.png';};" />
-                      <div>
-                        <div class="text-xs font-black text-green-950 flex items-center gap-1">
-                          <span>乌萨奇 · 甜蜜恋爱信使</span>
-                          <span class="text-[9px] bg-green-100 text-green-700 px-1.5 py-0.2 rounded-full font-bold">信使在线</span>
-                        </div>
-                        <p class="text-[11px] text-stone-600 mt-0.5">“系好绿色领结，递上给芷萱的爱心信件~ 扫码登录全程甜蜜私聊！🐰💌”</p>
-                      </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2 mb-3">
-                      <button onclick="openWeChatApp()" class="p-2.5 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs">
-                        <i class="fa-solid fa-mobile-screen"></i> <span>打开手机 App</span>
-                      </button>
-                      <button onclick="openStandaloneApp('https://wx.qq.com', 'WeChatWebWindow')" class="p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs">
-                        <i class="fa-solid fa-qrcode"></i> <span>网页版扫码登录</span>
-                      </button>
-                    </div>
-
-                    <div class="text-[11px] font-bold text-green-950 mb-1.5">💌 快捷发送情话：</div>
-                    <div class="space-y-1.5">
-                      <button onclick="copyWeChatPreset('💖 老公早安！今天也是超级超级爱你的芷萱哦~ 🐰✨')" class="w-full text-left p-2 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-900 text-xs font-medium border border-pink-200 truncate">💖 老公早安！今天也是超级爱你的芷萱~</button>
-                      <button onclick="copyWeChatPreset('🍰 今晚下班带好吃的来找我好不好呀~ 抱抱！')" class="w-full text-left p-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-medium border border-amber-200 truncate">🍰 今晚下班带好吃的来找我好不好呀~</button>
-                      <button onclick="copyWeChatPreset('🥺 肚子有点酸酸难受，要老公抱抱呼呼~')" class="w-full text-left p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-900 text-xs font-medium border border-rose-200 truncate">🥺 肚子有点酸酸难受，要老公抱抱呼呼~</button>
-                    </div>
-                  </div>
-
-                  <div class="p-2.5 rounded-xl bg-white border border-green-200 text-[11px] text-stone-500 flex items-center justify-between mt-3">
-                    <button onclick="openStandaloneApp('https://filehelper.weixin.qq.com', 'WeChatHelperWindow')" class="text-teal-700 font-bold hover:underline">📁 文件传输助手(秒登) ↗</button>
-                    <button onclick="switchSocialSubTab('wechat')" class="text-green-700 font-bold hover:underline">切换微信大屏 ↗</button>
-                  </div>
-                </div>
-
-                <!-- Grid 3: WhatsApp Dedicated Mini Card -->
-                <div class="glass-card p-4 rounded-3xl border-2 border-emerald-200 bg-gradient-to-b from-white to-emerald-50/40 shadow-md flex flex-col justify-between" style="min-height: 520px;">
-                  <div>
-                    <div class="flex items-center justify-between pb-2 mb-3 border-b border-emerald-100 text-xs font-black text-emerald-900">
-                      <span class="flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-emerald-600 text-base"></i> WhatsApp 直通站</span>
-                      <button onclick="switchSocialSubTab('whatsapp')" class="text-emerald-600 hover:underline">单视窗大屏 ↗</button>
-                    </div>
-
-                    <div class="flex items-center gap-3 p-3 bg-emerald-50/70 rounded-2xl border border-emerald-200 mb-3">
-                      <img src="usagi_whatsapp.png" alt="Usagi WhatsApp" class="w-16 h-16 object-contain shrink-0 animate-bounce" style="animation-duration: 2.5s;" onerror="this.src='assets/images/usagi_whatsapp.png'; this.onerror=function(){this.src='usagi_character.png';};" />
-                      <div>
-                        <div class="text-xs font-black text-emerald-950 flex items-center gap-1">
-                          <span>乌萨奇 · 连麦热线传声筒</span>
-                          <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.2 rounded-full font-bold">热线就绪</span>
-                        </div>
-                        <p class="text-[11px] text-stone-600 mt-0.5">“嘟嘟嘟~ 已经帮芷萱接通老公的专属热线啦！按绿色按钮秒唤起 WhatsApp 畅聊~ 🐰💖”</p>
-                      </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2 mb-3">
-                      <button onclick="openWhatsAppApp()" class="p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs">
-                        <i class="fa-solid fa-mobile-screen"></i> <span>打开手机 App</span>
-                      </button>
-                      <button onclick="openStandaloneApp('https://web.whatsapp.com/', 'WhatsAppAppWindow')" class="p-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs">
-                        <i class="fa-solid fa-rocket"></i> <span>启动官方网页版</span>
-                      </button>
-                    </div>
-                    <div class="text-[11px] font-bold text-emerald-900 mb-1.5">💌 快捷发送情话：</div>
-                    <div class="space-y-1.5">
-                      <button onclick="sendWhatsAppQuick('💖 想你啦老公~ 今天也是最爱你的一天！')" class="w-full text-left p-2 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-900 text-xs font-medium border border-pink-200 truncate">💖 想你啦老公~ 今天也是最爱你的一天！</button>
-                      <button onclick="sendWhatsAppQuick('🍰 今天超想吃好吃的甜品/大餐，快带我去！')" class="w-full text-left p-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-medium border border-amber-200 truncate">🍰 今天超想吃好吃的甜品/大餐</button>
-                      <button onclick="sendWhatsAppQuick('🥺 肚子有点酸酸难受，要抱抱呼呼~')" class="w-full text-left p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-900 text-xs font-medium border border-rose-200 truncate">🥺 肚子有点难受，要抱抱呼呼~</button>
-                    </div>
-                  </div>
-                  <div class="p-2.5 rounded-xl bg-white border border-emerald-200 text-[11px] text-stone-500 flex items-center justify-between mt-3">
-                    <span>🐰 乌萨奇恋爱电波工作中</span>
-                    <button onclick="openWhatsAppWeb()" class="text-emerald-700 font-bold hover:underline">新标签打开 ↗</button>
-                  </div>
-                </div>
-
-                <!-- Grid 4: Instagram Dedicated Mini Card -->
-                <div class="glass-card p-4 rounded-3xl border-2 border-purple-200 bg-gradient-to-b from-white to-pink-50/40 shadow-md flex flex-col justify-between" style="min-height: 520px;">
-                  <div>
-                    <div class="flex items-center justify-between pb-2 mb-3 border-b border-purple-100 text-xs font-black text-purple-900">
-                      <span class="flex items-center gap-1.5"><i class="fa-brands fa-instagram text-pink-600 text-base"></i> Instagram 直通站</span>
-                      <button onclick="switchSocialSubTab('instagram')" class="text-purple-600 hover:underline">单视窗大屏 ↗</button>
-                    </div>
-
-                    <div class="flex items-center gap-3 p-3 bg-purple-50/70 rounded-2xl border border-purple-200 mb-3">
-                      <img src="usagi_instagram.png" alt="Usagi Instagram" class="w-16 h-16 object-contain shrink-0 animate-bounce" style="animation-duration: 2.5s;" onerror="this.src='assets/images/usagi_instagram.png'; this.onerror=function(){this.src='usagi_character.png';};" />
-                      <div>
-                        <div class="text-xs font-black text-purple-950 flex items-center gap-1">
-                          <span>乌萨奇 · 浪漫写真摄影师</span>
-                          <span class="text-[9px] bg-pink-100 text-pink-700 px-1.5 py-0.2 rounded-full font-bold">镜头就位</span>
-                        </div>
-                        <p class="text-[11px] text-stone-600 mt-0.5">“咔嚓！定格芷萱仙子的每一个心动瞬间~ 快打开 IG 刷大片看动态吧！🐰🌸”</p>
-                      </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2 mb-3">
-                      <button onclick="openInstagramApp()" class="p-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 hover:opacity-95 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs">
-                        <i class="fa-solid fa-mobile-screen"></i> <span>打开手机 App</span>
-                      </button>
-                      <button onclick="openStandaloneApp('https://www.instagram.com/?hl=en', 'InstagramAppWindow')" class="p-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 hover:opacity-95 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs">
-                        <i class="fa-solid fa-rocket"></i> <span>启动官方登录页</span>
-                      </button>
-                    </div>
-                    <div class="text-[11px] font-bold text-purple-900 mb-1.5">✨ 热门灵感探索：</div>
-                    <div class="space-y-1.5 text-xs">
-                      <a href="https://www.instagram.com/explore/tags/chiikawa/" target="_blank" class="block p-2 rounded-xl bg-yellow-50 hover:bg-yellow-100 text-yellow-800 font-bold border border-yellow-200 truncate">🐰 #Chiikawa 乌萨奇可爱周边</a>
-                      <a href="https://www.instagram.com/explore/tags/couplesgoals/" target="_blank" class="block p-2 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-800 font-bold border border-pink-200 truncate">💑 #情侣日常甜蜜打卡</a>
-                      <a href="https://www.instagram.com/explore/tags/cafehopping/" target="_blank" class="block p-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold border border-amber-200 truncate">☕ #约会探店咖啡馆</a>
-                    </div>
-                  </div>
-                  <div class="p-2.5 rounded-xl bg-white border border-purple-200 text-[11px] text-stone-500 flex items-center justify-between mt-3">
-                    <button onclick="openInstagramDirect()" class="text-pink-600 font-bold hover:underline">✈️ 打开 Direct 私信</button>
-                    <button onclick="openStandaloneApp('https://www.instagram.com/?hl=en', 'InstagramAppWindow')" class="text-purple-700 font-bold hover:underline">官方登录 ↗</button>
-                  </div>
-                </div>
-              </div>
-            </div>
 
           </div>
 
@@ -3946,10 +3736,10 @@
     }
 
     function fillDemoAccount() {
-      // Ensure gts account exists
+      // Ensure gts tester account exists
       const users = USAGI_APP.getUsers();
       if (!users['gts']) {
-        users['gts'] = { username: 'gts', password: '123', nickname: '颜芷萱 (Tzi Shuan) 🌸', createdAt: new Date().toISOString() };
+        users['gts'] = { username: 'gts', password: '123', nickname: 'kim', createdAt: new Date().toISOString() };
         USAGI_APP.saveUsers(users);
       }
       const u = document.getElementById('login-username');
@@ -4169,6 +3959,59 @@
       } catch (e) { console.warn("Usagi mascot update info:", e); }
     }
     window.handleUsagiClick = handleUsagiClick;
+
+    // Make Usagi Mascot freely draggable on both mobile touch & desktop mouse so it NEVER blocks any button!
+    (function initUsagiDraggable() {
+      const pet = document.getElementById('usagi-pet');
+      if (!pet) return;
+      let isDragging = false;
+      let startX = 0, startY = 0, origLeft = 0, origTop = 0;
+
+      function onPointerDown(e) {
+        if (e.target.closest('button') || e.target.closest('input') || e.target.closest('select')) return;
+        const pt = e.touches ? e.touches[0] : e;
+        if (!pt) return;
+        isDragging = true;
+        startX = pt.clientX;
+        startY = pt.clientY;
+        const rect = pet.getBoundingClientRect();
+        origLeft = rect.left;
+        origTop = rect.top;
+
+        document.addEventListener('mousemove', onPointerMove, { passive: false });
+        document.addEventListener('mouseup', onPointerUp);
+        document.addEventListener('touchmove', onPointerMove, { passive: false });
+        document.addEventListener('touchend', onPointerUp);
+      }
+
+      function onPointerMove(e) {
+        if (!isDragging) return;
+        const pt = e.touches ? e.touches[0] : e;
+        if (!pt) return;
+        const dx = pt.clientX - startX;
+        const dy = pt.clientY - startY;
+        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+          if (e.cancelable) e.preventDefault();
+          const newLeft = Math.max(8, Math.min(window.innerWidth - pet.offsetWidth - 8, origLeft + dx));
+          const newTop = Math.max(8, Math.min(window.innerHeight - pet.offsetHeight - 8, origTop + dy));
+          pet.style.left = newLeft + 'px';
+          pet.style.top = newTop + 'px';
+          pet.style.right = 'auto';
+          pet.style.bottom = 'auto';
+        }
+      }
+
+      function onPointerUp(e) {
+        isDragging = false;
+        document.removeEventListener('mousemove', onPointerMove);
+        document.removeEventListener('mouseup', onPointerUp);
+        document.removeEventListener('touchmove', onPointerMove);
+        document.removeEventListener('touchend', onPointerUp);
+      }
+
+      pet.addEventListener('mousedown', onPointerDown);
+      pet.addEventListener('touchstart', onPointerDown, { passive: true });
+    })();
 
     function handleHeroPatUsagi(e) {
       if (e) {
@@ -5502,7 +5345,9 @@
       let html = '';
       msgs.forEach(m => {
         const isTzishuan = m.sender === 'tzishuan';
-        const senderName = isTzishuan ? '颜芷萱 (Tzi Shuan) 🌸' : '男朋友 (老公) 👦';
+        const senderName = isTzishuan
+          ? ((window.USAGI_APP && USAGI_APP.data && USAGI_APP.data.profile && USAGI_APP.data.profile.nickname) ? USAGI_APP.data.profile.nickname : '颜芷萱 (Tzi Shuan) 🌸')
+          : '男朋友 (老公) 👦';
         const alignClass = isTzishuan ? 'justify-end' : 'justify-start';
         const bubbleBg = isTzishuan
           ? 'bg-gradient-to-r from-pink-500 to-rose-400 text-white rounded-2xl rounded-tr-xs shadow-xs'
@@ -5603,8 +5448,7 @@
         { id: 'btn-subtab-wechat', name: 'wechat', activeClass: 'bg-green-600 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-green-50 hover:text-green-700' },
         { id: 'btn-subtab-xhs', name: 'xhs', activeClass: 'bg-red-500 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-red-50 hover:text-red-700' },
         { id: 'btn-subtab-whatsapp', name: 'whatsapp', activeClass: 'bg-emerald-600 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-emerald-50 hover:text-emerald-700' },
-        { id: 'btn-subtab-instagram', name: 'instagram', activeClass: 'bg-gradient-to-r from-purple-600 via-pink-500 to-rose-500 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-purple-50 hover:text-purple-700' },
-        { id: 'btn-subtab-grid', name: 'grid', activeClass: 'bg-amber-500 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-amber-50 hover:text-amber-800' }
+        { id: 'btn-subtab-instagram', name: 'instagram', activeClass: 'bg-gradient-to-r from-purple-600 via-pink-500 to-rose-500 text-white shadow-xs', normalClass: 'bg-stone-100 text-stone-700 hover:bg-purple-50 hover:text-purple-700' }
       ];
 
       tabs.forEach(t => {
@@ -5618,7 +5462,7 @@
       });
 
       // Show/hide view panels
-      const panels = ['wechat', 'xhs', 'whatsapp', 'instagram', 'grid'];
+      const panels = ['wechat', 'xhs', 'whatsapp', 'instagram'];
       panels.forEach(p => {
         const el = document.getElementById(`social-view-${p}`);
         if (el) {
@@ -5633,20 +5477,17 @@
       // Update status tip & Pet Mascot reaction
       const tip = document.getElementById('social-current-status-tip');
       if (appName === 'xhs') {
-        if (tip) tip.innerText = '小红书官方工作台 · 扫码与账号登录直接在手账内使用，或点击打开手机 App 📕';
-        if (window.UsagiPetManager && UsagiPetManager.reactTo) UsagiPetManager.reactTo('social', '小红书已就绪！扫码或输入手机号登录，直接在手账里刷穿搭和探店吧~ 📕✨');
+        if (tip) tip.innerText = '小红书直通站 · 点击官方登录页或手机 App 快捷进入 📕';
+        if (window.UsagiPetManager && UsagiPetManager.reactTo) UsagiPetManager.reactTo('social', '小红书已就绪！点击打开手机 App 或启动官方登录页，跟乌萨奇一起搜罗甜妹穿搭与探店好物~ 📕✨');
       } else if (appName === 'wechat') {
-        if (tip) tip.innerText = '微信官方网页版 · 手机扫码即可直接在此页面聊天，或点击打开手机 App 💚';
-        if (window.UsagiPetManager && UsagiPetManager.reactTo) UsagiPetManager.reactTo('social', '微信网页版已就绪！手机扫码登录，全程在本站内发消息聊天~ 💚');
+        if (tip) tip.innerText = '微信官方直通 · 点击打开手机 App 或启动网页版扫码登录 💚';
+        if (window.UsagiPetManager && UsagiPetManager.reactTo) UsagiPetManager.reactTo('social', '微信信使已就绪！点击打开手机 App 或启动网页扫码与老公聊天~ 💚');
       } else if (appName === 'whatsapp') {
-        if (tip) tip.innerText = 'WhatsApp 快捷直通 · 点击打开手机 App 或启动官方网页版登录 💬';
+        if (tip) tip.innerText = 'WhatsApp 快捷直通 · 点击打开手机 App 或启动官方网页版 💬';
         if (window.UsagiPetManager && UsagiPetManager.reactTo) UsagiPetManager.reactTo('social', 'WhatsApp 直通站已就绪！点击打开手机 App 或启动官方网页版与老公聊天~ 💬💖');
       } else if (appName === 'instagram') {
-        if (tip) tip.innerText = 'Instagram 快捷直通 · 点击打开手机 App 或启动官方登录页 📸';
-        if (window.UsagiPetManager && UsagiPetManager.reactTo) UsagiPetManager.reactTo('social', 'Instagram 直通站已就绪！点击打开手机 App 或官方登录页，探索精彩灵感~ 📸🌸');
-      } else if (appName === 'grid') {
-        if (tip) tip.innerText = '四合一分屏视图 · 微信与小红书站内登录，WhatsApp与Instagram直连 🪟';
-        if (window.UsagiPetManager && UsagiPetManager.reactTo) UsagiPetManager.reactTo('social', '哇！四合一多视窗开启！一边聊天一边刷种草，手账超强大！🪟🎉');
+        if (tip) tip.innerText = 'Instagram 快捷直通 · 点击打开手机 App 或启动官方网页版 📸';
+        if (window.UsagiPetManager && UsagiPetManager.reactTo) UsagiPetManager.reactTo('social', 'Instagram 直通站已就绪！点击打开手机 App 或官方网页版，探索精彩日常~ 📸🌸');
       }
     }
 
@@ -6094,13 +5935,35 @@
       document.getElementById('habit-new-icon').value = '';
     }
 
+    function toggleNoteTagOther() {
+      const sel = document.getElementById('note-input-tag');
+      const box = document.getElementById('note-input-tag-other-box');
+      if (sel && box) {
+        if (sel.value === '其他') {
+          box.classList.remove('hidden');
+          document.getElementById('note-input-tag-other')?.focus();
+        } else {
+          box.classList.add('hidden');
+        }
+      }
+    }
+
     function handleAddNoteSubmit() {
       const title = document.getElementById('note-input-title').value;
-      const tag = document.getElementById('note-input-tag').value;
+      let tag = document.getElementById('note-input-tag').value;
+      if (tag === '其他') {
+        const customTag = (document.getElementById('note-input-tag-other')?.value || '').trim();
+        tag = customTag ? customTag : '✨ 自定义便签';
+      }
       const content = document.getElementById('note-input-content').value;
       USAGI_APP.addNote(title, content, tag);
       document.getElementById('note-input-title').value = '';
       document.getElementById('note-input-content').value = '';
+      if (document.getElementById('note-input-tag-other')) {
+        document.getElementById('note-input-tag-other').value = '';
+      }
+      document.getElementById('note-input-tag').value = '灵感';
+      toggleNoteTagOther();
     }
 
     function handleAddCountdownSubmit() {

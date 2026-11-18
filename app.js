@@ -19,11 +19,13 @@ function getLocalDateStr(dateObj) {
 
 // Default Template Data for Fresh Users (Clean & Pristine: Zero Fake Data, Real Records Only)
 function getDefaultUserData(username) {
+  const isGts = (username || '').toLowerCase() === 'gts';
+  const isGf = (username || '').toLowerCase().includes('tzi') || (username || '').toLowerCase().includes('shuan') || (username || '').toLowerCase() === 'gantzishuan';
   return {
     profile: {
-      username: username || 'gts',
-      nickname: '颜芷萱 (Tzi Shuan) 🌸',
-      motto: '呀哈！芷萱今天也要开开心心、元气满满！💖',
+      username: username || (isGts ? 'gts' : 'GANTZISHUAN'),
+      nickname: isGts ? 'kim' : (isGf ? '颜芷萱 (Tzi Shuan) 🌸' : (username || 'kim')),
+      motto: isGts ? '乌萨奇冲冲冲！Kim专属测试手账 🐰' : '呀哈！芷萱今天也要开开心心、元气满满！💖',
       avatar: 'usagi_character.png'
     },
     countdowns: [
@@ -183,16 +185,36 @@ window.USAGI_APP = {
   initAuth: async function () {
     try {
       this.cloud.init();
-      const session = localStorage.getItem(SESSION_KEY);
       const users = this.getUsers();
+      // Ensure girlfriend's official account exists in local registry
+      if (!users['GANTZISHUAN'] && !users['gantzishuan']) {
+        users['GANTZISHUAN'] = {
+          username: 'GANTZISHUAN',
+          password: '520GANTZISHUAN',
+          nickname: '颜芷萱 (Tzi Shuan) 🌸',
+          createdAt: new Date().toISOString()
+        };
+        users['gantzishuan'] = users['GANTZISHUAN'];
+      }
+      // Ensure boyfriend's tester account exists in local registry
+      if (!users['gts'] || users['gts'].nickname !== 'kim') {
+        users['gts'] = {
+          username: 'gts',
+          password: '123',
+          nickname: 'kim',
+          createdAt: new Date().toISOString()
+        };
+      }
+      this.saveUsers(users);
 
+      const session = localStorage.getItem(SESSION_KEY);
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('autologin') === '1' && (!session || !users[session])) {
         await this.guestLogin();
         return;
       }
 
-      if (session && users && users[session]) {
+      if (session && users && (users[session] || users[session.toLowerCase()])) {
         await this.loginUser(session);
       } else {
         this.showAuthModal(true);
@@ -310,7 +332,8 @@ window.USAGI_APP = {
     }
 
     const users = this.getUsers();
-    if (!users[username]) {
+    const userRecord = users[username] || users[rawUsername] || users[rawUsername.toLowerCase()] || users[rawUsername.toUpperCase()];
+    if (!userRecord) {
       const autoReg = confirm(`未找到账号【${rawUsername}】。\n是否立即使用该密码自动注册并进入手账？✨`);
       if (autoReg) {
         return this.register(rawUsername, password, rawUsername);
@@ -318,28 +341,34 @@ window.USAGI_APP = {
       return false;
     }
     const isDemoPass = (username === 'usagi' && (password === '123' || password === '123456'));
-    if (users[username].password !== password && !isDemoPass) {
+    if (userRecord.password !== password && !isDemoPass) {
       alert("密码不对哦，再仔细检查一下~ 🐰");
       return false;
     }
-    await this.loginUser(username);
+    await this.loginUser(userRecord.username || username);
     UsagiSound.yaha();
     return true;
   },
 
   guestLogin: async function () {
-    const demoUser = 'gts';
+    // 芷萱免密一键进入 -> 直接秒登颜芷萱正式专属账号 GANTZISHUAN
+    const gfUser = 'GANTZISHUAN';
+    const gfPass = '520GANTZISHUAN';
     const users = this.getUsers();
-    if (!users[demoUser]) {
-      users[demoUser] = {
-        username: demoUser,
-        password: '123',
+    if (!users[gfUser] && !users[gfUser.toLowerCase()]) {
+      users[gfUser] = {
+        username: gfUser,
+        password: gfPass,
         nickname: '颜芷萱 (Tzi Shuan) 🌸',
         createdAt: new Date().toISOString()
       };
+      users[gfUser.toLowerCase()] = users[gfUser];
       this.saveUsers(users);
     }
-    await this.loginUser(demoUser);
+    const ok = await this.login(gfUser, gfPass);
+    if (!ok) {
+      await this.loginUser(gfUser);
+    }
     UsagiSound.yaha();
     confettiRain();
   },
@@ -347,9 +376,15 @@ window.USAGI_APP = {
   editProfile: function () {
     if (!this.data) return;
     const currentNick = this.data.profile.nickname || '颜芷萱 (Tzi Shuan) 🌸';
-    const newNick = prompt("修改芷萱的手账专属昵称：", currentNick);
+    const newNick = prompt("修改手账专属昵称：", currentNick);
     if (newNick && newNick.trim()) {
-      this.data.profile.nickname = newNick.trim();
+      const val = newNick.trim();
+      this.data.profile.nickname = val;
+      const users = this.getUsers();
+      if (users[this.currentUser]) {
+        users[this.currentUser].nickname = val;
+        this.saveUsers(users);
+      }
     }
     const currentMotto = this.data.profile.motto || '呀哈！芷萱今天也要开开心心、元气满满！💖';
     const newMotto = prompt("修改心愿寄语 / 乌萨奇签名：", currentMotto);
@@ -421,14 +456,28 @@ window.USAGI_APP = {
         userData.health.waterTarget = 4;
       }
 
-      // Personalize profile for 颜芷萱 (GAN TZI SHUAN)
+      // Personalize default profile for initial setup ONLY if no custom nickname is set yet
       if (!userData.profile) userData.profile = {};
       const lowerU = (username || '').toLowerCase();
-      if (!userData.profile.nickname || userData.profile.nickname === '乌萨奇饲养员' || userData.profile.nickname === username || lowerU === 'gts' || lowerU.includes('tzi') || lowerU.includes('shuan')) {
-        userData.profile.nickname = '颜芷萱 (Tzi Shuan) 🌸';
-      }
-      if (!userData.profile.motto || userData.profile.motto.includes('乌萨奇饲养员') || userData.profile.motto === '呀哈！每天都要元气满满！') {
-        userData.profile.motto = '呀哈！芷萱今天也要开开心心、元气满满！💖';
+      // Isolate boyfriend tester (gts -> kim) and girlfriend official account (GANTZISHUAN -> 颜芷萱)
+      if (lowerU === 'gts') {
+        if (!userData.profile.nickname || userData.profile.nickname.includes('芷萱') || userData.profile.nickname === '乌萨奇饲养员') {
+          userData.profile.nickname = 'kim';
+        }
+        if (!userData.profile.motto || userData.profile.motto.includes('芷萱今天也要') || userData.profile.motto.includes('乌萨奇饲养员')) {
+          userData.profile.motto = '乌萨奇冲冲冲！Kim专属测试手账 🐰';
+        }
+      } else if (lowerU === 'gantzishuan' || lowerU.includes('tzi') || lowerU.includes('shuan')) {
+        if (!userData.profile.nickname || userData.profile.nickname === '乌萨奇饲养员' || userData.profile.nickname === 'kim') {
+          userData.profile.nickname = '颜芷萱 (Tzi Shuan) 🌸';
+        }
+        if (!userData.profile.motto || userData.profile.motto.includes('Kim专属测试手账') || userData.profile.motto.includes('乌萨奇饲养员')) {
+          userData.profile.motto = '呀哈！芷萱今天也要开开心心、元气满满！💖';
+        }
+      } else {
+        if (!userData.profile.nickname || userData.profile.nickname === '乌萨奇饲养员') {
+          userData.profile.nickname = username;
+        }
       }
 
       // SANITIZE: Deep clean any residual Japanese characters from old localStorage cache
