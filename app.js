@@ -87,6 +87,7 @@ window.USAGI_APP = {
     url: localStorage.getItem('usagi_cloud_url') || 'https://rlbovlevaddvbuchsxwz.supabase.co',
     key: localStorage.getItem('usagi_cloud_key') || 'sb_publishable_v-jwAI5rZT3nq_kHRfHv5Q_8CdXbbjz',
     isConnected: false,
+    cloudUsernameMap: {},
 
     init: function () {
       this.url = (localStorage.getItem('usagi_cloud_url') || 'https://rlbovlevaddvbuchsxwz.supabase.co').trim();
@@ -141,8 +142,10 @@ window.USAGI_APP = {
     syncDataToCloud: async function (username, data, password, nickname) {
       if (!this.isConnected || !this.client) return;
       try {
+        const u = (username || '').trim();
+        const targetUsername = this.cloudUsernameMap[u.toLowerCase()] || u;
         const { error } = await this.client.from('usagi_userdata').upsert({
-          username: username.toLowerCase(),
+          username: targetUsername,
           nickname: nickname || '',
           password: password || '',
           data: data,
@@ -157,8 +160,17 @@ window.USAGI_APP = {
     pullDataFromCloud: async function (username) {
       if (!this.isConnected || !this.client) return null;
       try {
-        const { data, error } = await this.client.from('usagi_userdata').select('*').eq('username', username.toLowerCase()).single();
+        const u = (username || '').trim();
+        // Support case-insensitive query (matches both GANTZISHUAN and gantzishuan)
+        const { data, error } = await this.client
+          .from('usagi_userdata')
+          .select('*')
+          .ilike('username', u)
+          .maybeSingle();
         if (error || !data) return null;
+        if (data.username) {
+          this.cloudUsernameMap[u.toLowerCase()] = data.username;
+        }
         return data;
       } catch (e) {
         console.warn("Pull cloud data exception:", e);
@@ -249,33 +261,45 @@ window.USAGI_APP = {
   },
 
   login: async function (username, password) {
-    username = (username || '').trim().toLowerCase();
+    const rawUsername = (username || '').trim();
+    username = rawUsername.toLowerCase();
     password = (password || '').trim();
     if (!username || !password) {
       alert("请输入用户名和密码哦！🐰");
       return false;
     }
 
-    // Check Cloud DB first if connected (with 2.5s safe timeout so it never hangs)
+    // Check Cloud DB first if connected (with 3.5s safe timeout so it never hangs)
     if (this.cloud && this.cloud.isConnected) {
       try {
-        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Cloud timeout')), 2500));
-        const cloudRecord = await Promise.race([this.cloud.pullDataFromCloud(username), timeoutPromise]);
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Cloud timeout')), 3500));
+        const cloudRecord = await Promise.race([this.cloud.pullDataFromCloud(rawUsername), timeoutPromise]);
         if (cloudRecord) {
-          if (cloudRecord.password && cloudRecord.password !== password) {
+          const cloudPass = (cloudRecord.password || '').trim();
+          if (cloudPass && cloudPass !== password) {
             alert("密码不对哦，再仔细检查一下~ 🐰");
             return false;
           }
-          // Sync cloud record to local
+          // Sync cloud record to local users database
           const users = this.getUsers();
           users[username] = {
             username: username,
+            cloudUsername: cloudRecord.username || rawUsername,
             password: password,
             nickname: cloudRecord.nickname || username,
             createdAt: cloudRecord.updated_at || new Date().toISOString()
           };
+          if (cloudRecord.username && cloudRecord.username !== username) {
+            users[cloudRecord.username] = users[username];
+          }
           this.saveUsers(users);
-          localStorage.setItem(getUserDataKey(username), JSON.stringify(cloudRecord.data));
+
+          if (cloudRecord.data && typeof cloudRecord.data === 'object') {
+            localStorage.setItem(getUserDataKey(username), JSON.stringify(cloudRecord.data));
+            if (cloudRecord.username && cloudRecord.username !== username) {
+              localStorage.setItem(getUserDataKey(cloudRecord.username), JSON.stringify(cloudRecord.data));
+            }
+          }
           await this.loginUser(username);
           UsagiSound.yaha();
           return true;
@@ -287,9 +311,9 @@ window.USAGI_APP = {
 
     const users = this.getUsers();
     if (!users[username]) {
-      const autoReg = confirm(`未找到账号【${username}】。\n是否立即使用该密码自动注册并进入手账？✨`);
+      const autoReg = confirm(`未找到账号【${rawUsername}】。\n是否立即使用该密码自动注册并进入手账？✨`);
       if (autoReg) {
-        return this.register(username, password, username);
+        return this.register(rawUsername, password, rawUsername);
       }
       return false;
     }
