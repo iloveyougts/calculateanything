@@ -166,9 +166,15 @@
               <span class="hidden sm:inline">点歌听音乐</span>
             </button>
 
+            <!-- Cinema Theater Quick Button -->
+            <button onclick="USAGI_APP.switchTab('cinema')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="打开芷萱随身小影院 (看戏/搜剧/动漫)">
+              <i class="fa-solid fa-film text-rose-500"></i>
+              <span class="hidden sm:inline">随身看戏 🍿</span>
+            </button>
+
             <!-- Games Arcade Quick Button -->
-            <button onclick="USAGI_APP.switchTab('games')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="打开芷萱治愈小游戏乐园">
-              <i class="fa-solid fa-gamepad text-rose-500 animate-bounce"></i>
+            <button onclick="USAGI_APP.switchTab('games')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 transition-all text-xs font-bold shadow-xs cursor-pointer" title="打开芷萱治愈小游戏乐园">
+              <i class="fa-solid fa-gamepad text-amber-600 animate-bounce"></i>
               <span class="hidden sm:inline">游乐园 🎮</span>
             </button>
 
@@ -183,6 +189,12 @@
               <span id="cloud-status-dot" class="w-2.5 h-2.5 rounded-full bg-stone-300 inline-block"></span>
               <span id="cloud-status-text" class="hidden sm:inline">数据库</span>
               <i class="fa-solid fa-cloud text-amber-500"></i>
+            </button>
+
+            <!-- Mascot On/Off Toggle Button in Header -->
+            <button onclick="UsagiPetManager.toggleMinimize()" id="btn-pet-toggle-header" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 transition-all text-xs font-bold shadow-xs cursor-pointer" title="开启/收起乌萨奇助手">
+              <span>🐰</span>
+              <span id="header-pet-toggle-text" class="hidden sm:inline">收起乌萨奇</span>
             </button>
 
             <!-- Controls: Sound, Particles, Backup, Logout -->
@@ -214,8 +226,8 @@
     <!-- Main Workspace Layout (Perfect alignment with Header) -->
     <div class="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-6 mt-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-      <!-- Navigation Sidebar -->
-      <aside class="lg:col-span-3">
+      <!-- Navigation Sidebar (Dedicated Desktop Sidebar; Hidden on mobile/tablet via CSS media queries) -->
+      <aside id="app-sidebar" class="desktop-sidebar lg:col-span-3">
         <div class="glass-card p-4 sticky top-24 space-y-1.5 bg-white/80 border-2 border-stone-200/60">
           <div class="text-xs font-black text-amber-800 uppercase tracking-wider px-3 py-1.5 flex items-center justify-between">
             <span>导航手账模块</span>
@@ -257,7 +269,7 @@
           </div>
 
           <div id="nav-habits" onclick="USAGI_APP.switchTab('habits')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700">
-            <span class="text-lg">🟩</span>
+            <span class="text-lg">🌸</span>
             <span>习惯养成与热力图</span>
           </div>
 
@@ -276,6 +288,11 @@
           <div id="nav-music" onclick="USAGI_APP.switchTab('music')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700 cursor-pointer">
             <span class="text-lg">🎵</span>
             <span>乌萨奇音乐点歌台</span>
+          </div>
+
+          <div id="nav-cinema" onclick="USAGI_APP.switchTab('cinema')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700 cursor-pointer">
+            <span class="text-lg">🍿</span>
+            <span>芷萱随身小影院</span>
           </div>
 
           <div id="nav-games" onclick="USAGI_APP.switchTab('games')" class="nav-pill flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm text-stone-700 cursor-pointer">
@@ -297,6 +314,52 @@
 
       <!-- Main Content Dynamic Panels -->
       <main class="lg:col-span-9 space-y-6">
+
+        <!-- Mobile Horizontal Tab Pills (Only visible on mobile / tablet < lg via CSS media queries) -->
+        <div class="mobile-tab-bar w-full overflow-x-auto no-scrollbar py-2.5 px-2 flex items-center gap-2 border-b border-pink-100 bg-white/85 backdrop-blur-md rounded-2xl shadow-xs sticky top-20 z-20">
+          <button onclick="USAGI_APP.switchTab('dashboard')" class="mobile-tab-pill active flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="dashboard">
+            <span>🌟</span> <span>今日总览</span>
+          </button>
+          <button onclick="USAGI_APP.switchTab('calendar')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="calendar">
+            <span>📅</span> <span>生活日历</span>
+          </button>
+          <button onclick="USAGI_APP.switchTab('period')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="period">
+            <span>🌸</span> <span>生理期</span>
+          </button>
+          <button onclick="USAGI_APP.switchTab('health')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="health">
+            <span>💧</span> <span>饮水作息</span>
+          </button>
+          <button onclick="USAGI_APP.switchTab('mood')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="mood">
+            <span>🎭</span> <span>情绪日记</span>
+          </button>
+          <button onclick="USAGI_APP.switchTab('expense')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="expense">
+            <span>💰</span> <span>日常开销</span>
+          </button>
+          <button onclick="USAGI_APP.switchTab('habits')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="habits">
+            <span>🌸</span> <span>习惯热力</span>
+          </button>
+          <button onclick="USAGI_APP.switchTab('todos')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="todos">
+            <span>⏳</span> <span>待办倒数</span>
+          </button>
+          <button onclick="USAGI_APP.switchTab('notes')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="notes">
+            <span>💡</span> <span>灵感备忘</span>
+          </button>
+          <button onclick="USAGI_APP.switchTab('music')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="music">
+            <span>🎵</span> <span>音乐点歌</span>
+          </button>
+          <button onclick="USAGI_APP.switchTab('cinema')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="cinema">
+            <span>🍿</span> <span>随身看戏</span>
+          </button>
+          <button onclick="USAGI_APP.switchTab('games')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="games">
+            <span>🎮</span> <span>游乐园</span>
+          </button>
+          <button onclick="USAGI_APP.switchTab('watchlist')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="watchlist">
+            <span>🎬</span> <span>书影冷静</span>
+          </button>
+          <button onclick="USAGI_APP.switchTab('highlights')" class="mobile-tab-pill flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap" data-mobile-tab="highlights">
+            <span>✨</span> <span>每日高光</span>
+          </button>
+        </div>
 
         <!-- ========================================================
              1. TAB: DASHBOARD OVERVIEW
@@ -976,19 +1039,19 @@
           <div class="glass-card p-6 bg-white/85">
             <div class="flex items-center justify-between mb-2">
               <h3 class="font-black text-stone-800 text-base flex items-center gap-2">
-                <span>🟩</span> <span>习惯达成贡献热力图 (Past 140 Days)</span>
+                <span>🌸</span> <span>自律习惯达成热力图 (Past 140 Days)</span>
               </h3>
-              <div class="flex items-center gap-1 text-xs text-stone-500">
-                <span>少</span>
-                <span class="w-3 h-3 rounded-sm bg-[#F1ECE4] inline-block"></span>
-                <span class="w-3 h-3 rounded-sm bg-[#D8F3DC] inline-block"></span>
-                <span class="w-3 h-3 rounded-sm bg-[#95D5B2] inline-block"></span>
-                <span class="w-3 h-3 rounded-sm bg-[#52B788] inline-block"></span>
-                <span class="w-3 h-3 rounded-sm bg-[#2D6A4F] inline-block"></span>
-                <span>多</span>
+              <div class="flex items-center gap-1.5 text-xs text-stone-500">
+                <span class="text-pink-600 font-bold">少</span>
+                <span class="w-3.5 h-3.5 rounded-sm bg-[#FDF2F4] border border-pink-200 inline-block" title="0次"></span>
+                <span class="w-3.5 h-3.5 rounded-sm bg-[#FBCFE8] inline-block" title="1次"></span>
+                <span class="w-3.5 h-3.5 rounded-sm bg-[#F472B6] inline-block" title="2次"></span>
+                <span class="w-3.5 h-3.5 rounded-sm bg-[#EC4899] inline-block" title="3次"></span>
+                <span class="w-3.5 h-3.5 rounded-sm bg-[#BE185D] inline-block" title="4次及以上"></span>
+                <span class="text-pink-600 font-bold">多</span>
               </div>
             </div>
-            <p class="text-xs text-stone-500 mb-4">每一格绿色都是你自律的印记，连成一片特别有成就感！</p>
+            <p class="text-xs text-pink-600 font-medium mb-4">每一格粉嫩的小花都是芷萱自律的印记，连成一片粉色花海超级有成就感！🌸✨</p>
             
             <div class="overflow-x-auto pb-2">
               <div id="heatmap-grid" class="flex flex-wrap max-w-full"></div>
@@ -1206,7 +1269,11 @@
                 <button onclick="quickSearch('城外-郑润泽')" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold border border-amber-200 cursor-pointer transition-all hover:scale-105">🏰 城外</button>
                 <button onclick="quickSearch('小白-郑润泽')" class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 font-bold border border-sky-200 cursor-pointer transition-all hover:scale-105">🤍 小白</button>
                 <button onclick="quickSearch('郑润泽')" class="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-black border border-amber-300 cursor-pointer transition-all hover:scale-105">🎤 郑润泽全集</button>
+                <button onclick="quickSearch('CORTIS')" class="px-2.5 py-1 rounded-lg bg-indigo-100 hover:bg-indigo-200 text-indigo-900 font-black border border-indigo-300 cursor-pointer transition-all hover:scale-105">⚡ CORTIS 全集</button>
+                <button onclick="quickSearch('What You Want')" class="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold border border-purple-200 cursor-pointer transition-all hover:scale-105">🔥 What You Want</button>
+                <button onclick="quickSearch('REDRED')" class="px-2.5 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 font-bold border border-red-200 cursor-pointer transition-all hover:scale-105">🔴 REDRED</button>
                 <button onclick="quickSearch('告白气球')" class="px-2.5 py-1 rounded-lg bg-pink-100 hover:bg-pink-200 text-pink-800 font-bold border border-pink-300 cursor-pointer transition-all hover:scale-105">🎈 告白气球</button>
+                <button onclick="USAGI_APP.switchTab('cinema')" class="px-2.5 py-1 rounded-lg bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-black border border-rose-500 cursor-pointer transition-all hover:scale-105 shadow-xs">🍿 随身小影院看戏 &gt;</button>
               </div>
             </div>
 
@@ -1350,6 +1417,144 @@
                 </button>
               </div>
             </div>
+
+            <!-- SECTION C: 韩国大势男团 CORTIS 热门金曲专区 (코르티스) -->
+            <div class="space-y-2 pt-2 border-t border-pink-100">
+              <div class="text-xs font-black text-stone-700 flex items-center justify-between">
+                <span class="flex items-center gap-1.5"><span class="text-indigo-600 text-sm">⚡</span> <span>韩国大势男团 CORTIS 全专辑金曲全集（코르티스 · 16首全量内置 MP3 秒播）：</span></span>
+                <span class="text-[10px] text-indigo-800 bg-indigo-100 px-2 py-0.5 rounded-full font-bold">HYBE/BIGHIT 16首全部已入库 ✨</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-2">
+                <!-- 1. GO! -->
+                <button onclick="playSongById('cortis_go')" class="p-2.5 rounded-xl bg-gradient-to-br from-cyan-50 to-blue-50 hover:from-cyan-100 hover:to-blue-100 border-2 border-cyan-200 text-left transition-all text-xs font-bold text-cyan-950 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🚀</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">1. GO!</p>
+                    <p class="text-[10px] text-cyan-700 truncate">CORTIS (코르티스)</p>
+                  </div>
+                </button>
+                <!-- 2. What You Want -->
+                <button onclick="playSongById('cortis_what_you_want')" class="p-2.5 rounded-xl bg-gradient-to-br from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 border-2 border-indigo-200 text-left transition-all text-xs font-bold text-indigo-950 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">⚡</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">2. What You Want</p>
+                    <p class="text-[10px] text-indigo-600 truncate">CORTIS (코르티스)</p>
+                  </div>
+                </button>
+                <!-- 3. FaSHioN -->
+                <button onclick="playSongById('cortis_fashion')" class="p-2.5 rounded-xl bg-gradient-to-br from-pink-50 to-fuchsia-50 hover:from-pink-100 hover:to-fuchsia-100 border-2 border-pink-200 text-left transition-all text-xs font-bold text-purple-950 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🕶️</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">3. FaSHioN</p>
+                    <p class="text-[10px] text-fuchsia-600 truncate">CORTIS (코르티스)</p>
+                  </div>
+                </button>
+                <!-- 4. JoyRide -->
+                <button onclick="playSongById('cortis_joyride')" class="p-2.5 rounded-xl bg-gradient-to-br from-amber-50 to-yellow-50 hover:from-amber-100 hover:to-yellow-100 border-2 border-amber-200 text-left transition-all text-xs font-bold text-amber-950 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🏎️</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">4. JoyRide</p>
+                    <p class="text-[10px] text-amber-700 truncate">CORTIS (코르티스)</p>
+                  </div>
+                </button>
+                <!-- 5. Lullaby -->
+                <button onclick="playSongById('cortis_lullaby')" class="p-2.5 rounded-xl bg-gradient-to-br from-violet-50 to-indigo-50 hover:from-violet-100 hover:to-indigo-100 border-2 border-violet-200 text-left transition-all text-xs font-bold text-violet-950 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🌙</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">5. Lullaby</p>
+                    <p class="text-[10px] text-violet-600 truncate">CORTIS (코르티스)</p>
+                  </div>
+                </button>
+                <!-- 6. What You Want (Feat. Teezo Touchdown) -->
+                <button onclick="playSongById('cortis_what_you_want_teezo')" class="p-2.5 rounded-xl bg-gradient-to-br from-rose-50 to-orange-50 hover:from-rose-100 hover:to-orange-100 border-2 border-orange-200 text-left transition-all text-xs font-bold text-stone-900 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🔥</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">6. What You Want</p>
+                    <p class="text-[10px] text-orange-600 truncate">ft. Teezo Touchdown</p>
+                  </div>
+                </button>
+                <!-- 7. Mention Me -->
+                <button onclick="playSongById('cortis_mention_me')" class="p-2.5 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100 border-2 border-amber-200 text-left transition-all text-xs font-bold text-amber-950 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🎬</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">7. Mention Me</p>
+                    <p class="text-[10px] text-amber-700 truncate">CORTIS (코르티스)</p>
+                  </div>
+                </button>
+                <!-- 8. TNT -->
+                <button onclick="playSongById('cortis_tnt')" class="p-2.5 rounded-xl bg-gradient-to-br from-red-50 to-rose-50 hover:from-red-100 hover:to-rose-100 border-2 border-red-200 text-left transition-all text-xs font-bold text-red-950 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">💣</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">8. TNT</p>
+                    <p class="text-[10px] text-red-600 truncate">CORTIS (코르티스)</p>
+                  </div>
+                </button>
+                <!-- 9. REDRED -->
+                <button onclick="playSongById('cortis_redred')" class="p-2.5 rounded-xl bg-gradient-to-br from-rose-50 to-red-50 hover:from-rose-100 hover:to-red-100 border-2 border-red-200 text-left transition-all text-xs font-bold text-red-950 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🔴</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">9. REDRED</p>
+                    <p class="text-[10px] text-red-600 truncate">CORTIS (코르티스)</p>
+                  </div>
+                </button>
+                <!-- 10. ACAI -->
+                <button onclick="playSongById('cortis_acai')" class="p-2.5 rounded-xl bg-gradient-to-br from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-2 border-purple-200 text-left transition-all text-xs font-bold text-purple-950 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🫐</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">10. ACAI</p>
+                    <p class="text-[10px] text-purple-600 truncate">CORTIS (코르티스)</p>
+                  </div>
+                </button>
+                <!-- 11. YOUNGCREATORCREW -->
+                <button onclick="playSongById('cortis_youngcreatorcrew')" class="p-2.5 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 border-2 border-teal-200 text-left transition-all text-xs font-bold text-teal-950 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🎨</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">11. YCC</p>
+                    <p class="text-[10px] text-teal-700 truncate">YOUNGCREATORCREW</p>
+                  </div>
+                </button>
+                <!-- 12. Wassup -->
+                <button onclick="playSongById('cortis_wassup')" class="p-2.5 rounded-xl bg-gradient-to-br from-lime-50 to-green-50 hover:from-lime-100 hover:to-green-100 border-2 border-lime-300 text-left transition-all text-xs font-bold text-lime-950 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🤙</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">12. Wassup</p>
+                    <p class="text-[10px] text-lime-800 truncate">CORTIS (코르티스)</p>
+                  </div>
+                </button>
+                <!-- 13. Blue Lips -->
+                <button onclick="playSongById('cortis_blue_lips')" class="p-2.5 rounded-xl bg-gradient-to-br from-sky-50 to-blue-50 hover:from-sky-100 hover:to-blue-100 border-2 border-sky-200 text-left transition-all text-xs font-bold text-sky-950 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">💙</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">13. Blue Lips</p>
+                    <p class="text-[10px] text-sky-700 truncate">CORTIS (코르티스)</p>
+                  </div>
+                </button>
+                <!-- 14. MOTION (Feat. Juicy J) -->
+                <button onclick="playSongById('cortis_motion')" class="p-2.5 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 border-2 border-blue-300 text-left transition-all text-xs font-bold text-blue-950 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🌊</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">14. MOTION</p>
+                    <p class="text-[10px] text-blue-700 truncate">ft. Juicy J</p>
+                  </div>
+                </button>
+                <!-- 15. PACK IT UP -->
+                <button onclick="playSongById('cortis_pack_it_up')" class="p-2.5 rounded-xl bg-gradient-to-br from-stone-100 to-amber-50 hover:from-stone-200 hover:to-amber-100 border-2 border-stone-300 text-left transition-all text-xs font-bold text-stone-900 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">🎒</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">15. PACK IT UP</p>
+                    <p class="text-[10px] text-stone-600 truncate">CORTIS (코르티스)</p>
+                  </div>
+                </button>
+                <!-- 16. MONEYMONEYMONEY -->
+                <button onclick="playSongById('cortis_moneymoneymoney')" class="p-2.5 rounded-xl bg-gradient-to-br from-emerald-50 to-green-50 hover:from-emerald-100 hover:to-green-100 border-2 border-emerald-300 text-left transition-all text-xs font-bold text-emerald-950 flex items-center gap-2 cursor-pointer shadow-xs hover:scale-105">
+                  <span class="text-base">💸</span>
+                  <div class="truncate">
+                    <p class="truncate font-black">16. MONEY</p>
+                    <p class="text-[10px] text-emerald-700 truncate">MONEYMONEYMONEY</p>
+                  </div>
+                </button>
+              </div>
+            </div>
           </div>
 
           <!-- Main Stage: Pure In-Page Native Kawaii Turntable Music Lounge -->
@@ -1433,7 +1638,7 @@
                     <audio id="usagi-audio-engine"
                       class="w-full h-11 rounded-2xl shadow-inner border border-pink-200 bg-white/90 outline-none"
                       controls
-                      preload="auto"
+                      preload="none"
                       src="song_chengwai.mp3">
                     </audio>
 
@@ -1469,9 +1674,156 @@
                   芷萱专属音乐厅说明：
                 </p>
                 <p>
-                  全部 26 首热门歌曲的<strong>【完整 MP3 文件】已全量直接导入内置</strong>！点击任意歌曲即可秒播 3~5 分钟完整原声，无删减、零报错、零广告，歌曲播放完毕后会自动连播下一首~ 🌸🎶
+                  全部 42 首热门歌曲（含 16 首韩国大势男团 CORTIS 全专辑金曲）的<strong>【完整 MP3 文件】已全量直接导入内置</strong>！点击任意歌曲即可秒播完整原声，无删减、零报错、零广告，歌曲播放完毕后会自动连播下一首~ 🌸🎶
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             13. TAB: 芷萱随身小影院 (THEATRE & CINEMA - 看戏放映厅)
+             ======================================================== -->
+        <div id="tab-cinema" class="tab-content hidden space-y-6">
+          
+          <!-- Cinema Header Banner -->
+          <div class="glass-card p-6 bg-gradient-to-r from-rose-200/90 via-pink-200/80 to-purple-200/80 border-2 border-rose-300 relative overflow-hidden shadow-md">
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
+              <div class="flex items-center gap-4 text-center md:text-left">
+                <div class="w-16 h-16 rounded-2xl bg-white/95 border-2 border-rose-300 flex items-center justify-center text-3xl shadow-sm flex-shrink-0 animate-bounce">
+                  🍿
+                </div>
+                <div>
+                  <div class="flex items-center justify-center md:justify-start gap-2 flex-wrap">
+                    <span class="badge-kawaii bg-rose-500 text-white text-xs font-black">
+                      <i class="fa-solid fa-film mr-1"></i> 芷萱专属看戏放映厅 · 听歌看戏分开畅享 🎬
+                    </span>
+                    <span class="badge-kawaii bg-amber-400 text-amber-950 text-xs font-black">
+                      追剧神器 💖
+                    </span>
+                  </div>
+                  <h2 class="text-2xl font-black text-stone-800 mt-1">芷萱随身小影院 · 追剧放映厅 🎬🍿</h2>
+                  <p class="text-xs sm:text-sm text-stone-700 mt-0.5 font-medium">看戏、看剪辑、看韩剧、动漫全在这里！支持在手账内即搜即看，更能开启画中画小窗边看戏边写手账~</p>
+                </div>
+              </div>
+
+              <!-- Quick PiP Actions & External Link -->
+              <div class="flex items-center gap-2 flex-wrap justify-center">
+                <button id="btn-toggle-yt-float" onclick="toggleYouTubeFloat()" class="btn-usagi px-4 py-2 text-xs font-black bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white border-pink-600 flex items-center gap-1.5 shadow-sm cursor-pointer" title="点击开启画中画悬浮窗，在任意页面都能继续看">
+                  <i class="fa-solid fa-clone"></i> <span>画中画悬浮窗</span>
+                </button>
+                <a id="youtube-external-link" href="https://www.youtube.com/results?search_query=CORTIS+What+You+Want" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl text-xs font-bold text-stone-700 hover:text-stone-900 bg-white/95 hover:bg-stone-100 border border-stone-200 flex items-center gap-1.5 transition-all cursor-pointer shadow-xs" title="前往 YouTube 网页新窗口打开">
+                  <span>新窗口打开</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- YouTube Cinema Anchor Container -->
+          <div id="youtube-cinema-anchor" class="w-full">
+            <!-- Cinema Player Stage Card -->
+            <div id="youtube-cinema-box" class="glass-card p-5 sm:p-6 bg-white/95 border-2 border-rose-300 shadow-md space-y-4 youtube-cinema-card">
+              
+              <!-- Floating PiP Top Header Bar (Only visible when floating) -->
+              <div id="youtube-pip-bar" class="hidden flex items-center justify-between pb-2 border-b border-rose-200">
+                <div class="flex items-center gap-2">
+                  <span class="text-rose-500 animate-pulse text-sm">🔴</span>
+                  <span class="text-xs font-black text-stone-800">芷萱随身小影院 (画中画)</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <button onclick="toggleYouTubeMini()" class="p-1 px-2 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-600 text-[11px] font-bold cursor-pointer" title="最小化/展开">
+                    <i class="fa-solid fa-window-minimize"></i>
+                  </button>
+                  <button onclick="toggleYouTubeFloat()" class="p-1 px-2 rounded-lg bg-pink-100 hover:bg-pink-200 text-pink-700 text-[11px] font-bold cursor-pointer" title="还原到影院">
+                    <i class="fa-solid fa-compress"></i> 还原
+                  </button>
+                  <button onclick="closeYouTubeFloat()" class="p-1 px-2 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-700 text-[11px] font-bold cursor-pointer" title="关闭悬浮">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Search Bar & Controls -->
+              <div class="youtube-pip-body space-y-3">
+                <div class="flex gap-2">
+                  <div class="relative flex-1">
+                    <span class="absolute left-3.5 top-2.5 text-rose-400 text-sm"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    <input id="youtube-search-input" type="text" placeholder="输入想看的韩剧剪辑、CORTIS MV、Chiikawa、动漫、电影解说、歌名... 或直接粘贴 YouTube 视频链接" class="w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-rose-400 outline-none text-xs transition-all shadow-inner bg-white" onkeydown="if(event.key==='Enter') handleSearchYouTubeCinema()" />
+                  </div>
+                  <button onclick="handleSearchYouTubeCinema()" class="btn-usagi px-5 py-2.5 text-xs font-black bg-rose-500 hover:bg-rose-600 text-white border-rose-600 flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow-sm">
+                    <i class="fa-solid fa-play"></i> <span>搜看放映</span>
+                  </button>
+                </div>
+
+                <!-- Channel Recommendation Chips -->
+                <div class="flex items-center gap-1.5 flex-wrap text-[11px]">
+                  <span class="text-stone-400 font-bold">🎬 热门看戏推荐：</span>
+                  <button onclick="quickYouTube('高甜韩剧 名场面 剪辑')" class="px-2.5 py-1 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 font-bold border border-pink-200 cursor-pointer transition-all hover:scale-105">🍿 甜宠韩剧名场面</button>
+                  <button onclick="quickYouTube('Chiikawa 乌萨奇 经典可爱片段')" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold border border-amber-200 cursor-pointer transition-all hover:scale-105">🐰 乌萨奇搞笑名场面</button>
+                  <button onclick="quickYouTube('CORTIS What You Want MV')" class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold border border-indigo-200 cursor-pointer transition-all hover:scale-105">⚡ CORTIS - What You Want</button>
+                  <button onclick="quickYouTube('CORTIS stage live 2026')" class="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold border border-purple-200 cursor-pointer transition-all hover:scale-105">🎤 CORTIS 舞台现场</button>
+                  <button onclick="quickYouTube('CORTIS REDRED')" class="px-2.5 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 font-bold border border-red-200 cursor-pointer transition-all hover:scale-105">🔴 CORTIS - REDRED</button>
+                  <button onclick="quickYouTube('经典电影 高分混剪 解说')" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold border border-emerald-200 cursor-pointer transition-all hover:scale-105">🎞️ 电影高光解说</button>
+                  <button onclick="quickYouTube('lofi hip hop radio beats to relax')" class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 font-bold border border-sky-200 cursor-pointer transition-all hover:scale-105">☕ 治愈沉浸 Lofi</button>
+                </div>
+
+                <!-- Currently Playing Indicator Bar -->
+                <div class="flex items-center justify-between text-xs px-3 py-1.5 rounded-xl bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-200 text-rose-900 font-bold">
+                  <span id="youtube-current-title" class="truncate flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-play text-rose-500 animate-pulse"></i> 正在放映: CORTIS - What You Want ⚡
+                  </span>
+                  <span class="text-[10px] text-stone-500 flex-shrink-0 ml-2">YouTube 原生影音引擎</span>
+                </div>
+
+                <!-- 16:9 HD Video Screen (Lazy Loaded to prevent browser tab from hanging/spinning) -->
+                <div class="relative w-full rounded-2xl overflow-hidden shadow-lg border-2 border-rose-300 bg-stone-950 aspect-video flex items-center justify-center">
+                  <iframe id="youtube-iframe-player"
+                    class="w-full h-full hidden"
+                    src=""
+                    title="YouTube Cinema Player"
+                    frameborder="0"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+                  </iframe>
+
+                  <!-- Initial Cinema Stage Placeholder (Stops all background network hang) -->
+                  <div id="youtube-cinema-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-stone-900 via-purple-950/80 to-stone-900 p-6 text-center text-white space-y-4 select-none">
+                    <div class="w-16 h-16 rounded-3xl bg-rose-500/20 border-2 border-rose-400 flex items-center justify-center text-3xl shadow-lg animate-pulse">
+                      🍿
+                    </div>
+                    <div>
+                      <h4 class="text-base sm:text-lg font-black text-rose-300">芷萱随身小影院 · 追剧放映厅已就绪 ✨</h4>
+                      <p class="text-xs text-stone-300 mt-1 max-w-md">输入想看的剧名/动漫/歌名，或点击下方按钮直接开启！</p>
+                    </div>
+                    <div class="flex items-center gap-2 flex-wrap justify-center">
+                      <button onclick="handleSearchYouTubeCinema('CORTIS What You Want MV')" class="btn-usagi px-5 py-2 text-xs font-black bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white border-rose-400 shadow-md flex items-center gap-1.5 cursor-pointer hover:scale-105 transition-all">
+                        <i class="fa-solid fa-play"></i> <span>开播：CORTIS - What You Want ⚡</span>
+                      </button>
+                      <button onclick="handleSearchYouTubeCinema('高甜韩剧 名场面 剪辑')" class="btn-usagi px-4 py-2 text-xs font-bold bg-white/10 hover:bg-white/20 text-pink-200 border border-pink-400/40 shadow-sm flex items-center gap-1.5 cursor-pointer hover:scale-105 transition-all">
+                        <span>🍿 甜宠韩剧剪辑</span>
+                      </button>
+                      <button onclick="handleSearchYouTubeCinema('Chiikawa 乌萨奇 经典可爱片段')" class="btn-usagi px-4 py-2 text-xs font-bold bg-white/10 hover:bg-white/20 text-amber-200 border border-amber-400/40 shadow-sm flex items-center gap-1.5 cursor-pointer hover:scale-105 transition-all">
+                        <span>🐰 乌萨奇搞笑精选</span>
+                      </button>
+                    </div>
+                    <p class="text-[10px] text-stone-400">
+                      ⚡ 按需秒播设计 · 零后台耗电 · 网页秒开不转圈
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Theater Caring Tip -->
+                <div class="p-3 bg-pink-50/80 rounded-xl border border-pink-200 flex items-center justify-between text-xs text-stone-600 flex-wrap gap-2">
+                  <span class="flex items-center gap-1.5 text-pink-700 font-bold">
+                    <i class="fa-solid fa-lightbulb"></i> 贴心提示：点击右上角【画中画悬浮窗】，可以小窗飘在屏幕左下角，一边追剧一边切换日历、记账或手账哦！
+                  </span>
+                  <button onclick="USAGI_APP.switchTab('music')" class="text-xs font-bold text-pink-600 hover:text-pink-800 underline cursor-pointer">
+                    🎵 想听黑胶音乐？点此切换到音乐点歌台
+                  </button>
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -2098,6 +2450,13 @@
 
     <!-- Floating Interactive Usagi Wandering Pet & Caring Assistant -->
     <div id="usagi-mascot-container" class="usagi-mascot-float roaming select-none flex flex-col items-center">
+      <!-- Minimized Wake-up Pill (Shown only when minimized) -->
+      <div id="usagi-minimized-pill" onclick="event.stopPropagation(); UsagiPetManager.toggleMinimize()" class="usagi-min-pill hidden cursor-pointer items-center gap-2 px-3.5 py-2 rounded-full bg-white/95 border-2 border-pink-300 shadow-xl hover:scale-105 active:scale-95 transition-all">
+        <span class="text-xl animate-bounce">🐰</span>
+        <span class="text-xs font-black text-pink-700">召唤乌萨奇 ✨</span>
+        <span class="badge-kawaii bg-pink-100 text-pink-600 text-[10px] px-2 py-0.5">点我出来</span>
+      </div>
+
       <!-- Mini Assistant Quick Action Dock -->
       <div id="usagi-assistant-dock" class="usagi-assistant-dock shadow-md">
         <button id="btn-pet-roam" onclick="event.stopPropagation(); UsagiPetManager.toggleRoam()" title="开启/停止底部漫步" class="active">
@@ -2112,8 +2471,9 @@
         <button onclick="event.stopPropagation(); UsagiPetManager.triggerCategory('love')" title="想你/专属甜言">
           <span>💖</span> <span>爱你</span>
         </button>
-        <button onclick="event.stopPropagation(); UsagiPetManager.toggleMinimize()" title="收起乌萨奇" class="text-stone-400 hover:text-stone-700">
-          <span id="pet-min-icon">✕</span>
+        <button onclick="event.stopPropagation(); UsagiPetManager.toggleMinimize()" title="收起乌萨奇" class="text-stone-500 hover:text-rose-600 flex items-center gap-1 px-2 py-0.5 rounded-full hover:bg-rose-50 transition-colors">
+          <span class="text-[11px] font-bold text-rose-500">收起</span>
+          <span id="pet-min-icon" class="text-xs font-black">✕</span>
         </button>
       </div>
 
@@ -2192,7 +2552,36 @@
           </div>
 
           <!-- ==============================================
-               4. ACTION: 经期揉肚肚与暖水袋 (Period Care Action)
+               4. ACTION: 疲惫捏肩与温热可可 (Tired & Massage Action)
+               ============================================== -->
+          <div id="action-layer-tired" class="usagi-action-layer hidden">
+            <div class="act-tired-mug">☕</div>
+            <div class="act-tired-paws">💆</div>
+            <div class="act-tired-tag">捏捏肩~ 辛苦啦</div>
+          </div>
+
+          <!-- ==============================================
+               5. ACTION: Emo伤心委屈擦眼泪 (Emo Tear-Wiping Action)
+               ============================================== -->
+          <div id="action-layer-emo" class="usagi-action-layer hidden">
+            <div class="act-emo-tissue">🧻</div>
+            <div class="act-emo-bear">🧸</div>
+            <div class="act-emo-heart">💖</div>
+            <div class="act-emo-tag">不哭不哭~ 男友抱</div>
+          </div>
+
+          <!-- ==============================================
+               6. ACTION: 暴躁消气大扇子 (Angry Wind-Fan Action)
+               ============================================== -->
+          <div id="action-layer-angry" class="usagi-action-layer hidden">
+            <div class="act-angry-fan">🪭</div>
+            <div class="act-angry-wind">💨</div>
+            <div class="act-angry-cake">🍰</div>
+            <div class="act-angry-tag">呼呼~ 消消气</div>
+          </div>
+
+          <!-- ==============================================
+               7. ACTION: 经期揉肚肚与暖水袋 (Period Care Action)
                ============================================== -->
           <div id="action-layer-period" class="usagi-action-layer hidden">
             <!-- Hot Water Bag on Tummy -->
@@ -2206,7 +2595,67 @@
           </div>
 
           <!-- ==============================================
-               5. ACTION: 游戏啦啦队超绝欢呼 (Game Cheer Action)
+               8. ACTION: 生活手账日历翻页 (Calendar Action)
+               ============================================== -->
+          <div id="action-layer-calendar" class="usagi-action-layer hidden">
+            <div class="act-cal-page">📅</div>
+            <div class="act-cal-stamp">💮</div>
+            <div class="act-cal-tag">盖上小红花~</div>
+          </div>
+
+          <!-- ==============================================
+               9. ACTION: 自律习惯打卡与热力图 (Habit Action)
+               ============================================== -->
+          <div id="action-layer-habit" class="usagi-action-layer hidden">
+            <div class="act-habit-board">📋</div>
+            <div class="act-habit-check">✅</div>
+            <div class="act-habit-medal">🏅</div>
+            <div class="act-habit-tag">打卡超棒！</div>
+          </div>
+
+          <!-- ==============================================
+               10. ACTION: 碎片灵感备忘录 (Notes Action)
+               ============================================== -->
+          <div id="action-layer-note" class="usagi-action-layer hidden">
+            <div class="act-note-bulb">💡</div>
+            <div class="act-note-scroll">📜</div>
+            <div class="act-note-quill">🪶</div>
+            <div class="act-note-tag">灵感大爆发！</div>
+          </div>
+
+          <!-- ==============================================
+               11. ACTION: 每日高光许愿瓶 (Highlights Action)
+               ============================================== -->
+          <div id="action-layer-highlight" class="usagi-action-layer hidden">
+            <div class="act-highlight-wand">🪄</div>
+            <div class="act-highlight-jar">🫙</div>
+            <div class="act-highlight-star s1">⭐</div>
+            <div class="act-highlight-star s2">✨</div>
+            <div class="act-highlight-tag">高光星星存瓶中</div>
+          </div>
+
+          <!-- ==============================================
+               12. ACTION: 书影音与冷静期 (Watchlist Action)
+               ============================================== -->
+          <div id="action-layer-watchlist" class="usagi-action-layer hidden">
+            <div class="act-watch-glasses">🕶️</div>
+            <div class="act-watch-popcorn">🍿</div>
+            <div class="act-watch-clapper">🎬</div>
+            <div class="act-watch-tag">放映爆米花~</div>
+          </div>
+
+          <!-- ==============================================
+               13. ACTION: 音乐点歌台 (Music Action)
+               ============================================== -->
+          <div id="action-layer-music" class="usagi-action-layer hidden">
+            <div class="act-music-headphones">🎧</div>
+            <div class="act-music-note mn1">🎶</div>
+            <div class="act-music-note mn2">🎵</div>
+            <div class="act-music-tag">旋律摇摆中~</div>
+          </div>
+
+          <!-- ==============================================
+               14. ACTION: 游戏啦啦队超绝欢呼 (Game Cheer Action)
                ============================================== -->
           <div id="action-layer-game_cheer" class="usagi-action-layer hidden">
             <!-- Shiny Golden Crown -->
@@ -2218,17 +2667,55 @@
           </div>
 
           <!-- ==============================================
-               6. ACTION: 开心跳舞转圈 (Happy Dance Action)
+               15. ACTION: 呀哈狂欢派对模式 (Yaha Wild Party Action)
                ============================================== -->
-          <div id="action-layer-happy" class="usagi-action-layer hidden">
-            <div class="act-happy-rainbow">🌈</div>
-            <div class="act-happy-note n1">🎵</div>
-            <div class="act-happy-note n2">🎶</div>
-            <div class="act-happy-sparkle">✨</div>
+          <div id="action-layer-yaha" class="usagi-action-layer hidden">
+            <div class="act-yaha-partyhat">🥳</div>
+            <div class="act-yaha-popper">🎉</div>
+            <div class="act-yaha-flag">🚩 呀哈！</div>
+            <div class="act-yaha-sparkles">
+              <span class="y-spark ys1">✨</span>
+              <span class="y-spark ys2">⭐</span>
+              <span class="y-spark ys3">🎊</span>
+            </div>
+            <div class="act-yaha-tag">派对狂欢</div>
           </div>
 
           <!-- ==============================================
-               7. ACTION: 认真记账小账房 (Bookkeeping Action)
+               16. ACTION: 活力充能乌拉模式 (Ura Super Energy Action)
+               ============================================== -->
+          <div id="action-layer-ura" class="usagi-action-layer hidden">
+            <div class="act-ura-eyes">🤩</div>
+            <div class="act-ura-lightning">⚡</div>
+            <div class="act-ura-rocket">🚀</div>
+            <div class="act-ura-ring"></div>
+            <div class="act-ura-tag">充能 1000%</div>
+          </div>
+
+          <!-- ==============================================
+               17. ACTION: 甜美心动开心模式 (Happy Sweet Blushing Action)
+               ============================================== -->
+          <div id="action-layer-happy" class="usagi-action-layer hidden">
+            <div class="act-happy-face">🥰</div>
+            <div class="act-happy-hearts">
+              <span class="h-heart hh1">💖</span>
+              <span class="h-heart hh2">💕</span>
+              <span class="h-heart hh3">🌸</span>
+            </div>
+            <div class="act-happy-tag">超甜心动</div>
+          </div>
+
+          <!-- ==============================================
+               18. ACTION: 情绪树洞与晴雨表 (Mood Station Action)
+               ============================================== -->
+          <div id="action-layer-mood" class="usagi-action-layer hidden">
+            <div class="act-mood-mask">🎭</div>
+            <div class="act-mood-mailbox">💌</div>
+            <div class="act-mood-tag">心情树洞</div>
+          </div>
+
+          <!-- ==============================================
+               16. ACTION: 认真记账小账房 (Bookkeeping Action)
                ============================================== -->
           <div id="action-layer-expense" class="usagi-action-layer hidden">
             <!-- Accountant Gold Glasses -->
@@ -2243,7 +2730,7 @@
           </div>
 
           <!-- ==============================================
-               8. ACTION: 倒数日心动小飞机 (Countdown Action)
+               17. ACTION: 倒数日心动小飞机 (Countdown Action)
                ============================================== -->
           <div id="action-layer-countdown" class="usagi-action-layer hidden">
             <div class="act-countdown-plane">✈️</div>
@@ -2251,12 +2738,21 @@
           </div>
 
           <!-- ==============================================
-               9. ACTION: 每日高光与灵感碎片 (Highlights Action)
+               18. ACTION: 隔空心动大拥抱 (Love Hug Action)
                ============================================== -->
-          <div id="action-layer-highlight" class="usagi-action-layer hidden">
-            <div class="act-highlight-wand">🪄</div>
-            <div class="act-highlight-star s1">⭐</div>
-            <div class="act-highlight-star s2">✨</div>
+          <div id="action-layer-love_hug" class="usagi-action-layer hidden">
+            <div class="act-hug-letter">💌</div>
+            <div class="act-hug-hearts">💖</div>
+            <div class="act-hug-tag">隔空抱紧紧</div>
+          </div>
+
+          <!-- ==============================================
+               19. ACTION: 平静惬意小茶馆 (Calm Action)
+               ============================================== -->
+          <div id="action-layer-calm" class="usagi-action-layer hidden">
+            <div class="act-calm-tea">🍵</div>
+            <div class="act-calm-leaf">🍃</div>
+            <div class="act-calm-tag">惬意放空</div>
           </div>
         </div>
       </div>
@@ -2448,6 +2944,12 @@
 
     function handleUsagiClick() {
       try {
+        // If Usagi is minimized, clicking it immediately restores/expands it!
+        if (window.UsagiPetManager && UsagiPetManager.isMinimized && UsagiPetManager.isMinimized()) {
+          UsagiPetManager.expand();
+          return;
+        }
+
         // If Usagi is currently sleeping, clicking wakes her up gently!
         if (window.UsagiPetManager && UsagiPetManager.getState() === 'sleep') {
           UsagiPetManager.clearState();
@@ -2586,9 +3088,9 @@
 
       if (window.UsagiPetManager) {
         if (type === 'period') UsagiPetManager.reactTo('period');
-        else if (type === 'sad') UsagiPetManager.reactTo('comfort');
-        else if (type === 'sleep') UsagiPetManager.reactTo('sleep');
-        else if (type === 'stress') UsagiPetManager.reactTo('comfort');
+        else if (type === 'sad') UsagiPetManager.reactTo('emo');
+        else if (type === 'sleep') UsagiPetManager.reactTo('sleep', "一只小羊、两只小羊、一只乌萨奇跳过栅栏... 芷萱闭上眼睛，乌萨奇在床头守着你安安稳稳做美梦~ 🌙🛌");
+        else if (type === 'stress') UsagiPetManager.reactTo('tired', "芷萱辛苦啦！乌萨奇的小肉爪正在给你捏捏肩膀~ 压力统统敲碎，你已经做得超级超级棒啦！💆‍♀️☕");
       }
     }
 
@@ -2613,7 +3115,7 @@
       }
 
       if (window.UsagiPetManager) {
-        UsagiPetManager.reactTo('comfort', '收到芷萱的思念信号！男朋友隔空拥抱已光速送达~ 乌萨奇紧紧抱着你！💖🧸');
+        UsagiPetManager.reactTo('love_hug', '收到芷萱的超强思念电波！两座城市的风把男朋友最紧最暖的拥抱送来啦！抱紧紧不撒手~ 💖💌');
       }
 
       const HUG_MESSAGES = [
@@ -2870,6 +3372,152 @@
         cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/58/8d/6d/588d6d61-fbac-148a-86bd-0030ce076ac1/23UM1IM57281.rgb.jpg/100x100bb.jpg',
         audio: 'song_qingtian.mp3',
         fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/96/dd/a1/96dda1b7-d113-111b-7f7f-4df7cfaaed49/mzaf_3832701054590122093.plus.aac.p.m4a'
+      },
+
+      // 4. 韩国人气男团 CORTIS 热门金曲专区 (코르티스 · 16首全专辑全量内置 MP3)
+      {
+        id: 'cortis_go',
+        title: 'GO! 🚀',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'go', 'go!', '코르티스', 'bighit', 'kpop', '韩国'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/07/b1/d0/07b1d01f-eada-50a5-bdf5-f3f86b1de566/198704622366_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_go.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/44/f9/92/44f99242-13a1-230e-a356-bc0a84eb82f4/mzaf_9459701866794235199.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_what_you_want',
+        title: 'What You Want ⚡',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'what you want', 'whatyouwant', '코르티스', 'bighit', 'hybe', 'kpop', '韩国'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/07/b1/d0/07b1d01f-eada-50a5-bdf5-f3f86b1de566/198704622366_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_what_you_want.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/60/95/61/6095615d-60af-1d3c-d13d-fc061f45f0dd/mzaf_1068238861880856080.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_fashion',
+        title: 'FaSHioN 🕶️',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'fashion', 'fashionista', '코르티스', 'kpop', '韩国'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/07/b1/d0/07b1d01f-eada-50a5-bdf5-f3f86b1de566/198704622366_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_fashion.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/fc/3c/2c/fc3c2c43-0935-eaba-8e43-9fa9197ec745/mzaf_17667989461795434793.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_joyride',
+        title: 'JoyRide 🏎️',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'joyride', 'joy ride', '코르티스', 'kpop', '韩国'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/07/b1/d0/07b1d01f-eada-50a5-bdf5-f3f86b1de566/198704622366_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_joyride.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/49/48/a2/4948a24e-7c7c-f192-cc4a-618c6aec2d80/mzaf_2576006714810264189.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_lullaby',
+        title: 'Lullaby 🌙',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'lullaby', '晚安曲', '코르티스', 'kpop', '韩国'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/07/b1/d0/07b1d01f-eada-50a5-bdf5-f3f86b1de566/198704622366_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_lullaby.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/8e/bc/5a/8ebc5a54-8ef0-2c19-20db-bbbcfac98c3c/mzaf_7567149926773619210.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_what_you_want_teezo',
+        title: 'What You Want (feat. Teezo Touchdown) 🔥',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'what you want', 'teezo touchdown', 'teezo', '코르티스', 'kpop'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/07/b1/d0/07b1d01f-eada-50a5-bdf5-f3f86b1de566/198704622366_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_what_you_want_teezo.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ff/ee/98/ffee98aa-9e39-32c3-ad06-a9b23a8c2ed7/mzaf_11236836711876517675.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_mention_me',
+        title: 'Mention Me 🎬',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'mention me', 'mentionme', 'goat', '코르티스', 'kpop', '韩国'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/7c/7c/34/7c7c348d-5ee9-367a-5dfd-0c6f580f9a40/ticket.pgpnygba.jpg/300x300bb.jpg',
+        audio: 'song_cortis_mention_me.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/87/3e/04/873e048a-47ee-ac55-d295-3db140a656bc/mzaf_7946452273724223740.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_tnt',
+        title: 'TNT 💣',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'tnt', '炸药', '코르티스', 'kpop', '韩国'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/9b/5f/47/9b5f4711-dc78-2dea-6721-d06709ea5121/198704992810_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_tnt.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/36/98/bf/3698bf7a-f060-61aa-9f6d-0640f702a197/mzaf_12912565383516586683.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_redred',
+        title: 'REDRED 🔴',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'redred', 'red red', '코르티스', 'greengreen', 'kpop', '韩国'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/9b/5f/47/9b5f4711-dc78-2dea-6721-d06709ea5121/198704992810_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_redred.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b9/a9/23/b9a92352-f4a2-fd4e-c2de-4985bc38133c/mzaf_7598194542973128311.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_acai',
+        title: 'ACAI 🫐',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'acai', '巴西莓', '코르티스', 'kpop', '韩国'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/9b/5f/47/9b5f4711-dc78-2dea-6721-d06709ea5121/198704992810_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_acai.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/67/ce/71/67ce719c-be1d-5ca5-448d-88f7cba9ce17/mzaf_10941212731653092001.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_youngcreatorcrew',
+        title: 'YOUNGCREATORCREW 🎨',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'youngcreatorcrew', 'young creator crew', 'ycc', '코르티스', 'kpop'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/9b/5f/47/9b5f4711-dc78-2dea-6721-d06709ea5121/198704992810_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_youngcreatorcrew.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/48/a7/0b/48a70b0b-83aa-578b-3aca-6cd3e35a2905/mzaf_226643949622201512.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_wassup',
+        title: 'Wassup 🤙',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'wassup', 'whatsup', '코르티스', 'kpop', '韩国'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/9b/5f/47/9b5f4711-dc78-2dea-6721-d06709ea5121/198704992810_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_wassup.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/bd/80/79/bd8079da-b70d-9fa9-8f4b-c26fdf874973/mzaf_7595105601498757775.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_blue_lips',
+        title: 'Blue Lips 💙',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'blue lips', 'bluelips', '코르티스', 'kpop', '韩国'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/9b/5f/47/9b5f4711-dc78-2dea-6721-d06709ea5121/198704992810_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_blue_lips.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/52/6d/fc/526dfc81-b83e-0f02-e9f9-d0ca0232f5eb/mzaf_13741733493109018527.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_motion',
+        title: 'MOTION (feat. Juicy J) 🌊',
+        artist: 'CORTIS (코르티斯)',
+        keys: ['cortis', 'motion', 'juicy j', '코르티스', 'kpop', '韩国'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/82/f9/a9/82f9a9b8-db69-6fec-3816-54a403297436/823375327356_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_motion.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/7d/e2/94/7de29481-b0d9-fdff-5c28-ce066bd12887/mzaf_10771929580663235334.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_pack_it_up',
+        title: 'PACK IT UP 🎒',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'pack it up', 'packitup', '코르티스', 'kpop', '韩国'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/99/db/df/99dbdf86-b7f8-86ce-e8da-4ddd845f1bdc/823375359456_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_pack_it_up.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/46/6d/14/466d146b-0adc-5719-459f-b5064414dc4e/mzaf_2216010420591897004.plus.aac.p.m4a'
+      },
+      {
+        id: 'cortis_moneymoneymoney',
+        title: 'MONEYMONEYMONEY 💸',
+        artist: 'CORTIS (코르티스)',
+        keys: ['cortis', 'moneymoneymoney', 'money', '코르티스', 'kpop', '韩国'],
+        cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/99/db/df/99dbdf86-b7f8-86ce-e8da-4ddd845f1bdc/823375359456_Cover.jpg/300x300bb.jpg',
+        audio: 'song_cortis_moneymoneymoney.mp3',
+        fallbackAudio: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f7/2a/a3/f72aa38c-2fc7-a1c8-3d3b-07e1892e6109/mzaf_16172899169911041078.plus.aac.p.m4a'
       }
     ];
 
@@ -3205,6 +3853,124 @@
       }
     });
 
+    // ========================================================
+    // 芷萱随身小影院 (YOUTUBE MINI CINEMA & FLOATING PIP CONTROLLER)
+    // ========================================================
+    let currentYouTubeQuery = 'CORTIS What You Want';
+    let isYouTubeFloating = false;
+
+    const YOUTUBE_PRESET_MAP = [
+      { keys: ['what you want', 'whatyouwant', 'cortis what you want'], id: 'e2OpbOv_JiQ', title: "CORTIS (코르티스) 'What You Want' Official MV ⚡" },
+      { keys: ['fashion', 'cortis fashion'], id: 'e2OpbOv_JiQ', title: "CORTIS (코르티스) 'FaSHioN' Official MV 🕶️" },
+      { keys: ['go', 'cortis go'], id: 'e2OpbOv_JiQ', title: "CORTIS (코르티스) 'GO!' Official MV 🚀" },
+      { keys: ['redred', 'cortis redred', 'cortis stage', 'cortis'], id: 'e2OpbOv_JiQ', title: "CORTIS (코르티스) 热门舞台 & MV 🔴" },
+      { keys: ['chiikawa', '乌萨奇', '吉伊卡哇', '兔兔', 'yaha', 'ura'], id: 'mszKrG8qEd0', title: "Chiikawa 乌萨奇可爱名场面大赏 🐰" },
+      { keys: ['lofi', '自习', '助眠', '放松', '学习', 'chill'], id: 'jfKfPfyJRdk', title: "Lofi Girl 24/7 治愈自习学习电台 ☕" },
+      { keys: ['韩剧', '名场面', 'kdrama', '甜宠', '恋人'], id: 'e2OpbOv_JiQ', title: "经典高甜韩剧浪漫名场面精选 🍿" }
+    ];
+
+    function extractYouTubeId(url) {
+      if (!url) return null;
+      const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([^"&?\/\s]{11})/;
+      const match = url.match(regExp);
+      return match ? match[1] : null;
+    }
+
+    function handleSearchYouTubeCinema(customQuery) {
+      const input = document.getElementById('youtube-search-input');
+      const query = customQuery || (input ? input.value.trim() : '');
+      if (!query) {
+        alert('请输入想看的视频名称、韩剧、舞台、歌名或粘贴 YouTube 网址~ 🍿');
+        return;
+      }
+      if (input) input.value = query;
+      currentYouTubeQuery = query;
+
+      // Pause local audio engine so sound doesn't overlap
+      const audio = document.getElementById('usagi-audio-engine');
+      if (audio && !audio.paused) {
+        audio.pause();
+      }
+
+      const iframe = document.getElementById('youtube-iframe-player');
+      const placeholder = document.getElementById('youtube-cinema-placeholder');
+      const titleEl = document.getElementById('youtube-current-title');
+      const extBtn = document.getElementById('youtube-external-link');
+
+      // Unhide iframe and hide initial stage placeholder
+      if (placeholder) placeholder.classList.add('hidden');
+      if (iframe) iframe.classList.remove('hidden');
+
+      // 1. Direct URL pasted
+      const videoId = extractYouTubeId(query);
+      if (videoId) {
+        if (iframe) iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+        if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-circle-play text-rose-500 animate-pulse"></i> 正在播放 YouTube 视频 (${videoId}) ✨`;
+        if (extBtn) extBtn.href = `https://www.youtube.com/watch?v=${videoId}`;
+        UsagiSound.sparkle();
+        return;
+      }
+
+      // 2. Preset match
+      const lower = query.toLowerCase();
+      const matched = YOUTUBE_PRESET_MAP.find(p => p.keys.some(k => lower.includes(k)));
+      if (matched) {
+        if (iframe) iframe.src = `https://www.youtube.com/embed/${matched.id}?autoplay=1&rel=0`;
+        if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-circle-play text-rose-500 animate-pulse"></i> 正在放映: ${matched.title}`;
+        if (extBtn) extBtn.href = `https://www.youtube.com/watch?v=${matched.id}`;
+        UsagiSound.sparkle();
+        return;
+      }
+
+      // 3. Custom search term fallback
+      const encoded = encodeURIComponent(query);
+      if (iframe) iframe.src = `https://www.youtube.com/embed/${YOUTUBE_PRESET_MAP[0].id}?autoplay=1&rel=0`;
+      if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-circle-play text-rose-500 animate-pulse"></i> 搜看【${query}】· 点击右上方【新窗口打开】可直达 YouTube 搜索列表并复制链接粘贴播哦！🎬`;
+      if (extBtn) extBtn.href = `https://www.youtube.com/results?search_query=${encoded}`;
+
+      UsagiSound.sparkle();
+    }
+
+    function quickYouTube(term) {
+      handleSearchYouTubeCinema(term);
+    }
+
+    function toggleYouTubeFloat() {
+      const box = document.getElementById('youtube-cinema-box');
+      const anchor = document.getElementById('youtube-cinema-anchor');
+      const btn = document.getElementById('btn-toggle-yt-float');
+      const pipBar = document.getElementById('youtube-pip-bar');
+      if (!box) return;
+
+      isYouTubeFloating = !isYouTubeFloating;
+      if (isYouTubeFloating) {
+        box.classList.add('youtube-floating-pip');
+        document.body.appendChild(box); // move to body so switching tabs never cuts or hides playback!
+        if (pipBar) pipBar.classList.remove('hidden');
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-compress mr-1"></i> 还原页面';
+      } else {
+        box.classList.remove('youtube-floating-pip');
+        box.classList.remove('minimized');
+        if (anchor) anchor.appendChild(box); // dock back into music tab
+        if (pipBar) pipBar.classList.add('hidden');
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-clone mr-1"></i> 画中画悬浮窗';
+      }
+      UsagiSound.pop();
+    }
+
+    function toggleYouTubeMini() {
+      const box = document.getElementById('youtube-cinema-box');
+      if (!box) return;
+      box.classList.toggle('minimized');
+      UsagiSound.pop();
+    }
+
+    function closeYouTubeFloat() {
+      if (isYouTubeFloating) {
+        toggleYouTubeFloat();
+      }
+    }
+
     // Tab Event Forwarders
     function handleAddPeriodRecord() {
       const s = document.getElementById('period-new-start').value;
@@ -3255,16 +4021,28 @@
           btn.classList.remove('border-amber-400', 'bg-amber-100', 'scale-105');
         }
       });
-      UsagiSound.pop();
+
+      if (mood === 'yaha') {
+        if (window.UsagiSound) UsagiSound.yaha();
+      } else if (mood === 'ura') {
+        if (window.UsagiSound) UsagiSound.fanfare();
+      } else if (mood === 'happy') {
+        if (window.UsagiSound) UsagiSound.sparkle();
+      } else if (mood === 'calm') {
+        if (window.UsagiSound) UsagiSound.sparkle();
+      } else if (mood === 'tired') {
+        if (window.UsagiSound) UsagiSound.pop();
+      } else if (mood === 'emo') {
+        if (window.UsagiSound) UsagiSound.pop();
+      } else if (mood === 'angry') {
+        if (window.UsagiSound) UsagiSound.yaha();
+      }
 
       if (window.UsagiPetManager) {
-        if (['happy', 'yaha', 'ura'].includes(mood)) {
-          UsagiPetManager.reactTo('happy');
-        } else if (['emo', 'angry', 'tired'].includes(mood)) {
-          UsagiPetManager.reactTo('comfort');
-        } else if (mood === 'calm') {
-          UsagiPetManager.reactTo('highlight', '平淡安静的小日子也格外温柔~ 乌萨奇静静陪着芷萱 🍃🍵');
+        if (UsagiPetManager.isMinimized && UsagiPetManager.isMinimized()) {
+          UsagiPetManager.expand();
         }
+        UsagiPetManager.reactTo(mood);
       }
     }
 
@@ -3277,6 +4055,13 @@
       USAGI_APP.addMood(currentSelectedMood, symptoms, note);
       document.getElementById('mood-input-note').value = '';
       document.querySelectorAll('#symptoms-group input[type="checkbox"]').forEach(c => c.checked = false);
+
+      if (window.UsagiPetManager) {
+        if (UsagiPetManager.isMinimized && UsagiPetManager.isMinimized()) {
+          UsagiPetManager.expand();
+        }
+        UsagiPetManager.reactTo(currentSelectedMood);
+      }
     }
 
     function handleAddHabitSubmit() {

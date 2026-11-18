@@ -195,11 +195,11 @@ body {
   z-index: 10;
   filter: brightness(1.1);
 }
-.level-0 { background-color: #F1ECE4; }
-.level-1 { background-color: #D8F3DC; }
-.level-2 { background-color: #95D5B2; }
-.level-3 { background-color: #52B788; }
-.level-4 { background-color: #2D6A4F; }
+.level-0 { background-color: #FDF2F4; border: 1px solid #FCE7F3; }
+.level-1 { background-color: #FBCFE8; }
+.level-2 { background-color: #F472B6; }
+.level-3 { background-color: #EC4899; }
+.level-4 { background-color: #BE185D; }
 
 /* Usagi Ears Mascot Badge */
 .usagi-ears {
@@ -237,17 +237,46 @@ body {
 .usagi-mascot-float:hover {
   transform: scale(1.05);
 }
+/* Minimized State: Tiny Chibi Usagi (变小小只，而不是变成字！) */
 .usagi-mascot-float.minimized {
-  transform: translate(50px, 35px) scale(0.6);
-  opacity: 0.55;
+  position: fixed !important;
+  bottom: 14px !important;
+  right: 18px !important;
+  left: auto !important;
+  transform: none !important;
+  opacity: 1 !important;
+  z-index: 9990 !important;
+  width: auto !important;
+  height: auto !important;
+  cursor: pointer !important;
+  filter: drop-shadow(0 8px 20px rgba(255, 143, 163, 0.5));
 }
-.usagi-mascot-float.minimized:hover {
-  transform: translate(10px, 5px) scale(0.85);
-  opacity: 1;
+.usagi-mascot-float.minimized.roaming {
+  right: 18px !important;
+  left: auto !important;
 }
-.usagi-mascot-float.minimized .speech-bubble,
-.usagi-mascot-float.minimized .usagi-assistant-dock {
+.usagi-mascot-float.minimized #usagi-assistant-dock,
+.usagi-mascot-float.minimized #usagi-speech-bubble,
+.usagi-mascot-float.minimized #usagi-minimized-pill {
   display: none !important;
+}
+.usagi-mascot-float.minimized #usagi-bouncer {
+  display: block !important;
+  transform: scale(0.48);
+  transform-origin: bottom right;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: miniChibiUsagiBounce 2.4s infinite ease-in-out;
+}
+.usagi-mascot-float.minimized:hover #usagi-bouncer {
+  transform: scale(0.60) rotate(5deg) !important;
+}
+@keyframes miniChibiUsagiBounce {
+  0%, 100% {
+    transform: scale(0.48) translateY(0);
+  }
+  50% {
+    transform: scale(0.50) translateY(-6px) rotate(-3deg);
+  }
 }
 
 .mascot-toggle-btn {
@@ -699,7 +728,9 @@ body {
     transform: scale(0.88);
   }
   .usagi-mascot-float.minimized {
-    transform: translate(45px, 20px) scale(0.55);
+    bottom: 74px !important;
+    right: 12px !important;
+    transform: none !important;
   }
   .speech-bubble {
     max-width: 230px !important;
@@ -1397,67 +1428,962 @@ body {
   100% { transform: rotate(360deg); }
 }
 
-/* 9. STATE: HIGHLIGHT (灵感高光魔杖) */
+/* 9. STATE: HIGHLIGHT (每日高光 - 魔法星星装进许愿瓶) */
 .act-highlight-wand {
   position: absolute;
-  top: 35px;
-  right: 2px;
+  top: 26px;
+  right: -4px;
   font-size: 26px;
-  z-index: 24;
+  z-index: 26;
   animation: wandWaveMagic 1.4s infinite ease-in-out;
 }
 @keyframes wandWaveMagic {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(-25deg) translateY(-4px); }
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(-30deg) translateY(-6px) scale(1.15); }
+}
+.act-highlight-jar {
+  position: absolute;
+  bottom: 8px;
+  right: 6px;
+  font-size: 26px;
+  z-index: 23;
+  filter: drop-shadow(0 2px 6px rgba(168, 85, 247, 0.4));
 }
 .act-highlight-star {
   position: absolute;
   font-size: 18px;
   color: #F59E0B;
   z-index: 25;
-  animation: starSparklePop 1.4s infinite ease-out;
+  animation: starDropInJar 1.6s infinite cubic-bezier(0.4, 0, 0.2, 1);
 }
-.act-highlight-star.s1 { top: 12px; right: 18px; animation-delay: 0.2s; }
-.act-highlight-star.s2 { top: 22px; left: 10px; animation-delay: 0.7s; }
-@keyframes starSparklePop {
-  0% { opacity: 0; transform: scale(0.3) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1.3) rotate(70deg); }
-  100% { opacity: 0; transform: scale(0.6) translateY(-14px) rotate(140deg); }
+.act-highlight-star.s1 { top: 10px; right: 16px; animation-delay: 0.1s; }
+.act-highlight-star.s2 { top: 22px; left: 14px; animation-delay: 0.7s; }
+@keyframes starDropInJar {
+  0% { opacity: 0; transform: scale(0.3) translateY(-10px) rotate(0deg); }
+  40% { opacity: 1; transform: scale(1.2) translateY(8px) rotate(90deg); }
+  80% { opacity: 0.9; transform: scale(0.7) translateY(36px) rotate(180deg); }
+  100% { opacity: 0; transform: scale(0.4) translateY(44px) rotate(240deg); }
+}
+.act-highlight-tag {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #7E22CE;
+  background: #FAF5FF;
+  border: 1px solid #D8B4FE;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+}
+
+/* 10. STATE: TIRED (疲惫捏肩与温热热饮 - 小肉爪揉太阳穴/捏肩，递上热咖啡) */
+#usagi-bouncer.state-tired {
+  animation: none !important;
+}
+#usagi-bouncer.state-tired #usagi-actor-box {
+  animation: usagiTiredSway 2.2s ease-in-out infinite !important;
+}
+@keyframes usagiTiredSway {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  35% { transform: translateY(2px) rotate(-3deg) scale(0.98, 1.02); }
+  75% { transform: translateY(1px) rotate(3deg) scale(1.02, 0.98); }
+}
+.act-tired-mug {
+  position: absolute;
+  bottom: 12px;
+  right: 6px;
+  font-size: 26px;
+  z-index: 24;
+  animation: mugWarmSteam 2s infinite ease-in-out;
+}
+@keyframes mugWarmSteam {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.12) rotate(-8deg); }
+}
+.act-tired-paws {
+  position: absolute;
+  top: 36px;
+  left: 20px;
+  font-size: 20px;
+  z-index: 25;
+  animation: pawsMassageMotion 1.2s infinite ease-in-out;
+}
+@keyframes pawsMassageMotion {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(6px, -4px) scale(1.2); }
+}
+.act-tired-tag {
+  position: absolute;
+  top: 18px;
+  left: -8px;
+  font-size: 10px;
+  font-weight: 900;
+  color: #92400E;
+  background: #FEF3C7;
+  border: 1px solid #FCD34D;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+}
+
+/* 11. STATE: EMO (Emo伤心委屈 - 拿着纸巾擦眼泪，泰迪熊紧紧相拥) */
+#usagi-bouncer.state-emo {
+  animation: none !important;
+}
+#usagi-bouncer.state-emo #usagi-actor-box {
+  animation: usagiEmoSway 1.8s ease-in-out infinite !important;
+}
+@keyframes usagiEmoSway {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.05, 0.96) translateY(2px); }
+}
+.act-emo-tissue {
+  position: absolute;
+  top: 48px;
+  left: 22px;
+  font-size: 24px;
+  z-index: 25;
+  animation: tissueWipeEyes 1.4s infinite ease-in-out;
+}
+@keyframes tissueWipeEyes {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(12px, -4px) rotate(15deg); }
+  50% { transform: translate(24px, 0px) rotate(-10deg); }
+  75% { transform: translate(12px, -2px) rotate(5deg); }
+}
+.act-emo-bear {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  font-size: 28px;
+  z-index: 24;
+  filter: drop-shadow(0 2px 6px rgba(251, 146, 60, 0.5));
+}
+.act-emo-heart {
+  position: absolute;
+  top: 24px;
+  right: 14px;
+  font-size: 22px;
+  z-index: 26;
+  animation: emoHeartWarmth 1.2s infinite ease-in-out;
+}
+@keyframes emoHeartWarmth {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.3) translateY(-4px); opacity: 1; }
+}
+.act-emo-tag {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #BE185D;
+  background: #FDF2F8;
+  border: 1px solid #F472B6;
+  padding: 1px 8px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+}
+
+/* 12. STATE: ANGRY (暴躁消火 - 猛烈挥小扇子扇风，送上甜甜草莓蛋糕) */
+#usagi-bouncer.state-angry {
+  animation: none !important;
+}
+#usagi-bouncer.state-angry #usagi-actor-box {
+  animation: usagiAngryFanSway 0.75s ease-in-out infinite !important;
+}
+@keyframes usagiAngryFanSway {
+  0%, 100% { transform: rotate(-4deg) translateY(0); }
+  50% { transform: rotate(4deg) translateY(-2px); }
+}
+.act-angry-fan {
+  position: absolute;
+  top: 40px;
+  left: -8px;
+  font-size: 28px;
+  z-index: 26;
+  animation: rapidFanWaving 0.4s infinite alternate ease-in-out;
+}
+@keyframes rapidFanWaving {
+  0% { transform: rotate(-30deg) translate(0, 0); }
+  100% { transform: rotate(35deg) translate(10px, -6px); }
+}
+.act-angry-wind {
+  position: absolute;
+  top: 36px;
+  right: 16px;
+  font-size: 18px;
+  z-index: 24;
+  animation: windBlowAway 0.8s infinite ease-out;
+}
+@keyframes windBlowAway {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+  50% { opacity: 1; transform: translate(14px, -12px) scale(1.1); }
+  100% { opacity: 0; transform: translate(26px, -22px) scale(0.6); }
+}
+.act-angry-cake {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 24px;
+  z-index: 25;
+  filter: drop-shadow(0 2px 6px rgba(244, 63, 94, 0.4));
+  animation: cakeOfferPulse 1.2s infinite ease-in-out;
+}
+@keyframes cakeOfferPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2) translateY(-3px); }
+}
+.act-angry-tag {
+  position: absolute;
+  top: 14px;
+  right: -10px;
+  font-size: 10px;
+  font-weight: 900;
+  color: #B91C1C;
+  background: #FEF2F2;
+  border: 1px solid #F87171;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+}
+
+/* 13. STATE: CALENDAR (生活手账日历 - 迷你日历翻页，盖上红花印章) */
+#usagi-bouncer.state-calendar {
+  animation: none !important;
+}
+#usagi-bouncer.state-calendar #usagi-actor-box {
+  animation: usagiCalendarNod 1.5s ease-in-out infinite !important;
+}
+@keyframes usagiCalendarNod {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px) rotate(2deg); }
+}
+.act-cal-page {
+  position: absolute;
+  top: 42px;
+  left: 8px;
+  font-size: 28px;
+  z-index: 24;
+  animation: calPageFlip 1.5s infinite ease-in-out;
+}
+@keyframes calPageFlip {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-15deg) scale(1.1); }
+}
+.act-cal-stamp {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  font-size: 26px;
+  z-index: 26;
+  animation: flowerStampPress 1.5s infinite cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes flowerStampPress {
+  0%, 100% { transform: scale(1) translateY(-6px); }
+  60% { transform: scale(1.25) translateY(2px); }
+}
+.act-cal-tag {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #1D4ED8;
+  background: #EFF6FF;
+  border: 1px solid #93C5FD;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+}
+
+/* 14. STATE: HABIT (习惯打卡 - 勾选任务清单，颁发闪闪大金牌) */
+#usagi-bouncer.state-habit {
+  animation: none !important;
+}
+#usagi-bouncer.state-habit #usagi-actor-box {
+  animation: usagiHabitJump 1.2s ease-in-out infinite !important;
+}
+@keyframes usagiHabitJump {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-12px) scale(1.05); }
+}
+.act-habit-board {
+  position: absolute;
+  top: 42px;
+  left: 6px;
+  font-size: 28px;
+  z-index: 24;
+}
+.act-habit-check {
+  position: absolute;
+  top: 48px;
+  left: 20px;
+  font-size: 18px;
+  z-index: 25;
+  animation: checkPopIn 1.2s infinite cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes checkPopIn {
+  0%, 100% { transform: scale(0.6); opacity: 0.5; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
+.act-habit-medal {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 26px;
+  z-index: 26;
+  filter: drop-shadow(0 2px 6px rgba(245, 158, 11, 0.6));
+  animation: medalSpinPulse 1.8s infinite ease-in-out;
+}
+@keyframes medalSpinPulse {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(15deg) scale(1.2); }
+}
+.act-habit-tag {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #BE185D;
+  background: #FDF2F8;
+  border: 1px solid #F472B6;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+}
+
+/* 15. STATE: NOTE (灵感备忘 - 脑门亮起大灯泡，羽毛笔羊皮纸) */
+#usagi-bouncer.state-note {
+  animation: none !important;
+}
+#usagi-bouncer.state-note #usagi-actor-box {
+  animation: usagiNotePonder 1.6s ease-in-out infinite !important;
+}
+@keyframes usagiNotePonder {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-3px) rotate(-3deg); }
+}
+.act-note-bulb {
+  position: absolute;
+  top: -16px;
+  left: 36px;
+  font-size: 26px;
+  z-index: 26;
+  filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.95));
+  animation: bulbIdeaFlash 1s infinite alternate ease-in-out;
+}
+@keyframes bulbIdeaFlash {
+  0% { transform: scale(0.9); filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.6)); }
+  100% { transform: scale(1.25) translateY(-2px); filter: drop-shadow(0 0 16px rgba(250, 204, 21, 1)); }
+}
+.act-note-scroll {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  font-size: 26px;
+  z-index: 24;
+}
+.act-note-quill {
+  position: absolute;
+  bottom: 20px;
+  right: 14px;
+  font-size: 22px;
+  z-index: 25;
+  animation: quillWriteMotion 0.6s infinite alternate ease-in-out;
+}
+@keyframes quillWriteMotion {
+  0% { transform: rotate(0deg) translate(0, 0); }
+  100% { transform: rotate(-25deg) translate(-6px, 3px); }
+}
+.act-note-tag {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #854D0E;
+  background: #FEFCE8;
+  border: 1px solid #FDE047;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+}
+
+/* 16. STATE: WATCHLIST (书影音放映 - 戴3D眼镜，抱着大桶爆米花) */
+#usagi-bouncer.state-watchlist {
+  animation: none !important;
+}
+#usagi-bouncer.state-watchlist #usagi-actor-box {
+  animation: usagiWatchPop 1.4s ease-in-out infinite !important;
+}
+@keyframes usagiWatchPop {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+.act-watch-glasses {
+  position: absolute;
+  top: 46px;
+  left: 28px;
+  font-size: 26px;
+  z-index: 25;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+.act-watch-popcorn {
+  position: absolute;
+  bottom: 8px;
+  left: 12px;
+  font-size: 28px;
+  z-index: 24;
+  animation: popcornJiggle 0.7s infinite alternate ease-in-out;
+}
+@keyframes popcornJiggle {
+  0% { transform: rotate(-5deg) translateY(0); }
+  100% { transform: rotate(5deg) translateY(-3px); }
+}
+.act-watch-clapper {
+  position: absolute;
+  top: 30px;
+  right: 4px;
+  font-size: 22px;
+  z-index: 26;
+  animation: clapperSnap 1.4s infinite ease-in-out;
+}
+@keyframes clapperSnap {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-25deg) translateY(-4px); }
+}
+.act-watch-tag {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #B45309;
+  background: #FFFBEB;
+  border: 1px solid #FCD34D;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+}
+
+/* 17. STATE: MUSIC (音乐点歌台 - 戴粉色猫耳耳机，跳动音符与律动摇摆) */
+#usagi-bouncer.state-music {
+  animation: none !important;
+}
+#usagi-bouncer.state-music #usagi-actor-box {
+  animation: usagiMusicGroove 0.75s ease-in-out infinite alternate !important;
+}
+@keyframes usagiMusicGroove {
+  0% { transform: translateY(0) rotate(-6deg) scale(1.02, 0.98); }
+  100% { transform: translateY(-8px) rotate(6deg) scale(0.98, 1.02); }
+}
+.act-music-headphones {
+  position: absolute;
+  top: 6px;
+  left: 20px;
+  font-size: 34px;
+  z-index: 26;
+  filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.8));
+  animation: headphonesPulse 0.75s infinite alternate ease-in-out;
+}
+@keyframes headphonesPulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.15) translateY(-2px); }
+}
+.act-music-note {
+  position: absolute;
+  font-size: 18px;
+  color: #F43F5E;
+  z-index: 25;
+  animation: musicNoteFloat 1.2s infinite ease-out;
+}
+.act-music-note.mn1 { top: 22px; left: -8px; animation-delay: 0.1s; }
+.act-music-note.mn2 { top: 16px; right: -8px; animation-delay: 0.6s; }
+@keyframes musicNoteFloat {
+  0% { opacity: 0; transform: translateY(0) scale(0.4) rotate(0deg); }
+  50% { opacity: 1; transform: translateY(-16px) scale(1.2) rotate(20deg); }
+  100% { opacity: 0; transform: translateY(-32px) scale(0.8) rotate(-20deg); }
+}
+.act-music-tag {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #BE185D;
+  background: #FDF2F8;
+  border: 1.5px solid #F472B6;
+  padding: 1px 8px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+  box-shadow: 0 2px 8px rgba(244, 63, 94, 0.3);
+}
+
+/* 18. STATE: LOVE HUG (隔空心动大拥抱 - 爱心信封与双心环绕) */
+#usagi-bouncer.state-love_hug {
+  animation: none !important;
+}
+#usagi-bouncer.state-love_hug #usagi-actor-box {
+  animation: usagiLoveHugPulse 1.2s ease-in-out infinite !important;
+}
+@keyframes usagiLoveHugPulse {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.12, 0.95) translateY(-4px); }
+}
+.act-hug-letter {
+  position: absolute;
+  top: 18px;
+  right: -8px;
+  font-size: 26px;
+  z-index: 26;
+  animation: letterFlyOrbit 1.8s infinite ease-in-out;
+}
+@keyframes letterFlyOrbit {
+  0% { transform: translate(0, 0) rotate(-10deg) scale(0.9); }
+  50% { transform: translate(-8px, -12px) rotate(15deg) scale(1.2); }
+  100% { transform: translate(0, 0) rotate(-10deg) scale(0.9); }
+}
+.act-hug-hearts {
+  position: absolute;
+  top: 40px;
+  left: 18px;
+  font-size: 24px;
+  z-index: 25;
+  animation: heartsBeatingPulse 0.9s infinite ease-in-out;
+}
+@keyframes heartsBeatingPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3) translateY(-3px); }
+}
+.act-hug-tag {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #BE185D;
+  background: #FDF2F8;
+  border: 1.5px solid #F472B6;
+  padding: 1px 8px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+  box-shadow: 0 2px 8px rgba(244, 63, 94, 0.4);
+}
+
+/* 19. STATE: CALM (平静惬意 - 清香热茶与绿叶微风) */
+#usagi-bouncer.state-calm {
+  animation: none !important;
+}
+#usagi-bouncer.state-calm #usagi-actor-box {
+  animation: usagiCalmSway 2.5s ease-in-out infinite !important;
+}
+@keyframes usagiCalmSway {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(2deg); }
+}
+.act-calm-tea {
+  position: absolute;
+  top: 26px;
+  right: -6px;
+  font-size: 24px;
+  z-index: 25;
+  animation: teaSteamWobble 2s infinite ease-in-out;
+}
+@keyframes teaSteamWobble {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.1) translateY(-3px); }
+}
+.act-calm-leaf {
+  position: absolute;
+  top: 6px;
+  left: 12px;
+  font-size: 20px;
+  z-index: 26;
+  animation: leafFloatBreeze 2.2s infinite ease-in-out;
+}
+@keyframes leafFloatBreeze {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(6px, -5px) rotate(15deg); }
+}
+.act-calm-tag {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #047857;
+  background: #ECFDF5;
+  border: 1.5px solid #6EE7B7;
+  padding: 1px 8px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+/* ============================================================
+   STATE: YAHA (🥳 狂欢派对模式)
+   ============================================================ */
+#usagi-bouncer.state-yaha {
+  animation: none !important;
+}
+#usagi-bouncer.state-yaha #usagi-actor-box {
+  animation: usagiYahaPartyJump 1.1s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite !important;
+}
+@keyframes usagiYahaPartyJump {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1, 0.96); }
+  25% { transform: translateY(-24px) rotate(-16deg) scale(1.1, 1.05); }
+  50% { transform: translateY(-4px) rotate(0deg) scale(0.95, 1.06); }
+  75% { transform: translateY(-28px) rotate(16deg) scale(1.12, 1.05); }
+}
+.act-yaha-partyhat {
+  position: absolute;
+  top: -18px;
+  left: 20px;
+  font-size: 26px;
+  z-index: 26;
+  animation: partyHatBob 0.8s infinite alternate ease-in-out;
+}
+@keyframes partyHatBob {
+  0% { transform: rotate(-8deg) scale(1); }
+  100% { transform: rotate(12deg) scale(1.15); }
+}
+.act-yaha-popper {
+  position: absolute;
+  top: 10px;
+  right: -10px;
+  font-size: 26px;
+  z-index: 25;
+  animation: popperPop 1.1s infinite ease-out;
+}
+@keyframes popperPop {
+  0% { transform: scale(0.8) rotate(-10deg); opacity: 0.8; }
+  50% { transform: scale(1.25) rotate(15deg); opacity: 1; }
+  100% { transform: scale(0.9) rotate(0deg); opacity: 0.8; }
+}
+.act-yaha-flag {
+  position: absolute;
+  bottom: 12px;
+  left: -14px;
+  font-size: 11px;
+  font-weight: 900;
+  color: #854D0E;
+  background: #FEF08A;
+  border: 1.5px solid #EAB308;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+  box-shadow: 0 2px 6px rgba(234, 179, 8, 0.3);
+  animation: flagWave 0.7s infinite alternate ease-in-out;
+}
+@keyframes flagWave {
+  0% { transform: rotate(-10deg) translateY(0); }
+  100% { transform: rotate(10deg) translateY(-4px); }
+}
+.act-yaha-sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 25;
+}
+.act-yaha-sparkles .y-spark {
+  position: absolute;
+  font-size: 14px;
+  animation: ySparkFloat 1.2s infinite ease-out;
+}
+.act-yaha-sparkles .ys1 { top: -10px; left: -4px; animation-delay: 0.1s; }
+.act-yaha-sparkles .ys2 { top: 0px; right: 8px; animation-delay: 0.5s; }
+.act-yaha-sparkles .ys3 { bottom: 20px; right: -8px; animation-delay: 0.8s; }
+@keyframes ySparkFloat {
+  0% { opacity: 0; transform: translateY(0) scale(0.6); }
+  50% { opacity: 1; transform: translateY(-12px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(-24px) scale(0.8); }
+}
+.act-yaha-tag {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #854D0E;
+  background: #FEF08A;
+  border: 1.5px solid #EAB308;
+  padding: 1px 8px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+  box-shadow: 0 2px 8px rgba(234, 179, 8, 0.35);
+}
+
+/* ============================================================
+   STATE: URA (🤩 超能充能模式)
+   ============================================================ */
+#usagi-bouncer.state-ura {
+  animation: none !important;
+}
+#usagi-bouncer.state-ura #usagi-actor-box {
+  animation: usagiUraHoverPower 0.9s ease-in-out infinite !important;
+}
+@keyframes usagiUraHoverPower {
+  0%, 100% { transform: translateY(-14px) rotate(-3deg) scale(1.08); }
+  50% { transform: translateY(-22px) rotate(3deg) scale(1.14); }
+}
+.act-ura-eyes {
+  position: absolute;
+  top: 24px;
+  left: 30px;
+  font-size: 26px;
+  z-index: 26;
+  animation: starEyesGlitter 0.5s infinite alternate ease-in-out;
+}
+@keyframes starEyesGlitter {
+  0% { transform: scale(0.95); filter: drop-shadow(0 0 2px #FACC15); }
+  100% { transform: scale(1.15); filter: drop-shadow(0 0 8px #FACC15); }
+}
+.act-ura-lightning {
+  position: absolute;
+  top: -14px;
+  left: -6px;
+  font-size: 26px;
+  z-index: 25;
+  animation: lightningZing 0.6s infinite ease-in-out;
+}
+@keyframes lightningZing {
+  0%, 100% { transform: scale(0.9) rotate(-15deg); opacity: 0.7; }
+  50% { transform: scale(1.25) rotate(15deg); opacity: 1; filter: drop-shadow(0 0 6px #FACC15); }
+}
+.act-ura-rocket {
+  position: absolute;
+  top: 8px;
+  right: -12px;
+  font-size: 26px;
+  z-index: 25;
+  animation: rocketBlast 0.8s infinite alternate ease-in-out;
+}
+@keyframes rocketBlast {
+  0% { transform: translateY(2px) rotate(-10deg); }
+  100% { transform: translateY(-8px) rotate(15deg); }
+}
+.act-ura-tag {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #1D4ED8;
+  background: #EFF6FF;
+  border: 1.5px solid #3B82F6;
+  padding: 1px 8px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+}
+
+/* ============================================================
+   STATE: HAPPY (🥰 甜美心动模式)
+   ============================================================ */
+#usagi-bouncer.state-happy {
+  animation: none !important;
+}
+#usagi-bouncer.state-happy #usagi-actor-box {
+  animation: usagiSweetBlushFloat 1.5s ease-in-out infinite !important;
+}
+@keyframes usagiSweetBlushFloat {
+  0%, 100% { transform: translateY(-8px) rotate(-6deg) scale(1.04); }
+  50% { transform: translateY(-16px) rotate(6deg) scale(1.08); }
+}
+.act-happy-face {
+  position: absolute;
+  top: 24px;
+  left: 32px;
+  font-size: 24px;
+  z-index: 26;
+  animation: happyFaceBlush 1.2s infinite ease-in-out;
+}
+@keyframes happyFaceBlush {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+.act-happy-hearts {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 25;
+}
+.act-happy-hearts .h-heart {
+  position: absolute;
+  font-size: 16px;
+  animation: happyHeartFloatUp 1.6s infinite ease-out;
+}
+.act-happy-hearts .hh1 { top: 0px; left: -6px; animation-delay: 0.1s; }
+.act-happy-hearts .hh2 { top: -14px; right: 10px; animation-delay: 0.5s; }
+.act-happy-hearts .hh3 { top: 12px; right: -8px; animation-delay: 0.9s; }
+@keyframes happyHeartFloatUp {
+  0% { opacity: 0; transform: translateY(0) scale(0.6); }
+  50% { opacity: 1; transform: translateY(-14px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(-28px) scale(0.8); }
+}
+.act-happy-tag {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #BE185D;
+  background: #FDF2F4;
+  border: 1.5px solid #F472B6;
+  padding: 1px 8px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+  box-shadow: 0 2px 8px rgba(244, 114, 182, 0.4);
+}
+
+/* ============================================================
+   STATE: MOOD (🎭 情绪晴雨表树洞模式)
+   ============================================================ */
+#usagi-bouncer.state-mood {
+  animation: none !important;
+}
+#usagi-bouncer.state-mood #usagi-actor-box {
+  animation: usagiMoodListenTilt 1.6s ease-in-out infinite !important;
+}
+@keyframes usagiMoodListenTilt {
+  0%, 100% { transform: translateY(-6px) rotate(-8deg) scale(1.05); }
+  50% { transform: translateY(-14px) rotate(8deg) scale(1.08); }
+}
+.act-mood-mask {
+  position: absolute;
+  top: -14px;
+  left: 18px;
+  font-size: 26px;
+  z-index: 26;
+  animation: maskFloatBob 1.6s infinite ease-in-out;
+}
+@keyframes maskFloatBob {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-5px) scale(1.15); }
+}
+.act-mood-mailbox {
+  position: absolute;
+  top: 12px;
+  right: -10px;
+  font-size: 24px;
+  z-index: 25;
+  animation: mailboxFlutter 1.4s infinite ease-in-out;
+}
+@keyframes mailboxFlutter {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.15) rotate(12deg); }
+}
+.act-mood-tag {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: #6B21A8;
+  background: #FAF5FF;
+  border: 1.5px solid #A855F7;
+  padding: 1px 8px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 26;
+  box-shadow: 0 2px 8px rgba(168, 85, 247, 0.35);
+}
+
+.usagi-yaha-party {
+  filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.95)) brightness(1.18) !important;
+}
+.usagi-ura-energy {
+  filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.95)) brightness(1.2) !important;
+}
+.usagi-mood-station {
+  filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.9)) brightness(1.15) !important;
 }
 
 /* State-Specific Dynamic Visual Halos for Usagi Image */
 .usagi-sleeping {
   filter: drop-shadow(0 0 16px rgba(129, 140, 248, 0.85)) brightness(0.92) !important;
 }
-
 .usagi-drinking {
   filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.9)) brightness(1.1) !important;
 }
-
 .usagi-period-care {
   filter: drop-shadow(0 0 18px rgba(244, 63, 94, 0.9)) brightness(1.1) !important;
 }
-
 .usagi-comforting {
   filter: drop-shadow(0 0 18px rgba(251, 146, 60, 0.85)) brightness(1.12) !important;
 }
-
+.usagi-calm {
+  filter: drop-shadow(0 0 18px rgba(52, 211, 153, 0.9)) brightness(1.08) !important;
+}
+.usagi-tired {
+  filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.85)) brightness(1.05) !important;
+}
+.usagi-emo {
+  filter: drop-shadow(0 0 18px rgba(244, 114, 182, 0.9)) brightness(1.08) !important;
+}
+.usagi-angry {
+  filter: drop-shadow(0 0 18px rgba(239, 68, 68, 0.85)) brightness(1.1) !important;
+}
+.usagi-calendar {
+  filter: drop-shadow(0 0 18px rgba(59, 130, 246, 0.85)) brightness(1.1) !important;
+}
+.usagi-habit {
+  filter: drop-shadow(0 0 18px rgba(236, 72, 153, 0.9)) brightness(1.12) !important;
+}
+.usagi-note {
+  filter: drop-shadow(0 0 18px rgba(234, 179, 8, 0.9)) brightness(1.15) !important;
+}
+.usagi-watchlist {
+  filter: drop-shadow(0 0 18px rgba(249, 115, 22, 0.85)) brightness(1.12) !important;
+}
+.usagi-music {
+  filter: drop-shadow(0 0 20px rgba(244, 63, 94, 0.95)) brightness(1.15) !important;
+}
 .usagi-game-cheering {
   filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.9)) brightness(1.18) !important;
 }
-
 .usagi-happy-dancing {
   filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.9)) brightness(1.18) !important;
 }
-
 .usagi-bookkeeping {
   filter: drop-shadow(0 0 18px rgba(245, 158, 11, 0.85)) brightness(1.12) !important;
 }
-
 .usagi-counting {
   filter: drop-shadow(0 0 18px rgba(244, 63, 94, 0.85)) brightness(1.12) !important;
 }
-
 .usagi-highlighting {
   filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.85)) brightness(1.18) !important;
 }
@@ -1646,6 +2572,147 @@ body {
 }
 .voucher-card::before { left: -10px; }
 .voucher-card::after { right: -10px; }
+
+/* ============================================================
+   MOBILE RESPONSIVE & HORIZONTAL TAB PILLS (专为手机端优化)
+   ============================================================ */
+.mobile-tab-pill {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid #FBCFE8;
+  color: #78350F;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.mobile-tab-pill:hover {
+  background: #FFF1F2;
+  border-color: #F472B6;
+}
+.mobile-tab-pill.active {
+  background: linear-gradient(135deg, #F43F5E 0%, #FB7185 100%) !important;
+  color: #FFFFFF !important;
+  border-color: #E11D48 !important;
+  box-shadow: 0 3px 10px rgba(244, 63, 94, 0.35) !important;
+  transform: scale(1.03);
+}
+
+/* ============================================================
+   Desktop Sidebar & Mobile Tab Bar (Strict Responsive Separation & Synchronized)
+   ============================================================ */
+.desktop-sidebar {
+  display: block !important;
+}
+.mobile-tab-bar {
+  display: none !important;
+}
+
+@media (max-width: 1023px) {
+  .desktop-sidebar {
+    display: none !important;
+  }
+  .mobile-tab-bar {
+    display: flex !important;
+  }
+  /* Mobile padding & card scale */
+  .glass-card {
+    padding: 1.15rem !important;
+    border-radius: 1.25rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Extra mobile optimization for phones */
+  .glass-card {
+    padding: 0.95rem !important;
+    border-radius: 1.15rem !important;
+  }
+
+  /* Mascot Actor & Image scaling on mobile */
+  #usagi-actor-box {
+    width: 5rem !important;
+    height: 6rem !important;
+  }
+  #usagi-mascot-img {
+    width: 5rem !important;
+    height: 6rem !important;
+  }
+
+  /* Speech Bubble mobile adaptation */
+  .speech-bubble {
+    max-width: min(320px, calc(100vw - 32px)) !important;
+    padding: 10px 14px !important;
+    font-size: 0.825rem !important;
+  }
+  .speech-bubble .speech-tag {
+    font-size: 0.7rem !important;
+  }
+  .speech-bubble .bubble-dock-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  /* Heatmap touch scroll */
+  #heatmap-grid {
+    min-width: 560px;
+  }
+}
+
+/* ============================================================
+   KAWAII YOUTUBE MINI CINEMA & FLOATING PIP WINDOW
+   ============================================================ */
+.youtube-cinema-card {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Floating PiP Window Mode */
+#youtube-cinema-box.youtube-floating-pip {
+  position: fixed !important;
+  bottom: 24px !important;
+  left: 24px !important;
+  width: 420px !important;
+  max-width: calc(100vw - 32px) !important;
+  z-index: 9998 !important;
+  margin: 0 !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  border: 3px solid #ec4899 !important;
+  border-radius: 24px !important;
+  box-shadow: 0 25px 60px -10px rgba(236, 72, 153, 0.4), 0 10px 25px -5px rgba(0, 0, 0, 0.25) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  animation: pipPopIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes pipPopIn {
+  from {
+    transform: scale(0.85) translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+#youtube-cinema-box.youtube-floating-pip.minimized {
+  width: 280px !important;
+}
+
+#youtube-cinema-box.youtube-floating-pip.minimized .youtube-pip-body {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  #youtube-cinema-box.youtube-floating-pip {
+    left: 10px !important;
+    bottom: 84px !important; /* clear of mobile bottom bar / usagi */
+    width: calc(100vw - 20px) !important;
+  }
+}
+
+
 
 
 

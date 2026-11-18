@@ -77,6 +77,131 @@ const UsagiPetManager = (function () {
         "不管别人怎么说，在男朋友和乌萨奇眼里，芷萱永远是最好、最值得被疼爱的小女孩！👑🌸"
       ]
     },
+    love_hug: {
+      propIcon: '💖',
+      propSub: '抱紧紧',
+      imgClass: 'usagi-comforting',
+      sound: 'yaha',
+      tag: '💖 隔空超大拥抱',
+      quotes: [
+        "收到芷萱的超强思念电波！两座城市的风把男朋友最紧最暖的拥抱送来啦！抱紧紧不撒手~ 💖🧸",
+        "两座城市的风都在替他紧紧拥抱你~ 男朋友今天超想超想芷萱！快把头埋在乌萨奇怀里蹭蹭，不委屈哦！💖💌",
+        "隔空抱抱已送达！男朋友的爱意像热可可一样把你包裹得严严实实，芷萱今天也是被全力偏爱的小仙女！✨🥰",
+        "叮！隔空拥抱已光速送达！男朋友正在千里之外紧紧抱住芷萱 10 秒钟~ 永远心疼你！🤗💕"
+      ]
+    },
+    calm: {
+      propIcon: '🍃',
+      propSub: '🍵 惬意',
+      imgClass: 'usagi-calm',
+      sound: 'sparkle',
+      tag: '🍃 惬意放空时光',
+      quotes: [
+        "享受安静也是一种浪漫~ 乌萨奇泡了一杯茉莉绿茶，和芷萱一起静静享受美好的午后 🍵🍃",
+        "平淡安静的小日子最让人安心啦！芷萱靠在窗边吹吹微风，乌萨奇在脚边乖乖陪着你~ ☁️🌸",
+        "世界太喧闹，乌萨奇只想陪着芷萱安安静静发呆~ 无论今天做了什么，你都是最棒的小仙女！✨🌿",
+        "静下心来听听微风的声音~ 乌萨奇陪在芷萱身边，感受属于此刻的温柔与放松 🍃☕"
+      ]
+    },
+    tired: {
+      propIcon: '☕',
+      propSub: '💆 捏肩',
+      imgClass: 'usagi-tired',
+      sound: 'sparkle',
+      tag: '💆 乌萨奇捏肩小铺',
+      quotes: [
+        "芷萱辛苦啦！乌萨奇的小肉爪正在给你揉揉肩膀、按按太阳穴~ 赶紧靠在男友和乌萨奇怀里歇一会儿吧！💆☕",
+        "累了就彻底放空，今天芷萱已经超额完成全部努力啦！不准再给自己压力，闭上眼深呼吸~ 呼~ 🍃💤",
+        "乌萨奇端来一杯暖暖的热可可，芷萱喝一口，把疲惫统统融化掉！今晚不准加班，早点窝进被窝！☕🛌",
+        "无论工作还是生活，身体最重要！男朋友嘱咐过：芷萱累了随时可以撒娇偷懒，我们宠着你！🌸🥰"
+      ]
+    },
+    emo: {
+      propIcon: '🧻',
+      propSub: '💖 抱抱',
+      imgClass: 'usagi-emo',
+      sound: 'sparkle',
+      tag: '🥺 乌萨奇擦泪抱抱',
+      quotes: [
+        "芷萱不哭不哭~ 乌萨奇拿着软软的小手帕帮你擦眼泪！把委屈都哭出来，有男朋友和乌萨奇在，永远偏心你！🧻🧸",
+        "难过的时候不要憋在心里，乌萨奇的小肚肚借芷萱靠着蹭眼泪！全世界最心疼你的男孩子正在飞奔来抱你！💖🥺",
+        "就算全世界下雨，男朋友也会为你撑起一整片晴空！芷萱吃块糖，乌萨奇给你变出小彩虹！🍬🌈",
+        "抱紧紧！任何坏情绪都是暂时的，芷萱依然是宇宙第一可爱的小仙女！乌萨奇寸步不离守着你！🌸💖"
+      ]
+    },
+    angry: {
+      propIcon: '🪭',
+      propSub: '🍰 消气',
+      imgClass: 'usagi-angry',
+      sound: 'yaha',
+      tag: '🪭 乌萨奇灭火扇风队',
+      quotes: [
+        "是谁惹我们芷萱大宝贝生气啦？！乌萨奇呼哧呼哧拿小扇子把火气统统扇飞！扇走所有大坏蛋！🪭💨",
+        "不气不气，气坏身体不划算！乌萨奇给你一拳把烦恼打到外太空！来，咬一口超甜的草莓小蛋糕！🍰🥊",
+        "芷萱不气哦！男朋友说谁惹芷萱不开心，他就去给芷萱出气！小兔子给你顺顺毛，呼噜噜呼噜噜~ 🐰💖",
+        "深呼吸~ 吸气~ 呼气~ 坏情绪全被吹跑啦！芷萱笑起来的样子比蜜糖还甜呢！呀哈！💨🍓"
+      ]
+    },
+    calendar: {
+      propIcon: '📅',
+      propSub: '💮 盖章',
+      imgClass: 'usagi-calendar',
+      sound: 'sparkle',
+      tag: '📅 乌萨奇生活日历小管家',
+      quotes: [
+        "翻翻日历~ 每一天都是和芷萱共同走过的闪亮印记！乌萨奇在今天盖上一朵小红花！💮📅",
+        "日程安排得井井有条，芷萱是最棒的生活记录家！乌萨奇帮你把好日子统统圈起来！✨🗓️",
+        "日历翻过每一页，都在见证芷萱的成长与幸福！未来还有好多好多甜甜的约会等着我们！💖✈️"
+      ]
+    },
+    habit: {
+      propIcon: '📋',
+      propSub: '🏅 优秀',
+      imgClass: 'usagi-habit',
+      sound: 'coin',
+      tag: '🌸 自律小达人打卡站',
+      quotes: [
+        "叮！自律小达人芷萱又打卡成功啦！乌萨奇拿着小印章盖上『优秀』！自律的花朵在盛开哦！🌸✅",
+        "哇！热力图又添了一颗粉粉的小樱花！坚持的芷萱最闪闪发光，乌萨奇给你颁发特大金牌！🏅💖",
+        "每天进步一点点，芷萱自律的样子特别迷人！乌萨奇双手给你比大大的赞！👍🌟"
+      ]
+    },
+    note: {
+      propIcon: '💡',
+      propSub: '📜 灵感',
+      imgClass: 'usagi-note',
+      sound: 'sparkle',
+      tag: '💡 乌萨奇灵感收集屋',
+      quotes: [
+        "叮！灵感小灯泡亮起来啦！芷萱的脑瓜里总装着天马行空的奇思妙想，乌萨奇用羽毛笔赶紧记下！💡📜",
+        "灵感就像小流星，咻的一下被芷萱抓在手心里啦！好聪明的芷萱，记录下来永远不忘！🪶✨",
+        "随手记录的小灵感，都是生活送给芷萱的礼物！乌萨奇帮芷萱把秘密花园打理得漂漂亮亮！🌱💎"
+      ]
+    },
+    watchlist: {
+      propIcon: '🍿',
+      propSub: '🎬 放映',
+      imgClass: 'usagi-watchlist',
+      sound: 'sparkle',
+      tag: '🎬 乌萨奇放映室与种草官',
+      quotes: [
+        "咔哒！乌萨奇戴上3D眼镜捧好大桶爆米花啦！芷萱今天想看什么甜甜的电影呀？乌萨奇陪你一起看！🍿🎬",
+        "冷静期清单帮你守住小钱包~ 好书好剧慢慢品味，和芷萱一起享受悠闲的时光！🕶️📚",
+        "探店吃美食、打卡好电影，把每一个心愿都列上清单，等男朋友带芷萱一个个去实现！🎟️🍰"
+      ]
+    },
+    music: {
+      propIcon: '🎧',
+      propSub: '🎶 摇摆',
+      imgClass: 'usagi-music',
+      sound: 'yaha',
+      tag: '🎧 乌萨奇甜甜点歌台',
+      quotes: [
+        "哇！乌萨奇戴上粉色猫耳耳机啦！身体跟着节拍摇摆~ 每一首歌都是男朋友送给芷萱的心动旋律！🎧🎶",
+        "戴上耳机，把全世界的喧嚣隔绝在外，只留下动听的旋律和甜甜的心情陪着芷萱！🎵🐰",
+        "音乐一响，烦恼全忘！呀哈！乌萨奇和芷萱一起当音乐电台的超级大明星！📻✨"
+      ]
+    },
     game_cheer: {
       propIcon: '🎉',
       propSub: '👑 棒!',
@@ -90,17 +215,55 @@ const UsagiPetManager = (function () {
         "打得太漂亮啦！坏情绪全都被敲碎了，芷萱笑起来的样子最可爱啦！呀哈！🔨💖"
       ]
     },
-    happy: {
-      propIcon: '🌈',
-      propSub: '🌸 呀哈',
-      imgClass: 'usagi-happy-dancing',
+    yaha: {
+      propIcon: '🥳',
+      propSub: '🎉 呀哈狂欢',
+      imgClass: 'usagi-yaha-party',
       sound: 'yaha',
-      tag: '🥳 跟着芷萱一起开心',
+      tag: '🥳 狂欢派对！呀哈！',
       quotes: [
-        "哇！芷萱开心乌萨奇也跟着超级超级开心！今天的好运直接翻倍翻倍再翻倍！呀哈！🌈🎉",
-        "看到芷萱这么开心，男朋友的心情也晴空万里啦！快乐会传染，今天也是元气满满的幸运日！☀️🌸",
-        "开心就蹦蹦跳跳！乌萨奇陪芷萱一起欢呼：呀哈！今天芷萱是世界上最快乐的女孩！🐰✨",
+        "呀哈！呀哈！狂欢派对开启！芷萱今天能量大爆发，乌萨奇疯狂摇旗放彩带！🥳🎉",
+        "呀哈！世界第一元气美少女颜芷萱闪亮登场！好运直接翻倍翻倍再翻倍！呀哈！🐰💥",
+        "呀哈！今天芷萱开心得像踩着棉花糖！乌萨奇原地托马斯回旋大欢呼！呀哈！🌈✨",
+        "开心就放声欢呼！乌萨奇陪芷萱一起大喊：呀哈——！今天我们是最幸运的人！🎉🐰"
+      ]
+    },
+    ura: {
+      propIcon: '🤩',
+      propSub: '⚡️ 活力充能',
+      imgClass: 'usagi-ura-energy',
+      sound: 'fanfare',
+      tag: '🤩 超能充能站 · 乌拉！',
+      quotes: [
+        "乌拉！芷萱今天电量 1000%！星星眼闪耀全场，整个人都在发光发亮！🤩⚡️",
+        "好强的元气能量波！芷萱今天做什么都顺风顺水，乌萨奇也被充满电啦！✨🚀",
+        "动力拉满！冲冲冲！今天的芷萱无所不能，乌萨奇为你高举胜利小旗帜！🚩🌟",
+        "眼神里闪着星星的小仙女来啦！乌拉乌拉！今天的所有困难统统退散！💫🤩"
+      ]
+    },
+    happy: {
+      propIcon: '🥰',
+      propSub: '💖 甜美心动',
+      imgClass: 'usagi-happy-dancing',
+      sound: 'sparkle',
+      tag: '🥰 乌萨奇甜甜爱心波',
+      quotes: [
+        "看到芷萱甜甜的笑脸，乌萨奇整只兔子都被融化啦！好甜好甜的心情，抱抱~ 🥰💖",
+        "芷萱一开心，全宇宙的小花都开好啦！男朋友也隔空收到了你甜甜的爱意~ 🌸✨",
+        "今天也是被蜜糖包裹的一天！芷萱笑起来的样子全世界最好看，多笑一笑哦！🍓💕",
         "生活中的每一个小确幸，都因为芷萱的笑容变得闪闪发光！耶！💖✨"
+      ]
+    },
+    mood: {
+      propIcon: '🎭',
+      propSub: '心情晴雨表',
+      imgClass: 'usagi-mood-station',
+      sound: 'sparkle',
+      tag: '🎭 乌萨奇心情晴雨表',
+      quotes: [
+        "今天芷萱的心情是晴天、多云还是微风呀？快选一个心情告诉乌萨奇，乌萨奇随时做你的贴心树洞！🎭💖",
+        "不管是开心的呀哈、还是小小的委屈，乌萨奇都在这里认真倾听芷萱的每一个心声哦！🌸✨",
+        "记录情绪和身体规律，是为了更好地宠爱自己！芷萱只管做最真实的自己，我们永远爱你！🐰💕"
       ]
     },
     expense: {
@@ -130,15 +293,15 @@ const UsagiPetManager = (function () {
       ]
     },
     highlight: {
-      propIcon: '📖',
-      propSub: '⭐ 记录',
+      propIcon: '⭐',
+      propSub: '🫙 存瓶',
       imgClass: 'usagi-highlighting',
       sound: 'sparkle',
-      tag: '✨ 灵感与高光见证官',
+      tag: '🪄 乌萨奇每日高光瓶',
       quotes: [
-        "哇！芷萱把今天闪闪发光的小美好都记下来啦！生活中的甜都被芷萱珍藏在手账里了呢~ 📖🌸",
-        "有灵感的女孩最迷人！芷萱写下的每一个字，都在让平凡的日子变得浪漫而有意义！💡✨",
-        "又收集到了一颗生活的高光小星星！芷萱要一直一直这么用心热爱生活哦！⭐💎",
+        "哇！芷萱今天又收集到了一颗闪闪发光的高光小星星！乌萨奇挥起魔法棒帮你装进许愿瓶存好！⭐🫙",
+        "生活中的每一个小确幸都值得被感恩珍藏！芷萱眼里的光芒，比天上的星星还要耀眼呢！🪄🌸",
+        "睡前记下一件好事，今晚的梦境就会全是甜甜的草莓味！乌萨奇最喜欢听芷萱讲开心事啦！🍓✨",
         "手账里的点点滴滴，都是芷萱认真爱生活的证明，超级珍贵，乌萨奇好喜欢！📖💖"
       ]
     }
@@ -179,8 +342,22 @@ const UsagiPetManager = (function () {
     // Start movement loop
     startLoop();
 
+    // Check saved minimize state
+    try {
+      const savedMin = localStorage.getItem('usagi_pet_minimized');
+      if (savedMin === 'true') {
+        toggleMinimize(true);
+      }
+    } catch (e) {}
+
     // Welcome speech or URL-triggered state test
     const urlParams = new URLSearchParams(window.location.search);
+    const testMin = urlParams.get('test_min');
+    if (testMin === '1') {
+      setTimeout(() => {
+        toggleMinimize(true);
+      }, 400);
+    }
     const testAct = urlParams.get('test_act');
     if (testAct) {
       setTimeout(() => {
@@ -254,6 +431,12 @@ const UsagiPetManager = (function () {
     const bubble = document.getElementById('usagi-speech-bubble');
     if (!container) return;
 
+    if (isMinimized) {
+      container.style.left = 'auto';
+      container.style.right = (window.innerWidth < 768) ? '12px' : '24px';
+      return;
+    }
+
     const screenW = window.innerWidth || 1024;
     const minX = 20;
     const maxX = Math.max(minX + 40, screenW - 240);
@@ -318,18 +501,59 @@ const UsagiPetManager = (function () {
     if (window.UsagiSound) UsagiSound.pop();
   }
 
-  function toggleMinimize() {
+  function toggleMinimize(forceState = null) {
     const container = document.getElementById('usagi-mascot-container');
     if (!container) return;
 
-    isMinimized = !isMinimized;
-    container.classList.toggle('minimized', isMinimized);
-
-    const icon = document.getElementById('pet-min-icon');
-    if (icon) {
-      icon.innerText = isMinimized ? '🐰' : '✕';
+    if (forceState !== null) {
+      isMinimized = !!forceState;
+    } else {
+      isMinimized = !isMinimized;
     }
-    if (window.UsagiSound) UsagiSound.pop();
+
+    container.classList.toggle('minimized', isMinimized);
+    if (isMinimized) {
+      container.style.left = 'auto';
+      container.style.right = window.innerWidth < 768 ? '12px' : '24px';
+    } else {
+      updatePositionStyle();
+    }
+    try {
+      localStorage.setItem('usagi_pet_minimized', isMinimized ? 'true' : 'false');
+    } catch (e) {}
+
+    // Update Header Button UI
+    const headerBtn = document.getElementById('btn-pet-toggle-header');
+    const headerText = document.getElementById('header-pet-toggle-text');
+    if (headerText) {
+      headerText.innerText = isMinimized ? '召唤乌萨奇' : '收起乌萨奇';
+    }
+    if (headerBtn) {
+      if (isMinimized) {
+        headerBtn.classList.add('bg-pink-100', 'border-pink-300', 'text-pink-700');
+        headerBtn.classList.remove('bg-amber-50', 'border-amber-300', 'text-amber-800');
+        headerBtn.setAttribute('title', '点击召唤乌萨奇陪伴助手 ✨');
+      } else {
+        headerBtn.classList.remove('bg-pink-100', 'border-pink-300', 'text-pink-700');
+        headerBtn.classList.add('bg-amber-50', 'border-amber-300', 'text-amber-800');
+        headerBtn.setAttribute('title', '点击收起乌萨奇助手');
+      }
+    }
+
+    // Update Dock Close Icon
+    const minIcon = document.getElementById('pet-min-icon');
+    if (minIcon) {
+      minIcon.innerText = isMinimized ? '🐰' : '✕';
+    }
+
+    if (isMinimized) {
+      if (window.UsagiSound) UsagiSound.pop();
+    } else {
+      // Waking up / expanding
+      if (window.UsagiSound) UsagiSound.yaha();
+      if (typeof confettiRain === 'function') confettiRain(20);
+      speak('✨ 乌萨奇来啦', '呀哈！芷萱召唤乌萨奇啦~ 我会一直乖乖陪着你哦！💖🐰');
+    }
   }
 
   function updateDockUI() {
@@ -422,8 +646,12 @@ const UsagiPetManager = (function () {
     if (bouncer) {
       const allBouncerStates = [
         'state-sleep', 'state-water', 'state-period',
-        'state-comfort', 'state-game_cheer', 'state-happy',
-        'state-expense', 'state-countdown', 'state-highlight'
+        'state-comfort', 'state-tired', 'state-emo', 'state-angry',
+        'state-calendar', 'state-habit', 'state-note', 'state-highlight',
+        'state-watchlist', 'state-music',
+        'state-game_cheer', 'state-happy', 'state-yaha', 'state-ura', 'state-mood',
+        'state-expense', 'state-countdown',
+        'state-love_hug', 'state-calm'
       ];
       allBouncerStates.forEach(cls => bouncer.classList.remove(cls));
       bouncer.classList.add(`state-${stateName}`);
@@ -448,8 +676,12 @@ const UsagiPetManager = (function () {
     if (mascotImg) {
       const allStateClasses = [
         'usagi-sleeping', 'usagi-drinking', 'usagi-period-care',
-        'usagi-comforting', 'usagi-game-cheering', 'usagi-happy-dancing',
-        'usagi-bookkeeping', 'usagi-counting', 'usagi-highlighting'
+        'usagi-comforting', 'usagi-tired', 'usagi-emo', 'usagi-angry',
+        'usagi-calendar', 'usagi-habit', 'usagi-note', 'usagi-highlighting',
+        'usagi-watchlist', 'usagi-music',
+        'usagi-game-cheering', 'usagi-happy-dancing',
+        'usagi-yaha-party', 'usagi-ura-energy', 'usagi-mood-station',
+        'usagi-bookkeeping', 'usagi-counting', 'usagi-calm'
       ];
       allStateClasses.forEach(cls => mascotImg.classList.remove(cls));
       if (config.imgClass) mascotImg.classList.add(config.imgClass);
@@ -476,7 +708,7 @@ const UsagiPetManager = (function () {
     pauseWaddle(4000);
 
     // Visual particles
-    if (['happy', 'game_cheer', 'comfort', 'period'].includes(stateName)) {
+    if (['happy', 'yaha', 'ura', 'mood', 'game_cheer', 'comfort', 'period', 'habit', 'calendar', 'music', 'highlight'].includes(stateName)) {
       if (typeof confetti === 'function') {
         confetti({ particleCount: 30, spread: 65, origin: { y: 0.82 } });
       }
@@ -503,8 +735,12 @@ const UsagiPetManager = (function () {
     if (bouncer) {
       const allBouncerStates = [
         'state-sleep', 'state-water', 'state-period',
-        'state-comfort', 'state-game_cheer', 'state-happy',
-        'state-expense', 'state-countdown', 'state-highlight'
+        'state-comfort', 'state-tired', 'state-emo', 'state-angry',
+        'state-calendar', 'state-habit', 'state-note', 'state-highlight',
+        'state-watchlist', 'state-music',
+        'state-game_cheer', 'state-happy', 'state-yaha', 'state-ura', 'state-mood',
+        'state-expense', 'state-countdown',
+        'state-love_hug', 'state-calm'
       ];
       allBouncerStates.forEach(cls => bouncer.classList.remove(cls));
     }
@@ -516,8 +752,12 @@ const UsagiPetManager = (function () {
     if (mascotImg) {
       const allStateClasses = [
         'usagi-sleeping', 'usagi-drinking', 'usagi-period-care',
-        'usagi-comforting', 'usagi-game-cheering', 'usagi-happy-dancing',
-        'usagi-bookkeeping', 'usagi-counting', 'usagi-highlighting'
+        'usagi-comforting', 'usagi-tired', 'usagi-emo', 'usagi-angry',
+        'usagi-calendar', 'usagi-habit', 'usagi-note', 'usagi-highlighting',
+        'usagi-watchlist', 'usagi-music',
+        'usagi-game-cheering', 'usagi-happy-dancing',
+        'usagi-yaha-party', 'usagi-ura-energy', 'usagi-mood-station',
+        'usagi-bookkeeping', 'usagi-counting', 'usagi-calm'
       ];
       allStateClasses.forEach(cls => mascotImg.classList.remove(cls));
     }
@@ -539,18 +779,46 @@ const UsagiPetManager = (function () {
       setState('water', data);
     } else if (event === 'period') {
       setState('period', data);
-    } else if (['sad', 'emo', 'angry', 'stress', 'comfort'].includes(event)) {
+    } else if (event === 'love_hug') {
+      setState('love_hug', data);
+    } else if (['calm', 'peaceful'].includes(event)) {
+      setState('calm', data);
+    } else if (['tired', 'exhausted'].includes(event)) {
+      setState('tired', data);
+    } else if (['emo', 'sad', 'cry'].includes(event)) {
+      setState('emo', data);
+    } else if (['angry', 'stress', 'furious'].includes(event)) {
+      setState('angry', data);
+    } else if (event === 'comfort') {
       setState('comfort', data);
-    } else if (['happy', 'yaha', 'ura'].includes(event)) {
+    } else if (event === 'calendar') {
+      setState('calendar', data);
+    } else if (['habit', 'habits'].includes(event)) {
+      setState('habit', data);
+    } else if (['note', 'notes'].includes(event)) {
+      setState('note', data);
+    } else if (['highlight', 'highlights'].includes(event)) {
+      setState('highlight', data);
+    } else if (['watchlist', 'movie', 'shop'].includes(event)) {
+      setState('watchlist', data);
+    } else if (['music', 'song'].includes(event)) {
+      setState('music', data);
+    } else if (event === 'yaha') {
+      setState('yaha', data);
+    } else if (event === 'ura') {
+      setState('ura', data);
+    } else if (event === 'happy') {
       setState('happy', data);
+    } else if (['mood', 'moods'].includes(event)) {
+      setState('mood', data);
     } else if (['game', 'game_cheer'].includes(event)) {
       setState('game_cheer', data);
     } else if (event === 'expense') {
       setState('expense', data);
     } else if (event === 'countdown') {
       setState('countdown', data);
-    } else if (['note', 'highlight'].includes(event)) {
-      setState('highlight', data);
+    } else {
+      if (STATE_CONFIGS[event]) setState(event, data);
     }
   }
 
@@ -570,6 +838,9 @@ const UsagiPetManager = (function () {
     init,
     toggleRoam,
     toggleMinimize,
+    expand: () => toggleMinimize(false),
+    minimize: () => toggleMinimize(true),
+    isMinimized: () => isMinimized,
     triggerCategory,
     setState,
     clearState,
@@ -1693,4 +1964,20 @@ document.addEventListener('DOMContentLoaded', () => {
   WoodenFishGame.init();
   GachaGame.init();
   WhackGame.init();
+
+  // URL support for test/direct mascot state triggering
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const petAction = urlParams.get('pet_action');
+    if (petAction) {
+      setTimeout(() => {
+        UsagiPetManager.reactTo(petAction);
+      }, 500);
+    }
+    if (urlParams.get('test_min') === '1') {
+      setTimeout(() => {
+        UsagiPetManager.minimize();
+      }, 400);
+    }
+  } catch (e) {}
 });

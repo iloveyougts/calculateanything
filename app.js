@@ -17,12 +17,8 @@ function getLocalDateStr(dateObj) {
   return `${year}-${month}-${day}`;
 }
 
-// Default Template Data for Fresh Users
+// Default Template Data for Fresh Users (Clean & Pristine: Zero Fake Data, Real Records Only)
 function getDefaultUserData(username) {
-  const today = getLocalDateStr();
-  const yesterday = getLocalDateStr(Date.now() - 86400000);
-  const twoDaysAgo = getLocalDateStr(Date.now() - 86400000 * 2);
-
   return {
     profile: {
       username: username || 'gts',
@@ -30,104 +26,41 @@ function getDefaultUserData(username) {
       motto: '呀哈！芷萱今天也要开开心心、元气满满！💖',
       avatar: 'usagi_character.png'
     },
+    countdowns: [
+      { id: 'c_together', title: '💑 我们在一起的日子 (2026-09-05)', targetDate: '2026-09-05', category: '纪念日', icon: '❤️' },
+      { id: 'c_anniversary', title: '💖 恋爱一周年纪念日', targetDate: '2027-09-05', category: '纪念日', icon: '💑' },
+      { id: 'c_birthday', title: '🎂 芷萱小仙女生日 (11月6日)', targetDate: '2027-11-06', category: '生日', icon: '🎂' }
+    ],
     period: {
       cycleLength: 28,
       duration: 5,
-      records: [
-        { startDate: twoDaysAgo, endDate: today, flow: 'moderate', pain: 'mild', notes: '肚子稍微有点胀，多喝温水，暖宝宝贴贴~ 🌸' }
-      ]
+      records: []
     },
     expenses: {
       budget: 3500,
-      records: [
-        { id: 'exp_1', date: today, type: 'expense', category: '餐饮美食', amount: 28.5, note: '草莓厚乳拿铁 + 可颂 🥐' },
-        { id: 'exp_2', date: today, type: 'expense', category: '日用百货', amount: 15.0, note: '乌萨奇主题手账贴纸 🐰' },
-        { id: 'exp_3', date: yesterday, type: 'expense', category: '餐饮美食', amount: 48.0, note: '暖胃热汤拉面' },
-        { id: 'exp_4', date: twoDaysAgo, type: 'income', category: '兼职外快', amount: 300.0, note: '兼职小奖励' },
-        { id: 'exp_5', date: '2026-10-25', type: 'expense', category: '美妆护肤', amount: 138.0, note: '保湿润唇膏与护手霜 ✨' },
-        { id: 'exp_6', date: '2026-10-12', type: 'expense', category: '休闲娱乐', amount: 45.0, note: '剧场版电影票' }
-      ]
+      records: []
     },
     health: {
       waterTarget: 4, // 4 glasses = 2000ml (500ml/glass)
       waterPerCup: 500, // 500ml per drink
-      waterLogs: { [today]: 2, [yesterday]: 4, [twoDaysAgo]: 3 },
-      sleepLogs: [
-        { date: today, sleepTime: '23:30', wakeTime: '07:30', hours: 8.0, quality: 'great', note: '睡得很香甜，做了一个甜甜的梦 😴' },
-        { date: yesterday, sleepTime: '00:15', wakeTime: '07:45', hours: 7.5, quality: 'good', note: '稍微有点晚睡，今天要早点休息' }
-      ],
-      weightLogs: [
-        { date: twoDaysAgo, weight: 48.5, exerciseType: '瑜伽拉伸', duration: 30 },
-        { date: yesterday, weight: 48.3, exerciseType: '慢跑散步', duration: 25 },
-        { date: today, weight: 48.2, exerciseType: '散步散心', duration: 35 }
-      ]
+      waterLogs: {},
+      sleepLogs: [],
+      weightLogs: []
     },
-    moods: [
-      {
-        id: 'mood_1',
-        date: today,
-        mood: 'yaha',
-        symptoms: ['精力充沛', '心情超好'],
-        note: '今天收到了男朋友为我专属定制的乌萨奇生活手账，太惊喜太开心啦！乌萨奇大胜利！🐰💖'
-      },
-      {
-        id: 'mood_2',
-        date: yesterday,
-        mood: 'calm',
-        symptoms: ['轻微腹痛'],
-        note: '经期第一天，放慢节奏，喝了暖暖的红糖水，窝在沙发看乌萨奇~'
-      }
-    ],
+    moods: [],
     habits: [
-      { id: 'h_1', name: '晨起喝一杯温开水 💧', icon: '💧', history: { [today]: true, [yesterday]: true, [twoDaysAgo]: true } },
-      { id: 'h_2', name: '早晚护肤 & 润唇做精致仙女 ✨', icon: '✨', history: { [today]: true, [yesterday]: true } },
-      { id: 'h_3', name: '睡前跟男朋友互道晚安 💕', icon: '💑', history: { [today]: true, [yesterday]: true, [twoDaysAgo]: true } },
-      { id: 'h_4', name: '每天喝足 2000ml 温水 (4大杯)', icon: '🥤', history: { [today]: true, [yesterday]: true } },
-      { id: 'h_5', name: '看一集乌萨奇开心一下 🐰', icon: '🥕', history: { [today]: true, [yesterday]: true } }
+      { id: 'h_1', name: '晨起喝一杯温开水 💧', icon: '💧', history: {} },
+      { id: 'h_2', name: '早晚护肤 & 润唇做精致仙女 ✨', icon: '✨', history: {} },
+      { id: 'h_3', name: '睡前跟男朋友互道晚安 💖', icon: '💑', history: {} },
+      { id: 'h_4', name: '每天喝足 2000ml 温水 (4大杯)', icon: '🥛', history: {} },
+      { id: 'h_5', name: '看一集乌萨奇开心一下 🐰', icon: '🥕', history: {} }
     ],
-    notes: [
-      {
-        id: 'n_1',
-        title: '💌 男朋友的专属悄悄话',
-        content: '“芷萱宝贝，这是专门为你定制的乌萨奇生活手账！希望你每天都开开心心、健健康康。累了随时拍拍乌萨奇，任何时候我都在你身边爱你哦~ 💖”',
-        tag: '甜蜜',
-        pinned: true,
-        date: today
-      },
-      {
-        id: 'n_2',
-        title: '📖 芷萱的治愈小金句',
-        content: '“生活不需要轰轰烈烈，能够按时吃饭、好好睡觉、被温柔爱着，就已经是最棒的幸福啦。”',
-        tag: '金句',
-        pinned: false,
-        date: yesterday
-      }
-    ],
-    todos: [
-      { id: 't_1', text: '喝足今日 4 大杯温水 (2000ml) 💧', priority: 'high', category: '健康', completed: false, dueDate: today },
-      { id: 't_2', text: '今晚 11 点前早点睡，做个漂亮仙女 🌙', priority: 'medium', category: '生活', completed: false, dueDate: today },
-      { id: 't_3', text: '给男朋友发一个可爱的乌萨奇表情包 🐰', priority: 'low', category: '恋爱', completed: true, dueDate: today }
-    ],
-    countdowns: [
-      { id: 'c_1', title: '💖 恋爱甜蜜纪念日', targetDate: getFutureDate(15), category: '纪念日', icon: '💑' },
-      { id: 'c_2', title: '🎂 芷萱小仙女生日', targetDate: getFutureDate(45), category: '生日', icon: '🎂' },
-      { id: 'c_3', title: '🎡 我们的下一次旅行约会', targetDate: getFutureDate(30), category: '旅行', icon: '✈️' }
-    ],
-    watchlist: [
-      { id: 'w_1', title: '吉伊卡哇 Chiikawa 大电影与乌萨奇周边 🐰', type: 'movie', rating: 5, status: 'wish', notes: '必须拉上男朋友一起去电影院看！' },
-      { id: 'w_2', title: '浪漫日式舒芙蕾草莓松饼店 🍓', type: 'food', rating: 5, status: 'wish', notes: '周末和男朋友去打卡，拍照超级出片' },
-      { id: 'w_3', title: '乌萨奇正版毛绒大玩偶 🥕', type: 'cooling_shop', price: 129, coolingDaysLeft: 2, status: 'cooling', notes: '软乎乎超好rua，放在床头陪睡' }
-    ],
-    highlights: [
-      { id: 'hl_1', date: today, text: '今天男朋友送了我这个独一无二的专属乌萨奇手账，太感动太甜啦！幸福感拉满！🥰', gratitude: '感谢用心爱我的男朋友~ 💖' },
-      { id: 'hl_2', date: yesterday, text: '喝到了超级好喝的草莓奶盖，晚上天空是粉紫色的晚霞 ✨', gratitude: '感谢生活中的每一个小美好！' }
-    ],
-    calendarEvents: [
-      { id: 'ev_1', date: today, title: '芷萱乌萨奇专属手账启用 💖', category: '生活', time: '10:00', content: '收到男朋友精心制作的生活手账，以后认真记录每一天的快乐！', color: 'pink', completed: true },
-      { id: 'ev_2', date: today, title: '喝足 4 大杯水 (2000ml) 💧', category: '健康', time: '14:30', content: '每天 4 杯 500ml，多喝温水皮肤好好！', color: 'blue', completed: false },
-      { id: 'ev_3', date: yesterday, title: '和男朋友通电话互道晚安 🌙', category: '恋爱', time: '22:30', content: '聊了今天发生的开心情报，做个好梦~', color: 'purple', completed: true },
-      { id: 'ev_4', date: getFutureDate(3), title: '甜蜜约会与下午茶 🍓', category: '约会', time: '15:00', content: '去吃草莓可丽饼，拍美美的照片！', color: 'amber', completed: false }
-    ]
+    calendarEvents: [],
+    notes: [],
+    todos: [],
+    watchlist: [],
+    highlights: [],
+    loveLogs: {}
   };
 }
 
@@ -235,7 +168,7 @@ window.USAGI_APP = {
   },
 
   // User Auth System - 增强容错，确保永不锁死
-  initAuth: function () {
+  initAuth: async function () {
     try {
       this.cloud.init();
       const session = localStorage.getItem(SESSION_KEY);
@@ -243,12 +176,12 @@ window.USAGI_APP = {
 
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('autologin') === '1' && (!session || !users[session])) {
-        this.guestLogin();
+        await this.guestLogin();
         return;
       }
 
       if (session && users && users[session]) {
-        this.loginUser(session);
+        await this.loginUser(session);
       } else {
         this.showAuthModal(true);
       }
@@ -343,7 +276,7 @@ window.USAGI_APP = {
           };
           this.saveUsers(users);
           localStorage.setItem(getUserDataKey(username), JSON.stringify(cloudRecord.data));
-          this.loginUser(username);
+          await this.loginUser(username);
           UsagiSound.yaha();
           return true;
         }
@@ -365,12 +298,12 @@ window.USAGI_APP = {
       alert("密码不对哦，再仔细检查一下~ 🐰");
       return false;
     }
-    this.loginUser(username);
+    await this.loginUser(username);
     UsagiSound.yaha();
     return true;
   },
 
-  guestLogin: function () {
+  guestLogin: async function () {
     const demoUser = 'gts';
     const users = this.getUsers();
     if (!users[demoUser]) {
@@ -382,7 +315,7 @@ window.USAGI_APP = {
       };
       this.saveUsers(users);
     }
-    this.loginUser(demoUser);
+    await this.loginUser(demoUser);
     UsagiSound.yaha();
     confettiRain();
   },
@@ -404,20 +337,38 @@ window.USAGI_APP = {
     UsagiSound.pop();
   },
 
-  loginUser: function (username) {
+  loginUser: async function (username) {
     try {
       this.currentUser = username;
       localStorage.setItem(SESSION_KEY, username);
 
       const userKey = getUserDataKey(username);
       let userData = null;
-      try {
-        const raw = localStorage.getItem(userKey);
-        if (raw && raw !== 'undefined' && raw !== 'null') {
-          userData = JSON.parse(raw);
+
+      // 1. SUPABASE CLOUD-FIRST LOAD: Pull from Supabase cloud first so github update or cache clearing NEVER loses data!
+      if (this.cloud && this.cloud.isConnected) {
+        try {
+          const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Cloud timeout')), 2800));
+          const cloudRecord = await Promise.race([this.cloud.pullDataFromCloud(username), timeoutPromise]);
+          if (cloudRecord && cloudRecord.data && typeof cloudRecord.data === 'object') {
+            userData = cloudRecord.data;
+            console.log("Successfully fetched latest user records from Supabase Cloud!");
+          }
+        } catch (e) {
+          console.warn("Could not pull from cloud immediately, using local cache:", e);
         }
-      } catch (err) {
-        console.warn("Parse user data error:", err);
+      }
+
+      // 2. Fallback to localStorage if offline or cloud empty
+      if (!userData) {
+        try {
+          const raw = localStorage.getItem(userKey);
+          if (raw && raw !== 'undefined' && raw !== 'null') {
+            userData = JSON.parse(raw);
+          }
+        } catch (err) {
+          console.warn("Parse user data error:", err);
+        }
       }
 
       if (!userData || typeof userData !== 'object') {
@@ -425,13 +376,48 @@ window.USAGI_APP = {
         localStorage.setItem(userKey, JSON.stringify(userData));
       }
 
-      // Ensure calendarEvents array exists
-      if (!userData.calendarEvents) {
-        userData.calendarEvents = [
-          { id: 'ev_1', date: new Date().toISOString().split('T')[0], title: '乌萨奇手账打卡', category: '生活', time: '10:00', content: '今天开始认真记录每天的生活和开销~', color: 'amber', completed: true },
-          { id: 'ev_2', date: new Date().toISOString().split('T')[0], title: '喝足温水 (500ml)', category: '健康', time: '14:30', content: '多喝温水，皮肤好好！', color: 'blue', completed: false }
-        ];
+      // Ensure together & anniversary & birthday countdowns exist and are exact
+      if (!userData.countdowns || !Array.isArray(userData.countdowns)) userData.countdowns = [];
+      userData.countdowns.forEach(c => {
+        if (c.title && c.title.includes('生日')) {
+          c.title = '🎂 芷萱小仙女生日 (11月6日)';
+          c.targetDate = '2027-11-06';
+          c.icon = '🎂';
+        }
+        if (c.title && (c.title.includes('一周年') || c.id === 'c_anniversary')) {
+          c.title = '💖 恋爱一周年纪念日';
+          c.targetDate = '2027-09-05';
+          c.icon = '💑';
+        }
+        if (c.title && (c.title.includes('在一起') || c.id === 'c_together')) {
+          c.title = '💑 我们在一起的日子 (2026-09-05)';
+          c.targetDate = '2026-09-05';
+          c.icon = '❤️';
+        }
+      });
+      const hasTogether = userData.countdowns.some(c => c.targetDate === '2026-09-05' || (c.title && c.title.includes('在一起')));
+      if (!hasTogether) {
+        userData.countdowns.unshift({ id: 'c_together', title: '💑 我们在一起的日子 (2026-09-05)', targetDate: '2026-09-05', category: '纪念日', icon: '❤️' });
       }
+      const hasAnniversary = userData.countdowns.some(c => c.targetDate === '2027-09-05' || (c.title && c.title.includes('一周年')));
+      if (!hasAnniversary) {
+        userData.countdowns.push({ id: 'c_anniversary', title: '💖 恋爱一周年纪念日', targetDate: '2027-09-05', category: '纪念日', icon: '💑' });
+      }
+      const hasBirthday = userData.countdowns.some(c => c.targetDate === '2027-11-06' || (c.title && c.title.includes('生日')));
+      if (!hasBirthday) {
+        userData.countdowns.push({ id: 'c_birthday', title: '🎂 芷萱小仙女生日 (11月6日)', targetDate: '2027-11-06', category: '生日', icon: '🎂' });
+      }
+
+      // Ensure calendarEvents array exists (Clean: No mock events injected)
+      if (!userData.calendarEvents || !Array.isArray(userData.calendarEvents)) {
+        userData.calendarEvents = [];
+      }
+
+      // Filter out any mock countdowns, strictly keeping real ones
+      userData.countdowns = userData.countdowns.filter(c => {
+        if (c.id === 'c_trip' || (c.title && c.title.includes('海岛度假'))) return false;
+        return true;
+      });
 
       // Ensure water tracking is configured to 500ml per drink
       if (!userData.health) userData.health = {};
@@ -470,11 +456,16 @@ window.USAGI_APP = {
       }
 
       this.renderAll();
+      this.startCrossDeviceSync();
 
       const urlParams = new URLSearchParams(window.location.search);
       const targetTab = urlParams.get('tab');
       if (targetTab) {
         this.switchTab(targetTab);
+      }
+      const targetSong = urlParams.get('song');
+      if (targetSong && typeof window.playSongById === 'function') {
+        setTimeout(() => window.playSongById(targetSong), 300);
       }
     } catch (e) {
       console.error("LoginUser critical error:", e);
@@ -493,6 +484,39 @@ window.USAGI_APP = {
     }
   },
 
+  // Cross-Device Real-time Auto-Sync (Phone, PC, Tablet)
+  startCrossDeviceSync: function () {
+    if (this._syncInterval) clearInterval(this._syncInterval);
+
+    const pullLatestCloud = async () => {
+      if (!this.currentUser || !this.cloud || !this.cloud.isConnected) return;
+      try {
+        const cloudRecord = await this.cloud.pullDataFromCloud(this.currentUser);
+        if (cloudRecord && cloudRecord.data && typeof cloudRecord.data === 'object') {
+          const remoteStr = JSON.stringify(cloudRecord.data);
+          const currentStr = JSON.stringify(this.data);
+          if (remoteStr !== currentStr) {
+            console.log("☁️ [多设备同步] 检测到其他设备（手机/电脑/平板）有最新记录，正在无缝同步...");
+            this.data = this.sanitizeData(cloudRecord.data);
+            localStorage.setItem(getUserDataKey(this.currentUser), JSON.stringify(this.data));
+            this.renderAll();
+          }
+        }
+      } catch (err) {
+        console.warn("Cross-device sync check error:", err);
+      }
+    };
+
+    // When switching back to this tab or unlocking device
+    window.addEventListener('focus', pullLatestCloud);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') pullLatestCloud();
+    });
+
+    // Background heartbeat polling every 15s
+    this._syncInterval = setInterval(pullLatestCloud, 15000);
+  },
+
   sanitizeData: function (obj) {
     if (!obj) return obj;
     try {
@@ -503,9 +527,39 @@ window.USAGI_APP = {
       const cleaned = JSON.parse(str);
       if (cleaned.profile) {
         if (!cleaned.profile.motto || cleaned.profile.motto.includes('每天都要元气满满！')) {
-          cleaned.profile.motto = '呀哈！每天都要元气满满！';
+          cleaned.profile.motto = '呀哈！芷萱今天也要开开心心、元气满满！💖';
         }
         cleaned.profile.avatar = 'usagi_character.png';
+      }
+      if (!cleaned.countdowns || !Array.isArray(cleaned.countdowns)) cleaned.countdowns = [];
+      cleaned.countdowns.forEach(c => {
+        if (c.title && c.title.includes('生日')) {
+          c.title = '🎂 芷萱小仙女生日 (11月6日)';
+          c.targetDate = '2027-11-06';
+          c.icon = '🎂';
+        }
+        if (c.title && (c.title.includes('一周年') || c.id === 'c_anniversary')) {
+          c.title = '💖 恋爱一周年纪念日';
+          c.targetDate = '2027-09-05';
+          c.icon = '💑';
+        }
+        if (c.title && (c.title.includes('在一起') || c.id === 'c_together')) {
+          c.title = '💑 我们在一起的日子 (2026-09-05)';
+          c.targetDate = '2026-09-05';
+          c.icon = '❤️';
+        }
+      });
+      const hasTogether = cleaned.countdowns.some(c => c.targetDate === '2026-09-05' || (c.title && c.title.includes('在一起')));
+      if (!hasTogether) {
+        cleaned.countdowns.unshift({ id: 'c_together', title: '💑 我们在一起的日子 (2026-09-05)', targetDate: '2026-09-05', category: '纪念日', icon: '❤️' });
+      }
+      const hasAnniversary = cleaned.countdowns.some(c => c.targetDate === '2027-09-05' || (c.title && c.title.includes('一周年')));
+      if (!hasAnniversary) {
+        cleaned.countdowns.push({ id: 'c_anniversary', title: '💖 恋爱一周年纪念日', targetDate: '2027-09-05', category: '纪念日', icon: '💑' });
+      }
+      const hasBirthday = cleaned.countdowns.some(c => c.targetDate === '2027-11-06' || (c.title && c.title.includes('生日')));
+      if (!hasBirthday) {
+        cleaned.countdowns.push({ id: 'c_birthday', title: '🎂 芷萱小仙女生日 (11月6日)', targetDate: '2027-11-06', category: '生日', icon: '🎂' });
       }
       return cleaned;
     } catch (e) {
@@ -568,6 +622,16 @@ window.USAGI_APP = {
     if (targetTab) targetTab.classList.remove('hidden');
     if (targetNav) targetNav.classList.add('active');
 
+    // Update Mobile Horizontal Tab Pills Active State
+    document.querySelectorAll('.mobile-tab-pill').forEach(btn => {
+      if (btn.getAttribute('data-mobile-tab') === tabName) {
+        btn.classList.add('active');
+        try { btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); } catch(e){}
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
     // Update Mobile Bottom Dock Active State
     document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
       if (btn.getAttribute('data-tab') === tabName) {
@@ -600,11 +664,22 @@ window.USAGI_APP = {
       try {
         if (window.UsagiPetManager && typeof UsagiPetManager.reactTo === 'function') {
           if (tabName === 'period') UsagiPetManager.reactTo('period');
+          else if (tabName === 'calendar') UsagiPetManager.reactTo('calendar');
+          else if (tabName === 'habits') UsagiPetManager.reactTo('habit');
           else if (tabName === 'expense') UsagiPetManager.reactTo('expense', '乌萨奇小账房戴上眼镜上线啦！快把今天的收支告诉乌萨奇吧~ 💰🥕');
           else if (tabName === 'todos') UsagiPetManager.reactTo('countdown', '乌萨奇正在认真帮芷萱数着每一个期待的心愿倒数哦！⏳💖');
-          else if (tabName === 'notes') UsagiPetManager.reactTo('highlight', '这里是芷萱的灵感秘密花园~ 有什么奇思妙想快记下来吧！💡📖');
-          else if (tabName === 'highlights') UsagiPetManager.reactTo('highlight', '睡前写下一件今天发生的好事吧~ 乌萨奇最喜欢听芷萱讲开心的事啦！✨🌸');
+          else if (tabName === 'notes') UsagiPetManager.reactTo('note', '这里是芷萱的灵感秘密花园~ 脑门小灯泡亮起来啦！💡📜');
+          else if (tabName === 'highlights') UsagiPetManager.reactTo('highlight', '睡前写下一件今天发生的好事吧~ 魔法星星装进许愿瓶！✨🫙');
+          else if (tabName === 'watchlist') UsagiPetManager.reactTo('watchlist', '乌萨奇戴上3D眼镜抱好大桶爆米花啦！芷萱想看什么电影呀~ 🍿🎬');
+          else if (tabName === 'cinema') {
+            UsagiPetManager.reactTo('watchlist', '乌萨奇戴上3D眼镜抱好大桶爆米花啦！芷萱今天想看什么戏呀~ 🍿🎬');
+            const audio = document.getElementById('usagi-audio-engine');
+            if (audio && !audio.paused) audio.pause();
+          }
+          else if (tabName === 'music') UsagiPetManager.reactTo('music', '乌萨奇戴上粉色猫耳耳机啦！跟着旋律一起摇摆~ 🎧🎶');
           else if (tabName === 'games') UsagiPetManager.reactTo('game', '芷萱的治愈游乐园开张啦！乌萨奇在旁边全程为你加油助威！🎮🎉');
+          else if (tabName === 'health') UsagiPetManager.reactTo('water');
+          else if (tabName === 'mood') UsagiPetManager.reactTo('mood', '这里是芷萱的心情与规律树洞~ 无论今天是什么心情，乌萨奇都在这里认真倾听你！🎭💖');
         }
       } catch (e) { console.warn("Pet tab react error:", e); }
     } catch (err) {
@@ -747,26 +822,57 @@ window.USAGI_APP = {
     container.innerHTML = '';
     const now = new Date();
 
-    const sorted = [...this.data.countdowns].map(c => {
+    const items = [...(this.data.countdowns || [])].map(c => {
       const diff = Math.ceil((new Date(c.targetDate) - now) / (1000 * 60 * 60 * 24));
       return { ...c, daysLeft: diff };
-    }).sort((a, b) => a.daysLeft - b.daysLeft).slice(0, 3);
+    });
 
-    if (sorted.length === 0) {
+    if (items.length === 0) {
       container.innerHTML = '<div class="text-sm text-gray-400 py-2">还没有添加倒数日哦~ 🐰</div>';
       return;
     }
 
-    sorted.forEach(c => {
-      const daysText = c.daysLeft > 0 ? `${c.daysLeft} 天后` : c.daysLeft === 0 ? '就在今天！🎉' : `已过去 ${Math.abs(c.daysLeft)} 天`;
+    // Sort: together & upcoming anniversary/birthday prioritized
+    items.sort((a, b) => {
+      const aIsTogether = a.targetDate === '2026-09-05' || (a.title && a.title.includes('在一起'));
+      const bIsTogether = b.targetDate === '2026-09-05' || (b.title && b.title.includes('在一起'));
+      if (aIsTogether) return -1;
+      if (bIsTogether) return 1;
+      const aUp = a.daysLeft >= 0 ? 0 : 1;
+      const bUp = b.daysLeft >= 0 ? 0 : 1;
+      if (aUp !== bUp) return aUp - bUp;
+      return a.daysLeft - b.daysLeft;
+    });
+
+    items.slice(0, 4).forEach(c => {
+      let daysText = '';
+      let badgeCls = 'bg-amber-200 text-amber-900';
+      const isTogether = c.targetDate === '2026-09-05' || (c.title && c.title.includes('在一起'));
+
+      if (isTogether) {
+        const passed = Math.max(0, Math.floor((now - new Date('2026-09-05')) / (1000 * 60 * 60 * 24)));
+        daysText = `已相爱 ${passed} 天 ❤️`;
+        badgeCls = 'bg-rose-100 text-rose-700 font-bold border border-rose-200';
+      } else if (c.daysLeft > 0) {
+        daysText = `还有 ${c.daysLeft} 天`;
+        if (c.daysLeft <= 10) badgeCls = 'bg-rose-500 text-white animate-pulse';
+        else badgeCls = 'bg-pink-100 text-pink-700 border border-pink-200';
+      } else if (c.daysLeft === 0) {
+        daysText = '就在今天！🎉';
+        badgeCls = 'bg-rose-600 text-white animate-bounce';
+      } else {
+        daysText = `已过去 ${Math.abs(c.daysLeft)} 天`;
+        badgeCls = 'bg-stone-100 text-stone-600';
+      }
+
       const div = document.createElement('div');
-      div.className = 'flex items-center justify-between p-2.5 rounded-xl bg-amber-50/70 border border-amber-200/60';
+      div.className = `flex items-center justify-between p-2.5 rounded-xl ${isTogether ? 'bg-gradient-to-r from-pink-50/90 to-rose-50/90 border border-pink-300' : 'bg-amber-50/70 border border-amber-200/60'}`;
       div.innerHTML = `
         <div class="flex items-center gap-2">
           <span class="text-xl">${c.icon || '⏰'}</span>
           <span class="font-bold text-sm text-stone-700">${escapeHtml(c.title)}</span>
         </div>
-        <span class="text-xs font-black px-2.5 py-1 rounded-full ${c.daysLeft <= 3 && c.daysLeft >= 0 ? 'bg-red-400 text-white animate-pulse' : 'bg-amber-200 text-amber-900'}">${daysText}</span>
+        <span class="text-xs font-black px-2.5 py-1 rounded-full ${badgeCls}">${daysText}</span>
       `;
       container.appendChild(div);
     });
@@ -1741,10 +1847,19 @@ window.USAGI_APP = {
     this.renderMood();
     UsagiSound.yaha();
     if (window.UsagiPetManager) {
+      if (UsagiPetManager.isMinimized && UsagiPetManager.isMinimized()) {
+        UsagiPetManager.expand();
+      }
       if (['happy', 'yaha', 'ura'].includes(moodKey)) {
         UsagiPetManager.reactTo('happy');
-      } else if (['emo', 'angry', 'tired'].includes(moodKey)) {
-        UsagiPetManager.reactTo('comfort');
+      } else if (moodKey === 'tired') {
+        UsagiPetManager.reactTo('tired');
+      } else if (moodKey === 'emo') {
+        UsagiPetManager.reactTo('emo');
+      } else if (moodKey === 'angry') {
+        UsagiPetManager.reactTo('angry');
+      } else if (moodKey === 'calm') {
+        UsagiPetManager.reactTo('calm');
       } else {
         UsagiPetManager.reactTo('highlight', '平淡也是一种温柔的美好~ 乌萨奇静静陪着芷萱 🍃🍵');
       }
@@ -2011,23 +2126,34 @@ window.USAGI_APP = {
     (this.data.countdowns || []).forEach(c => {
       const diff = Math.ceil((new Date(c.targetDate) - now) / (1000 * 60 * 60 * 24));
       const card = document.createElement('div');
-      card.className = 'p-3.5 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 flex items-center justify-between';
+      const isPast = diff < 0;
+      const isTogether = c.targetDate === '2026-09-05' || (c.title && c.title.includes('在一起'));
+      const passedDays = isTogether ? Math.max(0, Math.floor((now - new Date('2026-09-05')) / (1000 * 60 * 60 * 24))) : Math.abs(diff);
+
+      card.className = `p-3.5 rounded-2xl ${isTogether ? 'bg-gradient-to-r from-pink-50 via-rose-50 to-amber-50 border-2 border-pink-300' : 'bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200'} flex items-center justify-between`;
+      let suffix = diff > 0 ? '天后' : diff === 0 ? '就在今天！' : isTogether ? '天 (相爱相伴)' : '天前';
+      let numVal = isTogether ? passedDays : (diff >= 0 ? diff : Math.abs(diff));
+
       card.innerHTML = `
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">${c.icon || '⏰'}</span>
-          <div>
-            <div class="font-bold text-stone-800">${escapeHtml(c.title)}</div>
-            <div class="text-xs text-stone-500">目标日: ${c.targetDate}</div>
+        <div class="flex items-center gap-3 min-w-0 pr-2">
+          <span class="text-2xl shrink-0">${c.icon || '⏰'}</span>
+          <div class="min-w-0">
+            <div class="font-bold text-stone-800 text-sm flex items-center gap-1.5 flex-wrap">
+              <span>${escapeHtml(c.title)}</span>
+              ${isTogether ? '<span class="text-[10px] font-black px-1.5 py-0.5 rounded-full bg-pink-100 text-pink-700 whitespace-nowrap">相爱相伴</span>' : ''}
+            </div>
+            <div class="text-xs text-stone-500 mt-0.5">目标日: ${c.targetDate}</div>
           </div>
         </div>
-        <div class="flex items-center gap-3">
-          <div class="text-right">
-            <span class="text-xl font-black text-amber-700">${diff >= 0 ? diff : Math.abs(diff)}</span>
-            <span class="text-xs text-amber-600">${diff >= 0 ? '天后' : '天前'}</span>
+        <div class="flex items-center gap-3 shrink-0">
+          <div class="text-right whitespace-nowrap">
+            <span class="text-xl font-black ${isTogether ? 'text-pink-600' : diff < 0 ? 'text-stone-500' : 'text-amber-700'}">${numVal}</span>
+            <span class="text-xs block ${isTogether ? 'text-pink-500 font-bold' : diff < 0 ? 'text-stone-400' : 'text-amber-600'}">${suffix}</span>
           </div>
+          ${(c.id === 'c_together' || c.id === 'c_anniversary' || c.id === 'c_birthday') ? '' : `
           <button onclick="USAGI_APP.deleteCountdown('${c.id}')" class="text-stone-300 hover:text-red-500 text-sm">
             <i class="fa-solid fa-trash-can"></i>
-          </button>
+          </button>`}
         </div>
       `;
       cList.appendChild(card);
@@ -2479,6 +2605,10 @@ window.USAGI_APP = {
       const targetTab = urlParams.get('tab');
       if (targetTab) {
         this.switchTab(targetTab);
+      }
+      const targetSong = urlParams.get('song');
+      if (targetSong && typeof window.playSongById === 'function') {
+        setTimeout(() => window.playSongById(targetSong), 300);
       }
           alert("数据导入成功！✨");
           UsagiSound.yaha();
