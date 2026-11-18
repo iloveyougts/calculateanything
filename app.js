@@ -663,7 +663,8 @@ window.USAGI_APP = {
       // 乌萨奇智能随场景切换专属状态与对话互动
       try {
         if (window.UsagiPetManager && typeof UsagiPetManager.reactTo === 'function') {
-          if (tabName === 'period') UsagiPetManager.reactTo('period');
+          if (tabName === 'dashboard') UsagiPetManager.reactTo('dashboard');
+          else if (tabName === 'period') UsagiPetManager.reactTo('period');
           else if (tabName === 'calendar') UsagiPetManager.reactTo('calendar');
           else if (tabName === 'habits') UsagiPetManager.reactTo('habit');
           else if (tabName === 'expense') UsagiPetManager.reactTo('expense', '乌萨奇小账房戴上眼镜上线啦！快把今天的收支告诉乌萨奇吧~ 💰🥕');

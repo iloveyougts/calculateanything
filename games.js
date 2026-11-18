@@ -215,6 +215,19 @@ const UsagiPetManager = (function () {
         "打得太漂亮啦！坏情绪全都被敲碎了，芷萱笑起来的样子最可爱啦！呀哈！🔨💖"
       ]
     },
+    dashboard: {
+      propIcon: '🌟',
+      propSub: '✨ 欢迎',
+      imgClass: 'usagi-dashboard-welcome',
+      sound: 'fanfare',
+      tag: '🌟 欢迎回到手账总览',
+      quotes: [
+        "呀哈！欢迎颜芷萱大宝贝回到生活手账总览！今天也是充满奇迹和美好的一天！🌟💖",
+        "叮咚！生活手账核心仪表盘已就绪！乌萨奇挥舞小魔杖，把今天满满的幸运全送给芷萱！✨🪄",
+        "回到温馨小家啦！芷萱今天喝了几杯水、心情怎么样？乌萨奇全都帮你盯得好好的哦！🏠🌸",
+        "芷萱一打开手账，整个世界都变得粉嫩又闪亮！乌萨奇在总览台给你比个大大的小心心！🥰🌟"
+      ]
+    },
     yaha: {
       propIcon: '🥳',
       propSub: '🎉 呀哈狂欢',
@@ -431,15 +444,18 @@ const UsagiPetManager = (function () {
     const bubble = document.getElementById('usagi-speech-bubble');
     if (!container) return;
 
+    const isMobile = (window.innerWidth < 768);
+    container.style.bottom = isMobile ? 'calc(96px + env(safe-area-inset-bottom, 16px))' : '24px';
+
     if (isMinimized) {
       container.style.left = 'auto';
-      container.style.right = (window.innerWidth < 768) ? '12px' : '24px';
+      container.style.right = isMobile ? '12px' : '24px';
       return;
     }
 
     const screenW = window.innerWidth || 1024;
-    const minX = 20;
-    const maxX = Math.max(minX + 40, screenW - 240);
+    const minX = 16;
+    const maxX = Math.max(minX + 30, screenW - (isMobile ? 180 : 240));
 
     if (isRoaming) {
       if (posX > maxX) posX = maxX;
@@ -773,7 +789,9 @@ const UsagiPetManager = (function () {
   }
 
   function reactTo(event, data = null) {
-    if (event === 'sleep') {
+    } else if (['dashboard', 'overview'].includes(event)) {
+      setState('dashboard', data);
+    } else if (event === 'sleep') {
       setState('sleep', data);
     } else if (event === 'water') {
       setState('water', data);
