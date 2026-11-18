@@ -3237,3 +3237,262 @@ body {
 
 
 
+
+
+/* ============================================================
+   DESKTOP SIDEBAR SCROLLBAR & POSITION STABILIZER
+   ============================================================ */
+.sidebar-scroll-box {
+  overscroll-behavior: contain !important;
+  scroll-behavior: smooth;
+}
+
+.custom-sidebar-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(251, 146, 60, 0.35) transparent;
+}
+
+.custom-sidebar-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-sidebar-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #fbcfe8 0%, #fed7aa 100%);
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.custom-sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #f472b6 0%, #fb923c 100%);
+}
+
+/* ============================================================
+   KAWAII BESPOKE TAB ENTRANCE ANIMATIONS (每一页专属可爱进场特效)
+   ============================================================ */
+
+/* 1. 今日总览: 乌萨奇元气弹性蹦跳 (Elastic Pop) */
+#tab-dashboard:not(.hidden) {
+  animation: usagiElasticPop 0.46s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+@keyframes usagiElasticPop {
+  0% { opacity: 0; transform: scale(0.88) translateY(28px); }
+  60% { opacity: 1; transform: scale(1.025) translateY(-5px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* 2. 生理期: 暖暖樱花爱心绽放 (Heart Bloom) */
+#tab-period:not(.hidden) {
+  animation: usagiHeartBloom 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes usagiHeartBloom {
+  0% { opacity: 0; transform: scale(0.92) translateY(20px); filter: drop-shadow(0 0 16px rgba(251, 113, 133, 0.4)) blur(3px); }
+  50% { filter: drop-shadow(0 0 24px rgba(244, 63, 94, 0.25)) blur(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: drop-shadow(0 0 0 transparent) blur(0); }
+}
+
+/* 3. 生活日历: 魔法手账翻页特效 (Calendar 3D Flip) */
+#tab-calendar:not(.hidden) {
+  animation: usagiCalendarFlip 0.46s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes usagiCalendarFlip {
+  0% { opacity: 0; transform: perspective(800px) rotateX(10deg) translateY(24px); }
+  100% { opacity: 1; transform: perspective(800px) rotateX(0deg) translateY(0); }
+}
+
+/* 4. 音乐点歌台: 戴耳机摇摆律动 (Music Groove Wobble) */
+#tab-music:not(.hidden) {
+  animation: usagiMusicGroove 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.25) both;
+}
+@keyframes usagiMusicGroove {
+  0% { opacity: 0; transform: translateY(30px) rotate(-2.5deg) scale(0.95); }
+  50% { transform: translateY(-4px) rotate(1.5deg) scale(1.015); }
+  75% { transform: translateY(2px) rotate(-0.8deg); }
+  100% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+}
+
+/* 5. 日常开销: 乌萨奇金萝卜金币掉落 (Coin Drop & Bounce) */
+#tab-expense:not(.hidden) {
+  animation: usagiCoinDrop 0.44s cubic-bezier(0.175, 0.885, 0.32, 1.2) both;
+}
+@keyframes usagiCoinDrop {
+  0% { opacity: 0; transform: translateY(-30px) scale(0.94); }
+  60% { opacity: 1; transform: translateY(6px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 6. 饮水作息: 清透水泡咕噜咕噜升起 (Bubble Rise) */
+#tab-health:not(.hidden) {
+  animation: usagiBubbleRise 0.46s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes usagiBubbleRise {
+  0% { opacity: 0; transform: translateY(36px) scale(0.94); filter: blur(4px); }
+  70% { transform: translateY(-4px) scale(1.01); filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 7. 随身小影院: 爆米花大荧幕拉开 (Cinema Screen Pop) */
+#tab-cinema:not(.hidden) {
+  animation: usagiCinemaScreen 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes usagiCinemaScreen {
+  0% { opacity: 0; transform: scale(0.86) translateY(20px); filter: contrast(1.15) brightness(1.1); }
+  60% { transform: scale(1.02) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: contrast(1) brightness(1); }
+}
+
+/* 8. 常用社交: 气泡传情轻快弹出 (Social Ping Pop) */
+#tab-social:not(.hidden) {
+  animation: usagiSocialPing 0.44s cubic-bezier(0.175, 0.885, 0.32, 1.25) both;
+}
+@keyframes usagiSocialPing {
+  0% { opacity: 0; transform: scale(0.92) translateY(24px); }
+  65% { transform: scale(1.02) translateY(-3px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* 9. 治愈游乐园: 马里奥像素跳跃 (Arcade Spring Jump) */
+#tab-games:not(.hidden) {
+  animation: usagiArcadeJump 0.48s cubic-bezier(0.175, 0.885, 0.32, 1.3) both;
+}
+@keyframes usagiArcadeJump {
+  0% { opacity: 0; transform: translateY(45px) scale(0.92, 1.08); }
+  50% { transform: translateY(-8px) scale(1.04, 0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1, 1); }
+}
+
+/* 10. 待办清单与倒数日: 飞奔火箭急速突进 (Rocket Snap) */
+#tab-todos:not(.hidden) {
+  animation: usagiRocketSnap 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes usagiRocketSnap {
+  0% { opacity: 0; transform: translateX(-35px) scale(0.96); }
+  70% { transform: translateX(4px) scale(1.01); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+/* 11. 碎片灵感备忘录: 便签书页微旋轻飘 (Notebook Flutter) */
+#tab-notes:not(.hidden) {
+  animation: usagiNotebookFlutter 0.46s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes usagiNotebookFlutter {
+  0% { opacity: 0; transform: translateY(22px) rotate(1.8deg) scale(0.96); }
+  60% { transform: translateY(-3px) rotate(-0.6deg); }
+  100% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+}
+
+/* 12. 习惯养成与热力图: 花草萌芽生机破土 (Garden Bloom) */
+#tab-habits:not(.hidden) {
+  animation: usagiGardenBloom 0.46s cubic-bezier(0.175, 0.885, 0.32, 1.2) both;
+  transform-origin: bottom center;
+}
+@keyframes usagiGardenBloom {
+  0% { opacity: 0; transform: scale(0.9) translateY(25px); }
+  60% { transform: scale(1.02) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* 13. 书影音购物冷静期: 云朵惬意漫步飘逸 (Cloud Drift) */
+#tab-watchlist:not(.hidden) {
+  animation: usagiCloudDrift 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes usagiCloudDrift {
+  0% { opacity: 0; transform: translateX(35px) scale(0.96); }
+  70% { transform: translateX(-3px) scale(1.01); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+/* 14. 感恩日记每日高光: 许愿瓶星光闪烁破晓 (Starlight Shimmer) */
+#tab-highlights:not(.hidden) {
+  animation: usagiStarlightShimmer 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes usagiStarlightShimmer {
+  0% { opacity: 0; transform: scale(0.92) translateY(18px); filter: brightness(1.25) drop-shadow(0 0 16px rgba(253, 224, 71, 0.5)); }
+  70% { transform: scale(1.015) translateY(-2px); filter: brightness(1.05); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: brightness(1); }
+}
+
+/* 15. 情绪与症状日记: 梦幻彩虹秋千轻摆 (Rainbow Swing) */
+#tab-mood:not(.hidden) {
+  animation: usagiRainbowSwing 0.48s cubic-bezier(0.175, 0.885, 0.32, 1.2) both;
+  transform-origin: top center;
+}
+@keyframes usagiRainbowSwing {
+  0% { opacity: 0; transform: rotate(-3.5deg) scale(0.95) translateY(16px); }
+  60% { transform: rotate(1.2deg); }
+  100% { opacity: 1; transform: rotate(0deg) scale(1) translateY(0); }
+}
+
+/* ------------------------------------------------------------
+   Floating Usagi & Emoji Overlay Keyframes (可爱乌萨奇漂浮微粒)
+   ------------------------------------------------------------ */
+@keyframes usagiFlyIn {
+  0% {
+    opacity: 0;
+    transform: translateY(60px) scale(0.4) rotate(-25deg);
+  }
+  35% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1.15) rotate(12deg);
+  }
+  75% {
+    opacity: 0.95;
+    transform: translateY(-55px) scale(1.05) rotate(-6deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-95px) scale(0.8) rotate(10deg);
+  }
+}
+
+@keyframes emojiDriftFade {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.5) rotate(-15deg);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.2) rotate(10deg);
+  }
+  70% {
+    opacity: 0.9;
+    transform: translateY(-40px) scale(1) rotate(-5deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-75px) scale(0.6) rotate(15deg);
+  }
+}
+
+@keyframes usagiBannerPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -20px) scale(0.85);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, 0px) scale(1.05);
+  }
+  75% {
+    opacity: 1;
+    transform: translate(-50%, 0px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -15px) scale(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-content:not(.hidden),
+  .usagi-float-particle,
+  .usagi-theme-emoji-particle,
+  .usagi-entrance-banner {
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

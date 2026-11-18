@@ -373,27 +373,46 @@ window.USAGI_APP = {
     confettiRain();
   },
 
-  editProfile: function () {
+  editProfile: async function () {
     if (!this.data) return;
-    const currentNick = this.data.profile.nickname || '颜芷萱 (Tzi Shuan) 🌸';
+    if (!this.data.profile) this.data.profile = {};
+    const currentNick = this.data.profile.nickname || (this.currentUser && this.currentUser.toLowerCase() === 'gts' ? 'kim' : '颜芷萱 (Tzi Shuan) 🌸');
     const newNick = prompt("修改手账专属昵称：", currentNick);
-    if (newNick && newNick.trim()) {
+    let changed = false;
+
+    if (newNick !== null && newNick.trim() !== '') {
       const val = newNick.trim();
       this.data.profile.nickname = val;
       const users = this.getUsers();
       if (users[this.currentUser]) {
         users[this.currentUser].nickname = val;
-        this.saveUsers(users);
       }
+      if (this.currentUser && users[this.currentUser.toLowerCase()]) {
+        users[this.currentUser.toLowerCase()].nickname = val;
+      }
+      this.saveUsers(users);
+      changed = true;
     }
-    const currentMotto = this.data.profile.motto || '呀哈！芷萱今天也要开开心心、元气满满！💖';
+
+    const currentMotto = this.data.profile.motto || (this.currentUser && this.currentUser.toLowerCase() === 'gts' ? '乌萨奇冲冲冲！Kim专属测试手账 🐰' : '呀哈！芷萱今天也要开开心心、元气满满！💖');
     const newMotto = prompt("修改心愿寄语 / 乌萨奇签名：", currentMotto);
-    if (newMotto && newMotto.trim()) {
+    if (newMotto !== null && newMotto.trim() !== '') {
       this.data.profile.motto = newMotto.trim();
+      changed = true;
     }
-    this.saveData();
-    this.renderAll();
-    UsagiSound.pop();
+
+    if (changed) {
+      this.saveData();
+      this.renderAll();
+      // 立即触发云端同步，确保数据库与本地绝对一致
+      if (this.cloud && this.cloud.isConnected) {
+        const users = this.getUsers();
+        const pwd = users[this.currentUser] ? users[this.currentUser].password : (this.currentUser.toLowerCase() === 'gts' ? '123' : '520GANTZISHUAN');
+        this.cloud.syncDataToCloud(this.currentUser, this.data, pwd, this.data.profile.nickname);
+      }
+      UsagiSound.yaha();
+      confettiRain(25);
+    }
   },
 
   loginUser: async function (username) {
@@ -411,6 +430,9 @@ window.USAGI_APP = {
           const cloudRecord = await Promise.race([this.cloud.pullDataFromCloud(username), timeoutPromise]);
           if (cloudRecord && cloudRecord.data && typeof cloudRecord.data === 'object') {
             userData = cloudRecord.data;
+            if (cloudRecord.nickname && userData.profile) {
+              userData.profile.nickname = cloudRecord.nickname;
+            }
             console.log("Successfully fetched latest user records from Supabase Cloud!");
           }
         } catch (e) {
@@ -456,28 +478,14 @@ window.USAGI_APP = {
         userData.health.waterTarget = 4;
       }
 
-      // Personalize default profile for initial setup ONLY if no custom nickname is set yet
+      // 核心：永久尊重并使用用户修改的昵称与签名，绝不被默认名字重置还原！
       if (!userData.profile) userData.profile = {};
       const lowerU = (username || '').toLowerCase();
-      // Isolate boyfriend tester (gts -> kim) and girlfriend official account (GANTZISHUAN -> 颜芷萱)
-      if (lowerU === 'gts') {
-        if (!userData.profile.nickname || userData.profile.nickname.includes('芷萱') || userData.profile.nickname === '乌萨奇饲养员') {
-          userData.profile.nickname = 'kim';
-        }
-        if (!userData.profile.motto || userData.profile.motto.includes('芷萱今天也要') || userData.profile.motto.includes('乌萨奇饲养员')) {
-          userData.profile.motto = '乌萨奇冲冲冲！Kim专属测试手账 🐰';
-        }
-      } else if (lowerU === 'gantzishuan' || lowerU.includes('tzi') || lowerU.includes('shuan')) {
-        if (!userData.profile.nickname || userData.profile.nickname === '乌萨奇饲养员' || userData.profile.nickname === 'kim') {
-          userData.profile.nickname = '颜芷萱 (Tzi Shuan) 🌸';
-        }
-        if (!userData.profile.motto || userData.profile.motto.includes('Kim专属测试手账') || userData.profile.motto.includes('乌萨奇饲养员')) {
-          userData.profile.motto = '呀哈！芷萱今天也要开开心心、元气满满！💖';
-        }
-      } else {
-        if (!userData.profile.nickname || userData.profile.nickname === '乌萨奇饲养员') {
-          userData.profile.nickname = username;
-        }
+      if (!userData.profile.nickname || userData.profile.nickname === '乌萨奇饲养员') {
+        userData.profile.nickname = (lowerU === 'gts') ? 'kim' : '颜芷萱 (Tzi Shuan) 🌸';
+      }
+      if (!userData.profile.motto || userData.profile.motto.includes('每天都要元气满满！')) {
+        userData.profile.motto = (lowerU === 'gts') ? '乌萨奇冲冲冲！Kim专属测试手账 🐰' : '呀哈！芷萱今天也要开开心心、元气满满！💖';
       }
 
       // SANITIZE: Deep clean any residual Japanese characters from old localStorage cache
@@ -543,6 +551,9 @@ window.USAGI_APP = {
       try {
         const cloudRecord = await this.cloud.pullDataFromCloud(this.currentUser);
         if (cloudRecord && cloudRecord.data && typeof cloudRecord.data === 'object') {
+          if (cloudRecord.nickname && cloudRecord.data.profile) {
+            cloudRecord.data.profile.nickname = cloudRecord.nickname;
+          }
           const remoteStr = JSON.stringify(cloudRecord.data);
           const currentStr = JSON.stringify(this.data);
           if (remoteStr !== currentStr) {
@@ -608,13 +619,19 @@ window.USAGI_APP = {
 
   saveData: function () {
     if (this.currentUser && this.data) {
+      if (!this.data.profile) this.data.profile = {};
+      const isGts = this.currentUser.toLowerCase() === 'gts';
+      const userNick = (this.data.profile.nickname && this.data.profile.nickname.trim())
+        ? this.data.profile.nickname.trim()
+        : (isGts ? 'kim' : '颜芷萱 (Tzi Shuan) 🌸');
+      this.data.profile.nickname = userNick;
+
       localStorage.setItem(getUserDataKey(this.currentUser), JSON.stringify(this.data));
       // Auto-sync to Supabase cloud if connected
       if (this.cloud && this.cloud.isConnected) {
         const users = this.getUsers();
-        const pwd = users[this.currentUser] ? users[this.currentUser].password : '';
-        const nick = (this.data.profile && this.data.profile.nickname) ? this.data.profile.nickname : this.currentUser;
-        this.cloud.syncDataToCloud(this.currentUser, this.data, pwd, nick);
+        const pwd = users[this.currentUser] ? users[this.currentUser].password : (isGts ? '123' : '520GANTZISHUAN');
+        this.cloud.syncDataToCloud(this.currentUser, this.data, pwd, userNick);
       }
     }
   },
@@ -633,22 +650,232 @@ window.USAGI_APP = {
     }
   },
 
+  // 强制立即回到顶部 Header（无缝瞬间归零，绝不给用户看到底部）
+  scrollToTopImmediately: function () {
+    try {
+      window.scrollTo(0, 0);
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
+      const mainEl = document.getElementById('app-container');
+      if (mainEl) mainEl.scrollTop = 0;
+    } catch (e) {}
+  },
+
+  // 每一页专属的可爱进场特效：可爱的乌萨奇飘入 + 专属萌趣微粒 + 专属横幅
+  triggerTabKawaiiFX: function (tabName) {
+    try {
+      const oldFx = document.getElementById('usagi-tab-transition-overlay');
+      if (oldFx) oldFx.remove();
+
+      const overlay = document.createElement('div');
+      overlay.id = 'usagi-tab-transition-overlay';
+      overlay.className = 'fixed inset-0 pointer-events-none z-50 overflow-hidden';
+      document.body.appendChild(overlay);
+
+      const themeConfigs = {
+        dashboard: {
+          emojis: ['🥕', '✨', '🌟', '💖', '🐰', '🥕', '✨'],
+          bubble: '呀哈！欢迎回到总览~ 元气满满！✨',
+          color: '#d97706'
+        },
+        period: {
+          emojis: ['🌸', '💖', '🩹', '🫖', '🌸', '💕', '🌷'],
+          bubble: '揉揉小肚子~ 乌萨奇暖暖守护中 🌸',
+          color: '#e11d48'
+        },
+        calendar: {
+          emojis: ['📅', '✨', '🌸', '🍃', '⭐', '🎈'],
+          bubble: '翻开美好生活日历啦~ 每一天都是小奇迹 📅',
+          color: '#0284c7'
+        },
+        health: {
+          emojis: ['💧', '🫧', '🥛', '💧', '🫧', '✨'],
+          bubble: '咕噜咕噜~ 记得多喝温开水哦！💧',
+          color: '#0891b2'
+        },
+        mood: {
+          emojis: ['☁️', '🌈', '🧸', '🌸', '✨', '💖'],
+          bubble: '今天心情怎么样呀~ 乌萨奇认真倾听你 🎭',
+          color: '#9333ea'
+        },
+        expense: {
+          emojis: ['🥕', '💰', '🪙', '✨', '💎', '🥕', '🪙'],
+          bubble: '金萝卜小金币掉下来啦~ 乌萨奇为你打理好账目 💰',
+          color: '#ca8a04'
+        },
+        habits: {
+          emojis: ['🌱', '🌷', '🌼', '🌿', '✨', '🌻'],
+          bubble: '今日好习惯打卡~ 萌芽快快健康长大 🌱',
+          color: '#16a34a'
+        },
+        todos: {
+          emojis: ['⏳', '🚀', '🎯', '🎉', '✨', '⏰'],
+          bubble: '心愿倒数日冲冲冲！美好即将奔赴而来 🚀',
+          color: '#ea580c'
+        },
+        notes: {
+          emojis: ['💡', '📜', '✏️', '✨', '📑', '💡'],
+          bubble: '小灵感亮起来啦~ 脑门小灯泡闪闪发光 💡',
+          color: '#d97706'
+        },
+        music: {
+          emojis: ['🎧', '🎵', '🎶', '🎷', '🎸', '✨', '🎶'],
+          bubble: '戴上粉色猫耳耳机啦~ 跟着旋律一起摇摆 🎧',
+          color: '#db2777'
+        },
+        cinema: {
+          emojis: ['🍿', '🎬', '🎟️', '🥤', '✨', '🍿'],
+          bubble: '爆米花蹦出来啦！芷萱今天想看什么戏呀 🍿',
+          color: '#e11d48'
+        },
+        social: {
+          emojis: ['💬', '💌', '📱', '✈️', '💖', '✨'],
+          bubble: '爱心传声筒叮咚上线~ 常用App随心直达 💌',
+          color: '#059669'
+        },
+        games: {
+          emojis: ['🎮', '🕹️', '🍓', '⭐', '🍉', '🎉'],
+          bubble: '芷萱的治愈游乐园开张啦！乌萨奇全程为你加油助威 🎮',
+          color: '#7c3aed'
+        },
+        watchlist: {
+          emojis: ['📚', '🎬', '☁️', '🎟️', '🛋️', '✨'],
+          bubble: '放慢节奏，喝杯奶茶看看书影小憩一下 ☕',
+          color: '#4f46e5'
+        },
+        highlights: {
+          emojis: ['🌟', '✨', '🫙', '💫', '🌟', '🕯️'],
+          bubble: '收集一颗今日小确幸星星装进许愿瓶~ ✨',
+          color: '#d97706'
+        }
+      };
+
+      const config = themeConfigs[tabName] || themeConfigs.dashboard;
+
+      // 1. 生成 4-5 只可爱的乌萨奇从屏幕下方欢快飘入/蹦起
+      for (let i = 0; i < 5; i++) {
+        const u = document.createElement('div');
+        u.className = 'usagi-float-particle';
+        const startX = 12 + i * 18 + (Math.random() * 8 - 4);
+        const startY = 65 + (Math.random() * 20);
+        const size = 52 + (i % 2) * 12;
+        const delay = i * 0.07;
+
+        u.style.cssText = `
+          position: fixed;
+          left: ${startX}vw;
+          top: ${startY}vh;
+          width: ${size}px;
+          height: ${size}px;
+          background-image: url('usagi_character.png');
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: center;
+          filter: drop-shadow(0 8px 16px rgba(251, 146, 60, 0.4));
+          animation: usagiFlyIn 1.35s cubic-bezier(0.175, 0.885, 0.32, 1.25) ${delay}s forwards;
+          z-index: 60;
+        `;
+        overlay.appendChild(u);
+      }
+
+      // 2. 生成每一页专属的主题萌趣微粒（樱花/音符/金币/爆米花/水滴等）
+      config.emojis.forEach((emoji, idx) => {
+        const el = document.createElement('div');
+        el.className = 'usagi-theme-emoji-particle';
+        el.innerText = emoji;
+        const x = 8 + (idx * 13) + (Math.random() * 6 - 3);
+        const y = 45 + (Math.random() * 30);
+        const size = 26 + (idx % 3) * 6;
+        const delay = idx * 0.05;
+
+        el.style.cssText = `
+          position: fixed;
+          left: ${x}vw;
+          top: ${y}vh;
+          font-size: ${size}px;
+          filter: drop-shadow(0 4px 12px rgba(0,0,0,0.12));
+          animation: emojiDriftFade 1.3s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s forwards;
+          z-index: 61;
+        `;
+        overlay.appendChild(el);
+      });
+
+      // 3. 屏幕中上方轻弹出一个萌系气泡
+      const toast = document.createElement('div');
+      toast.className = 'usagi-entrance-banner';
+      toast.innerHTML = `
+        <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 backdrop-blur-md border-2 border-amber-300 shadow-[0_10px_25px_-5px_rgba(251,146,60,0.35)] select-none">
+          <img src="usagi_character.png" class="w-6 h-6 object-contain animate-bounce" />
+          <span class="text-xs font-black" style="color: ${config.color}">${config.bubble}</span>
+        </div>
+      `;
+      toast.style.cssText = `
+        position: fixed;
+        top: 86px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: usagiBannerPop 1.4s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards;
+        z-index: 65;
+      `;
+      overlay.appendChild(toast);
+
+      // 1.4s 后自动移除销毁
+      setTimeout(() => {
+        if (overlay && overlay.parentNode) {
+          overlay.style.transition = 'opacity 0.25s ease';
+          overlay.style.opacity = '0';
+          setTimeout(() => overlay.remove(), 260);
+        }
+      }, 1300);
+    } catch (e) {
+      console.warn("Kawaii transition fx error:", e);
+    }
+  },
+
   // Switch Active Tab
   switchTab: function (tabName) {
+    // 1. 记忆桌面端侧边栏当前的滚动位置，确保换页时侧边栏绝对停留在原位不自动上去
+    const sidebarBox = document.querySelector('.sidebar-scroll-box') || document.querySelector('#app-sidebar > div');
+    const savedSidebarScroll = sidebarBox ? sidebarBox.scrollTop : 0;
+
     document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
     document.querySelectorAll('.nav-pill').forEach(el => el.classList.remove('active'));
 
     const targetTab = document.getElementById(`tab-${tabName}`);
     const targetNav = document.getElementById(`nav-${tabName}`);
 
-    if (targetTab) targetTab.classList.remove('hidden');
+    if (targetTab) {
+      targetTab.classList.remove('hidden');
+      targetTab.scrollTop = 0;
+      // 触发本页专属高级动态进场动效
+      targetTab.style.animation = 'none';
+      void targetTab.offsetHeight; // 触发 reflow 重置动画
+      targetTab.style.animation = '';
+    }
     if (targetNav) targetNav.classList.add('active');
 
-    // Update Mobile Horizontal Tab Pills Active State
+    // 核心第一步：显示新Tab的瞬间立即执行回到最顶部 Header
+    this.scrollToTopImmediately();
+
+    // 触发乌萨奇专属可爱萌系全屏进场漂浮特效 (飘入多只可爱乌萨奇与本页专属萌物)
+    this.triggerTabKawaiiFX(tabName);
+
+    // 锁定并保持侧边栏滚动位置，严禁侧边栏自动滚回顶部
+    if (sidebarBox) {
+      sidebarBox.scrollTop = savedSidebarScroll;
+    }
+
+    // Update Mobile Horizontal Tab Pills Active State (仅在水平滑动条内居中，严禁调用 scrollIntoView 导致整个窗口纵向偏移)
     document.querySelectorAll('.mobile-tab-pill').forEach(btn => {
       if (btn.getAttribute('data-mobile-tab') === tabName) {
         btn.classList.add('active');
-        try { btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); } catch(e){}
+        try {
+          const parentBar = btn.closest('.mobile-tab-bar') || btn.parentElement;
+          if (parentBar) {
+            const scrollTarget = btn.offsetLeft - (parentBar.clientWidth / 2) + (btn.clientWidth / 2);
+            parentBar.scrollTo({ left: Math.max(0, scrollTarget), behavior: 'smooth' });
+          }
+        } catch(e){}
       } else {
         btn.classList.remove('active');
       }
@@ -718,6 +945,18 @@ window.USAGI_APP = {
       console.warn(`Tab render error for ${tabName}:`, err);
     }
 
+    // 核心第二步：渲染完成后再次强行保证处于页面顶部，并持续锁定侧边栏原位
+    this.scrollToTopImmediately();
+    if (sidebarBox) sidebarBox.scrollTop = savedSidebarScroll;
+    requestAnimationFrame(() => {
+      this.scrollToTopImmediately();
+      if (sidebarBox) sidebarBox.scrollTop = savedSidebarScroll;
+    });
+    setTimeout(() => {
+      this.scrollToTopImmediately();
+      if (sidebarBox) sidebarBox.scrollTop = savedSidebarScroll;
+    }, 50);
+
     UsagiSound.pop();
   },
 
@@ -775,26 +1014,28 @@ window.USAGI_APP = {
     document.getElementById('dash-period-sub').innerText = periodState.subText;
     document.getElementById('dash-period-badge').className = `badge-kawaii ${periodState.badgeClass}`;
 
-    // Personalized Greeting Banner for 颜芷萱
+    // Personalized Greeting Banner for 颜芷萱 & Kim
     const greetingTitleEl = document.getElementById('dash-greeting-title');
     const greetingSubEl = document.getElementById('dash-greeting-sub');
-    const nick = (this.data.profile && this.data.profile.nickname) ? this.data.profile.nickname : '芷萱';
+    const isKim = (this.currentUser || '').toLowerCase() === 'gts' || (this.data.profile && this.data.profile.nickname === 'kim');
+    const nick = (this.data.profile && this.data.profile.nickname) ? this.data.profile.nickname : (isKim ? 'Kim' : '颜芷萱 (Tzi Shuan) 🌸');
     if (greetingTitleEl) {
       greetingTitleEl.innerText = `呀哈！欢迎回到 ${nick} 的专属生活手账！🐰💖`;
     }
     if (greetingSubEl) {
       const hour = new Date().getHours();
+      const greetingName = isKim ? 'Kim' : '芷萱';
       let greetingMsg = '今天又是元气满满的一天，记得喝水完成打卡哦~ ✨';
       if (hour >= 5 && hour < 12) {
-        greetingMsg = '早安芷萱！今天也是元气满满的一天，记得喝足 500ml 温水、吃顿元气早餐哦~ ☀️';
+        greetingMsg = `早安${greetingName}！今天也是元气满满的一天，记得喝足 500ml 温水、吃顿元气早餐哦~ ☀️`;
       } else if (hour >= 12 && hour < 18) {
-        greetingMsg = '下午好芷萱！累了就拍拍乌萨奇，喝口温水放松一下，乌萨奇在为你撑腰！🧋';
+        greetingMsg = `下午好${greetingName}！累了就拍拍乌萨奇，喝口温水放松一下，乌萨奇在为你撑腰！🧋`;
       } else if (hour >= 18 && hour < 22) {
-        greetingMsg = '晚上好芷萱！今天辛苦啦，写下今天的小确幸，今晚早点休息做个好梦~ 🍲';
+        greetingMsg = `晚上好${greetingName}！今天辛苦啦，写下今天的小确幸，今晚早点休息做个好梦~ 🍲`;
       } else {
-        greetingMsg = '夜深啦芷萱！早点睡觉做个甜甜的美梦，乌萨奇和最爱你的人陪着你晚安哦~ 🌙';
+        greetingMsg = `夜深啦${greetingName}！早点睡觉做个甜甜的美梦，乌萨奇陪着你晚安哦~ 🌙`;
       }
-      if (periodState && (periodState.statusText.includes('经期') || periodState.statusText.includes('黄体'))) {
+      if (!isKim && periodState && (periodState.statusText.includes('经期') || periodState.statusText.includes('黄体'))) {
         greetingMsg = '🌸 芷萱贴心关怀：注意腹部保暖，多喝温开水贴暖宝宝，随时都有乌萨奇陪着你哦~ 💕';
       }
       greetingSubEl.innerText = greetingMsg;
