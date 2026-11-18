@@ -1502,8 +1502,8 @@
                   </div>
                 </div>
                 <div class="flex items-center gap-2 flex-wrap">
-                  <button onclick="openStandaloneApp('https://web.whatsapp.com', 'WhatsAppAppWindow')" class="p-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
-                    <i class="fa-solid fa-rocket"></i> <span>🚀 启动 WhatsApp 专属纯净视窗 (推荐)</span>
+                  <button onclick="openStandaloneApp('https://web.whatsapp.com/', 'WhatsAppAppWindow')" class="p-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+                    <i class="fa-solid fa-rocket"></i> <span>🚀 启动 WhatsApp 专属纯净视窗 (扫码秒登)</span>
                   </button>
                   <button onclick="openWhatsAppWeb()" class="p-1.5 px-3 rounded-xl bg-white hover:bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-bold transition-all flex items-center gap-1">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>网页新标签</span>
@@ -1542,14 +1542,14 @@
               <div class="p-2.5 px-4 rounded-xl bg-emerald-50 border border-emerald-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-emerald-900 font-medium">
                 <span class="flex items-center gap-1.5">
                   <span>📱</span>
-                  <span>手机扫码/登录技巧：在下方 WhatsApp 登录界面点击底部的<b>【Link with phone number (手机号免扫码配对)】</b>，输入手机号即可在手机收到 8 位配对码秒登！或用另一台手机/电脑扫码登录！</span>
+                  <span>WhatsApp 扫码/配对指南：Meta 官方限制了 iframe 内嵌（若下方内嵌视窗显示灰屏），只需点击右上角<b>【🚀 启动 WhatsApp 专属纯净视窗】</b>即可秒出官方完整扫码与手机号 8 位配对码，直接在网页里登录使用！</span>
                 </span>
                 <button onclick="refreshWhatsAppIframe()" class="px-2.5 py-1 rounded-lg bg-emerald-200 hover:bg-emerald-300 font-bold shrink-0">刷新网页</button>
               </div>
 
               <!-- Iframe Container (Full Unobstructed View) -->
               <div class="relative w-full rounded-3xl overflow-hidden border-2 border-emerald-300 shadow-md bg-stone-100" style="height: 760px; min-height: 520px;">
-                <iframe id="social-iframe-wa" src="" data-src="https://web.whatsapp.com" class="w-full h-full border-0 bg-white" allow="camera; microphone; clipboard-read; clipboard-write; autoplay; fullscreen" allowfullscreen></iframe>
+                <iframe id="social-iframe-wa" src="" data-src="https://web.whatsapp.com/" class="w-full h-full border-0 bg-white" allow="camera; microphone; clipboard-read; clipboard-write; autoplay; fullscreen" allowfullscreen></iframe>
               </div>
             </div>
 
@@ -1564,20 +1564,17 @@
                   <div>
                     <div class="text-xs font-black text-purple-900 flex items-center gap-1.5">
                       <span>Instagram 官方网页版 · 实时视窗</span>
-                      <span class="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-bold">刷帖子 · 聊私信</span>
+                      <span class="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-bold">登录即用 · 刷帖看剧</span>
                     </div>
-                    <p class="text-[11px] text-stone-500">登录账号即可浏览好友动态、发 Story、看 Reels 视频与 Direct 私聊！</p>
+                    <p class="text-[11px] text-stone-500">直连官方登录页 (https://www.instagram.com/?hl=en)，登录账号即可浏览好友动态与 Reels！</p>
                   </div>
                 </div>
                 <div class="flex items-center gap-2 flex-wrap">
-                  <button onclick="setInstagramMode('login')" class="p-1.5 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-all flex items-center gap-1 shadow-xs">
-                    <i class="fa-solid fa-key"></i> <span>登录页面</span>
+                  <button onclick="openStandaloneApp('https://www.instagram.com/?hl=en', 'InstagramAppWindow')" class="p-2 px-4 rounded-xl bg-gradient-to-r from-purple-600 via-pink-500 to-rose-500 hover:opacity-95 text-white text-xs font-black transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+                    <i class="fa-solid fa-rocket"></i> <span>🚀 启动 Instagram 专属纯净视窗 (秒显登录页)</span>
                   </button>
-                  <button onclick="setInstagramMode('home')" class="p-1.5 px-3 rounded-xl bg-pink-100 hover:bg-pink-200 text-pink-900 text-xs font-bold transition-all flex items-center gap-1">
-                    <i class="fa-solid fa-house"></i> <span>主页动态</span>
-                  </button>
-                  <button onclick="openStandaloneApp('https://www.instagram.com', 'InstagramAppWindow')" class="p-1.5 px-3 rounded-xl bg-gradient-to-r from-purple-600 via-pink-500 to-rose-500 hover:opacity-95 text-white text-xs font-black transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
-                    <i class="fa-solid fa-rocket"></i> <span>独立大视窗</span>
+                  <button onclick="setInstagramMode('login')" class="p-1.5 px-3 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 text-xs font-bold transition-all flex items-center gap-1">
+                    <i class="fa-solid fa-key"></i> <span>内嵌重试登录</span>
                   </button>
                 </div>
               </div>
@@ -1595,14 +1592,14 @@
               <div class="p-2.5 px-4 rounded-xl bg-purple-50 border border-purple-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-purple-900 font-medium">
                 <span class="flex items-center gap-1.5">
                   <span>🔑</span>
-                  <span>账号登录提示：直接在下方官方登录页面输入账号与密码即可登录手账使用；若浏览器拦截内嵌，点击右上角【独立大视窗】即可秒开！</span>
+                  <span>Instagram 官方安全提示：由于 Meta 官方安全协议限制（X-Frame-Options: DENY），浏览器会拦截第三方内嵌。只需点击上方<b>【🚀 启动 Instagram 专属纯净视窗】</b>，即可 100% 正常显示完整登录页输入账号密码使用！</span>
                 </span>
                 <button onclick="refreshInstagramIframe()" class="px-2.5 py-1 rounded-lg bg-purple-200 hover:bg-purple-300 font-bold shrink-0">刷新网页</button>
               </div>
 
               <!-- Iframe Container (Full Unobstructed View) -->
               <div class="relative w-full rounded-3xl overflow-hidden border-2 border-purple-300 shadow-md bg-stone-100" style="height: 760px; min-height: 520px;">
-                <iframe id="social-iframe-ig" src="" data-src="https://www.instagram.com/accounts/login/" class="w-full h-full border-0 bg-white" allow="camera; microphone; clipboard-read; clipboard-write; autoplay; fullscreen" allowfullscreen></iframe>
+                <iframe id="social-iframe-ig" src="" data-src="https://www.instagram.com/?hl=en" class="w-full h-full border-0 bg-white" allow="camera; microphone; clipboard-read; clipboard-write; autoplay; fullscreen" allowfullscreen></iframe>
               </div>
             </div>
 
@@ -5105,11 +5102,11 @@
       const el = document.getElementById('social-iframe-ig');
       if (!el) return;
       if (mode === 'login') {
-        el.src = 'https://www.instagram.com/accounts/login/';
+        el.src = 'https://www.instagram.com/?hl=en';
       } else if (mode === 'home') {
-        el.src = 'https://www.instagram.com/';
+        el.src = 'https://www.instagram.com/?hl=en';
       } else {
-        el.src = 'https://www.instagram.com/explore/';
+        el.src = 'https://www.instagram.com/explore/?hl=en';
       }
     }
 
@@ -5123,11 +5120,11 @@
     }
 
     function openActiveAppStandalone() {
-      if (currentActiveSocialApp === 'xhs') openStandaloneApp('https://www.xiaohongshu.com/explore', 'XiaohongshuApp');
+      if (currentActiveSocialApp === 'xhs') openStandaloneApp('https://www.xiaohongshu.com/login', 'XiaohongshuApp');
       else if (currentActiveSocialApp === 'wechat') openStandaloneApp('https://wx.qq.com', 'WeChatWebApp');
-      else if (currentActiveSocialApp === 'whatsapp') openStandaloneApp('https://web.whatsapp.com', 'WhatsAppApp');
-      else if (currentActiveSocialApp === 'instagram') openStandaloneApp('https://www.instagram.com', 'InstagramApp');
-      else openStandaloneApp('https://www.xiaohongshu.com/explore', 'XiaohongshuApp');
+      else if (currentActiveSocialApp === 'whatsapp') openStandaloneApp('https://web.whatsapp.com/', 'WhatsAppApp');
+      else if (currentActiveSocialApp === 'instagram') openStandaloneApp('https://www.instagram.com/?hl=en', 'InstagramApp');
+      else openStandaloneApp('https://www.xiaohongshu.com/login', 'XiaohongshuApp');
     }
 
     function refreshActiveSocialIframe() {
