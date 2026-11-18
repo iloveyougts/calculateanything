@@ -160,41 +160,41 @@
               <span id="user-nickname-display" class="text-xs font-bold text-stone-700">颜芷萱 🌸</span>
             </div>
 
-            <!-- Music Player Quick Button -->
-            <button onclick="USAGI_APP.switchTab('music')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-pink-50 hover:bg-pink-100 border border-pink-300 text-pink-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="打开乌萨奇无广告音乐点歌台">
+            <!-- Music Player Quick Button (Desktop / Tablet) -->
+            <button onclick="USAGI_APP.switchTab('music')" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-pink-50 hover:bg-pink-100 border border-pink-300 text-pink-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="打开乌萨奇无广告音乐点歌台">
               <i class="fa-solid fa-music text-pink-500 animate-pulse"></i>
-              <span class="hidden sm:inline">点歌听音乐</span>
+              <span>点歌听音乐</span>
             </button>
 
-            <!-- Cinema Theater Quick Button -->
-            <button onclick="USAGI_APP.switchTab('cinema')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="打开芷萱随身小影院 (看戏/搜剧/动漫)">
+            <!-- Cinema Theater Quick Button (Desktop / Tablet) -->
+            <button onclick="USAGI_APP.switchTab('cinema')" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="打开芷萱随身小影院 (看戏/搜剧/动漫)">
               <i class="fa-solid fa-film text-rose-500"></i>
-              <span class="hidden sm:inline">随身看戏 🍿</span>
+              <span>随身看戏 🍿</span>
             </button>
 
-            <!-- Games Arcade Quick Button -->
-            <button onclick="USAGI_APP.switchTab('games')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 transition-all text-xs font-bold shadow-xs cursor-pointer" title="打开芷萱治愈小游戏乐园">
+            <!-- Games Arcade Quick Button (Desktop / Tablet) -->
+            <button onclick="USAGI_APP.switchTab('games')" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 transition-all text-xs font-bold shadow-xs cursor-pointer" title="打开芷萱治愈小游戏乐园">
               <i class="fa-solid fa-gamepad text-amber-600 animate-bounce"></i>
-              <span class="hidden sm:inline">游乐园 🎮</span>
+              <span>游乐园 🎮</span>
             </button>
 
             <!-- Export Excel Button (Desktop / Tablet) -->
-            <button onclick="openExportExcelModal('all_overview')" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-emerald-50 border border-emerald-300 text-stone-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="导出 Excel 手账与财务对账单">
+            <button onclick="openExportExcelModal('all_overview')" class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-emerald-50 border border-emerald-300 text-stone-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="导出 Excel 手账与财务对账单">
               <i class="fa-solid fa-file-excel text-emerald-600"></i>
-              <span class="hidden md:inline">导出 Excel</span>
+              <span>导出 Excel</span>
             </button>
 
-            <!-- Cloud DB Setting Button -->
-            <button onclick="openCloudDbModal()" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white hover:bg-amber-100 border border-amber-300 text-stone-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="云端数据库设置">
+            <!-- Cloud DB Setting Button (Desktop / Tablet) -->
+            <button onclick="openCloudDbModal()" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-amber-100 border border-amber-300 text-stone-700 transition-all text-xs font-bold shadow-xs cursor-pointer" title="云端数据库设置">
               <span id="cloud-status-dot" class="w-2.5 h-2.5 rounded-full bg-stone-300 inline-block"></span>
-              <span id="cloud-status-text" class="hidden sm:inline">数据库</span>
+              <span>数据库</span>
               <i class="fa-solid fa-cloud text-amber-500"></i>
             </button>
 
-            <!-- Mascot On/Off Toggle Button in Header -->
-            <button onclick="UsagiPetManager.toggleMinimize()" id="btn-pet-toggle-header" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 transition-all text-xs font-bold shadow-xs cursor-pointer" title="开启/收起乌萨奇助手">
+            <!-- Mascot On/Off Toggle Button in Header (Desktop / Tablet) -->
+            <button onclick="UsagiPetManager.toggleMinimize()" id="btn-pet-toggle-header" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 transition-all text-xs font-bold shadow-xs cursor-pointer" title="开启/收起乌萨奇助手">
               <span>🐰</span>
-              <span id="header-pet-toggle-text" class="hidden sm:inline">收起乌萨奇</span>
+              <span id="header-pet-toggle-text">收起乌萨奇</span>
             </button>
 
             <!-- Controls: Sound, Particles, Backup, Logout -->
@@ -624,17 +624,17 @@
               </div>
 
               <!-- Cycle & Duration Settings -->
-              <div class="flex items-center gap-2 bg-white/80 p-3 rounded-2xl border border-rose-200">
+              <div class="flex items-center gap-2.5 bg-white/90 p-3 rounded-2xl border border-rose-200 flex-wrap">
                 <div class="text-xs">
-                  <div class="font-bold text-stone-600">周期长度(天)</div>
-                  <input id="period-cycle-length-input" type="number" value="28" class="w-16 px-2 py-1 border rounded text-center text-sm font-bold" />
+                  <div class="font-bold text-stone-600 mb-0.5">周期长度(天)</div>
+                  <input id="period-cycle-length-input" type="number" value="28" class="w-16 px-2 py-1.5 border border-stone-200 rounded-lg text-center text-sm font-bold bg-white" />
                 </div>
                 <div class="text-xs">
-                  <div class="font-bold text-stone-600">经期天数(天)</div>
-                  <input id="period-duration-input" type="number" value="5" class="w-16 px-2 py-1 border rounded text-center text-sm font-bold" />
+                  <div class="font-bold text-stone-600 mb-0.5">经期天数(天)</div>
+                  <input id="period-duration-input" type="number" value="5" class="w-16 px-2 py-1.5 border border-stone-200 rounded-lg text-center text-sm font-bold bg-white" />
                 </div>
-                <button onclick="USAGI_APP.savePeriodSettings()" class="btn-pink text-xs py-2 px-3">
-                  保存
+                <button onclick="USAGI_APP.savePeriodSettings()" class="btn-pink text-xs py-2 px-4 font-bold self-end shadow-xs cursor-pointer">
+                  保存设置
                 </button>
               </div>
             </div>
@@ -1722,35 +1722,16 @@
           <!-- YouTube Cinema Anchor Container -->
           <div id="youtube-cinema-anchor" class="w-full">
             <!-- Cinema Player Stage Card -->
-            <div id="youtube-cinema-box" class="glass-card p-5 sm:p-6 bg-white/95 border-2 border-rose-300 shadow-md space-y-4 youtube-cinema-card">
+            <div id="youtube-cinema-box" class="glass-card p-4 sm:p-6 bg-white/95 border-2 border-rose-300 shadow-md space-y-4 youtube-cinema-card">
               
-              <!-- Floating PiP Top Header Bar (Only visible when floating) -->
-              <div id="youtube-pip-bar" class="hidden flex items-center justify-between pb-2 border-b border-rose-200">
-                <div class="flex items-center gap-2">
-                  <span class="text-rose-500 animate-pulse text-sm">🔴</span>
-                  <span class="text-xs font-black text-stone-800">芷萱随身小影院 (画中画)</span>
-                </div>
-                <div class="flex items-center gap-1.5">
-                  <button onclick="toggleYouTubeMini()" class="p-1 px-2 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-600 text-[11px] font-bold cursor-pointer" title="最小化/展开">
-                    <i class="fa-solid fa-window-minimize"></i>
-                  </button>
-                  <button onclick="toggleYouTubeFloat()" class="p-1 px-2 rounded-lg bg-pink-100 hover:bg-pink-200 text-pink-700 text-[11px] font-bold cursor-pointer" title="还原到影院">
-                    <i class="fa-solid fa-compress"></i> 还原
-                  </button>
-                  <button onclick="closeYouTubeFloat()" class="p-1 px-2 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-700 text-[11px] font-bold cursor-pointer" title="关闭悬浮">
-                    <i class="fa-solid fa-xmark"></i>
-                  </button>
-                </div>
-              </div>
-
               <!-- Search Bar & Controls -->
-              <div class="youtube-pip-body space-y-3">
+              <div class="space-y-3">
                 <div class="flex gap-2">
                   <div class="relative flex-1">
                     <span class="absolute left-3.5 top-2.5 text-rose-400 text-sm"><i class="fa-solid fa-magnifying-glass"></i></span>
                     <input id="youtube-search-input" type="text" placeholder="输入想看的韩剧剪辑、CORTIS MV、Chiikawa、动漫、电影解说、歌名... 或直接粘贴 YouTube 视频链接" class="w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-stone-200 focus:border-rose-400 outline-none text-xs transition-all shadow-inner bg-white" onkeydown="if(event.key==='Enter') handleSearchYouTubeCinema()" />
                   </div>
-                  <button onclick="handleSearchYouTubeCinema()" class="btn-usagi px-5 py-2.5 text-xs font-black bg-rose-500 hover:bg-rose-600 text-white border-rose-600 flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow-sm">
+                  <button onclick="handleSearchYouTubeCinema()" class="btn-usagi px-4 sm:px-5 py-2.5 text-xs font-black bg-rose-500 hover:bg-rose-600 text-white border-rose-600 flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow-sm">
                     <i class="fa-solid fa-play"></i> <span>搜看放映</span>
                   </button>
                 </div>
@@ -1768,15 +1749,20 @@
                 </div>
 
                 <!-- Currently Playing Indicator Bar -->
-                <div class="flex items-center justify-between text-xs px-3 py-1.5 rounded-xl bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-200 text-rose-900 font-bold">
-                  <span id="youtube-current-title" class="truncate flex items-center gap-1.5">
+                <div class="flex items-center justify-between text-xs px-3 py-2 rounded-xl bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-200 text-rose-900 font-bold flex-wrap gap-2">
+                  <span id="youtube-current-title" class="truncate flex items-center gap-1.5 max-w-[280px] sm:max-w-md">
                     <i class="fa-solid fa-circle-play text-rose-500 animate-pulse"></i> 正在放映: CORTIS - What You Want ⚡
                   </span>
-                  <span class="text-[10px] text-stone-500 flex-shrink-0 ml-2">YouTube 原生影音引擎</span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleYouTubeFloat()" class="px-2.5 py-1 rounded-lg bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold flex items-center gap-1 shadow-xs cursor-pointer transition-all" title="切换画中画小窗，可在屏幕右下角浮动播放">
+                      <i class="fa-solid fa-clone text-[10px]"></i> <span>小窗画中画</span>
+                    </button>
+                    <span class="text-[10px] text-stone-500 hidden sm:inline">YouTube 原生影音引擎</span>
+                  </div>
                 </div>
 
                 <!-- 16:9 HD Video Screen (Lazy Loaded to prevent browser tab from hanging/spinning) -->
-                <div class="relative w-full rounded-2xl overflow-hidden shadow-lg border-2 border-rose-300 bg-stone-950 aspect-video flex items-center justify-center">
+                <div id="youtube-cinema-screen-wrap" class="relative w-full rounded-2xl overflow-hidden shadow-lg border-2 border-rose-300 bg-stone-950 aspect-video flex items-center justify-center">
                   <iframe id="youtube-iframe-player"
                     class="w-full h-full hidden"
                     src=""
@@ -1797,13 +1783,13 @@
                       <p class="text-xs text-stone-300 mt-1 max-w-md">输入想看的剧名/动漫/歌名，或点击下方按钮直接开启！</p>
                     </div>
                     <div class="flex items-center gap-2 flex-wrap justify-center">
-                      <button onclick="handleSearchYouTubeCinema('CORTIS What You Want MV')" class="btn-usagi px-5 py-2 text-xs font-black bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white border-rose-400 shadow-md flex items-center gap-1.5 cursor-pointer hover:scale-105 transition-all">
+                      <button onclick="handleSearchYouTubeCinema('CORTIS What You Want MV')" class="btn-usagi px-4 sm:px-5 py-2 text-xs font-black bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white border-rose-400 shadow-md flex items-center gap-1.5 cursor-pointer hover:scale-105 transition-all">
                         <i class="fa-solid fa-play"></i> <span>开播：CORTIS - What You Want ⚡</span>
                       </button>
-                      <button onclick="handleSearchYouTubeCinema('高甜韩剧 名场面 剪辑')" class="btn-usagi px-4 py-2 text-xs font-bold bg-white/10 hover:bg-white/20 text-pink-200 border border-pink-400/40 shadow-sm flex items-center gap-1.5 cursor-pointer hover:scale-105 transition-all">
+                      <button onclick="handleSearchYouTubeCinema('高甜韩剧 名场面 剪辑')" class="btn-usagi px-3 sm:px-4 py-2 text-xs font-bold bg-white/10 hover:bg-white/20 text-pink-200 border border-pink-400/40 shadow-sm flex items-center gap-1.5 cursor-pointer hover:scale-105 transition-all">
                         <span>🍿 甜宠韩剧剪辑</span>
                       </button>
-                      <button onclick="handleSearchYouTubeCinema('Chiikawa 乌萨奇 经典可爱片段')" class="btn-usagi px-4 py-2 text-xs font-bold bg-white/10 hover:bg-white/20 text-amber-200 border border-amber-400/40 shadow-sm flex items-center gap-1.5 cursor-pointer hover:scale-105 transition-all">
+                      <button onclick="handleSearchYouTubeCinema('Chiikawa 乌萨奇 经典可爱片段')" class="btn-usagi px-3 sm:px-4 py-2 text-xs font-bold bg-white/10 hover:bg-white/20 text-amber-200 border border-amber-400/40 shadow-sm flex items-center gap-1.5 cursor-pointer hover:scale-105 transition-all">
                         <span>🐰 乌萨奇搞笑精选</span>
                       </button>
                     </div>
@@ -1811,12 +1797,26 @@
                       ⚡ 按需秒播设计 · 零后台耗电 · 网页秒开不转圈
                     </p>
                   </div>
+
+                  <!-- PiP Active Screen Placeholder (Shown when video is floating in mini-dock) -->
+                  <div id="youtube-pip-active-notice" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-stone-950 via-rose-950/70 to-stone-950 p-6 text-center text-white space-y-3 select-none">
+                    <div class="w-14 h-14 rounded-2xl bg-rose-500/20 border-2 border-rose-400 text-rose-400 flex items-center justify-center text-2xl shadow-lg animate-pulse">
+                      <i class="fa-solid fa-clone"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-base font-black text-rose-300">视频正在右下角【画中画小窗】播放中 🍿</h4>
+                      <p class="text-xs text-stone-300 mt-1 max-w-sm">你可以随意切换日历、记账、手账模块，视频小窗会一直在右下角陪伴芷萱~</p>
+                    </div>
+                    <button onclick="restoreYouTubeFromPip()" class="btn-usagi px-4 py-2 text-xs font-black bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white border-rose-400 shadow-md flex items-center gap-1.5 cursor-pointer hover:scale-105 transition-all">
+                      <i class="fa-solid fa-expand"></i> <span>点击还原回大屏放映厅</span>
+                    </button>
+                  </div>
                 </div>
 
                 <!-- Theater Caring Tip -->
                 <div class="p-3 bg-pink-50/80 rounded-xl border border-pink-200 flex items-center justify-between text-xs text-stone-600 flex-wrap gap-2">
                   <span class="flex items-center gap-1.5 text-pink-700 font-bold">
-                    <i class="fa-solid fa-lightbulb"></i> 贴心提示：点击右上角【画中画悬浮窗】，可以小窗飘在屏幕左下角，一边追剧一边切换日历、记账或手账哦！
+                    <i class="fa-solid fa-lightbulb"></i> 贴心提示：点击【小窗画中画】，视频会小巧浮动在屏幕右下角，一边追剧一边切换日历、记账或写手账哦！
                   </span>
                   <button onclick="USAGI_APP.switchTab('music')" class="text-xs font-bold text-pink-600 hover:text-pink-800 underline cursor-pointer">
                     🎵 想听黑胶音乐？点此切换到音乐点歌台
@@ -3953,17 +3953,42 @@
       return match ? match[1] : null;
     }
 
+    let currentPlayingVideoTitle = 'CORTIS - What You Want';
+    let currentPlayingVideoAuthor = 'CORTIS Official';
+    let isYouTubeInPip = false;
+
     function formatSeconds(secs) {
       if (!secs || isNaN(secs)) return '3:30';
-      const m = Math.floor(secs / 60);
-      const s = Math.floor(secs % 60);
-      return `${m}:${s < 10 ? '0' : ''}${s}`;
+      const total = parseInt(secs, 10);
+      if (total < 0) return '3:30';
+      const h = Math.floor(total / 3600);
+      const m = Math.floor((total % 3600) / 60);
+      const s = total % 60;
+      const pad = (n) => (n < 10 ? '0' + n : '' + n);
+      if (h > 0) {
+        return `${h}:${pad(m)}:${pad(s)}`;
+      }
+      return `${m}:${pad(s)}`;
+    }
+
+    function formatViewsCount(views) {
+      if (!views || isNaN(views)) return '';
+      const v = parseInt(views, 10);
+      if (v >= 100000000) {
+        return `${(v / 100000000).toFixed(1)}亿次播放`;
+      }
+      if (v >= 10000) {
+        return `${Math.round(v / 10000)}万次播放`;
+      }
+      return `${v}次播放`;
     }
 
     // Play Any Selected YouTube Video Directly in Cinema
     function playSelectedYouTubeVideo(videoId, title, author, cardEl) {
       if (!videoId) return;
       currentPlayingVideoId = videoId;
+      currentPlayingVideoTitle = title || '精选放映';
+      currentPlayingVideoAuthor = author || '';
 
       // Pause local audio engine so sound doesn't overlap
       const audio = document.getElementById('usagi-audio-engine');
@@ -3971,18 +3996,31 @@
         audio.pause();
       }
 
-      const iframe = document.getElementById('youtube-iframe-player');
-      const placeholder = document.getElementById('youtube-cinema-placeholder');
+      // If currently floating in YouTube PiP dock, update the mini player
+      if (isYouTubeInPip) {
+        const pipIframe = document.getElementById('youtube-pip-iframe-player');
+        const pipTitle = document.getElementById('mini-pip-title-text');
+        if (pipIframe) {
+          pipIframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&enablejsapi=1`;
+        }
+        if (pipTitle) {
+          pipTitle.innerText = currentPlayingVideoTitle;
+        }
+      } else {
+        // Normal Cinema Screen
+        const iframe = document.getElementById('youtube-iframe-player');
+        const placeholder = document.getElementById('youtube-cinema-placeholder');
+        if (placeholder) placeholder.classList.add('hidden');
+        if (iframe) {
+          iframe.classList.remove('hidden');
+          iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&enablejsapi=1`;
+        }
+      }
+
       const titleEl = document.getElementById('youtube-current-title');
       const extBtn = document.getElementById('youtube-external-link');
-
-      if (placeholder) placeholder.classList.add('hidden');
-      if (iframe) {
-        iframe.classList.remove('hidden');
-        iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&enablejsapi=1`;
-      }
       if (titleEl) {
-        titleEl.innerHTML = `<i class="fa-solid fa-circle-play text-rose-500 animate-pulse"></i> 正在放映: ${title || '精选视频'} ${author ? `· ${author}` : ''} ✨`;
+        titleEl.innerHTML = `<i class="fa-solid fa-circle-play text-rose-500 animate-pulse"></i> 正在放映: ${escapeHtml(currentPlayingVideoTitle)} ${author ? `· ${escapeHtml(author)}` : ''} ✨`;
       }
       if (extBtn) {
         extBtn.href = `https://www.youtube.com/watch?v=${videoId}`;
@@ -3990,38 +4028,40 @@
 
       // Highlight active result card
       document.querySelectorAll('.yt-result-card').forEach(c => {
-        c.classList.remove('ring-4', 'ring-rose-400', 'bg-rose-50/80');
+        c.classList.remove('ring-4', 'ring-rose-400', 'bg-rose-50/80', 'border-rose-300');
+        c.classList.add('border-pink-200');
         const badge = c.querySelector('.yt-playing-badge');
         if (badge) badge.classList.add('hidden');
       });
       if (cardEl) {
-        cardEl.classList.add('ring-4', 'ring-rose-400', 'bg-rose-50/80');
+        cardEl.classList.remove('border-pink-200');
+        cardEl.classList.add('ring-4', 'ring-rose-400', 'bg-rose-50/80', 'border-rose-300');
         const badge = cardEl.querySelector('.yt-playing-badge');
         if (badge) badge.classList.remove('hidden');
       }
 
-      UsagiSound.sparkle();
-      confettiRain(20);
+      if (window.UsagiSound && UsagiSound.sparkle) UsagiSound.sparkle();
+      if (typeof confettiRain === 'function') confettiRain(20);
 
-      // Smooth scroll to player on small screens
-      if (window.innerWidth < 768) {
+      // Smooth scroll to player on small screens if not in PiP
+      if (!isYouTubeInPip && window.innerWidth < 768) {
         const box = document.getElementById('youtube-cinema-box');
         if (box) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
 
-    // Search and Render Multiple Choices for User to Choose From
+    // Search and Render Real YouTube Video Results Across All Categories
     async function handleSearchYouTubeCinema(customQuery) {
       const input = document.getElementById('youtube-search-input');
       const query = (customQuery || (input ? input.value.trim() : '')).trim();
       if (!query) {
-        alert('请输入想看的视频名称、韩剧、舞台、歌名（例如：fein dj、CORTIS）或粘贴 YouTube 网址~ 🍿');
+        alert('请输入想看的视频名称、韩剧、电影、动漫、歌名或粘贴 YouTube 网址~ 🍿');
         return;
       }
       if (input) input.value = query;
       currentYouTubeQuery = query;
 
-      // 1. Direct URL pasted
+      // 1. Direct URL or Video ID pasted
       const directId = extractYouTubeId(query);
       if (directId) {
         playSelectedYouTubeVideo(directId, '已加载专属 YouTube 视频', '用户直链输入', null);
@@ -4034,89 +4074,63 @@
       const heading = document.getElementById('youtube-results-heading');
       if (loading) loading.classList.remove('hidden');
       if (queryLabel) queryLabel.innerText = query;
-      if (heading) heading.innerHTML = `正在检索【<span class="text-rose-600 font-black">${escapeHtml(query)}</span>】候选视频列表...`;
-
-      // 1. Check curated library first for instantaneous (0ms) response
-      const lower = query.toLowerCase();
-      let matchedCurated = null;
-      if (lower.includes('fein') || lower.includes('dj') || lower.includes('booyah') || lower.includes('travis')) {
-        matchedCurated = YOUTUBE_CURATED_LIBRARY.fein;
-      } else if (lower.includes('cortis') || lower.includes('코르티스') || lower.includes('what you want') || lower.includes('fashion') || lower.includes('joyride')) {
-        matchedCurated = YOUTUBE_CURATED_LIBRARY.cortis;
-      } else if (lower.includes('chii') || lower.includes('乌萨奇') || lower.includes('吉伊卡哇') || lower.includes('兔兔')) {
-        matchedCurated = YOUTUBE_CURATED_LIBRARY.chiikawa;
-      } else if (lower.includes('韩剧') || lower.includes('甜宠') || lower.includes('kdrama') || lower.includes('剧')) {
-        matchedCurated = YOUTUBE_CURATED_LIBRARY.kdrama;
-      } else if (lower.includes('lofi') || lower.includes('学习') || lower.includes('助眠')) {
-        matchedCurated = YOUTUBE_CURATED_LIBRARY.lofi;
-      } else if (lower.includes('周杰伦') || lower.includes('晴天') || lower.includes('告白气球')) {
-        matchedCurated = YOUTUBE_CURATED_LIBRARY.jay;
-      } else if (lower.includes('郑润泽') || lower.includes('城外') || lower.includes('瞬')) {
-        matchedCurated = YOUTUBE_CURATED_LIBRARY.zrz;
-      }
-
-      if (matchedCurated && matchedCurated.length > 0) {
-        if (loading) loading.classList.add('hidden');
-        renderYouTubeResults(matchedCurated, query);
-        const first = matchedCurated[0];
-        playSelectedYouTubeVideo(first.videoId, first.title, first.author, document.querySelector('.yt-result-card'));
-        return;
-      }
+      if (heading) heading.innerHTML = `正在全网检索【<span class="text-rose-600 font-black">${escapeHtml(query)}</span>】相关视频...`;
 
       let results = [];
 
-      // 2. Fetch real YouTube search results via Invidious API
+      // 2. Fetch real YouTube search results via reliable Piped API instances
       const searchApis = [
-        `https://yt.chocolatemoo53.com/api/v1/search?q=${encodeURIComponent(query)}&type=video`,
-        `https://invidious.nerdvpn.de/api/v1/search?q=${encodeURIComponent(query)}&type=video`,
-        `https://inv.nadeko.net/api/v1/search?q=${encodeURIComponent(query)}&type=video`
+        `https://api.piped.private.coffee/search?q=${encodeURIComponent(query)}&filter=videos`,
+        `https://pipedapi.leptons.xyz/search?q=${encodeURIComponent(query)}&filter=videos`,
+        `https://api.allorigins.win/raw?url=${encodeURIComponent('https://api.piped.private.coffee/search?q=' + encodeURIComponent(query) + '&filter=videos')}`
       ];
 
       for (const api of searchApis) {
         try {
           const controller = new AbortController();
-          const timer = setTimeout(() => controller.abort(), 2000);
+          const timer = setTimeout(() => controller.abort(), 4500);
           const res = await fetch(api, { signal: controller.signal });
           clearTimeout(timer);
           if (res.ok) {
             const data = await res.json();
-            if (Array.isArray(data) && data.length > 0) {
-              const videoItems = data.filter(it => it.type === 'video' && it.videoId).slice(0, 9);
+            const items = (data && data.items) ? data.items : (Array.isArray(data) ? data : []);
+            if (Array.isArray(items) && items.length > 0) {
+              const videoItems = items.filter(it => it.url && it.url.includes('/watch?v=')).slice(0, 18);
               if (videoItems.length > 0) {
-                results = videoItems.map(v => ({
-                  videoId: v.videoId,
-                  title: v.title,
-                  author: v.author || 'YouTube 创作者',
-                  duration: formatSeconds(v.lengthSeconds),
-                  viewsText: v.viewCountText || (v.viewCount ? `${Math.round(v.viewCount / 10000)}万次播放` : ''),
-                  thumbnail: `https://i.ytimg.com/vi/${v.videoId}/mqdefault.jpg`
-                }));
+                results = videoItems.map(it => {
+                  const vid = it.url.replace('/watch?v=', '').split('&')[0];
+                  return {
+                    videoId: vid,
+                    title: it.title || 'YouTube 视频',
+                    author: it.uploaderName || 'YouTube 创作者',
+                    duration: formatSeconds(it.duration),
+                    viewsText: formatViewsCount(it.views),
+                    thumbnail: it.thumbnail || `https://i.ytimg.com/vi/${vid}/mqdefault.jpg`
+                  };
+                });
                 break;
               }
             }
           }
         } catch (e) {
-          console.warn('API instance try failed, fallback to next:', e);
+          console.warn('YouTube search API endpoint try failed, checking next:', e);
         }
       }
 
-      // 3. Fallback to General dynamic candidates if network API was unreachable
-      if (results.length === 0) {
-        results = [
-          { videoId: 'bsytWBV3XVo', title: `【${query}】精选高燃舞台 / 现场版`, author: '音乐精选频道', duration: '3:15', viewsText: '热门推荐' },
-          { videoId: 'e2OpbOv_JiQ', title: `【${query}】官方高清 MV / 原曲首播`, author: '官方影视频道', duration: '3:40', viewsText: '官方发布' },
-          { videoId: 'B9synWjqBn8', title: `【${query}】超清 4K 特别现场版`, author: 'Live Stage', duration: '3:30', viewsText: '高清精选' },
-          { videoId: 'mszKrG8qEd0', title: `【${query}】治愈剪辑与特别高光赏析`, author: '手账影院推荐', duration: '5:20', viewsText: '特别推荐' }
-        ];
-      }
-
       if (loading) loading.classList.add('hidden');
-      renderYouTubeResults(results, query);
 
-      // Automatically play the first item in the results
+      // 3. Render genuine results
       if (results.length > 0) {
+        renderYouTubeResults(results, query);
+        // Automatically play the first real video found
         const first = results[0];
         playSelectedYouTubeVideo(first.videoId, first.title, first.author, document.querySelector('.yt-result-card'));
+      } else {
+        // If network failed or 0 results found, never fake titles!
+        if (heading) {
+          heading.innerHTML = `未能在线检索到【<span class="text-rose-600 font-black">${escapeHtml(query)}</span>】相关视频，请尝试其他关键词或直接粘贴 YouTube 视频网址~ 🍿`;
+        }
+        initDefaultYouTubeShowcase();
       }
     }
 
@@ -4180,10 +4194,9 @@
     // Default Initial Showcase Gallery
     function initDefaultYouTubeShowcase() {
       const defaultShowcase = [
-        { videoId: 'bsytWBV3XVo', title: 'FE!N x Booyah (NOISETIME Edit)', author: 'NOISETIME', duration: '2:11', viewsText: '608万次播放' },
-        { videoId: 'B9synWjqBn8', title: 'Travis Scott - FE!N ft. Playboi Carti', author: 'Travis Scott', duration: '3:30', viewsText: '2.8亿次播放' },
         { videoId: 'e2OpbOv_JiQ', title: "CORTIS (코르티스) 'What You Want' Official MV ⚡", author: 'CORTIS Official', duration: '3:25', viewsText: '1250万次播放' },
-        { videoId: 'e2OpbOv_JiQ', title: "CORTIS (코르티스) 'GO!' Official MV 🚀", author: 'CORTIS Official', duration: '3:10', viewsText: '980万次播放' },
+        { videoId: 'B9synWjqBn8', title: 'Travis Scott - FE!N ft. Playboi Carti', author: 'Travis Scott', duration: '3:30', viewsText: '2.8亿次播放' },
+        { videoId: 'bsytWBV3XVo', title: 'FE!N x Booyah (NOISETIME Edit)', author: 'NOISETIME', duration: '2:11', viewsText: '608万次播放' },
         { videoId: 'mszKrG8qEd0', title: 'Chiikawa 乌萨奇可爱名场面大赏 呀哈~ 🐰', author: 'Chiikawa Official', duration: '5:20', viewsText: '890万次播放' },
         { videoId: 'jfKfPfyJRdk', title: 'Lofi Girl 24/7 治愈自习学习电台 ☕', author: 'Lofi Girl', duration: 'LIVE', viewsText: '1.2亿次播放' }
       ];
@@ -4194,40 +4207,122 @@
       handleSearchYouTubeCinema(term);
     }
 
+    // ============================================================
+    // YOUTUBE-STYLE GENUINE MINI-PLAYER PICTURE-IN-PICTURE (画中画)
+    // ============================================================
     function toggleYouTubeFloat() {
-      const box = document.getElementById('youtube-cinema-box');
-      const anchor = document.getElementById('youtube-cinema-anchor');
-      const btn = document.getElementById('btn-toggle-yt-float');
-      const pipBar = document.getElementById('youtube-pip-bar');
-      if (!box) return;
-
-      isYouTubeFloating = !isYouTubeFloating;
-      if (isYouTubeFloating) {
-        box.classList.add('youtube-floating-pip');
-        document.body.appendChild(box); // move to body so switching tabs never cuts or hides playback!
-        if (pipBar) pipBar.classList.remove('hidden');
-        if (btn) btn.innerHTML = '<i class="fa-solid fa-compress mr-1"></i> 还原页面';
+      if (isYouTubeInPip) {
+        restoreYouTubeFromPip();
       } else {
-        box.classList.remove('youtube-floating-pip');
-        box.classList.remove('minimized');
-        if (anchor) anchor.appendChild(box); // dock back into music tab
-        if (pipBar) pipBar.classList.add('hidden');
-        if (btn) btn.innerHTML = '<i class="fa-solid fa-clone mr-1"></i> 画中画悬浮窗';
+        enableYouTubePip();
       }
-      UsagiSound.pop();
+      if (window.UsagiSound && UsagiSound.pop) UsagiSound.pop();
+    }
+
+    function enableYouTubePip() {
+      const pipDock = document.getElementById('youtube-mini-pip-dock');
+      const mainIframe = document.getElementById('youtube-iframe-player');
+      const pipIframe = document.getElementById('youtube-pip-iframe-player');
+      const placeholder = document.getElementById('youtube-cinema-placeholder');
+      const pipNotice = document.getElementById('youtube-pip-active-notice');
+      const pipTitle = document.getElementById('mini-pip-title-text');
+      const btn = document.getElementById('btn-toggle-yt-float');
+
+      if (!currentPlayingVideoId) {
+        currentPlayingVideoId = 'e2OpbOv_JiQ';
+        currentPlayingVideoTitle = "CORTIS 'What You Want'";
+      }
+
+      isYouTubeInPip = true;
+
+      // Set the mini PIP player's iframe
+      if (pipIframe) {
+        pipIframe.src = `https://www.youtube-nocookie.com/embed/${currentPlayingVideoId}?autoplay=1&rel=0&enablejsapi=1`;
+      }
+      if (pipTitle) {
+        pipTitle.innerText = currentPlayingVideoTitle || '正在画中画播放';
+      }
+
+      // Show the mini dock
+      if (pipDock) pipDock.classList.remove('hidden');
+
+      // On main screen, show placeholder notice
+      if (mainIframe) {
+        mainIframe.src = '';
+        mainIframe.classList.add('hidden');
+      }
+      if (placeholder) placeholder.classList.add('hidden');
+      if (pipNotice) pipNotice.classList.remove('hidden');
+
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-expand mr-1"></i> 还原大屏';
+
+      if (window.UsagiPetManager && UsagiPetManager.mascotSpeak) {
+        UsagiPetManager.mascotSpeak('乌萨奇帮你把视频变成右下角小窗啦！去写手账、看日历也能继续看哦~ 🍿✨');
+      }
+    }
+
+    function restoreYouTubeFromPip() {
+      const pipDock = document.getElementById('youtube-mini-pip-dock');
+      const mainIframe = document.getElementById('youtube-iframe-player');
+      const pipIframe = document.getElementById('youtube-pip-iframe-player');
+      const pipNotice = document.getElementById('youtube-pip-active-notice');
+      const btn = document.getElementById('btn-toggle-yt-float');
+
+      isYouTubeInPip = false;
+
+      // Stop mini player
+      if (pipIframe) pipIframe.src = '';
+      if (pipDock) pipDock.classList.add('hidden');
+
+      // Restore main player
+      if (pipNotice) pipNotice.classList.add('hidden');
+      if (mainIframe && currentPlayingVideoId) {
+        mainIframe.classList.remove('hidden');
+        mainIframe.src = `https://www.youtube-nocookie.com/embed/${currentPlayingVideoId}?autoplay=1&rel=0&enablejsapi=1`;
+      }
+
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-clone mr-1"></i> 画中画悬浮窗';
+
+      // Ensure cinema tab is visible
+      if (window.USAGI_APP && USAGI_APP.switchTab) {
+        USAGI_APP.switchTab('cinema');
+      }
+
+      if (window.UsagiPetManager && UsagiPetManager.mascotSpeak) {
+        UsagiPetManager.mascotSpeak('已经为你还原回大屏影院啦！大屏看戏更过瘾~ 📺✨');
+      }
+    }
+
+    function closeYouTubePip() {
+      const pipDock = document.getElementById('youtube-mini-pip-dock');
+      const pipIframe = document.getElementById('youtube-pip-iframe-player');
+      const pipNotice = document.getElementById('youtube-pip-active-notice');
+      const mainIframe = document.getElementById('youtube-iframe-player');
+      const placeholder = document.getElementById('youtube-cinema-placeholder');
+      const btn = document.getElementById('btn-toggle-yt-float');
+
+      isYouTubeInPip = false;
+
+      if (pipIframe) pipIframe.src = '';
+      if (pipDock) pipDock.classList.add('hidden');
+
+      if (pipNotice) pipNotice.classList.add('hidden');
+      if (mainIframe) {
+        mainIframe.src = '';
+        mainIframe.classList.add('hidden');
+      }
+      if (placeholder) placeholder.classList.remove('hidden');
+
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-clone mr-1"></i> 画中画悬浮窗';
+      if (window.UsagiSound && UsagiSound.pop) UsagiSound.pop();
     }
 
     function toggleYouTubeMini() {
-      const box = document.getElementById('youtube-cinema-box');
-      if (!box) return;
-      box.classList.toggle('minimized');
-      UsagiSound.pop();
+      toggleYouTubeFloat();
     }
 
     function closeYouTubeFloat() {
-      if (isYouTubeFloating) {
-        toggleYouTubeFloat();
-      }
+      closeYouTubePip();
     }
 
     // Tab Event Forwarders
@@ -4525,11 +4620,43 @@
       <span class="text-xl">🎵</span>
       <span class="text-[10px] font-black">点歌</span>
     </button>
-    <button onclick="USAGI_APP.switchTab('games')" class="mobile-nav-btn flex flex-col items-center gap-0.5 text-stone-600 focus:outline-none" data-tab="games">
-      <span class="text-xl">🎮</span>
-      <span class="text-[10px] font-black">游乐园</span>
+    <button onclick="USAGI_APP.switchTab('cinema')" class="mobile-nav-btn flex flex-col items-center gap-0.5 text-stone-600 focus:outline-none" data-tab="cinema">
+      <span class="text-xl">🍿</span>
+      <span class="text-[10px] font-black">看戏</span>
     </button>
   </nav>
+
+  <!-- 📺 YouTube 原生画中画迷你悬浮播放器 (YouTube Style Floating Mini-Player Dock) -->
+  <div id="youtube-mini-pip-dock" class="hidden fixed z-[9999] bg-stone-950 border-2 border-rose-500/80 rounded-2xl shadow-2xl overflow-hidden group select-none transition-all duration-300">
+    <!-- Top Control Bar Overlay (Hover on PC, Always accessible on Mobile) -->
+    <div class="mini-pip-bar absolute top-0 inset-x-0 bg-gradient-to-b from-black/90 via-black/50 to-transparent p-2 z-20 flex items-center justify-between text-white">
+      <span class="text-[11px] font-bold truncate max-w-[140px] sm:max-w-[200px] flex items-center gap-1.5 drop-shadow">
+        <i class="fa-solid fa-circle-play text-rose-500 animate-pulse text-xs"></i>
+        <span id="mini-pip-title-text">正在播放</span>
+      </span>
+      <div class="flex items-center gap-1.5 flex-shrink-0">
+        <!-- Expand / Restore to Big Screen -->
+        <button onclick="restoreYouTubeFromPip()" class="w-6 h-6 rounded-lg bg-white/25 hover:bg-white/40 active:scale-95 flex items-center justify-center text-white transition-all cursor-pointer" title="还原到影院大屏">
+          <i class="fa-solid fa-expand text-[10px]"></i>
+        </button>
+        <!-- Close PIP Player -->
+        <button onclick="closeYouTubePip()" class="w-6 h-6 rounded-lg bg-rose-600 hover:bg-rose-700 active:scale-95 flex items-center justify-center text-white transition-all cursor-pointer" title="关闭小窗">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Mini Player 16:9 Screen Target -->
+    <div id="mini-pip-screen-target" class="w-full aspect-video bg-black flex items-center justify-center">
+      <iframe id="youtube-pip-iframe-player"
+        class="w-full h-full"
+        src=""
+        title="YouTube Mini Cinema Player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
 
 </body>
 </html>
