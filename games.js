@@ -4,6 +4,133 @@
    ============================================================ */
 
 /* ============================================================
+   0. USAGI KAWAII VOICE ENGINE (Web Speech API 智能可爱语音播报)
+   ============================================================ */
+const UsagiVoice = (function () {
+  let isVoiceEnabled = localStorage.getItem('usagi_voice_enabled') !== 'false'; // 默认开启
+  let voices = [];
+  let isSpeaking = false;
+
+  function loadVoices() {
+    if (!('speechSynthesis' in window)) return;
+    try {
+      voices = window.speechSynthesis.getVoices() || [];
+    } catch (e) {}
+  }
+
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    loadVoices();
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+  }
+
+  function getBestVoice() {
+    if (!voices || voices.length === 0) loadVoices();
+    const preferred = ['Xiaoxiao', 'Yaoyao', 'Tingting', 'Mei-Jia', 'Sin-ji', 'Huihui', 'Lily', 'Google 普通话', 'Microsoft', 'Chinese'];
+    for (const name of preferred) {
+      const match = voices.find(v => v.name && v.name.includes(name) && (v.lang.startsWith('zh') || v.lang.startsWith('cmn')));
+      if (match) return match;
+    }
+    const zh = voices.find(v => v.lang && (v.lang.startsWith('zh') || v.lang.startsWith('cmn')));
+    return zh || null;
+  }
+
+  function speak(text, options = {}) {
+    if (!isVoiceEnabled) return;
+    if (!('speechSynthesis' in window)) return;
+    if (!text || !text.trim()) return;
+
+    try {
+      window.speechSynthesis.cancel();
+
+      // 过滤表情符号与特殊标点，获得最自然清脆的萌系朗读
+      const cleanText = text
+        .replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]/gu, '')
+        .replace(/[【】「」『』~！!？?·_—]/g, ' ')
+        .trim();
+
+      if (!cleanText) return;
+
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = 'zh-CN';
+      utterance.pitch = options.pitch || 1.48; // 可爱软萌的高音调
+      utterance.rate = options.rate || 1.12;   // 活泼轻快语速
+      utterance.volume = options.volume || 1.0;
+
+      const v = getBestVoice();
+      if (v) utterance.voice = v;
+
+      utterance.onstart = () => {
+        isSpeaking = true;
+        updateUI(true);
+      };
+      utterance.onend = () => {
+        isSpeaking = false;
+        updateUI(false);
+      };
+      utterance.onerror = () => {
+        isSpeaking = false;
+        updateUI(false);
+      };
+
+      if (window.UsagiSound && !options.silent) {
+        UsagiSound.pop();
+      }
+
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      console.warn("SpeechSynthesis error:", e);
+    }
+  }
+
+  function stop() {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      isSpeaking = false;
+      updateUI(false);
+    }
+  }
+
+  function toggleVoice() {
+    isVoiceEnabled = !isVoiceEnabled;
+    localStorage.setItem('usagi_voice_enabled', isVoiceEnabled ? 'true' : 'false');
+    if (!isVoiceEnabled) stop();
+    updateButtonUI();
+    if (isVoiceEnabled) {
+      speak('乌萨奇可爱语音已开启！我会准时提醒芷萱哦~ 呀哈！');
+    }
+    return isVoiceEnabled;
+  }
+
+  function updateUI(speaking) {
+    const bubble = document.getElementById('usagi-speech-bubble');
+    const wave = document.getElementById('usagi-voice-wave');
+    if (wave) wave.classList.toggle('hidden', !speaking);
+    if (bubble) bubble.classList.toggle('speaking-active', speaking);
+  }
+
+  function updateButtonUI() {
+    const btn = document.getElementById('btn-speech-voice-toggle');
+    if (btn) {
+      btn.innerHTML = isVoiceEnabled ? '🔊 语音开启' : '🔇 语音静音';
+      btn.title = isVoiceEnabled ? '点击关闭乌萨奇语音播报' : '点击开启乌萨奇可爱语音播报';
+      btn.classList.toggle('text-pink-600', isVoiceEnabled);
+      btn.classList.toggle('text-stone-400', !isVoiceEnabled);
+    }
+  }
+
+  return {
+    speak,
+    stop,
+    toggleVoice,
+    isEnabled: () => isVoiceEnabled,
+    updateButtonUI
+  };
+})();
+window.UsagiVoice = UsagiVoice;
+
+/* ============================================================
    1. USAGI PET MANAGER (底部漫步桌面萌宠 & 贴心生活助手)
    ============================================================ */
 const UsagiPetManager = (function () {
@@ -395,6 +522,13 @@ const UsagiPetManager = (function () {
         reactTo('dashboard');
       }, 500);
     }
+
+    // 初始化桌面物理拖拽抛掷引擎与语音状态
+    setTimeout(() => {
+      initPhysicsToss();
+      if (window.UsagiVoice) UsagiVoice.updateButtonUI();
+      checkDailyReminders();
+    }, 1500);
   }
 
   function startLoop() {
@@ -604,7 +738,7 @@ const UsagiPetManager = (function () {
     }
   }
 
-  function speak(tag, message) {
+  function speak(tag, message, autoVoice = false) {
     const tagEl = document.getElementById('usagi-speech-tag');
     const textEl = document.getElementById('usagi-speech-text');
     const bubble = document.getElementById('usagi-speech-bubble');
@@ -617,6 +751,10 @@ const UsagiPetManager = (function () {
       bubble.classList.remove('bubble-pop');
       void bubble.offsetWidth;
       bubble.classList.add('bubble-pop');
+    }
+
+    if (autoVoice && window.UsagiVoice) {
+      UsagiVoice.speak(message);
     }
   }
 
@@ -858,12 +996,311 @@ const UsagiPetManager = (function () {
     if (currentState !== 'idle' && STATE_CONFIGS[currentState]) {
       const cfg = STATE_CONFIGS[currentState];
       const q = cfg.quotes[Math.floor(Math.random() * cfg.quotes.length)];
-      speak(cfg.tag, q);
+      speak(cfg.tag, q, true);
       return;
     }
 
     const item = IDLE_REMINDERS[Math.floor(Math.random() * IDLE_REMINDERS.length)];
-    speak(item.tag, item.text);
+    speak(item.tag, item.text, true);
+  }
+
+  let isTossing = false;
+  let tossAnimId = null;
+
+  function initPhysicsToss() {
+    const container = document.getElementById('usagi-mascot-container');
+    const bouncer = document.getElementById('usagi-bouncer');
+    const mascotImg = document.getElementById('usagi-mascot-img');
+    if (!container || !bouncer) return;
+
+    let isPointerDown = false;
+    let hasDragged = false;
+    let startX = 0, startY = 0;
+    let origLeft = 0, origTop = 0;
+    let grabOffsetX = 0, grabOffsetY = 0;
+    let trackHistory = [];
+    let startTime = 0;
+
+    function getPt(e) {
+      return (e.touches && e.touches.length > 0) ? e.touches[0] : e;
+    }
+
+    function onStart(e) {
+      if (e.target.closest('#usagi-assistant-dock') || e.target.closest('#btn-speech-voice-toggle') || e.target.closest('#usagi-minimized-pill')) {
+        return;
+      }
+
+      const pt = getPt(e);
+      if (!pt) return;
+
+      isPointerDown = true;
+      hasDragged = false;
+      startTime = performance.now();
+      startX = pt.clientX;
+      startY = pt.clientY;
+
+      const rect = container.getBoundingClientRect();
+      origLeft = rect.left;
+      origTop = rect.top;
+      grabOffsetX = pt.clientX - rect.left;
+      grabOffsetY = pt.clientY - rect.top;
+
+      trackHistory = [{ x: pt.clientX, y: pt.clientY, t: startTime }];
+
+      if (tossAnimId) {
+        cancelAnimationFrame(tossAnimId);
+        tossAnimId = null;
+      }
+      isTossing = false;
+
+      window.addEventListener('mousemove', onMove, { passive: false });
+      window.addEventListener('mouseup', onEnd);
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('touchend', onEnd);
+      window.addEventListener('touchcancel', onEnd);
+    }
+
+    function onMove(e) {
+      if (!isPointerDown) return;
+      const pt = getPt(e);
+      if (!pt) return;
+
+      const dx = pt.clientX - startX;
+      const dy = pt.clientY - startY;
+
+      if (!hasDragged && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+        hasDragged = true;
+        isPaused = true;
+        container.classList.add('is-dragging');
+        container.style.transition = 'none';
+        container.style.bottom = 'auto';
+        container.style.right = 'auto';
+        if (window.UsagiSound) UsagiSound.pop();
+        speak('🐰 抓起来啦！', '咦？抓我起来啦！芷萱要把我丢到哪里去呀~ 呀哈！✈️', true);
+      }
+
+      if (hasDragged) {
+        if (e.cancelable) e.preventDefault();
+
+        const curX = pt.clientX - grabOffsetX;
+        const curY = pt.clientY - grabOffsetY;
+
+        container.style.left = curX + 'px';
+        container.style.top = curY + 'px';
+        posX = curX;
+
+        const now = performance.now();
+        trackHistory.push({ x: pt.clientX, y: pt.clientY, t: now });
+        if (trackHistory.length > 6) trackHistory.shift();
+      }
+    }
+
+    function onEnd(e) {
+      if (!isPointerDown) return;
+      isPointerDown = false;
+      container.classList.remove('is-dragging');
+
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onEnd);
+      window.removeEventListener('touchmove', onMove);
+      window.removeEventListener('touchend', onEnd);
+      window.removeEventListener('touchcancel', onEnd);
+
+      if (!hasDragged) {
+        if (typeof handleUsagiClick === 'function') handleUsagiClick();
+        return;
+      }
+
+      let vx = 0, vy = 0;
+      if (trackHistory.length >= 2) {
+        const last = trackHistory[trackHistory.length - 1];
+        const first = trackHistory[0];
+        const dt = Math.max(16, last.t - first.t);
+        vx = ((last.x - first.x) / dt) * 18;
+        vy = ((last.y - first.y) / dt) * 18;
+      }
+
+      const maxSpd = 36;
+      vx = Math.max(-maxSpd, Math.min(maxSpd, vx));
+      vy = Math.max(-maxSpd, Math.min(maxSpd, vy));
+
+      if (Math.abs(vx) < 2 && Math.abs(vy) < 2) {
+        finishToss(posX, container.offsetTop);
+        return;
+      }
+
+      startFlingFlight(posX, container.offsetTop, vx, vy);
+    }
+
+    function startFlingFlight(startX, startY, initVx, initVy) {
+      isTossing = true;
+      container.classList.add('is-flying');
+      container.style.transition = 'none';
+
+      let x = startX;
+      let y = startY;
+      let vx = initVx;
+      let vy = initVy;
+      const gravity = 0.88;
+      const friction = 0.988;
+      const bounceCoeff = 0.72;
+      let angle = 0;
+
+      if (window.UsagiSound) UsagiSound.whoosh();
+      speak('🚀 起飞啦！', '呀哈——！起飞啦！芷萱丢得好远呀！💫💨', true);
+
+      function physicsStep() {
+        if (!isTossing) return;
+
+        x += vx;
+        y += vy;
+        vy += gravity;
+        vx *= friction;
+        vy *= friction;
+
+        const screenW = window.innerWidth || 1024;
+        const screenH = window.innerHeight || 800;
+        const isMobile = screenW < 768;
+
+        const w = container.offsetWidth || 110;
+        const h = container.offsetHeight || 140;
+
+        const minX = 8;
+        const maxX = screenW - w - 8;
+        const minY = 8;
+        const maxY = screenH - h - (isMobile ? 86 : 28);
+
+        let hitBoundary = false;
+
+        if (x <= minX) {
+          x = minX;
+          vx = -vx * bounceCoeff;
+          hitBoundary = true;
+        } else if (x >= maxX) {
+          x = maxX;
+          vx = -vx * bounceCoeff;
+          hitBoundary = true;
+        }
+
+        if (y <= minY) {
+          y = minY;
+          vy = -vy * bounceCoeff;
+          hitBoundary = true;
+        } else if (y >= maxY) {
+          y = maxY;
+          vy = -vy * 0.65;
+          vx *= 0.82;
+          hitBoundary = true;
+        }
+
+        if (hitBoundary && (Math.abs(vx) > 3 || Math.abs(vy) > 3)) {
+          if (window.UsagiSound) UsagiSound.boing();
+          if (mascotImg) {
+            mascotImg.classList.add('usagi-bounce-squish');
+            setTimeout(() => mascotImg.classList.remove('usagi-bounce-squish'), 320);
+          }
+        }
+
+        angle += vx * 1.6;
+        if (mascotImg) mascotImg.style.transform = `rotate(${Math.min(45, Math.max(-45, angle))}deg)`;
+
+        container.style.left = x + 'px';
+        container.style.top = y + 'px';
+
+        if (y >= maxY - 2 && Math.abs(vy) < 1.2 && Math.abs(vx) < 0.8) {
+          finishToss(x, y);
+          return;
+        }
+
+        tossAnimId = requestAnimationFrame(physicsStep);
+      }
+
+      tossAnimId = requestAnimationFrame(physicsStep);
+    }
+
+    function finishToss(finalX, finalY) {
+      isTossing = false;
+      if (tossAnimId) cancelAnimationFrame(tossAnimId);
+      container.classList.remove('is-flying');
+      container.style.transition = '';
+
+      if (mascotImg) mascotImg.style.transform = 'none';
+
+      posX = finalX;
+      isPaused = false;
+
+      if (window.UsagiSound) UsagiSound.pop();
+      if (typeof confettiRain === 'function') confettiRain(15);
+      speak('✨ 稳稳落地', '呼~ 稳稳着陆啦！芷萱丢得真好玩，还想再飞一次！嘿嘿~ 🥰🐰', true);
+
+      setTimeout(() => {
+        updatePositionStyle();
+      }, 500);
+    }
+
+    bouncer.addEventListener('mousedown', onStart);
+    bouncer.addEventListener('touchstart', onStart, { passive: false });
+  }
+
+  function remindEvent(type, title, extraDate) {
+    if (type === 'calendar') {
+      const text = `乌萨奇收到啦！已将【${title}】记在日历${extraDate ? ' ' + extraDate : ''}上啦！到时准时提醒芷萱哦~ 📅🌸`;
+      speak('📅 日历日程已记录', text, true);
+    } else if (type === 'countdown') {
+      const text = `哇！心动倒数【${title}】记录好啦！乌萨奇每天都陪着芷萱一起数着日子，好期待呀~ ⏳💖`;
+      speak('⏳ 倒数心动中', text, true);
+    } else if (type === 'todo') {
+      const text = `待办小任务【${title}】添加成功！芷萱冲鸭，乌萨奇陪你一起搞定它！🥕✨`;
+      speak('📝 待办任务已记下', text, true);
+    }
+  }
+
+  function checkDailyReminders() {
+    if (!window.USAGI_APP || !USAGI_APP.data) return;
+    const data = USAGI_APP.data;
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    // 1. Countdown check
+    if (data.countdowns && data.countdowns.length > 0) {
+      for (const c of data.countdowns) {
+        if (!c.targetDate) continue;
+        const target = new Date(c.targetDate);
+        const today = new Date(todayStr);
+        const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+        if (diffDays === 0) {
+          const msg = `芷萱快看！今天是期待已久的【${c.title}】啦！乌萨奇为你放彩花庆祝~ 呀哈！🎉💖`;
+          speak('🎉 今天是大日子！', msg, true);
+          if (typeof confettiRain === 'function') confettiRain(35);
+          return;
+        } else if (diffDays > 0 && diffDays <= 3) {
+          const msg = `还有 ${diffDays} 天就是【${c.title}】啦！乌萨奇每天都在替芷萱数着日子，好期待呀~ ⏳✈️`;
+          speak('⏳ 倒数提醒', msg, true);
+          return;
+        }
+      }
+    }
+
+    // 2. Calendar check
+    if (data.calendarEvents && data.calendarEvents.length > 0) {
+      const todayEvents = data.calendarEvents.filter(e => e.date === todayStr && !e.completed);
+      if (todayEvents.length > 0) {
+        const firstEv = todayEvents[0];
+        const msg = `芷萱，今天在日历上有特别日程【${firstEv.title}】哦！要记得注意时间，乌萨奇爱你！📅🌸`;
+        speak('📅 今日特别日程', msg, true);
+        return;
+      }
+    }
+
+    // 3. Todo check
+    if (data.todos && data.todos.length > 0) {
+      const pendingTodos = data.todos.filter(t => !t.completed);
+      if (pendingTodos.length > 0) {
+        const firstTodo = pendingTodos[0];
+        const msg = `芷萱小仙女，今天有待办事项【${firstTodo.text}】还没有打勾勾哦，乌萨奇陪你一起冲鸭！🥕💪`;
+        speak('📝 今日待办提醒', msg, true);
+        return;
+      }
+    }
   }
 
   return {
@@ -879,6 +1316,9 @@ const UsagiPetManager = (function () {
     reactTo,
     speak,
     speakRandomSweet,
+    initPhysicsToss,
+    remindEvent,
+    checkDailyReminders,
     getState: () => currentState,
     isRoaming: () => isRoaming
   };
@@ -2784,10 +3224,662 @@ window.RPSGame = RPSGame;
 
 
 /* ============================================================
-   7. MINI-GAMES SUBTAB SWITCHER (游乐园子页面切换 - 9大萌趣游戏)
+   6.5. GAME 10: 🚀 乌萨奇蹦蹦跳跃 · 跃向星空 (Sky Hop)
+   ============================================================ */
+const SkyHopGame = (function () {
+  let canvas = null, ctx = null;
+  let animId = null;
+  let isPlaying = false;
+  let score = 0, highScore = parseInt(localStorage.getItem('usagi_hop_high') || '0', 10);
+  let player = { x: 172, y: 380, vx: 0, vy: -10, w: 36, h: 36, facing: 1 };
+  let platforms = [];
+  let cameraY = 0;
+  let keys = { left: false, right: false };
+
+  function init() {
+    canvas = document.getElementById('hop-canvas');
+    if (!canvas) return;
+    ctx = canvas.getContext('2d');
+    const highEl = document.getElementById('hop-high');
+    if (highEl) highEl.innerText = highScore + 'm';
+
+    window.removeEventListener('keydown', onKeyDown);
+    window.removeEventListener('keyup', onKeyUp);
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+
+    const btnL = document.getElementById('hop-btn-left');
+    const btnR = document.getElementById('hop-btn-right');
+    if (btnL) {
+      btnL.onmousedown = btnL.ontouchstart = (e) => { e.preventDefault(); keys.left = true; };
+      btnL.onmouseup = btnL.ontouchend = (e) => { e.preventDefault(); keys.left = false; };
+    }
+    if (btnR) {
+      btnR.onmousedown = btnR.ontouchstart = (e) => { e.preventDefault(); keys.right = true; };
+      btnR.onmouseup = btnR.ontouchend = (e) => { e.preventDefault(); keys.right = false; };
+    }
+
+    canvas.onmousemove = (e) => {
+      if (!isPlaying) return;
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+      if (mouseX < player.x) { player.vx = -4.5; player.facing = -1; }
+      else if (mouseX > player.x + player.w) { player.vx = 4.5; player.facing = 1; }
+    };
+
+    reset();
+  }
+
+  function reset() {
+    isPlaying = true;
+    score = 0;
+    cameraY = 0;
+    player = { x: canvas ? canvas.width / 2 - 18 : 172, y: 380, vx: 0, vy: -10, w: 36, h: 36, facing: 1 };
+    platforms = [
+      { x: 140, y: 440, w: 100, h: 14, type: 'normal' },
+      { x: 60, y: 360, w: 80, h: 14, type: 'normal' },
+      { x: 230, y: 280, w: 80, h: 14, type: 'spring' },
+      { x: 120, y: 200, w: 75, h: 14, type: 'moving', vx: 1.5 },
+      { x: 250, y: 120, w: 80, h: 14, type: 'normal' },
+      { x: 80, y: 40, w: 75, h: 14, type: 'normal' }
+    ];
+    for (let i = platforms.length; i < 9; i++) {
+      spawnPlatform(-i * 70);
+    }
+    updateScoreUI();
+    if (animId) cancelAnimationFrame(animId);
+    loop();
+  }
+
+  function spawnPlatform(y) {
+    const types = ['normal', 'normal', 'moving', 'spring', 'fragile'];
+    const type = types[Math.floor(Math.random() * types.length)];
+    const w = type === 'spring' ? 65 : 75;
+    const x = 20 + Math.random() * (canvas.width - w - 40);
+    platforms.push({
+      x, y, w, h: 14, type,
+      vx: type === 'moving' ? (Math.random() > 0.5 ? 1.4 : -1.4) : 0,
+      hasStar: Math.random() < 0.28
+    });
+  }
+
+  function onKeyDown(e) {
+    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+    if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+  }
+  function onKeyUp(e) {
+    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+    if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+  }
+
+  function loop() {
+    if (!isPlaying) return;
+    update();
+    draw();
+    animId = requestAnimationFrame(loop);
+  }
+
+  function update() {
+    if (keys.left) { player.vx = -4.5; player.facing = -1; }
+    else if (keys.right) { player.vx = 4.5; player.facing = 1; }
+    else { player.vx *= 0.82; }
+
+    player.x += player.vx;
+    player.y += player.vy;
+    player.vy += 0.32;
+
+    if (player.x < -player.w) player.x = canvas.width;
+    if (player.x > canvas.width) player.x = -player.w;
+
+    if (player.vy > 0) {
+      for (const p of platforms) {
+        if (
+          player.x + player.w > p.x &&
+          player.x < p.x + p.w &&
+          player.y + player.h >= p.y &&
+          player.y + player.h <= p.y + p.h + player.vy + 2
+        ) {
+          if (p.type === 'spring') {
+            player.vy = -15;
+            if (window.UsagiSound) UsagiSound.yaha();
+            if (window.UsagiPetManager) UsagiPetManager.reactTo('yaha', '呀哈！大弹簧弹起！冲上云霄！🚀✨');
+          } else if (p.type === 'fragile') {
+            player.vy = -9;
+            p.broken = true;
+            if (window.UsagiSound) UsagiSound.hit();
+          } else {
+            player.vy = -10;
+            if (window.UsagiSound) UsagiSound.boing();
+          }
+          break;
+        }
+      }
+    }
+
+    for (const p of platforms) {
+      if (p.hasStar && !p.starCollected) {
+        if (
+          player.x + player.w > p.x + p.w / 2 - 12 &&
+          player.x < p.x + p.w / 2 + 12 &&
+          player.y + player.h > p.y - 25 &&
+          player.y < p.y
+        ) {
+          p.starCollected = true;
+          score += 50;
+          if (window.UsagiSound) UsagiSound.coin();
+        }
+      }
+    }
+
+    for (const p of platforms) {
+      if (p.type === 'moving') {
+        p.x += p.vx;
+        if (p.x <= 10 || p.x + p.w >= canvas.width - 10) p.vx = -p.vx;
+      }
+    }
+
+    if (player.y < canvas.height * 0.45) {
+      const diff = canvas.height * 0.45 - player.y;
+      player.y = canvas.height * 0.45;
+      cameraY += diff;
+      score += Math.floor(diff);
+      updateScoreUI();
+
+      for (const p of platforms) {
+        p.y += diff;
+      }
+
+      platforms = platforms.filter(p => p.y < canvas.height + 40 && !p.broken);
+      while (platforms.length < 8) {
+        const topY = Math.min(...platforms.map(p => p.y));
+        spawnPlatform(topY - (55 + Math.random() * 35));
+      }
+    }
+
+    if (player.y > canvas.height + 50) {
+      gameOver();
+    }
+  }
+
+  function gameOver() {
+    isPlaying = false;
+    if (score > highScore) {
+      highScore = score;
+      localStorage.setItem('usagi_hop_high', highScore);
+      const highEl = document.getElementById('hop-high');
+      if (highEl) highEl.innerText = highScore + 'm';
+    }
+    if (window.UsagiSound) UsagiSound.hit();
+    if (window.UsagiPetManager) {
+      UsagiPetManager.reactTo('comfort', `呀呀掉下来啦！不过芷萱跳到了 ${score}m 的高空呢，超级厉害！抱抱亲一口~ 🐰💖`);
+    }
+  }
+
+  function updateScoreUI() {
+    const sEl = document.getElementById('hop-score');
+    if (sEl) sEl.innerText = score + 'm';
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    grad.addColorStop(0, '#bae6fd');
+    grad.addColorStop(0.5, '#fce7f3');
+    grad.addColorStop(1, '#fef3c7');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (const p of platforms) {
+      if (p.type === 'spring') {
+        ctx.fillStyle = '#f472b6';
+        ctx.beginPath();
+        ctx.roundRect(p.x, p.y, p.w, p.h, 7);
+        ctx.fill();
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = '14px sans-serif';
+        ctx.fillText('🌀', p.x + p.w / 2 - 7, p.y - 3);
+      } else if (p.type === 'moving') {
+        ctx.fillStyle = '#60a5fa';
+        ctx.beginPath();
+        ctx.roundRect(p.x, p.y, p.w, p.h, 7);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '11px sans-serif';
+        ctx.fillText('🌈', p.x + p.w / 2 - 6, p.y + 11);
+      } else if (p.type === 'fragile') {
+        ctx.fillStyle = '#fdba74';
+        ctx.beginPath();
+        ctx.roundRect(p.x, p.y, p.w, p.h, 7);
+        ctx.fill();
+      } else {
+        ctx.fillStyle = '#fb7185';
+        ctx.beginPath();
+        ctx.roundRect(p.x, p.y, p.w, p.h, 7);
+        ctx.fill();
+      }
+
+      if (p.hasStar && !p.starCollected) {
+        ctx.font = '16px sans-serif';
+        ctx.fillText('⭐', p.x + p.w / 2 - 8, p.y - 6);
+      }
+    }
+
+    ctx.save();
+    ctx.translate(player.x + player.w / 2, player.y + player.h / 2);
+    if (player.facing < 0) ctx.scale(-1, 1);
+    ctx.font = '32px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🐰', 0, 0);
+    ctx.restore();
+
+    if (!isPlaying) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 24px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🚀 挑战结束啦！', canvas.width / 2, canvas.height / 2 - 30);
+      ctx.font = 'bold 16px sans-serif';
+      ctx.fillText(`本次高度: ${score}m`, canvas.width / 2, canvas.height / 2 + 5);
+      ctx.font = '13px sans-serif';
+      ctx.fillText('点击上方【🔄 重新开始】再来一局！', canvas.width / 2, canvas.height / 2 + 40);
+    }
+  }
+
+  return { init, reset };
+})();
+window.SkyHopGame = SkyHopGame;
+
+
+/* ============================================================
+   6.6. GAME 11: 🥕 乌萨奇农场拔胡萝卜大作战 (Carrot Harvest)
+   ============================================================ */
+const HarvestGame = (function () {
+  let score = 0;
+  let timeLeft = 30;
+  let timerInterval = null;
+  let spawnInterval = null;
+  let isPlaying = false;
+  let holes = new Array(9).fill(null);
+  let combo = 0;
+  let highScore = parseInt(localStorage.getItem('usagi_harvest_high') || '0', 10);
+
+  const ITEMS = [
+    { type: 'carrot', icon: '🥕', pts: 10, prob: 0.45, name: '脆胡萝卜' },
+    { type: 'berry', icon: '🍓', pts: 20, prob: 0.25, name: '大草莓' },
+    { type: 'gold', icon: '🌟', pts: 50, prob: 0.12, name: '黄金萝卜' },
+    { type: 'usagi', icon: '🐰', pts: 30, prob: 0.10, name: '乌萨奇' },
+    { type: 'bomb', icon: '💣', pts: -20, prob: 0.08, name: '捣蛋炸弹' }
+  ];
+
+  function init() {
+    const highEl = document.getElementById('harvest-high');
+    if (highEl) highEl.innerText = highScore;
+    renderHoles();
+  }
+
+  function start() {
+    if (isPlaying) stop();
+    isPlaying = true;
+    score = 0;
+    combo = 0;
+    timeLeft = 30;
+    updateUI();
+
+    const btn = document.getElementById('btn-harvest-start');
+    if (btn) btn.innerText = '⏸️ 进行中...';
+
+    if (window.UsagiSound) UsagiSound.fanfare();
+    if (window.UsagiPetManager) UsagiPetManager.speak('🥕 农场开拔！', '农场丰收啦！30秒内快快把胡萝卜拔光光~ 冲呀芷萱！🌾🐰', true);
+
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      const timeEl = document.getElementById('harvest-time');
+      if (timeEl) timeEl.innerText = timeLeft;
+      if (timeLeft <= 0) {
+        finish();
+      }
+    }, 1000);
+
+    spawnInterval = setInterval(popItem, 650);
+  }
+
+  function stop() {
+    isPlaying = false;
+    if (timerInterval) clearInterval(timerInterval);
+    if (spawnInterval) clearInterval(spawnInterval);
+    holes.fill(null);
+    renderHoles();
+    const btn = document.getElementById('btn-harvest-start');
+    if (btn) btn.innerText = '▶️ 开始挑战';
+  }
+
+  function popItem() {
+    if (!isPlaying) return;
+    const emptyIndices = [];
+    holes.forEach((h, idx) => { if (!h) emptyIndices.push(idx); });
+    if (emptyIndices.length === 0) return;
+
+    const holeIdx = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+    const rand = Math.random();
+    let cumulative = 0;
+    let chosen = ITEMS[0];
+    for (const it of ITEMS) {
+      cumulative += it.prob;
+      if (rand <= cumulative) { chosen = it; break; }
+    }
+
+    holes[holeIdx] = chosen;
+    renderHole(holeIdx);
+
+    setTimeout(() => {
+      if (holes[holeIdx] === chosen) {
+        holes[holeIdx] = null;
+        renderHole(holeIdx);
+      }
+    }, 1200 + Math.random() * 500);
+  }
+
+  function whack(idx) {
+    if (!isPlaying) return;
+    const it = holes[idx];
+    if (!it) return;
+
+    holes[idx] = null;
+    renderHole(idx);
+
+    if (it.type === 'bomb') {
+      combo = 0;
+      score = Math.max(0, score + it.pts);
+      if (window.UsagiSound) UsagiSound.hit();
+    } else {
+      combo++;
+      const multiplier = combo >= 5 ? 2.0 : (combo >= 3 ? 1.5 : 1.0);
+      const earned = Math.round(it.pts * multiplier);
+      score += earned;
+
+      if (it.type === 'gold' || it.type === 'usagi') {
+        if (window.UsagiSound) UsagiSound.coin();
+        if (typeof confettiRain === 'function') confettiRain(10);
+      } else {
+        if (window.UsagiSound) UsagiSound.pop();
+      }
+    }
+    updateUI();
+  }
+
+  function finish() {
+    stop();
+    if (score > highScore) {
+      highScore = score;
+      localStorage.setItem('usagi_harvest_high', highScore);
+    }
+    updateUI();
+
+    let title = '🥕 农场见习小农夫 🌸';
+    if (score >= 400) title = '👑 农场特级拔萝卜神童芷萱！';
+    else if (score >= 250) title = '🌟 超级胡萝卜小富婆！';
+    else if (score >= 150) title = '🍓 甜心草莓丰收达人！';
+
+    if (typeof confettiRain === 'function') confettiRain(30);
+    if (window.UsagiPetManager) {
+      UsagiPetManager.speak('🎉 丰收大结算', `30秒时间到！芷萱总共收获了 ${score} 分！荣获【${title}】！快向男朋友领胡萝卜大餐吧~ 🥕💖`, true);
+    }
+  }
+
+  function updateUI() {
+    const sEl = document.getElementById('harvest-score');
+    const hEl = document.getElementById('harvest-high');
+    const cEl = document.getElementById('harvest-combo-text');
+    if (sEl) sEl.innerText = score;
+    if (hEl) hEl.innerText = highScore;
+    if (cEl) cEl.innerText = `连击: ${combo} 🔥 ${combo >= 3 ? '(加成x' + (combo >= 5 ? 2 : 1.5) + ')' : ''}`;
+  }
+
+  function renderHole(idx) {
+    const holeEl = document.getElementById(`harvest-hole-${idx}`);
+    if (!holeEl) return;
+    const itemSpan = holeEl.querySelector('.harvest-item');
+    if (!itemSpan) return;
+    const it = holes[idx];
+    if (it) {
+      itemSpan.innerText = it.icon;
+      itemSpan.className = 'harvest-item text-4xl sm:text-5xl select-none pointer-events-none animate-bounce';
+    } else {
+      itemSpan.innerText = '';
+      itemSpan.className = 'harvest-item text-4xl sm:text-5xl select-none pointer-events-none';
+    }
+  }
+
+  function renderHoles() {
+    for (let i = 0; i < 9; i++) renderHole(i);
+  }
+
+  return { init, start, whack };
+})();
+window.HarvestGame = HarvestGame;
+
+
+/* ============================================================
+   6.7. GAME 12: 🎹 乌萨奇心动节奏大师 (Kawaii Rhythm)
+   ============================================================ */
+const RhythmGame = (function () {
+  let canvas = null, ctx = null;
+  let isPlaying = false;
+  let animId = null;
+  let score = 0, combo = 0, highScore = parseInt(localStorage.getItem('usagi_rhythm_high') || '0', 10);
+  let notes = [];
+  let spawnTimer = 0;
+  const LANES = [
+    { key: 'd', freq: 523.25, icon: '💖', color: '#f43f5e' },
+    { key: 'f', freq: 659.25, icon: '🍓', color: '#fb7185' },
+    { key: 'j', freq: 783.99, icon: '⭐', color: '#f59e0b' },
+    { key: 'k', freq: 1046.50, icon: '🥕', color: '#10b981' }
+  ];
+
+  function init() {
+    canvas = document.getElementById('rhythm-canvas');
+    if (!canvas) return;
+    ctx = canvas.getContext('2d');
+    const highEl = document.getElementById('rhythm-high');
+    if (highEl) highEl.innerText = highScore;
+
+    window.addEventListener('keydown', (e) => {
+      if (!isPlaying) return;
+      const k = e.key.toLowerCase();
+      if (k === 'd') hitLane(0);
+      else if (k === 'f') hitLane(1);
+      else if (k === 'j') hitLane(2);
+      else if (k === 'k') hitLane(3);
+    });
+
+    for (let i = 0; i < 4; i++) {
+      const btn = document.getElementById(`rhythm-key-${i}`);
+      if (btn) {
+        btn.onmousedown = btn.ontouchstart = (e) => {
+          e.preventDefault();
+          hitLane(i);
+        };
+      }
+    }
+  }
+
+  function togglePlay() {
+    if (isPlaying) {
+      isPlaying = false;
+      if (animId) cancelAnimationFrame(animId);
+      const btn = document.getElementById('btn-rhythm-play');
+      if (btn) btn.innerText = '▶️ 开始弹奏';
+    } else {
+      isPlaying = true;
+      score = 0;
+      combo = 0;
+      notes = [];
+      updateUI();
+      const btn = document.getElementById('btn-rhythm-play');
+      if (btn) btn.innerText = '⏸️ 暂停演奏';
+      if (window.UsagiSound) UsagiSound.fanfare();
+      loop();
+    }
+  }
+
+  function hitLane(laneIdx) {
+    if (!isPlaying) return;
+    const laneData = LANES[laneIdx];
+    if (window.UsagiSound && UsagiSound.pianoTone) {
+      UsagiSound.pianoTone(laneData.freq);
+    }
+
+    const hitLineY = canvas.height - 70;
+    let closest = null;
+    let minDist = 999;
+    for (const n of notes) {
+      if (n.lane === laneIdx && !n.hit) {
+        const dist = Math.abs(n.y - hitLineY);
+        if (dist < minDist) {
+          minDist = dist;
+          closest = n;
+        }
+      }
+    }
+
+    if (closest && minDist < 65) {
+      closest.hit = true;
+      let earned = 50;
+      if (minDist < 25) {
+        earned = 100;
+        showFloatingText('PERFECT!', closest.lane, '#ec4899');
+      } else {
+        showFloatingText('GREAT!', closest.lane, '#f59e0b');
+      }
+      combo++;
+      score += Math.round(earned * (1 + combo * 0.05));
+    } else {
+      combo = 0;
+      showFloatingText('MISS', laneIdx, '#9ca3af');
+    }
+    updateUI();
+  }
+
+  let floatingTexts = [];
+  function showFloatingText(text, lane, color) {
+    const laneW = canvas.width / 4;
+    floatingTexts.push({
+      text,
+      x: lane * laneW + laneW / 2,
+      y: canvas.height - 80,
+      color,
+      alpha: 1.0
+    });
+  }
+
+  function loop() {
+    if (!isPlaying) return;
+    update();
+    draw();
+    animId = requestAnimationFrame(loop);
+  }
+
+  function update() {
+    spawnTimer++;
+    if (spawnTimer % 35 === 0) {
+      const lane = Math.floor(Math.random() * 4);
+      notes.push({ lane, y: -20, speed: 4.2 + Math.random() * 1.5, hit: false });
+    }
+
+    for (const n of notes) {
+      n.y += n.speed;
+    }
+
+    const hitLineY = canvas.height - 70;
+    for (const n of notes) {
+      if (!n.hit && n.y > hitLineY + 50) {
+        n.hit = true;
+        combo = 0;
+        updateUI();
+      }
+    }
+
+    notes = notes.filter(n => n.y < canvas.height + 40 && (!n.hit || n.y < hitLineY + 30));
+
+    for (const ft of floatingTexts) {
+      ft.y -= 1.2;
+      ft.alpha -= 0.035;
+    }
+    floatingTexts = floatingTexts.filter(ft => ft.alpha > 0);
+  }
+
+  function updateUI() {
+    const sEl = document.getElementById('rhythm-score');
+    const cEl = document.getElementById('rhythm-combo');
+    const hEl = document.getElementById('rhythm-high');
+    if (sEl) sEl.innerText = score;
+    if (cEl) cEl.innerText = combo;
+    if (score > highScore) {
+      highScore = score;
+      localStorage.setItem('usagi_rhythm_high', highScore);
+    }
+    if (hEl) hEl.innerText = highScore;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const laneW = canvas.width / 4;
+    for (let i = 0; i < 4; i++) {
+      ctx.fillStyle = i % 2 === 0 ? '#18181b' : '#27272a';
+      ctx.fillRect(i * laneW, 0, laneW, canvas.height);
+
+      ctx.strokeStyle = '#3f3f46';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(i * laneW, 0, laneW, canvas.height);
+    }
+
+    const hitLineY = canvas.height - 70;
+    ctx.strokeStyle = '#f43f5e';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(0, hitLineY);
+    ctx.lineTo(canvas.width, hitLineY);
+    ctx.stroke();
+
+    for (const n of notes) {
+      if (n.hit) continue;
+      const x = n.lane * laneW + laneW / 2;
+      ctx.fillStyle = LANES[n.lane].color;
+      ctx.beginPath();
+      ctx.arc(x, n.y, 22, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.font = '20px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(LANES[n.lane].icon, x, n.y);
+    }
+
+    for (const ft of floatingTexts) {
+      ctx.save();
+      ctx.globalAlpha = ft.alpha;
+      ctx.fillStyle = ft.color;
+      ctx.font = 'bold 18px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(ft.text, ft.x, ft.y);
+      ctx.restore();
+    }
+  }
+
+  return { init, togglePlay };
+})();
+window.RhythmGame = RhythmGame;
+
+
+/* ============================================================
+   7. MINI-GAMES SUBTAB SWITCHER (游乐园子页面切换 - 12大萌趣游戏)
    ============================================================ */
 function switchGameSubtab(subtab) {
-  const tabs = ['fruit', 'suika', 'wheel', 'snake', 'rps', 'memory', 'fish', 'gacha', 'whack'];
+  const tabs = ['fruit', 'suika', 'wheel', 'snake', 'rps', 'memory', 'fish', 'gacha', 'whack', 'hop', 'harvest', 'rhythm'];
 
   // Switch views
   tabs.forEach(t => {
@@ -2818,6 +3910,9 @@ function switchGameSubtab(subtab) {
   if (subtab === 'fish') WoodenFishGame.init();
   if (subtab === 'gacha') GachaGame.init();
   if (subtab === 'whack') WhackGame.init();
+  if (subtab === 'hop') SkyHopGame.init();
+  if (subtab === 'harvest') HarvestGame.init();
+  if (subtab === 'rhythm') RhythmGame.init();
 
   if (window.UsagiSound) UsagiSound.pop();
 }
@@ -2838,6 +3933,9 @@ document.addEventListener('DOMContentLoaded', () => {
   WoodenFishGame.init();
   GachaGame.init();
   WhackGame.init();
+  SkyHopGame.init();
+  HarvestGame.init();
+  RhythmGame.init();
 
   // URL support for test/direct mascot state triggering
   try {

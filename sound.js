@@ -179,6 +179,66 @@ const UsagiSound = (function () {
       });
     },
 
+    boing: function () {
+      // Elastic cartoon spring bounce sound (when Usagi hits screen walls / bounces)
+      if (isMuted) return;
+      try {
+        initCtx();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(260, now);
+        osc.frequency.exponentialRampToValueAtTime(680, now + 0.14);
+        osc.frequency.exponentialRampToValueAtTime(380, now + 0.28);
+        gain.gain.setValueAtTime(0.22, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.28);
+      } catch (e) {}
+    },
+
+    whoosh: function () {
+      // Flying through the air when thrown
+      if (isMuted) return;
+      try {
+        initCtx();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.exponentialRampToValueAtTime(700, now + 0.12);
+        osc.frequency.exponentialRampToValueAtTime(200, now + 0.35);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.35);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } catch (e) {}
+    },
+
+    pianoTone: function (freq = 523.25) {
+      if (isMuted) return;
+      try {
+        initCtx();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.45);
+      } catch (e) {}
+    },
+
     toggleMute: function () {
       isMuted = !isMuted;
       localStorage.setItem('usagi_muted', isMuted);

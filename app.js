@@ -857,6 +857,11 @@ window.USAGI_APP = {
     // 核心第一步：显示新Tab的瞬间立即执行回到最顶部 Header
     this.scrollToTopImmediately();
 
+    // 自动关闭可能悬浮的日历等弹窗
+    if (typeof this.closeCalendarDayModal === 'function') {
+      this.closeCalendarDayModal();
+    }
+
     // 触发乌萨奇专属可爱萌系全屏进场漂浮特效 (飘入多只可爱乌萨奇与本页专属萌物)
     this.triggerTabKawaiiFX(tabName);
 
@@ -912,6 +917,12 @@ window.USAGI_APP = {
         else if (tabName === 'games') UsagiPetManager.reactTo('game', '芷萱的治愈游乐园开张啦！乌萨奇在旁边全程为你加油助威！🎮🎉');
         else if (tabName === 'health') UsagiPetManager.reactTo('water');
         else if (tabName === 'mood') UsagiPetManager.reactTo('mood', '这里是芷萱的心情与规律树洞~ 无论今天是什么心情，乌萨奇都在这里认真倾听你！🎭💖');
+      }
+
+      if (['todos', 'calendar'].includes(tabName)) {
+        if (window.UsagiPetManager && typeof UsagiPetManager.checkDailyReminders === 'function') {
+          setTimeout(() => UsagiPetManager.checkDailyReminders(), 650);
+        }
       }
     } catch (e) { console.warn("Pet tab react error:", e); }
 
@@ -1434,6 +1445,9 @@ window.USAGI_APP = {
     this.openCalendarDayModal(newEv.date);
     UsagiSound.sparkle();
     confettiRain(15);
+    if (window.UsagiPetManager && UsagiPetManager.remindEvent) {
+      UsagiPetManager.remindEvent('calendar', newEv.title, newEv.date);
+    }
   },
 
   deleteCalendarEvent: function (id) {
@@ -2524,6 +2538,9 @@ window.USAGI_APP = {
     this.renderTodos();
     this.renderDashboard();
     UsagiSound.pop();
+    if (window.UsagiPetManager && UsagiPetManager.remindEvent) {
+      UsagiPetManager.remindEvent('todo', text.trim(), dueDate);
+    }
   },
 
   toggleTodo: function (id) {
@@ -2566,7 +2583,9 @@ window.USAGI_APP = {
     this.renderTodos();
     this.renderDashboard();
     UsagiSound.coin();
-    if (window.UsagiPetManager) {
+    if (window.UsagiPetManager && UsagiPetManager.remindEvent) {
+      UsagiPetManager.remindEvent('countdown', title.trim(), targetDate);
+    } else if (window.UsagiPetManager) {
       UsagiPetManager.reactTo('countdown', `哇！心动倒数【${title.trim()}】记录好啦！乌萨奇每天都帮你数着见男友的日子！⏳✈️`);
     }
   },

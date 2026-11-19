@@ -3496,3 +3496,46 @@ body {
     filter: none !important;
   }
 }
+
+/* ============================================================
+   USAGI PHYSICS FLING & TOSS ANIMATIONS (可拖拽抛掷与语音动效)
+   ============================================================ */
+.usagi-mascot-float.is-dragging {
+  cursor: grabbing !important;
+  user-select: none !important;
+  z-index: 10000 !important;
+  transition: none !important;
+}
+
+.usagi-mascot-float.is-dragging #usagi-actor-box {
+  transform: scale(1.15) rotate(4deg) !important;
+  filter: drop-shadow(0 15px 25px rgba(244, 63, 94, 0.35)) !important;
+}
+
+.usagi-mascot-float.is-flying {
+  z-index: 10000 !important;
+  transition: none !important;
+}
+
+.usagi-bounce-squish {
+  animation: usagiSquishBounce 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+@keyframes usagiSquishBounce {
+  0% { transform: scale(1, 1); }
+  35% { transform: scale(1.35, 0.68); }
+  65% { transform: scale(0.85, 1.22); }
+  85% { transform: scale(1.08, 0.94); }
+  100% { transform: scale(1, 1); }
+}
+
+#usagi-speech-bubble.speaking-active {
+  border-color: #f43f5e !important;
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.35), 0 8px 16px rgba(0,0,0,0.08) !important;
+  animation: speechPulseGlow 1.2s infinite alternate ease-in-out !important;
+}
+
+@keyframes speechPulseGlow {
+  0% { transform: translateX(-50%) scale(1); }
+  100% { transform: translateX(-50%) scale(1.03); }
+}

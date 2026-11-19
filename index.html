@@ -2745,6 +2745,15 @@
             <button onclick="switchGameSubtab('whack')" id="game-btn-whack" class="game-subtab-btn px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 whitespace-nowrap bg-pink-50 hover:bg-pink-100 text-stone-700 border border-pink-200">
               <span>🔨</span> <span>把不开心统统敲飞</span>
             </button>
+            <button onclick="switchGameSubtab('hop')" id="game-btn-hop" class="game-subtab-btn px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 whitespace-nowrap bg-pink-50 hover:bg-pink-100 text-stone-700 border border-pink-200">
+              <span>🚀</span> <span>蹦蹦跳跃</span>
+            </button>
+            <button onclick="switchGameSubtab('harvest')" id="game-btn-harvest" class="game-subtab-btn px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 whitespace-nowrap bg-pink-50 hover:bg-pink-100 text-stone-700 border border-pink-200">
+              <span>🥕</span> <span>农场拔萝卜</span>
+            </button>
+            <button onclick="switchGameSubtab('rhythm')" id="game-btn-rhythm" class="game-subtab-btn px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 whitespace-nowrap bg-pink-50 hover:bg-pink-100 text-stone-700 border border-pink-200">
+              <span>🎹</span> <span>心动节奏大师</span>
+            </button>
           </div>
 
           <!-- ==========================================
@@ -3225,6 +3234,162 @@
             </div>
           </div>
 
+          <!-- ==========================================
+               GAME 10: 🚀 乌萨奇蹦蹦跳跃 · 跃向星空 (Sky Hop)
+               ========================================== -->
+          <div id="game-view-hop" class="game-panel hidden glass-card p-5 sm:p-7 bg-white/95 border-2 border-pink-300 shadow-md space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-pink-100 pb-3">
+              <div>
+                <h3 class="font-black text-stone-800 text-base flex items-center gap-2">
+                  <span>🚀</span> 乌萨奇蹦蹦跳跃 · 跃向星空
+                </h3>
+                <p class="text-xs text-stone-500">踩着棉花糖云朵和彩虹一路往上跳！吃星星与草莓加速冲刺，看芷萱能跳多高~ ✨</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="badge-kawaii bg-pink-100 text-pink-700 text-xs font-black py-1 px-3">
+                  高度: <span id="hop-score">0m</span>
+                </span>
+                <span class="badge-kawaii bg-amber-100 text-amber-800 text-xs font-bold py-1 px-3">
+                  🏆 最高: <span id="hop-high">0m</span>
+                </span>
+                <button onclick="SkyHopGame.reset()" class="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold transition-all cursor-pointer">
+                  🔄 重新开始
+                </button>
+              </div>
+            </div>
+
+            <div class="flex flex-col items-center justify-center relative">
+              <canvas id="hop-canvas" width="380" height="500" class="rounded-2xl shadow-inner border-2 border-pink-200 bg-linear-to-b from-sky-100 via-pink-50 to-pink-100 touch-none block max-w-full cursor-pointer"></canvas>
+              <!-- Mobile D-pad control -->
+              <div class="flex sm:hidden items-center justify-center gap-6 mt-3 w-full max-w-xs">
+                <button id="hop-btn-left" class="flex-1 py-3 bg-pink-100 active:bg-pink-300 text-pink-800 font-black rounded-xl text-lg shadow-sm border border-pink-200 select-none">
+                  ⬅️ 向左跳
+                </button>
+                <button id="hop-btn-right" class="flex-1 py-3 bg-pink-100 active:bg-pink-300 text-pink-800 font-black rounded-xl text-lg shadow-sm border border-pink-200 select-none">
+                  向右跳 ➡️
+                </button>
+              </div>
+              <p class="text-[11px] text-stone-400 mt-2">
+                💻 电脑端：键盘方向键 ⬅️ ➡️ 或 A / D，也可直接移动鼠标控制方向；📱 手机端：点击屏幕左右侧或下方按键！
+              </p>
+            </div>
+          </div>
+
+          <!-- ==========================================
+               GAME 11: 🥕 乌萨奇农场拔胡萝卜大作战 (Carrot Harvest)
+               ========================================== -->
+          <div id="game-view-harvest" class="game-panel hidden glass-card p-5 sm:p-7 bg-white/95 border-2 border-pink-300 shadow-md space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-pink-100 pb-3">
+              <div>
+                <h3 class="font-black text-stone-800 text-base flex items-center gap-2">
+                  <span>🥕</span> 乌萨奇农场拔胡萝卜大作战
+                </h3>
+                <p class="text-xs text-stone-500">限时30秒！快快点击钻出土地的甜脆胡萝卜与大草莓，小心避开捣蛋黑毛球哦！🌾</p>
+              </div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="badge-kawaii bg-rose-100 text-rose-700 text-xs font-black py-1 px-3">
+                  🧺 积分: <span id="harvest-score">0</span>
+                </span>
+                <span class="badge-kawaii bg-sky-100 text-sky-800 text-xs font-black py-1 px-3">
+                  ⏳ 剩余: <span id="harvest-time">30</span>s
+                </span>
+                <span class="badge-kawaii bg-amber-100 text-amber-800 text-xs font-bold py-1 px-3">
+                  🏆 最高: <span id="harvest-high">0</span>
+                </span>
+                <button onclick="HarvestGame.start()" id="btn-harvest-start" class="px-3.5 py-1.5 rounded-xl bg-pink-500 hover:bg-pink-600 text-white text-xs font-black shadow-xs transition-all cursor-pointer">
+                  ▶️ 开始挑战
+                </button>
+              </div>
+            </div>
+
+            <!-- 3x3 Garden Field -->
+            <div class="max-w-md mx-auto bg-amber-50/70 p-4 sm:p-6 rounded-3xl border-2 border-amber-200 shadow-inner">
+              <div class="flex justify-between items-center mb-3 px-2">
+                <span id="harvest-combo-text" class="text-xs font-black text-rose-600">连击: 0 🔥</span>
+                <span class="text-[11px] text-stone-500">🥕普通+10 / 🍓草莓+20 / 🌟黄金+50 / 🐰贴贴+30</span>
+              </div>
+              <div class="grid grid-cols-3 gap-3 sm:gap-4 select-none">
+                <div id="harvest-hole-0" onclick="HarvestGame.whack(0)" class="harvest-hole aspect-square bg-linear-to-b from-amber-200 to-amber-300 rounded-2xl border-4 border-amber-400 shadow-inner flex items-center justify-center relative overflow-hidden cursor-pointer hover:scale-102 active:scale-95 transition-transform">
+                  <span class="harvest-item text-4xl sm:text-5xl select-none pointer-events-none"></span>
+                </div>
+                <div id="harvest-hole-1" onclick="HarvestGame.whack(1)" class="harvest-hole aspect-square bg-linear-to-b from-amber-200 to-amber-300 rounded-2xl border-4 border-amber-400 shadow-inner flex items-center justify-center relative overflow-hidden cursor-pointer hover:scale-102 active:scale-95 transition-transform">
+                  <span class="harvest-item text-4xl sm:text-5xl select-none pointer-events-none"></span>
+                </div>
+                <div id="harvest-hole-2" onclick="HarvestGame.whack(2)" class="harvest-hole aspect-square bg-linear-to-b from-amber-200 to-amber-300 rounded-2xl border-4 border-amber-400 shadow-inner flex items-center justify-center relative overflow-hidden cursor-pointer hover:scale-102 active:scale-95 transition-transform">
+                  <span class="harvest-item text-4xl sm:text-5xl select-none pointer-events-none"></span>
+                </div>
+                <div id="harvest-hole-3" onclick="HarvestGame.whack(3)" class="harvest-hole aspect-square bg-linear-to-b from-amber-200 to-amber-300 rounded-2xl border-4 border-amber-400 shadow-inner flex items-center justify-center relative overflow-hidden cursor-pointer hover:scale-102 active:scale-95 transition-transform">
+                  <span class="harvest-item text-4xl sm:text-5xl select-none pointer-events-none"></span>
+                </div>
+                <div id="harvest-hole-4" onclick="HarvestGame.whack(4)" class="harvest-hole aspect-square bg-linear-to-b from-amber-200 to-amber-300 rounded-2xl border-4 border-amber-400 shadow-inner flex items-center justify-center relative overflow-hidden cursor-pointer hover:scale-102 active:scale-95 transition-transform">
+                  <span class="harvest-item text-4xl sm:text-5xl select-none pointer-events-none"></span>
+                </div>
+                <div id="harvest-hole-5" onclick="HarvestGame.whack(5)" class="harvest-hole aspect-square bg-linear-to-b from-amber-200 to-amber-300 rounded-2xl border-4 border-amber-400 shadow-inner flex items-center justify-center relative overflow-hidden cursor-pointer hover:scale-102 active:scale-95 transition-transform">
+                  <span class="harvest-item text-4xl sm:text-5xl select-none pointer-events-none"></span>
+                </div>
+                <div id="harvest-hole-6" onclick="HarvestGame.whack(6)" class="harvest-hole aspect-square bg-linear-to-b from-amber-200 to-amber-300 rounded-2xl border-4 border-amber-400 shadow-inner flex items-center justify-center relative overflow-hidden cursor-pointer hover:scale-102 active:scale-95 transition-transform">
+                  <span class="harvest-item text-4xl sm:text-5xl select-none pointer-events-none"></span>
+                </div>
+                <div id="harvest-hole-7" onclick="HarvestGame.whack(7)" class="harvest-hole aspect-square bg-linear-to-b from-amber-200 to-amber-300 rounded-2xl border-4 border-amber-400 shadow-inner flex items-center justify-center relative overflow-hidden cursor-pointer hover:scale-102 active:scale-95 transition-transform">
+                  <span class="harvest-item text-4xl sm:text-5xl select-none pointer-events-none"></span>
+                </div>
+                <div id="harvest-hole-8" onclick="HarvestGame.whack(8)" class="harvest-hole aspect-square bg-linear-to-b from-amber-200 to-amber-300 rounded-2xl border-4 border-amber-400 shadow-inner flex items-center justify-center relative overflow-hidden cursor-pointer hover:scale-102 active:scale-95 transition-transform">
+                  <span class="harvest-item text-4xl sm:text-5xl select-none pointer-events-none"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==========================================
+               GAME 12: 🎹 乌萨奇心动节奏大师 (Kawaii Rhythm)
+               ========================================== -->
+          <div id="game-view-rhythm" class="game-panel hidden glass-card p-5 sm:p-7 bg-white/95 border-2 border-pink-300 shadow-md space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-pink-100 pb-3">
+              <div>
+                <h3 class="font-black text-stone-800 text-base flex items-center gap-2">
+                  <span>🎹</span> 乌萨奇心动节奏大师
+                </h3>
+                <p class="text-xs text-stone-500">伴随轻快节拍，看准音符下落瞬间敲击键盘或触屏！奏响属于芷萱的心动乐章~ 🎶</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="badge-kawaii bg-pink-100 text-pink-700 text-xs font-black py-1 px-3">
+                  得分: <span id="rhythm-score">0</span>
+                </span>
+                <span class="badge-kawaii bg-amber-100 text-amber-800 text-xs font-black py-1 px-3">
+                  🔥 COMBO: <span id="rhythm-combo">0</span>
+                </span>
+                <span class="badge-kawaii bg-stone-100 text-stone-700 text-xs font-bold py-1 px-3">
+                  🏆 最高: <span id="rhythm-high">0</span>
+                </span>
+                <button onclick="RhythmGame.togglePlay()" id="btn-rhythm-play" class="px-3.5 py-1.5 rounded-xl bg-pink-500 hover:bg-pink-600 text-white text-xs font-black shadow-xs transition-all cursor-pointer">
+                  ▶️ 开始弹奏
+                </button>
+              </div>
+            </div>
+
+            <div class="flex flex-col items-center justify-center relative max-w-sm mx-auto">
+              <canvas id="rhythm-canvas" width="360" height="440" class="rounded-2xl shadow-2xl border-4 border-stone-800 bg-stone-900 touch-none block max-w-full"></canvas>
+              <!-- 4-Lane Tap Buttons for Touch/Mouse -->
+              <div class="grid grid-cols-4 gap-2 w-full mt-3">
+                <button id="rhythm-key-0" class="py-3.5 rounded-xl bg-pink-100 hover:bg-pink-200 active:bg-pink-400 border-2 border-pink-300 text-pink-700 font-black text-sm flex flex-col items-center justify-center shadow-sm select-none cursor-pointer">
+                  <span>💖</span> <span class="text-[10px] text-stone-500">D 键</span>
+                </button>
+                <button id="rhythm-key-1" class="py-3.5 rounded-xl bg-rose-100 hover:bg-rose-200 active:bg-rose-400 border-2 border-rose-300 text-rose-700 font-black text-sm flex flex-col items-center justify-center shadow-sm select-none cursor-pointer">
+                  <span>🍓</span> <span class="text-[10px] text-stone-500">F 键</span>
+                </button>
+                <button id="rhythm-key-2" class="py-3.5 rounded-xl bg-amber-100 hover:bg-amber-200 active:bg-amber-400 border-2 border-amber-300 text-amber-800 font-black text-sm flex flex-col items-center justify-center shadow-sm select-none cursor-pointer">
+                  <span>⭐</span> <span class="text-[10px] text-stone-500">J 键</span>
+                </button>
+                <button id="rhythm-key-3" class="py-3.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 active:bg-emerald-400 border-2 border-emerald-300 text-emerald-800 font-black text-sm flex flex-col items-center justify-center shadow-sm select-none cursor-pointer">
+                  <span>🥕</span> <span class="text-[10px] text-stone-500">K 键</span>
+                </button>
+              </div>
+              <p class="text-[11px] text-stone-400 mt-2 text-center">
+                💻 电脑键盘：D / F / J / K 对应四条音轨；📱 手机端：直接点击上方大号萌趣按键！
+              </p>
+            </div>
+          </div>
+
         </div>
     </div>
 
@@ -3559,12 +3724,20 @@
         </button>
       </div>
 
-      <!-- Speech Bubble with Category Tag -->
-      <div id="usagi-speech-bubble" class="speech-bubble text-center" onclick="handleUsagiClick()">
-        <div class="flex items-center gap-1.5 mb-1">
+      <!-- Speech Bubble with Category Tag & Voice Toggle -->
+      <div id="usagi-speech-bubble" class="speech-bubble text-center relative" onclick="handleUsagiClick()">
+        <div class="flex items-center justify-between gap-1.5 mb-1">
           <span id="usagi-speech-tag" class="text-[10px] font-black px-1.5 py-0.5 rounded-full bg-pink-100 text-rose-600 inline-block shadow-xs">✨ 专属陪伴</span>
+          <button id="btn-speech-voice-toggle" onclick="event.stopPropagation(); if(window.UsagiVoice) UsagiVoice.toggleVoice();" class="text-[10px] font-bold text-pink-600 hover:text-pink-800 transition-colors flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-pink-50 hover:bg-pink-100 border border-pink-200" title="点击开关乌萨奇可爱语音播报">
+            🔊 语音播报
+          </button>
         </div>
         <div id="usagi-speech-text">芷萱加油！呀哈！今天也是元气满满的一天~ ✨</div>
+        <div id="usagi-voice-wave" class="hidden flex items-center justify-center gap-1 mt-1 text-pink-500 text-[10px]">
+          <span class="inline-block animate-bounce">🎶</span>
+          <span class="font-bold">乌萨奇正在可爱讲话中...</span>
+          <span class="inline-block animate-bounce">✨</span>
+        </div>
       </div>
 
       <!-- Mascot Bounce Container: Permanent Uninterrupted Jump -->
@@ -4189,58 +4362,10 @@
     }
     window.handleUsagiClick = handleUsagiClick;
 
-    // Make Usagi Mascot freely draggable on both mobile touch & desktop mouse so it NEVER blocks any button!
-    (function initUsagiDraggable() {
-      const pet = document.getElementById('usagi-pet');
-      if (!pet) return;
-      let isDragging = false;
-      let startX = 0, startY = 0, origLeft = 0, origTop = 0;
-
-      function onPointerDown(e) {
-        if (e.target.closest('button') || e.target.closest('input') || e.target.closest('select')) return;
-        const pt = e.touches ? e.touches[0] : e;
-        if (!pt) return;
-        isDragging = true;
-        startX = pt.clientX;
-        startY = pt.clientY;
-        const rect = pet.getBoundingClientRect();
-        origLeft = rect.left;
-        origTop = rect.top;
-
-        document.addEventListener('mousemove', onPointerMove, { passive: false });
-        document.addEventListener('mouseup', onPointerUp);
-        document.addEventListener('touchmove', onPointerMove, { passive: false });
-        document.addEventListener('touchend', onPointerUp);
-      }
-
-      function onPointerMove(e) {
-        if (!isDragging) return;
-        const pt = e.touches ? e.touches[0] : e;
-        if (!pt) return;
-        const dx = pt.clientX - startX;
-        const dy = pt.clientY - startY;
-        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-          if (e.cancelable) e.preventDefault();
-          const newLeft = Math.max(8, Math.min(window.innerWidth - pet.offsetWidth - 8, origLeft + dx));
-          const newTop = Math.max(8, Math.min(window.innerHeight - pet.offsetHeight - 8, origTop + dy));
-          pet.style.left = newLeft + 'px';
-          pet.style.top = newTop + 'px';
-          pet.style.right = 'auto';
-          pet.style.bottom = 'auto';
-        }
-      }
-
-      function onPointerUp(e) {
-        isDragging = false;
-        document.removeEventListener('mousemove', onPointerMove);
-        document.removeEventListener('mouseup', onPointerUp);
-        document.removeEventListener('touchmove', onPointerMove);
-        document.removeEventListener('touchend', onPointerUp);
-      }
-
-      pet.addEventListener('mousedown', onPointerDown);
-      pet.addEventListener('touchstart', onPointerDown, { passive: true });
-    })();
+    // Make Usagi Mascot freely draggable and flingable (丢来丢去) via UsagiPetManager Physics
+    if (window.UsagiPetManager && typeof UsagiPetManager.initPhysicsToss === 'function') {
+      UsagiPetManager.initPhysicsToss();
+    }
 
     function handleHeroPatUsagi(e) {
       if (e) {
