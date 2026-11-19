@@ -1950,10 +1950,844 @@ window.WhackGame = WhackGame;
 
 
 /* ============================================================
-   7. MINI-GAMES SUBTAB SWITCHER (游乐园子页面切换)
+   6.1. GAME 6: 🍉 乌萨奇合成大西瓜 (Suika Game Physics Engine)
+   ============================================================ */
+const SuikaGame = (function () {
+  let canvas = null;
+  let ctx = null;
+  let animId = null;
+  let score = 0;
+  let highScore = parseInt(localStorage.getItem('usagi_suika_high') || '0', 10);
+  let isGameOver = false;
+
+  const FRUITS = [
+    { name: '樱桃', emoji: '🍒', r: 18, pts: 2, color: '#f43f5e' },
+    { name: '草莓', emoji: '🍓', r: 24, pts: 4, color: '#fb7185' },
+    { name: '葡萄', emoji: '🍇', r: 30, pts: 8, color: '#c084fc' },
+    { name: '橘子', emoji: '🍊', r: 36, pts: 16, color: '#fb923c' },
+    { name: '苹果', emoji: '🍎', r: 44, pts: 32, color: '#ef4444' },
+    { name: '水蜜桃', emoji: '🍑', r: 52, pts: 64, color: '#fda4af' },
+    { name: '菠萝', emoji: '🍍', r: 60, pts: 128, color: '#eab308' },
+    { name: '大西瓜', emoji: '🍉', r: 72, pts: 256, color: '#22c55e' },
+    { name: '乌萨奇大爱心', emoji: '💖', r: 84, pts: 512, color: '#ec4899', isMax: true }
+  ];
+
+  let droppedFruits = [];
+  let currentTier = 0;
+  let nextTier = 1;
+  let aimX = 170;
+  let canDrop = true;
+  let dangerTimer = 0;
+  const DANGER_Y = 68;
+
+  function init() {
+    canvas = document.getElementById('suika-canvas');
+    if (!canvas) return;
+    ctx = canvas.getContext('2d');
+    updateScores();
+    setupEvents();
+    if (!droppedFruits.length && !animId) {
+      reset();
+    }
+  }
+
+  function reset() {
+    score = 0;
+    isGameOver = false;
+    droppedFruits = [];
+    currentTier = Math.floor(Math.random() * 3);
+    nextTier = Math.floor(Math.random() * 3);
+    canDrop = true;
+    dangerTimer = 0;
+    updateScores();
+    updateNextFruitPreview();
+    if (animId) cancelAnimationFrame(animId);
+    loop();
+  }
+
+  function setupEvents() {
+    if (!canvas || canvas._hasEvents) return;
+    canvas._hasEvents = true;
+
+    const getX = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const scaleX = canvas.width / rect.width;
+      const x = (clientX - rect.left) * scaleX;
+      return Math.max(28, Math.min(canvas.width - 28, x));
+    };
+
+    const onMove = (e) => {
+      if (isGameOver) return;
+      aimX = getX(e);
+    };
+
+    const onRelease = (e) => {
+      if (isGameOver || !canDrop) return;
+      dropFruit();
+    };
+
+    canvas.addEventListener('mousemove', onMove);
+    canvas.addEventListener('touchmove', (e) => { onMove(e); }, { passive: true });
+    canvas.addEventListener('click', onRelease);
+    canvas.addEventListener('touchend', (e) => { onRelease(e); }, { passive: true });
+  }
+
+  function dropFruit() {
+    canDrop = false;
+    const fConfig = FRUITS[currentTier];
+    droppedFruits.push({
+      x: aimX,
+      y: 40,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: 2.2,
+      r: fConfig.r,
+      tier: currentTier,
+      id: Date.now() + Math.random()
+    });
+
+    if (window.UsagiSound) UsagiSound.pop();
+
+    currentTier = nextTier;
+    nextTier = Math.floor(Math.random() * 3);
+    updateNextFruitPreview();
+
+    setTimeout(() => {
+      canDrop = true;
+    }, 450);
+  }
+
+  function updateScores() {
+    const sEl = document.getElementById('suika-score');
+    const hEl = document.getElementById('suika-high-score');
+    if (sEl) sEl.innerText = score;
+    if (hEl) hEl.innerText = highScore;
+  }
+
+  function updateNextFruitPreview() {
+    const nextEl = document.getElementById('suika-next-fruit');
+    if (nextEl) nextEl.innerText = FRUITS[nextTier].emoji;
+  }
+
+  function loop() {
+    updatePhysics();
+    draw();
+    if (!isGameOver) {
+      animId = requestAnimationFrame(loop);
+    }
+  }
+
+  function updatePhysics() {
+    const gravity = 0.28;
+    const bounce = 0.22;
+    const friction = 0.985;
+    const floorY = canvas.height - 10;
+
+    for (let i = 0; i < droppedFruits.length; i++) {
+      const f = droppedFruits[i];
+      f.vy += gravity;
+      f.vx *= friction;
+      f.vy *= friction;
+
+      f.x += f.vx;
+      f.y += f.vy;
+
+      // Walls
+      if (f.x - f.r < 10) {
+        f.x = 10 + f.r;
+        f.vx = -f.vx * bounce;
+      } else if (f.x + f.r > canvas.width - 10) {
+        f.x = canvas.width - 10 - f.r;
+        f.vx = -f.vx * bounce;
+      }
+
+      // Floor
+      if (f.y + f.r > floorY) {
+        f.y = floorY - f.r;
+        f.vy = -f.vy * bounce;
+        f.vx *= 0.92;
+      }
+    }
+
+    // Collisions between fruits & Merging
+    let toRemove = new Set();
+    let toAdd = [];
+
+    for (let i = 0; i < droppedFruits.length; i++) {
+      for (let j = i + 1; j < droppedFruits.length; j++) {
+        const f1 = droppedFruits[i];
+        const f2 = droppedFruits[j];
+        if (toRemove.has(f1) || toRemove.has(f2)) continue;
+
+        const dx = f2.x - f1.x;
+        const dy = f2.y - f1.y;
+        const dist = Math.hypot(dx, dy);
+        const minDist = f1.r + f2.r;
+
+        if (dist < minDist && dist > 0.001) {
+          // Check Merge
+          if (f1.tier === f2.tier && f1.tier < FRUITS.length - 1) {
+            toRemove.add(f1);
+            toRemove.add(f2);
+            const newTier = f1.tier + 1;
+            const newConfig = FRUITS[newTier];
+            toAdd.push({
+              x: (f1.x + f2.x) / 2,
+              y: (f1.y + f2.y) / 2,
+              vx: (f1.vx + f2.vx) * 0.4,
+              vy: Math.min(f1.vy, f2.vy) * 0.5 - 1.2,
+              r: newConfig.r,
+              tier: newTier,
+              id: Date.now() + Math.random(),
+              popScale: 1.35
+            });
+
+            score += newConfig.pts;
+            if (score > highScore) {
+              highScore = score;
+              localStorage.setItem('usagi_suika_high', highScore);
+            }
+            updateScores();
+
+            if (window.UsagiSound) UsagiSound.sparkle();
+            if (newConfig.name === '大西瓜' || newConfig.isMax) {
+              if (typeof confettiRain === 'function') confettiRain(40);
+              if (window.UsagiPetManager) {
+                UsagiPetManager.reactTo('game', `太厉害啦！芷萱合成了【${newConfig.name}】！大吉大利！🍉✨`);
+              }
+            }
+          } else {
+            // Elastic push
+            const overlap = (minDist - dist) * 0.5;
+            const nx = dx / dist;
+            const ny = dy / dist;
+
+            f1.x -= nx * overlap;
+            f1.y -= ny * overlap;
+            f2.x += nx * overlap;
+            f2.y += ny * overlap;
+
+            const kx = f1.vx - f2.vx;
+            const ky = f1.vy - f2.vy;
+            const p = 2 * (nx * kx + ny * ky) / 2;
+            f1.vx -= p * 0.5 * nx * 0.8;
+            f1.vy -= p * 0.5 * ny * 0.8;
+            f2.vx += p * 0.5 * nx * 0.8;
+            f2.vy += p * 0.5 * ny * 0.8;
+          }
+        }
+      }
+    }
+
+    if (toRemove.size > 0) {
+      droppedFruits = droppedFruits.filter(f => !toRemove.has(f));
+      droppedFruits.push(...toAdd);
+    }
+
+    // Danger line check
+    let overDanger = false;
+    for (const f of droppedFruits) {
+      if (f.y - f.r < DANGER_Y && Math.abs(f.vy) < 0.3) {
+        overDanger = true;
+        break;
+      }
+    }
+    if (overDanger) {
+      dangerTimer++;
+      if (dangerTimer > 180) {
+        isGameOver = true;
+        if (window.UsagiSound) UsagiSound.yaha();
+        alert(`🍉 游戏结束啦！芷萱本次获得了 ${score} 分！快点击重新开始再战西瓜吧~ 🐰✨`);
+      }
+    } else {
+      dangerTimer = Math.max(0, dangerTimer - 1);
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Danger line
+    ctx.save();
+    ctx.strokeStyle = dangerTimer > 60 ? 'rgba(239, 68, 68, 0.7)' : 'rgba(244, 63, 94, 0.25)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 6]);
+    ctx.beginPath();
+    ctx.moveTo(10, DANGER_Y);
+    ctx.lineTo(canvas.width - 10, DANGER_Y);
+    ctx.stroke();
+    ctx.restore();
+
+    // Aim guide & ready fruit
+    if (canDrop && !isGameOver) {
+      const curConfig = FRUITS[currentTier];
+      ctx.save();
+      ctx.strokeStyle = 'rgba(251, 146, 60, 0.4)';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(aimX, 40);
+      ctx.lineTo(aimX, canvas.height - 10);
+      ctx.stroke();
+      ctx.restore();
+
+      drawFruitCircle(ctx, aimX, 36, curConfig.r * 0.85, curConfig.color, curConfig.emoji);
+    }
+
+    // Dropped fruits
+    for (const f of droppedFruits) {
+      const config = FRUITS[f.tier];
+      let r = f.r;
+      if (f.popScale && f.popScale > 1) {
+        r *= f.popScale;
+        f.popScale -= 0.05;
+      }
+      drawFruitCircle(ctx, f.x, f.y, r, config.color, config.emoji);
+    }
+  }
+
+  function drawFruitCircle(c, x, y, r, color, emoji) {
+    c.save();
+    c.beginPath();
+    c.arc(x, y, r, 0, Math.PI * 2);
+    c.fillStyle = color;
+    c.shadowColor = 'rgba(0, 0, 0, 0.15)';
+    c.shadowBlur = 6;
+    c.shadowOffsetY = 3;
+    c.fill();
+    c.lineWidth = 2.5;
+    c.strokeStyle = '#ffffff';
+    c.stroke();
+
+    c.font = `${Math.floor(r * 1.15)}px sans-serif`;
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    c.fillText(emoji, x, y + 2);
+    c.restore();
+  }
+
+  return { init, reset };
+})();
+window.SuikaGame = SuikaGame;
+
+
+/* ============================================================
+   6.2. GAME 7: 🎡 乌萨奇心愿幸运大转盘 (Love Lucky Wheel)
+   ============================================================ */
+const WheelGame = (function () {
+  let canvas = null;
+  let ctx = null;
+  let isSpinning = false;
+  let currentAngle = 0;
+  let spinVelocity = 0;
+  let animId = null;
+
+  const SLICES = [
+    { title: '全糖奶茶外卖 🧋', desc: '男友立即给芷萱点一杯心仪的全糖去冰奶茶外卖！', color: '#fbcfe8', textColor: '#9d174d' },
+    { title: '专属吹头捏肩 💆', desc: '享受男朋友专属半小时贴心吹头、揉肩与头部解压SPA！', color: '#fed7aa', textColor: '#9a3412' },
+    { title: '无条件听话 🥺', desc: '获得一次男友绝对顺从特权，芷萱说什么就是什么！', color: '#fef08a', textColor: '#854d0e' },
+    { title: '今晚包场看戏 🎬', desc: '今晚由芷萱全权挑选想看的电影或电视剧，男友全程备好零食！', color: '#bbf7d0', textColor: '#166534' },
+    { title: '剥虾投喂大餐 🦐', desc: '一顿想吃的浪漫大餐，男友全程负责剥虾投喂+餐后洗碗！', color: '#bae6fd', textColor: '#075985' },
+    { title: '专属深情情书 💖', desc: '听男朋友现场真诚念一封专属定制情书与暖心睡前故事！', color: '#e9d5ff', textColor: '#6b21a8' },
+    { title: '神秘心愿礼物 🎁', desc: '获得一份男友精心准备的惊喜小礼物或心愿单清空！', color: '#fecdd3', textColor: '#9f1239' },
+    { title: '超大隔空拥抱 ✈️', desc: '男友立即发来隔空超紧深情大拥抱，并加速相聚倒数！', color: '#fde68a', textColor: '#78350f' }
+  ];
+
+  function init() {
+    canvas = document.getElementById('wheel-canvas');
+    if (!canvas) return;
+    ctx = canvas.getContext('2d');
+    drawWheel();
+    renderWallet();
+  }
+
+  function drawWheel() {
+    if (!ctx) return;
+    const w = canvas.width;
+    const h = canvas.height;
+    const cx = w / 2;
+    const cy = h / 2;
+    const r = w / 2 - 8;
+    const numSlices = SLICES.length;
+    const sliceAngle = (Math.PI * 2) / numSlices;
+
+    ctx.clearRect(0, 0, w, h);
+
+    for (let i = 0; i < numSlices; i++) {
+      const start = currentAngle + i * sliceAngle;
+      const end = start + sliceAngle;
+      const slice = SLICES[i];
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, r, start, end);
+      ctx.closePath();
+      ctx.fillStyle = slice.color;
+      ctx.fill();
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = '#ffffff';
+      ctx.stroke();
+
+      ctx.translate(cx, cy);
+      ctx.rotate(start + sliceAngle / 2);
+      ctx.textAlign = 'right';
+      ctx.fillStyle = slice.textColor;
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText(slice.title, r - 16, 4);
+      ctx.restore();
+    }
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = '#f59e0b';
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function spin() {
+    if (isSpinning) return;
+    isSpinning = true;
+
+    const btn = document.getElementById('btn-spin-wheel');
+    if (btn) btn.disabled = true;
+
+    spinVelocity = Math.random() * 0.15 + 0.35;
+    if (window.UsagiSound) UsagiSound.pop();
+
+    const spinStep = () => {
+      currentAngle += spinVelocity;
+      spinVelocity *= 0.982;
+
+      drawWheel();
+
+      if (spinVelocity > 0.002) {
+        animId = requestAnimationFrame(spinStep);
+      } else {
+        isSpinning = false;
+        if (btn) btn.disabled = false;
+        finishSpin();
+      }
+    };
+
+    animId = requestAnimationFrame(spinStep);
+  }
+
+  function finishSpin() {
+    const numSlices = SLICES.length;
+    const sliceAngle = (Math.PI * 2) / numSlices;
+    const normalized = (currentAngle % (Math.PI * 2) + (Math.PI * 2)) % (Math.PI * 2);
+    const pointerAngle = (Math.PI * 1.5 - normalized + Math.PI * 4) % (Math.PI * 2);
+    const winIdx = Math.floor(pointerAngle / sliceAngle) % numSlices;
+    const winPrize = SLICES[winIdx];
+
+    if (window.UsagiSound) UsagiSound.fanfare();
+    if (typeof confettiRain === 'function') confettiRain(45);
+
+    saveVoucher(winPrize);
+
+    if (window.UsagiPetManager) {
+      UsagiPetManager.reactTo('game', `哇塞！恭喜芷萱抽中【${winPrize.title}】！快存入背包找男朋友兑现吧！💖🎁`);
+    }
+
+    setTimeout(() => {
+      alert(`🎉 恭喜芷萱抽取到恋爱特权！\n\n【${winPrize.title}】\n${winPrize.desc}\n\n该特权已自动存入你的「心愿特权背包」，随时向男朋友出示兑现！✨🥰`);
+    }, 200);
+  }
+
+  function saveVoucher(prize) {
+    try {
+      const list = JSON.parse(localStorage.getItem('usagi_wheel_vouchers') || '[]');
+      list.unshift({
+        id: 'v_' + Date.now(),
+        title: prize.title,
+        desc: prize.desc,
+        time: new Date().toLocaleDateString()
+      });
+      localStorage.setItem('usagi_wheel_vouchers', JSON.stringify(list));
+      renderWallet();
+    } catch (e) {}
+  }
+
+  function renderWallet() {
+    const list = JSON.parse(localStorage.getItem('usagi_wheel_vouchers') || '[]');
+    const countEl = document.getElementById('wheel-voucher-count');
+    if (countEl) countEl.innerText = list.length;
+
+    const container = document.getElementById('wheel-wallet-list');
+    if (!container) return;
+
+    if (!list.length) {
+      container.innerHTML = '<p class="text-stone-400 text-center py-3">还没有抽到特权券哦，快点击转动转盘碰碰运气吧！🎁</p>';
+      return;
+    }
+
+    container.innerHTML = list.map((item) => `
+      <div class="flex items-center justify-between p-2.5 rounded-xl bg-white border border-pink-200 shadow-2xs">
+        <div>
+          <p class="font-black text-rose-700 text-xs">${item.title}</p>
+          <p class="text-[10px] text-stone-500">${item.desc}</p>
+          <span class="text-[9px] text-stone-400">抽中时间: ${item.time}</span>
+        </div>
+        <button onclick="WheelGame.copyVoucher('${item.title} - ${item.desc}')" class="px-2 py-1 rounded-lg bg-pink-100 hover:bg-pink-200 text-pink-700 text-[10px] font-bold whitespace-nowrap">
+          复制兑现 💌
+        </button>
+      </div>
+    `).join('');
+  }
+
+  function toggleWallet() {
+    const box = document.getElementById('wheel-wallet-box');
+    if (box) box.classList.toggle('hidden');
+  }
+
+  function copyVoucher(text) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(`【乌萨奇恋爱特权兑现申请】\n亲爱的男朋友！我在手账里抽中了：${text}，请尽快为芷萱兑现哦！💖`);
+      alert("✨ 兑现文本已复制到剪贴板！快去微信/WhatsApp发给男朋友吧~ 💌");
+    }
+  }
+
+  return { init, spin, toggleWallet, copyVoucher };
+})();
+window.WheelGame = WheelGame;
+
+
+/* ============================================================
+   6.3. GAME 8: 🐰 乌萨奇贪吃萝卜大冒险 (Kawaii Snake Engine)
+   ============================================================ */
+const SnakeGame = (function () {
+  let canvas = null;
+  let ctx = null;
+  let gameInterval = null;
+  let isRunning = false;
+  let score = 0;
+  let highScore = parseInt(localStorage.getItem('usagi_snake_high') || '0', 10);
+
+  const GRID_SIZE = 17;
+  let tileSize = 20;
+  let snake = [];
+  let dir = 'RIGHT';
+  let nextDir = 'RIGHT';
+  let food = { x: 8, y: 8, type: 'carrot', emoji: '🥕', pts: 10 };
+
+  const FOOD_TYPES = [
+    { type: 'carrot', emoji: '🥕', pts: 10 },
+    { type: 'strawberry', emoji: '🍓', pts: 20 },
+    { type: 'heart', emoji: '💖', pts: 30 }
+  ];
+
+  function init() {
+    canvas = document.getElementById('snake-canvas');
+    if (!canvas) return;
+    ctx = canvas.getContext('2d');
+    tileSize = canvas.width / GRID_SIZE;
+    updateScores();
+    setupControls();
+    if (!snake.length) reset();
+  }
+
+  function reset() {
+    snake = [
+      { x: 5, y: 8 },
+      { x: 4, y: 8 },
+      { x: 3, y: 8 }
+    ];
+    dir = 'RIGHT';
+    nextDir = 'RIGHT';
+    score = 0;
+    spawnFood();
+    updateScores();
+    draw();
+  }
+
+  function setupControls() {
+    if (window._snakeEvents) return;
+    window._snakeEvents = true;
+
+    window.addEventListener('keydown', (e) => {
+      const activeTab = document.getElementById('tab-games');
+      const snakeView = document.getElementById('game-view-snake');
+      if (!activeTab || activeTab.classList.contains('hidden') || !snakeView || snakeView.classList.contains('hidden')) return;
+
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') setDir('UP');
+      else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') setDir('DOWN');
+      else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') setDir('LEFT');
+      else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') setDir('RIGHT');
+      else if (e.key === ' ') togglePlay();
+    });
+  }
+
+  function setDir(d) {
+    if (d === 'UP' && dir !== 'DOWN') nextDir = 'UP';
+    if (d === 'DOWN' && dir !== 'UP') nextDir = 'DOWN';
+    if (d === 'LEFT' && dir !== 'RIGHT') nextDir = 'LEFT';
+    if (d === 'RIGHT' && dir !== 'LEFT') nextDir = 'RIGHT';
+    if (!isRunning) togglePlay();
+  }
+
+  function togglePlay() {
+    const btn = document.getElementById('btn-snake-start');
+    if (isRunning) {
+      clearInterval(gameInterval);
+      isRunning = false;
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-play mr-1"></i> 继续冒险';
+    } else {
+      isRunning = true;
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-pause mr-1"></i> 暂停游戏';
+      gameInterval = setInterval(step, 140);
+    }
+  }
+
+  function spawnFood() {
+    let valid = false;
+    let newX, newY;
+    while (!valid) {
+      newX = Math.floor(Math.random() * GRID_SIZE);
+      newY = Math.floor(Math.random() * GRID_SIZE);
+      valid = !snake.some(segment => segment.x === newX && segment.y === newY);
+    }
+    const ft = FOOD_TYPES[Math.floor(Math.random() * FOOD_TYPES.length)];
+    food = { x: newX, y: newY, ...ft };
+  }
+
+  function step() {
+    dir = nextDir;
+    const head = { ...snake[0] };
+
+    if (dir === 'UP') head.y--;
+    if (dir === 'DOWN') head.y++;
+    if (dir === 'LEFT') head.x--;
+    if (dir === 'RIGHT') head.x++;
+
+    // Wrap around boundaries
+    if (head.x < 0) head.x = GRID_SIZE - 1;
+    if (head.x >= GRID_SIZE) head.x = 0;
+    if (head.y < 0) head.y = GRID_SIZE - 1;
+    if (head.y >= GRID_SIZE) head.y = 0;
+
+    // Self collision
+    if (snake.some(seg => seg.x === head.x && seg.y === head.y)) {
+      gameOver();
+      return;
+    }
+
+    snake.unshift(head);
+
+    if (head.x === food.x && head.y === food.y) {
+      score += food.pts;
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('usagi_snake_high', highScore);
+      }
+      updateScores();
+      if (window.UsagiSound) UsagiSound.pop();
+      spawnFood();
+    } else {
+      snake.pop();
+    }
+
+    draw();
+  }
+
+  function gameOver() {
+    clearInterval(gameInterval);
+    isRunning = false;
+    const btn = document.getElementById('btn-snake-start');
+    if (btn) btn.innerHTML = '<i class="fa-solid fa-rotate-right mr-1"></i> 重新开始';
+    if (window.UsagiSound) UsagiSound.yaha();
+    alert(`🐰 哎呀！乌萨奇撞到自己的小尾巴啦！\n本次冒险得分：${score} 分！芷萱超棒，再接再厉~ ✨🥕`);
+    reset();
+  }
+
+  function updateScores() {
+    const sEl = document.getElementById('snake-score');
+    const hEl = document.getElementById('snake-high-score');
+    if (sEl) sEl.innerText = score;
+    if (hEl) hEl.innerText = highScore;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.save();
+    for (let r = 0; r < GRID_SIZE; r++) {
+      for (let c = 0; c < GRID_SIZE; c++) {
+        ctx.fillStyle = (r + c) % 2 === 0 ? '#FCF9F2' : '#F7F3E8';
+        ctx.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
+      }
+    }
+    ctx.restore();
+
+    // Food
+    ctx.save();
+    ctx.font = `${Math.floor(tileSize * 0.9)}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(food.emoji, food.x * tileSize + tileSize / 2, food.y * tileSize + tileSize / 2 + 1);
+    ctx.restore();
+
+    // Snake
+    for (let i = snake.length - 1; i >= 0; i--) {
+      const seg = snake[i];
+      const cx = seg.x * tileSize + tileSize / 2;
+      const cy = seg.y * tileSize + tileSize / 2;
+
+      if (i === 0) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, tileSize / 2 - 1, 0, Math.PI * 2);
+        ctx.fillStyle = '#fde68a';
+        ctx.fill();
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = '#f59e0b';
+        ctx.stroke();
+
+        ctx.font = `${Math.floor(tileSize * 0.85)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🐰', cx, cy + 1);
+        ctx.restore();
+      } else {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, tileSize / 2 - 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = i % 2 === 0 ? '#fbcfe8' : '#fed7aa';
+        ctx.fill();
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = '#ffffff';
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+  }
+
+  return { init, togglePlay, setDir };
+})();
+window.SnakeGame = SnakeGame;
+
+
+/* ============================================================
+   6.4. GAME 9: ✊ 乌萨奇心有灵犀猜拳擂台 (RPS Game)
+   ============================================================ */
+const RPSGame = (function () {
+  let streak = 0;
+  let highStreak = parseInt(localStorage.getItem('usagi_rps_high') || '0', 10);
+  let wins = 0;
+  let draws = 0;
+  let losses = 0;
+  let isPlaying = false;
+
+  const CHOICES = {
+    rock: { name: '石头', emoji: '✊', beats: 'scissors' },
+    scissors: { name: '剪刀', emoji: '✌️', beats: 'paper' },
+    paper: { name: '布', emoji: '✋', beats: 'rock' }
+  };
+
+  function init() {
+    updateUI();
+  }
+
+  function play(playerChoice) {
+    if (isPlaying) return;
+    isPlaying = true;
+
+    const pHand = document.getElementById('rps-player-hand');
+    const bHand = document.getElementById('rps-bot-hand');
+    const resText = document.getElementById('rps-result-text');
+    const pName = document.getElementById('rps-player-choice-name');
+    const bName = document.getElementById('rps-bot-choice-name');
+
+    if (pHand) pHand.innerText = CHOICES[playerChoice].emoji;
+    if (pName) pName.innerText = `出拳: ${CHOICES[playerChoice].name}`;
+    if (bHand) bHand.innerText = '✊';
+    if (bName) bName.innerText = '出拳中...';
+    if (resText) resText.innerText = '石头剪刀... 乌萨奇蓄力！';
+
+    let shakes = 0;
+    const shakeInterval = setInterval(() => {
+      shakes++;
+      if (bHand) bHand.style.transform = shakes % 2 === 0 ? 'translateY(-8px) scale(1.1)' : 'translateY(0) scale(1)';
+      if (window.UsagiSound) UsagiSound.pop();
+
+      if (shakes >= 4) {
+        clearInterval(shakeInterval);
+        resolveMatch(playerChoice);
+      }
+    }, 180);
+  }
+
+  function resolveMatch(playerChoice) {
+    const keys = Object.keys(CHOICES);
+    const botChoice = keys[Math.floor(Math.random() * keys.length)];
+
+    const bHand = document.getElementById('rps-bot-hand');
+    const bName = document.getElementById('rps-bot-choice-name');
+    const resText = document.getElementById('rps-result-text');
+
+    if (bHand) {
+      bHand.innerText = CHOICES[botChoice].emoji;
+      bHand.style.transform = 'scale(1.2)';
+      setTimeout(() => { if (bHand) bHand.style.transform = 'scale(1)'; }, 200);
+    }
+    if (bName) bName.innerText = `出拳: ${CHOICES[botChoice].name}`;
+
+    if (playerChoice === botChoice) {
+      draws++;
+      if (resText) resText.innerHTML = '<span class="text-amber-600">打平啦！心有灵犀贴贴~ 🤝</span>';
+      if (window.UsagiSound) UsagiSound.pop();
+    } else if (CHOICES[playerChoice].beats === botChoice) {
+      wins++;
+      streak++;
+      if (streak > highStreak) {
+        highStreak = streak;
+        localStorage.setItem('usagi_rps_high', highStreak);
+      }
+      if (resText) resText.innerHTML = `<span class="text-rose-600 font-black">芷萱大获全胜！${streak} 连胜！🎉</span>`;
+      if (window.UsagiSound) UsagiSound.fanfare();
+
+      if (streak === 3) {
+        if (typeof confettiRain === 'function') confettiRain(30);
+        if (window.UsagiPetManager) {
+          UsagiPetManager.reactTo('game', '3连胜！芷萱解锁【今日锦鲤拳王】称号！太棒啦！👑🌸');
+        }
+      } else if (streak === 5) {
+        if (typeof confettiRain === 'function') confettiRain(50);
+        if (window.UsagiPetManager) {
+          UsagiPetManager.reactTo('game', '5连胜！乌萨奇甘拜下风！快向男朋友索要大奖励！🏆💖');
+        }
+      }
+    } else {
+      losses++;
+      streak = 0;
+      if (resText) resText.innerHTML = '<span class="text-stone-500">乌萨奇险胜一局！芷萱再接再厉~ 🐰</span>';
+      if (window.UsagiSound) UsagiSound.yaha();
+    }
+
+    updateUI();
+    isPlaying = false;
+  }
+
+  function updateUI() {
+    const sEl = document.getElementById('rps-streak');
+    const hEl = document.getElementById('rps-high-streak');
+    const sumEl = document.getElementById('rps-record-summary');
+    if (sEl) sEl.innerText = streak;
+    if (hEl) hEl.innerText = highStreak;
+    if (sumEl) sumEl.innerText = `战绩: ${wins}胜 ${draws}平 ${losses}负`;
+  }
+
+  return { init, play };
+})();
+window.RPSGame = RPSGame;
+
+
+/* ============================================================
+   7. MINI-GAMES SUBTAB SWITCHER (游乐园子页面切换 - 9大萌趣游戏)
    ============================================================ */
 function switchGameSubtab(subtab) {
-  const tabs = ['fruit', 'memory', 'fish', 'gacha', 'whack'];
+  const tabs = ['fruit', 'suika', 'wheel', 'snake', 'rps', 'memory', 'fish', 'gacha', 'whack'];
 
   // Switch views
   tabs.forEach(t => {
@@ -1976,6 +2810,10 @@ function switchGameSubtab(subtab) {
 
   // Init corresponding game
   if (subtab === 'fruit') FruitGame.init();
+  if (subtab === 'suika') SuikaGame.init();
+  if (subtab === 'wheel') WheelGame.init();
+  if (subtab === 'snake') SnakeGame.init();
+  if (subtab === 'rps') RPSGame.init();
   if (subtab === 'memory') MemoryGame.init();
   if (subtab === 'fish') WoodenFishGame.init();
   if (subtab === 'gacha') GachaGame.init();
@@ -1992,6 +2830,10 @@ window.switchGameSubtab = switchGameSubtab;
 document.addEventListener('DOMContentLoaded', () => {
   UsagiPetManager.init();
   FruitGame.init();
+  SuikaGame.init();
+  WheelGame.init();
+  SnakeGame.init();
+  RPSGame.init();
   MemoryGame.init();
   WoodenFishGame.init();
   GachaGame.init();
