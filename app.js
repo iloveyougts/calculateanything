@@ -145,15 +145,21 @@ window.USAGI_APP = {
       if (!this.isConnected || !this.client) return;
       try {
         const u = (username || '').trim();
-        const targetUsername = this.cloudUsernameMap[u.toLowerCase()] || u;
+        // 确保芷萱账号严格使用云端大写主键 GANTZISHUAN
+        const targetUsername = this.cloudUsernameMap[u.toLowerCase()] || (u.toLowerCase() === 'gantzishuan' ? 'GANTZISHUAN' : u);
+        const userNick = (nickname && nickname.trim()) ? nickname.trim() : (data && data.profile && data.profile.nickname ? data.profile.nickname : '');
         const { error } = await this.client.from('usagi_userdata').upsert({
           username: targetUsername,
-          nickname: nickname || '',
+          nickname: userNick,
           password: password || '',
           data: data,
           updated_at: new Date().toISOString()
         });
-        if (error) console.warn("Cloud sync error:", error);
+        if (error) {
+          console.warn("Cloud sync error:", error);
+        } else {
+          console.log(`Cloud sync success for ${targetUsername}! Nickname: ${userNick}`);
+        }
       } catch (e) {
         console.warn("Cloud sync exception:", e);
       }
@@ -197,7 +203,7 @@ window.USAGI_APP = {
         users['gantzishuan'] = users['GANTZISHUAN'];
       }
       // Ensure boyfriend's tester account exists in local registry
-      if (!users['gts'] || users['gts'].nickname !== 'kim') {
+      if (!users['gts']) {
         users['gts'] = {
           username: 'gts',
           password: '123',
@@ -373,45 +379,87 @@ window.USAGI_APP = {
     confettiRain();
   },
 
-  editProfile: async function () {
+  editProfile: function () {
     if (!this.data) return;
     if (!this.data.profile) this.data.profile = {};
-    const currentNick = this.data.profile.nickname || (this.currentUser && this.currentUser.toLowerCase() === 'gts' ? 'kim' : '颜芷萱 (Tzi Shuan) 🌸');
-    const newNick = prompt("修改手账专属昵称：", currentNick);
-    let changed = false;
+    const lowerU = (this.currentUser || '').toLowerCase();
+    const isGts = (lowerU === 'gts');
+    const savedCustomNick = localStorage.getItem(`usagi_custom_nick_${lowerU}`);
+    const currentNick = (savedCustomNick && savedCustomNick.trim())
+      ? savedCustomNick.trim()
+      : ((this.data.profile.nickname && this.data.profile.nickname.trim())
+        ? this.data.profile.nickname.trim()
+        : (isGts ? 'kim' : '颜芷萱 (Tzi Shuan) 🌸'));
+    const currentMotto = (this.data.profile.motto && this.data.profile.motto.trim())
+      ? this.data.profile.motto.trim()
+      : (isGts ? '乌萨奇冲冲冲！Kim专属测试手账 🐰' : '呀哈！芷萱今天也要开开心心、元气满满！💖');
 
-    if (newNick !== null && newNick.trim() !== '') {
-      const val = newNick.trim();
-      this.data.profile.nickname = val;
-      const users = this.getUsers();
-      if (users[this.currentUser]) {
-        users[this.currentUser].nickname = val;
-      }
-      if (this.currentUser && users[this.currentUser.toLowerCase()]) {
-        users[this.currentUser.toLowerCase()].nickname = val;
+    const modal = document.getElementById('modal-profile-edit');
+    const inputNick = document.getElementById('input-profile-nickname');
+    const inputMotto = document.getElementById('input-profile-motto');
+
+    if (inputNick) inputNick.value = currentNick;
+    if (inputMotto) inputMotto.value = currentMotto;
+    if (modal) modal.classList.remove('hidden');
+    if (window.UsagiSound) UsagiSound.pop();
+  },
+
+  closeProfileModal: function () {
+    const modal = document.getElementById('modal-profile-edit');
+    if (modal) modal.classList.add('hidden');
+    if (window.UsagiSound) UsagiSound.pop();
+  },
+
+  submitProfileModal: async function () {
+    const inputNick = document.getElementById('input-profile-nickname');
+    const inputMotto = document.getElementById('input-profile-motto');
+    const newNick = inputNick ? inputNick.value.trim() : '';
+    const newMotto = inputMotto ? inputMotto.value.trim() : '';
+
+    if (!newNick) {
+      alert("手账专属昵称不能为空哦~ 🐰🌸");
+      return;
+    }
+
+    if (!this.data) this.data = {};
+    if (!this.data.profile) this.data.profile = {};
+
+    this.data.profile.nickname = newNick;
+    this.data.profile.nicknameUpdatedAt = Date.now();
+    if (newMotto) {
+      this.data.profile.motto = newMotto;
+    }
+
+    const lower = (this.currentUser || '').toLowerCase();
+    localStorage.setItem(`usagi_custom_nick_${lower}`, newNick);
+
+    // 永久保存在本地用户花名册与当前用户分区
+    const users = this.getUsers();
+    if (this.currentUser) {
+      if (!users[this.currentUser]) users[this.currentUser] = {};
+      users[this.currentUser].nickname = newNick;
+      users[this.currentUser].nicknameUpdatedAt = Date.now();
+      if (users[lower]) {
+        users[lower].nickname = newNick;
+        users[lower].nicknameUpdatedAt = Date.now();
       }
       this.saveUsers(users);
-      changed = true;
     }
 
-    const currentMotto = this.data.profile.motto || (this.currentUser && this.currentUser.toLowerCase() === 'gts' ? '乌萨奇冲冲冲！Kim专属测试手账 🐰' : '呀哈！芷萱今天也要开开心心、元气满满！💖');
-    const newMotto = prompt("修改心愿寄语 / 乌萨奇签名：", currentMotto);
-    if (newMotto !== null && newMotto.trim() !== '') {
-      this.data.profile.motto = newMotto.trim();
-      changed = true;
+    this.saveData();
+    this.renderAll();
+    this.closeProfileModal();
+
+    // 立即触发云端同步，确保数据库与本地绝对一致
+    if (this.cloud && this.cloud.isConnected) {
+      const pwd = users[this.currentUser] ? users[this.currentUser].password : (lower === 'gts' ? '123' : '520GANTZISHUAN');
+      await this.cloud.syncDataToCloud(this.currentUser, this.data, pwd, newNick);
     }
 
-    if (changed) {
-      this.saveData();
-      this.renderAll();
-      // 立即触发云端同步，确保数据库与本地绝对一致
-      if (this.cloud && this.cloud.isConnected) {
-        const users = this.getUsers();
-        const pwd = users[this.currentUser] ? users[this.currentUser].password : (this.currentUser.toLowerCase() === 'gts' ? '123' : '520GANTZISHUAN');
-        this.cloud.syncDataToCloud(this.currentUser, this.data, pwd, this.data.profile.nickname);
-      }
-      UsagiSound.yaha();
-      confettiRain(25);
+    if (window.UsagiSound) UsagiSound.yaha();
+    if (typeof confettiRain === 'function') confettiRain(25);
+    if (window.UsagiPetManager) {
+      UsagiPetManager.speak('🌸 昵称修改成功！', `太棒啦！手账专属昵称已永久更新为【${newNick}】！乌萨奇记住啦~ ✨`, true);
     }
   },
 
@@ -422,16 +470,18 @@ window.USAGI_APP = {
 
       const userKey = getUserDataKey(username);
       let userData = null;
+      let cloudRecord = null;
 
       // 1. SUPABASE CLOUD-FIRST LOAD: Pull from Supabase cloud first so github update or cache clearing NEVER loses data!
       if (this.cloud && this.cloud.isConnected) {
         try {
           const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Cloud timeout')), 2800));
-          const cloudRecord = await Promise.race([this.cloud.pullDataFromCloud(username), timeoutPromise]);
+          cloudRecord = await Promise.race([this.cloud.pullDataFromCloud(username), timeoutPromise]);
           if (cloudRecord && cloudRecord.data && typeof cloudRecord.data === 'object') {
             userData = cloudRecord.data;
-            if (cloudRecord.nickname && userData.profile) {
-              userData.profile.nickname = cloudRecord.nickname;
+            if (!userData.profile) userData.profile = {};
+            if (cloudRecord.nickname && cloudRecord.nickname.trim()) {
+              userData.profile.nickname = cloudRecord.nickname.trim();
             }
             console.log("Successfully fetched latest user records from Supabase Cloud!");
           }
@@ -481,11 +531,36 @@ window.USAGI_APP = {
       // 核心：永久尊重并使用用户修改的昵称与签名，绝不被默认名字重置还原！
       if (!userData.profile) userData.profile = {};
       const lowerU = (username || '').toLowerCase();
-      if (!userData.profile.nickname || userData.profile.nickname === '乌萨奇饲养员') {
-        userData.profile.nickname = (lowerU === 'gts') ? 'kim' : '颜芷萱 (Tzi Shuan) 🌸';
+      const isGts = (lowerU === 'gts');
+      const isGf = lowerU === 'gantzishuan' || lowerU.includes('tzi') || lowerU.includes('shuan');
+
+      // 读取本地花名册
+      const localUsers = this.getUsers();
+      const localUserRec = localUsers[username] || localUsers[lowerU];
+
+      // 永久尊重用户在本地修改过的自定义昵称，绝不被云端旧数据覆盖回退！
+      const savedCustomNick = localStorage.getItem(`usagi_custom_nick_${lowerU}`);
+      if (savedCustomNick && savedCustomNick.trim()) {
+        userData.profile.nickname = savedCustomNick.trim();
+      } else if (userData.profile.nickname && userData.profile.nickname.trim() && userData.profile.nickname !== '乌萨奇饲养员') {
+        // 保持用户已有自定义昵称，绝不回退
+      } else if (localUserRec && localUserRec.nickname && localUserRec.nickname.trim() && localUserRec.nickname !== '乌萨奇饲养员') {
+        userData.profile.nickname = localUserRec.nickname.trim();
+      } else if (cloudRecord && cloudRecord.nickname && cloudRecord.nickname.trim()) {
+        userData.profile.nickname = cloudRecord.nickname.trim();
+      } else {
+        userData.profile.nickname = isGts ? 'kim' : '颜芷萱 (Tzi Shuan) 🌸';
       }
-      if (!userData.profile.motto || userData.profile.motto.includes('每天都要元气满满！')) {
-        userData.profile.motto = (lowerU === 'gts') ? '乌萨奇冲冲冲！Kim专属测试手账 🐰' : '呀哈！芷萱今天也要开开心心、元气满满！💖';
+
+      // 保持本地花名册与当前最新昵称同步
+      if (localUserRec && userData.profile.nickname) {
+        localUserRec.nickname = userData.profile.nickname;
+        this.saveUsers(localUsers);
+      }
+
+      // 确保签名与账号身份严格匹配：芷萱账号绝对不出现 Kim专属测试手账！
+      if (!userData.profile.motto || userData.profile.motto.includes('每天都要元气满满！') || (isGf && userData.profile.motto.includes('Kim专属测试手账'))) {
+        userData.profile.motto = isGts ? '乌萨奇冲冲冲！Kim专属测试手账 🐰' : '呀哈！芷萱今天也要开开心心、元气满满！💖';
       }
 
       // SANITIZE: Deep clean any residual Japanese characters from old localStorage cache
@@ -571,7 +646,15 @@ window.USAGI_APP = {
     // When switching back to this tab or unlocking device
     window.addEventListener('focus', pullLatestCloud);
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') pullLatestCloud();
+      if (document.visibilityState === 'visible') {
+        pullLatestCloud();
+      } else {
+        try {
+          if (window.RhythmGame && typeof RhythmGame.pause === 'function') {
+            RhythmGame.pause();
+          }
+        } catch(e){}
+      }
     });
 
     // Background heartbeat polling every 15s
@@ -771,7 +854,9 @@ window.USAGI_APP = {
           background-size: contain;
           background-repeat: no-repeat;
           background-position: center;
-          filter: drop-shadow(0 8px 16px rgba(251, 146, 60, 0.4));
+          filter: drop-shadow(0 6px 14px rgba(251, 146, 60, 0.35));
+          will-change: transform, opacity;
+          transform: translateZ(0);
           animation: usagiFlyIn 1.35s cubic-bezier(0.175, 0.885, 0.32, 1.25) ${delay}s forwards;
           z-index: 60;
         `;
@@ -793,7 +878,9 @@ window.USAGI_APP = {
           left: ${x}vw;
           top: ${y}vh;
           font-size: ${size}px;
-          filter: drop-shadow(0 4px 12px rgba(0,0,0,0.12));
+          filter: drop-shadow(0 3px 8px rgba(0,0,0,0.1));
+          will-change: transform, opacity;
+          transform: translateZ(0);
           animation: emojiDriftFade 1.3s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s forwards;
           z-index: 61;
         `;
@@ -836,7 +923,14 @@ window.USAGI_APP = {
   switchTab: function (tabName) {
     // 1. 记忆桌面端侧边栏当前的滚动位置，确保换页时侧边栏绝对停留在原位不自动上去
     const sidebarBox = document.querySelector('.sidebar-scroll-box') || document.querySelector('#app-sidebar > div');
-    const savedSidebarScroll = sidebarBox ? sidebarBox.scrollTop : 0;
+    if (sidebarBox && !sidebarBox._hasScrollTracker) {
+      sidebarBox._hasScrollTracker = true;
+      sidebarBox.addEventListener('scroll', () => {
+        window._savedSidebarScroll = sidebarBox.scrollTop;
+      }, { passive: true });
+    }
+    const currentScroll = sidebarBox ? sidebarBox.scrollTop : 0;
+    const savedSidebarScroll = (currentScroll > 0) ? currentScroll : (window._savedSidebarScroll || 0);
 
     document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
     document.querySelectorAll('.nav-pill').forEach(el => el.classList.remove('active'));
@@ -847,12 +941,22 @@ window.USAGI_APP = {
     if (targetTab) {
       targetTab.classList.remove('hidden');
       targetTab.scrollTop = 0;
-      // 触发本页专属高级动态进场动效
+      // 触发本页专属高级动态进场动效 (通过 rAF 避免强制同步重排 Reflow，确保 60FPS 极速顺滑)
       targetTab.style.animation = 'none';
-      void targetTab.offsetHeight; // 触发 reflow 重置动画
-      targetTab.style.animation = '';
+      requestAnimationFrame(() => {
+        if (targetTab) targetTab.style.animation = '';
+      });
     }
     if (targetNav) targetNav.classList.add('active');
+
+    // 智能切页性能优化：当离开游戏页时自动暂停音游循环，节约系统性能
+    if (tabName !== 'games') {
+      try {
+        if (window.RhythmGame && typeof RhythmGame.pause === 'function') {
+          RhythmGame.pause();
+        }
+      } catch (e) {}
+    }
 
     // 核心第一步：显示新Tab的瞬间立即执行回到最顶部 Header
     this.scrollToTopImmediately();
@@ -958,7 +1062,10 @@ window.USAGI_APP = {
 
     // 核心第二步：渲染完成后再次强行保证处于页面顶部，并持续锁定侧边栏原位
     this.scrollToTopImmediately();
-    if (sidebarBox) sidebarBox.scrollTop = savedSidebarScroll;
+    if (sidebarBox) {
+      sidebarBox.scrollTop = savedSidebarScroll;
+      try { sessionStorage.setItem('usagi_sidebar_scroll', savedSidebarScroll); } catch(e){}
+    }
     requestAnimationFrame(() => {
       this.scrollToTopImmediately();
       if (sidebarBox) sidebarBox.scrollTop = savedSidebarScroll;
@@ -966,7 +1073,7 @@ window.USAGI_APP = {
     setTimeout(() => {
       this.scrollToTopImmediately();
       if (sidebarBox) sidebarBox.scrollTop = savedSidebarScroll;
-    }, 50);
+    }, 40);
 
     UsagiSound.pop();
   },
@@ -1597,7 +1704,10 @@ window.USAGI_APP = {
     this.renderDashboard();
     UsagiSound.sparkle();
     if (window.UsagiPetManager) {
-      UsagiPetManager.reactTo('period', '特殊生理期乌萨奇带着暖水袋来啦！多喝温水暖和身体，有任何不舒服都找男友和乌萨奇！🧸♨️');
+      if (UsagiPetManager.isMinimized && UsagiPetManager.isMinimized()) {
+        UsagiPetManager.expand();
+      }
+      UsagiPetManager.reactTo('period', '芷萱宝贝来例假辛苦啦！肚子还痛不痛呀？乌萨奇拿着暖暖水袋来给你贴贴揉揉肚肚啦！多喝温热红糖水，不准碰冰水冷饮哦，男朋友和乌萨奇心疼死你啦！🧸♨️');
     }
   },
 
@@ -1621,6 +1731,12 @@ window.USAGI_APP = {
     this.renderPeriod();
     this.renderDashboard();
     UsagiSound.coin();
+    if (window.UsagiPetManager) {
+      if (UsagiPetManager.isMinimized && UsagiPetManager.isMinimized()) {
+        UsagiPetManager.expand();
+      }
+      UsagiPetManager.reactTo('period', '生理期周期设置好啦！到了特殊日子乌萨奇会提前提醒芷萱备好暖宝宝和红糖姜茶哦~ 🌸🍵');
+    }
     alert("生理期周期设置已保存！✨");
   },
 
@@ -2135,23 +2251,31 @@ window.USAGI_APP = {
     this.data.moods.unshift(newMood);
     this.saveData();
     this.renderMood();
-    UsagiSound.yaha();
+
+    // 情绪音效：开心时呀哈庆祝，难过/疲惫/生气时温柔轻抚绝不吵闹！
+    if (['happy', 'yaha', 'ura'].includes(moodKey)) {
+      UsagiSound.yaha();
+      if (typeof confettiRain === 'function') confettiRain(30);
+    } else {
+      UsagiSound.sparkle();
+    }
+
     if (window.UsagiPetManager) {
       if (UsagiPetManager.isMinimized && UsagiPetManager.isMinimized()) {
         UsagiPetManager.expand();
       }
       if (['happy', 'yaha', 'ura'].includes(moodKey)) {
-        UsagiPetManager.reactTo('happy');
+        UsagiPetManager.reactTo('happy', '太棒啦！看到芷萱今天开开心心的，乌萨奇也跟着超级快乐！继续保持好心情，呀哈！🥰🌸');
       } else if (moodKey === 'tired') {
-        UsagiPetManager.reactTo('tired');
+        UsagiPetManager.reactTo('tired', '芷萱今天辛苦啦！乌萨奇的小肉爪正在给你捏捏肩膀揉揉腰~ 赶紧休息放空，今晚早点睡，男朋友心疼你呢！💆☕');
       } else if (moodKey === 'emo') {
-        UsagiPetManager.reactTo('emo');
+        UsagiPetManager.reactTo('emo', '芷萱不哭不哭~ 乌萨奇拿着软软的小手帕帮你擦眼泪！有任何委屈都跟男友和乌萨奇倾诉，我们永远最偏心你、最疼你啦！🧻🧸');
       } else if (moodKey === 'angry') {
-        UsagiPetManager.reactTo('angry');
+        UsagiPetManager.reactTo('angry', '谁惹我们芷萱大宝贝生气啦？！乌萨奇呼哧呼哧拿小扇子把坏心情统统扇飞！不气不气，吃块小蛋糕甜甜嘴！🪭🍓');
       } else if (moodKey === 'calm') {
-        UsagiPetManager.reactTo('calm');
+        UsagiPetManager.reactTo('calm', '平淡也是一种温柔的美好~ 乌萨奇泡了杯茉莉绿茶，乖乖坐在芷萱身边陪着你发呆 🍃🍵');
       } else {
-        UsagiPetManager.reactTo('highlight', '平淡也是一种温柔的美好~ 乌萨奇静静陪着芷萱 🍃🍵');
+        UsagiPetManager.reactTo('highlight', '生活的小点滴乌萨奇都陪着芷萱一起收藏，每天都要开开心心哦！🌸💖');
       }
     }
   },
@@ -2224,6 +2348,9 @@ window.USAGI_APP = {
     if (habit.history[today]) {
       UsagiSound.sparkle();
       confettiRain(25);
+      if (window.UsagiPetManager) {
+        UsagiPetManager.reactTo('habit', `太棒啦！自律习惯【${habit.name}】打卡成功！芷萱每天都在闪闪发光，乌萨奇为你骄傲！🌸🏅`);
+      }
     } else {
       UsagiSound.pop();
     }
@@ -2553,6 +2680,9 @@ window.USAGI_APP = {
       if (t.completed) {
         UsagiSound.sparkle();
         confettiRain(20);
+        if (window.UsagiPetManager) {
+          UsagiPetManager.reactTo('happy', `哇！待办小任务【${t.text}】搞定啦！芷萱效率超高超厉害，乌萨奇为你疯狂鼓掌！🎉🐰`);
+        }
       } else {
         UsagiSound.pop();
       }

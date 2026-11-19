@@ -26,12 +26,31 @@
    KAWAII USAGI CUSTOM CURSORS (乌萨奇专属萌兔光标)
    ============================================================ */
 /* Default Usagi Arrow Cursor */
-*, html, body {
+*,
+html,
+body {
   cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cellipse cx='9' cy='6' rx='2.8' ry='5.5' fill='%23FFE875' stroke='%234A3E3D' stroke-width='1.5' transform='rotate(-10 9 6)'/%3E%3Cellipse cx='9' cy='6' rx='1.2' ry='3.5' fill='%23FFB4B4' transform='rotate(-10 9 6)'/%3E%3Cellipse cx='17' cy='6' rx='2.8' ry='5.5' fill='%23FFE875' stroke='%234A3E3D' stroke-width='1.5' transform='rotate(10 17 6)'/%3E%3Cellipse cx='17' cy='6' rx='1.2' ry='3.5' fill='%23FFB4B4' transform='rotate(10 17 6)'/%3E%3Cellipse cx='13' cy='17' rx='8.5' ry='7.5' fill='%23FFE875' stroke='%234A3E3D' stroke-width='1.5'/%3E%3Cellipse cx='8.5' cy='18' rx='1.8' ry='1.2' fill='%23FF8FA3'/%3E%3Cellipse cx='17.5' cy='18' rx='1.8' ry='1.2' fill='%23FF8FA3'/%3E%3Ccircle cx='10' cy='15' r='1.3' fill='%234A3E3D'/%3E%3Ccircle cx='10.4' cy='14.6' r='0.4' fill='%23FFFFFF'/%3E%3Ccircle cx='16' cy='15' r='1.3' fill='%234A3E3D'/%3E%3Ccircle cx='16.4' cy='14.6' r='0.4' fill='%23FFFFFF'/%3E%3Cpath d='M11.5 18 Q13 19.5 14.5 18' stroke='%234A3E3D' stroke-width='1.3' fill='%23FF6B8B' stroke-linecap='round'/%3E%3Cpolygon points='2,2 8,14 11,10 16,9' fill='%23FFD43F' stroke='%234A3E3D' stroke-width='1.2'/%3E%3C/svg%3E") 2 2, auto;
 }
 
 /* Usagi Hover Pointer Cursor for clickable elements */
-button, a, input, select, textarea, [onclick], .cursor-pointer, .nav-pill, .btn-usagi, .btn-secondary, .mobile-nav-btn, .heatmap-cell, .calendar-day-cell, .mascot-toggle-btn, .usagi-mascot-float, label, audio, [role="button"] {
+button,
+a,
+input,
+select,
+textarea,
+[onclick],
+.cursor-pointer,
+.nav-pill,
+.btn-usagi,
+.btn-secondary,
+.mobile-nav-btn,
+.heatmap-cell,
+.calendar-day-cell,
+.mascot-toggle-btn,
+.usagi-mascot-float,
+label,
+audio,
+[role="button"] {
   cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Cpolygon points='4,2 14,14 10,16 2,6' fill='%23FF8A00' stroke='%234A3E3D' stroke-width='1.5'/%3E%3Cpath d='M2,6 L0,2 M4,2 L1,0 M4,4 L1,2' stroke='%2322C55E' stroke-width='1.5' stroke-linecap='round'/%3E%3Cellipse cx='18' cy='10' rx='2.8' ry='6' fill='%23FFE875' stroke='%234A3E3D' stroke-width='1.5' transform='rotate(-12 18 10)'/%3E%3Cellipse cx='18' cy='10' rx='1.2' ry='3.8' fill='%23FF8FA3' transform='rotate(-12 18 10)'/%3E%3Cellipse cx='27' cy='10' rx='2.8' ry='6' fill='%23FFE875' stroke='%234A3E3D' stroke-width='1.5' transform='rotate(12 27 10)'/%3E%3Cellipse cx='27' cy='10' rx='1.2' ry='3.8' fill='%23FF8FA3' transform='rotate(12 27 10)'/%3E%3Cellipse cx='22.5' cy='22' rx='9' ry='8' fill='%23FFE875' stroke='%234A3E3D' stroke-width='1.5'/%3E%3Cellipse cx='17' cy='23' rx='2' ry='1.2' fill='%23FF4D6D'/%3E%3Cellipse cx='28' cy='23' rx='2' ry='1.2' fill='%23FF4D6D'/%3E%3Ccircle cx='19' cy='20' r='1.5' fill='%234A3E3D'/%3E%3Ccircle cx='19.5' cy='19.5' r='0.5' fill='%23FFFFFF'/%3E%3Ccircle cx='26' cy='20' r='1.5' fill='%234A3E3D'/%3E%3Ccircle cx='26.5' cy='19.5' r='0.5' fill='%23FFFFFF'/%3E%3Cpath d='M20.5 23 Q22.5 26.5 24.5 23 Z' fill='%23FF4D6D' stroke='%234A3E3D' stroke-width='1.2'/%3E%3Cpolygon points='32,4 33,7 36,8 33,9 32,12 31,9 28,8 31,7' fill='%23FFD700'/%3E%3C/svg%3E") 4 2, pointer !important;
 }
 
@@ -65,6 +84,7 @@ button, a, input, select, textarea, [onclick], .cursor-pointer, .nav-pill, .btn-
     opacity: 0;
     transform: scale(0.97);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -81,6 +101,7 @@ button, a, input, select, textarea, [onclick], .cursor-pointer, .nav-pill, .btn-
     opacity: 0;
     transform: translateY(22px) scale(0.94);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -96,6 +117,7 @@ button, a, input, select, textarea, [onclick], .cursor-pointer, .nav-pill, .btn-
   0% {
     box-shadow: 0 0 16px rgba(244, 63, 94, 0.25), inset 0 0 12px rgba(255, 255, 255, 0.85);
   }
+
   100% {
     box-shadow: 0 0 28px rgba(244, 114, 182, 0.5), inset 0 0 20px rgba(255, 228, 230, 0.95);
   }
@@ -114,7 +136,7 @@ body {
   min-height: 100vh;
   overflow-x: clip;
   position: relative;
-  background-image: 
+  background-image:
     radial-gradient(#FFE58F 1.2px, transparent 1.2px),
     radial-gradient(#FFC6D9 1.2px, #FCF9F2 1.2px);
   background-size: 40px 40px;
@@ -186,10 +208,12 @@ body {
   border: 2px solid #E6506E;
   box-shadow: 0 4px 0 #C93452, 0 8px 15px rgba(255, 117, 143, 0.3);
 }
+
 .btn-pink:hover {
   background: linear-gradient(135deg, #FFC2D1 0%, #FF859D 100%);
   box-shadow: 0 6px 0 #C93452, 0 12px 20px rgba(255, 117, 143, 0.4);
 }
+
 .btn-pink:active {
   transform: translateY(3px);
   box-shadow: 0 1px 0 #C93452, 0 4px 6px rgba(255, 117, 143, 0.2);
@@ -205,11 +229,13 @@ body {
   font-weight: 600;
   transition: all 0.15s ease;
 }
+
 .btn-secondary:hover {
   background: #FDF4E7;
   transform: translateY(-2px);
   box-shadow: 0 5px 0 #D8C2AD;
 }
+
 .btn-secondary:active {
   transform: translateY(2px);
   box-shadow: 0 1px 0 #D8C2AD;
@@ -220,15 +246,18 @@ body {
   width: 8px;
   height: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: #F5EBE0;
   border-radius: 10px;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #FFD43F;
   border-radius: 10px;
   border: 2px solid #F5EBE0;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #FFB703;
 }
@@ -242,22 +271,41 @@ body {
   transition: transform 0.2s, filter 0.2s;
   cursor: pointer;
 }
+
 .heatmap-cell:hover {
   transform: scale(1.4);
   z-index: 10;
   filter: brightness(1.1);
 }
-.level-0 { background-color: #FDF2F4; border: 1px solid #FCE7F3; }
-.level-1 { background-color: #FBCFE8; }
-.level-2 { background-color: #F472B6; }
-.level-3 { background-color: #EC4899; }
-.level-4 { background-color: #BE185D; }
+
+.level-0 {
+  background-color: #FDF2F4;
+  border: 1px solid #FCE7F3;
+}
+
+.level-1 {
+  background-color: #FBCFE8;
+}
+
+.level-2 {
+  background-color: #F472B6;
+}
+
+.level-3 {
+  background-color: #EC4899;
+}
+
+.level-4 {
+  background-color: #BE185D;
+}
 
 /* Usagi Ears Mascot Badge */
 .usagi-ears {
   position: relative;
 }
-.usagi-ears::before, .usagi-ears::after {
+
+.usagi-ears::before,
+.usagi-ears::after {
   content: '';
   position: absolute;
   top: -14px;
@@ -268,10 +316,12 @@ body {
   border-radius: 14px 14px 0 0;
   z-index: 1;
 }
+
 .usagi-ears::before {
   left: 20%;
   transform: rotate(-12deg);
 }
+
 .usagi-ears::after {
   right: 20%;
   transform: rotate(12deg);
@@ -284,11 +334,18 @@ body {
   right: 20px;
   z-index: 30;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  will-change: left, transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
+
 .usagi-mascot-float:hover {
   transform: scale(1.05);
 }
+
 /* Minimized State: Tiny Chibi Usagi (变小小只，而不是变成字！) */
 .usagi-mascot-float.minimized {
   position: fixed !important;
@@ -303,15 +360,18 @@ body {
   cursor: pointer !important;
   filter: drop-shadow(0 8px 20px rgba(255, 143, 163, 0.5));
 }
+
 .usagi-mascot-float.minimized.roaming {
   right: 18px !important;
   left: auto !important;
 }
+
 .usagi-mascot-float.minimized #usagi-assistant-dock,
 .usagi-mascot-float.minimized #usagi-speech-bubble,
 .usagi-mascot-float.minimized #usagi-minimized-pill {
   display: none !important;
 }
+
 .usagi-mascot-float.minimized #usagi-bouncer {
   display: block !important;
   transform: scale(0.48);
@@ -319,13 +379,18 @@ body {
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   animation: miniChibiUsagiBounce 2.4s infinite ease-in-out;
 }
+
 .usagi-mascot-float.minimized:hover #usagi-bouncer {
   transform: scale(0.60) rotate(5deg) !important;
 }
+
 @keyframes miniChibiUsagiBounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(0.48) translateY(0);
   }
+
   50% {
     transform: scale(0.50) translateY(-6px) rotate(-3deg);
   }
@@ -347,10 +412,11 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   z-index: 40;
   transition: all 0.2s ease;
 }
+
 .mascot-toggle-btn:hover {
   background: #F472B6;
   color: #FFF;
@@ -358,10 +424,10 @@ body {
 }
 
 .speech-bubble {
-  pointer-events: none !important; /* 点击穿透，绝不阻挡背后的任何按钮操作 */
-  position: absolute;
-  bottom: 100%;
-  margin-bottom: 14px;
+  pointer-events: auto !important;
+  position: relative !important;
+  bottom: auto !important;
+  margin-bottom: 8px !important;
   background: #FFFFFF !important;
   color: #4A3E3D !important;
   opacity: 1 !important;
@@ -372,14 +438,16 @@ body {
   border-radius: 18px;
   border: 2px solid #FFD43F;
   box-shadow: 0 10px 28px rgba(245, 158, 11, 0.22), 0 4px 12px rgba(0, 0, 0, 0.12);
-  white-space: normal !important; /* 彻底解决文字太长不换行截断问题，自动优雅换行 */
-  word-break: break-word !important; /* 避免长句或标点截断 */
+  white-space: normal !important;
+  /* 彻底解决文字太长不换行截断问题，自动优雅换行 */
+  word-break: break-word !important;
+  /* 避免长句或标点截断 */
   width: max-content;
   max-width: min(290px, calc(100vw - 40px));
   z-index: 60;
   text-align: left;
-  animation: bubbleFloatBreathe 2.8s infinite ease-in-out;
 }
+
 .speech-bubble::after {
   content: '';
   position: absolute;
@@ -390,11 +458,13 @@ body {
   border-style: solid;
   border-color: #FFD43F transparent transparent transparent;
 }
+
 .speech-bubble.bubble-align-right::after {
   left: auto;
   right: 36px;
   transform: none;
 }
+
 .speech-bubble.bubble-align-left::after {
   left: 36px;
   right: auto;
@@ -402,9 +472,12 @@ body {
 }
 
 @keyframes bubbleFloatBreathe {
-  0%, 100% {
+
+  0%,
+  100% {
     margin-bottom: 14px;
   }
+
   50% {
     margin-bottom: 20px;
   }
@@ -422,6 +495,7 @@ body {
   overflow: hidden;
   box-shadow: inset 0 0 15px rgba(162, 210, 255, 0.3);
 }
+
 .water-fill {
   position: absolute;
   bottom: 0;
@@ -431,6 +505,7 @@ body {
   transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 0 0 20px 20px;
 }
+
 .water-wave {
   position: absolute;
   top: -8px;
@@ -444,8 +519,13 @@ body {
 }
 
 @keyframes waveMotion {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 /* Nav Item Pill */
@@ -456,10 +536,12 @@ body {
   cursor: pointer;
   border: 2px solid transparent;
 }
+
 .nav-pill:hover {
   background-color: rgba(255, 224, 102, 0.35);
   transform: translateX(4px);
 }
+
 .nav-pill.active {
   background: linear-gradient(135deg, #FFE066 0%, #FFD13B 100%);
   color: #4A3E3D;
@@ -481,9 +563,17 @@ body {
 
 /* Shake / Bounce animation */
 @keyframes cuteBounce {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.08); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
 }
+
 .animate-cute-bounce {
   animation: cuteBounce 0.3s ease;
 }
@@ -507,16 +597,31 @@ body {
 .modal-overlay {
   animation: fadeIn 0.25s ease-out;
 }
+
 .modal-content {
   animation: popScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
+
 @keyframes popScale {
-  from { opacity: 0; transform: scale(0.9) translateY(20px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* Checkbox kawaii style */
@@ -534,10 +639,12 @@ body {
   place-content: center;
   transition: all 0.2s ease;
 }
+
 .checkbox-kawaii:checked {
   background-color: #FFB703;
   border-color: #D88E00;
 }
+
 .checkbox-kawaii:checked::before {
   content: "✔";
   color: white;
@@ -551,6 +658,7 @@ body {
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 6px;
 }
+
 .calendar-day-cell {
   min-height: 95px;
   background: rgba(255, 255, 255, 0.8);
@@ -564,6 +672,7 @@ body {
   position: relative;
   overflow: hidden;
 }
+
 .calendar-day-cell:hover {
   background: #FFFDF5;
   border-color: #FFD43F;
@@ -571,15 +680,18 @@ body {
   box-shadow: 0 6px 14px rgba(255, 183, 3, 0.2);
   z-index: 5;
 }
+
 .calendar-day-cell.today {
   border: 2.5px solid #FFB703;
   background: #FFF9E6;
   box-shadow: 0 4px 12px rgba(255, 183, 3, 0.25);
 }
+
 .calendar-day-cell.other-month {
   opacity: 0.35;
   background: rgba(245, 245, 245, 0.4);
 }
+
 .calendar-event-pill {
   font-size: 10px;
   line-height: 1.25;
@@ -597,38 +709,69 @@ body {
 
 /* Music Vinyl Record & Visualizer Animation */
 @keyframes spinDisc {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
+
 .vinyl-disc {
   animation: spinDisc 8s linear infinite;
   will-change: transform;
 }
+
 .vinyl-paused {
   animation-play-state: paused !important;
 }
+
 @keyframes eqBounce {
-  0%, 100% { height: 6px; }
-  50% { height: 26px; }
+
+  0%,
+  100% {
+    height: 6px;
+  }
+
+  50% {
+    height: 26px;
+  }
 }
+
 .eq-bar {
   animation: eqBounce 0.8s ease-in-out infinite;
   will-change: height;
 }
-.eq-bar:nth-child(2) { animation-delay: 0.15s; }
-.eq-bar:nth-child(3) { animation-delay: 0.3s; }
-.eq-bar:nth-child(4) { animation-delay: 0.45s; }
-.eq-bar:nth-child(5) { animation-delay: 0.2s; }
+
+.eq-bar:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.eq-bar:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.eq-bar:nth-child(4) {
+  animation-delay: 0.45s;
+}
+
+.eq-bar:nth-child(5) {
+  animation-delay: 0.2s;
+}
 
 /* ============================================================
    USAGI DANCING & INTERACTIVE EMOTION ANIMATIONS
    Permanent, smooth 60fps bouncing that NEVER stops!
    ============================================================ */
 @keyframes usagiAlwaysBounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
     animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
   }
+
   50% {
     transform: translateY(-22px);
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
@@ -636,17 +779,22 @@ body {
 }
 
 @keyframes usagiMusicHop {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0) rotate(0deg);
     animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
   }
+
   25% {
     transform: translateY(-15px) rotate(-8deg);
   }
+
   50% {
     transform: translateY(-24px) rotate(0deg);
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
   }
+
   75% {
     transform: translateY(-15px) rotate(8deg);
   }
@@ -675,19 +823,23 @@ body {
     opacity: 0;
     transform: translate(0, 0) scale(0.6) rotate(0deg);
   }
+
   20% {
     opacity: 1;
     transform: translate(calc(var(--drift-x, 0px) * 0.3), -20px) scale(1.1) rotate(calc(var(--rot, 0deg) * 0.4));
   }
+
   80% {
     opacity: 0.9;
     transform: translate(calc(var(--drift-x, 0px) * 0.8), -65px) scale(1.15) rotate(calc(var(--rot, 0deg) * 0.8));
   }
+
   100% {
     opacity: 0;
     transform: translate(var(--drift-x, 0px), -95px) scale(0.8) rotate(var(--rot, 0deg));
   }
 }
+
 .floating-music-note {
   position: absolute;
   pointer-events: none;
@@ -705,15 +857,18 @@ body {
     opacity: 1;
     transform: translate(-50%, -50%) scale(0.6) translateY(0);
   }
+
   50% {
     opacity: 0.95;
     transform: translate(-50%, -50%) scale(1.2) translateY(-24px);
   }
+
   100% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.8) translateY(-50px);
   }
 }
+
 .click-heart-fx {
   position: fixed;
   pointer-events: none;
@@ -725,11 +880,25 @@ body {
 
 /* Button Wobble on Click */
 @keyframes btnWobble {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  25% { transform: scale(1.08) rotate(-4deg); }
-  50% { transform: scale(0.96) rotate(4deg); }
-  75% { transform: scale(1.04) rotate(-2deg); }
+
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  25% {
+    transform: scale(1.08) rotate(-4deg);
+  }
+
+  50% {
+    transform: scale(0.96) rotate(4deg);
+  }
+
+  75% {
+    transform: scale(1.04) rotate(-2deg);
+  }
 }
+
 .btn-wobble {
   animation: btnWobble 0.45s ease-in-out !important;
 }
@@ -738,28 +907,64 @@ body {
    FUN KAWAII ANIMATIONS & MICRO-INTERACTIONS
    ============================================================ */
 @keyframes kawaiiWiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-3deg) scale(1.02); }
-  75% { transform: rotate(3deg) scale(1.02); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-3deg) scale(1.02);
+  }
+
+  75% {
+    transform: rotate(3deg) scale(1.02);
+  }
 }
+
 .animate-wiggle:hover {
   animation: kawaiiWiggle 0.4s ease-in-out infinite;
 }
 
 @keyframes heartPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.06); filter: drop-shadow(0 4px 10px rgba(244, 63, 94, 0.35)); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.06);
+    filter: drop-shadow(0 4px 10px rgba(244, 63, 94, 0.35));
+  }
 }
+
 .animate-heart-pulse {
   animation: heartPulse 1.8s ease-in-out infinite;
 }
 
 @keyframes rainbowGlow {
-  0% { border-color: #F472B6; box-shadow: 0 4px 16px rgba(244, 114, 182, 0.2); }
-  33% { border-color: #FBBF24; box-shadow: 0 4px 16px rgba(251, 191, 36, 0.2); }
-  66% { border-color: #34D399; box-shadow: 0 4px 16px rgba(52, 211, 153, 0.2); }
-  100% { border-color: #F472B6; box-shadow: 0 4px 16px rgba(244, 114, 182, 0.2); }
+  0% {
+    border-color: #F472B6;
+    box-shadow: 0 4px 16px rgba(244, 114, 182, 0.2);
+  }
+
+  33% {
+    border-color: #FBBF24;
+    box-shadow: 0 4px 16px rgba(251, 191, 36, 0.2);
+  }
+
+  66% {
+    border-color: #34D399;
+    box-shadow: 0 4px 16px rgba(52, 211, 153, 0.2);
+  }
+
+  100% {
+    border-color: #F472B6;
+    box-shadow: 0 4px 16px rgba(244, 114, 182, 0.2);
+  }
 }
+
 .rainbow-glow-card {
   animation: rainbowGlow 6s linear infinite;
 }
@@ -771,32 +976,39 @@ body {
   body {
     padding-bottom: 120px !important;
   }
+
   .usagi-mascot-float {
     bottom: calc(76px + env(safe-area-inset-bottom, 12px)) !important;
-    right: 12px !important;
+    right: auto !important;
     transform: scale(0.88);
     transform-origin: bottom right;
     z-index: 9990 !important;
   }
+
   .usagi-mascot-float.roaming {
     bottom: calc(76px + env(safe-area-inset-bottom, 12px)) !important;
   }
+
   .usagi-mascot-float:hover {
     transform: scale(0.90);
   }
+
   .usagi-mascot-float.minimized {
     bottom: calc(96px + env(safe-area-inset-bottom, 16px)) !important;
     right: 12px !important;
     transform: none !important;
     z-index: 9999 !important;
   }
+
   .speech-bubble {
     max-width: 220px !important;
     font-size: 0.72rem !important;
     padding: 8px 12px !important;
     border-radius: 14px !important;
     line-height: 1.35 !important;
-    right: 0px !important;
+    position: relative !important;
+    bottom: auto !important;
+    right: auto !important;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
   }
 }
@@ -808,15 +1020,18 @@ body {
   transition: all 0.2s ease;
   position: relative;
 }
+
 .mobile-nav-btn.active {
   background: #FFF0F3;
   color: #E11D48;
   transform: translateY(-2px);
 }
+
 .mobile-nav-btn.active span:last-child {
   color: #E11D48;
   font-weight: 900;
 }
+
 .mobile-nav-btn.active::after {
   content: '';
   position: absolute;
@@ -835,15 +1050,28 @@ body {
 .usagi-mascot-float {
   position: fixed;
   bottom: 24px;
-  right: 24px;
+  right: auto !important;
   z-index: 9980;
-  transition: transform 0.2s ease;
+  width: max-content !important;
+  height: auto !important;
+  max-height: max-content !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  will-change: left, transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   pointer-events: auto;
 }
+
 .usagi-mascot-float.roaming {
   right: auto !important;
-  transition: bottom 0.3s ease;
+  transition: none !important;
 }
+
 .usagi-assistant-dock {
   display: flex;
   align-items: center;
@@ -856,6 +1084,7 @@ body {
   margin-bottom: 6px;
   backdrop-filter: blur(8px);
 }
+
 .usagi-assistant-dock button {
   font-size: 11px;
   font-weight: 800;
@@ -871,14 +1100,114 @@ body {
   gap: 3px;
   white-space: nowrap;
 }
+
 .usagi-assistant-dock button:hover {
   background: #FFE4E6;
   color: #E11D48;
   transform: scale(1.06);
 }
+
 .usagi-assistant-dock button.active {
   background: #F43F5E;
   color: #FFFFFF;
+}
+
+/* ============================================================
+   USAGI POSE SYSTEM (乌萨奇萌态姿势系统: 站立/趴趴爬行/乖巧坐坐/滚滚毛球)
+   ============================================================ */
+/* 1. 元气站立 (Standing) - 绝对 100% 直立 0度，严禁歪斜，站得笔直 */
+.usagi-pose-standing:not(.usagi-is-sleeping) #usagi-actor-box {
+  transform: rotate(0deg) scale(1, 1);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 2. 软萌趴趴爬行 (Prone / 趴着走动 - 像小海豹一样滑溜溜贴地爬行) */
+.usagi-pose-prone:not(.usagi-is-sleeping) #usagi-actor-box {
+  transform: rotate(-76deg) translate(-10px, 16px) scale(1.02, 0.90) !important;
+  transform-origin: center 70%;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.usagi-pose-prone:not(.usagi-is-sleeping).roaming #usagi-actor-box {
+  animation: usagiProneCrawling 0.5s infinite ease-in-out alternate !important;
+}
+
+@keyframes usagiProneCrawling {
+  0% {
+    transform: rotate(-73deg) translate(-8px, 14px) scale(1.04, 0.88);
+  }
+
+  100% {
+    transform: rotate(-79deg) translate(-12px, 18px) scale(0.98, 0.94);
+  }
+}
+
+/* 3. 乖巧软萌小坐坐 (Sitting Teatime) */
+.usagi-pose-sitting:not(.usagi-is-sleeping) #usagi-actor-box {
+  transform: scale(1.08, 0.88) translateY(8px) rotate(0deg) !important;
+  transform-origin: center bottom;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.usagi-pose-sitting:not(.usagi-is-sleeping) #usagi-bouncer {
+  animation: usagiSittingBreathe 2s infinite ease-in-out !important;
+}
+
+@keyframes usagiSittingBreathe {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px) scale(1.02, 0.98);
+  }
+}
+
+/* 4. 滚滚小毛球 (Rolling Mochi Ball) - 立刻活蹦乱跳高高弹跳与360度翻滚！ */
+.usagi-pose-rolling:not(.usagi-is-sleeping) #usagi-bouncer {
+  animation: mochiBallHighHop 0.65s cubic-bezier(0.28, 0.84, 0.42, 1) infinite !important;
+  transform-origin: bottom center !important;
+}
+
+.usagi-pose-rolling:not(.usagi-is-sleeping) #usagi-actor-box {
+  animation: mochiBallCuteRoll 0.65s infinite linear !important;
+  transform-origin: center center !important;
+}
+
+@keyframes mochiBallHighHop {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1.18, 0.82);
+  }
+
+  35% {
+    transform: translateY(-18px) scale(0.92, 1.14);
+  }
+
+  55% {
+    transform: translateY(-24px) scale(1, 1);
+  }
+
+  80% {
+    transform: translateY(-6px) scale(0.96, 1.05);
+  }
+}
+
+@keyframes mochiBallCuteRoll {
+  0% {
+    transform: rotate(0deg) scale(0.95);
+  }
+
+  50% {
+    transform: rotate(180deg) scale(0.98);
+  }
+
+  100% {
+    transform: rotate(360deg) scale(0.95);
+  }
 }
 
 /* ============================================================
@@ -915,120 +1244,181 @@ body {
 }
 
 @keyframes propPop {
-  0% { transform: scale(0) translateY(12px); opacity: 0; }
-  70% { transform: scale(1.18) translateY(-2px); opacity: 1; }
-  100% { transform: scale(1) translateY(0); opacity: 1; }
+  0% {
+    transform: scale(0) translateY(12px);
+    opacity: 0;
+  }
+
+  70% {
+    transform: scale(1.18) translateY(-2px);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
 }
 
 /* ============================================================
    REAL VISIBLE PHYSICAL ANIMATED ACTIONS FOR USAGI
    ============================================================ */
 
-/* 1. STATE: SLEEP (睡觉动作 - 身体横躺在云朵枕头上，被子盖身，闭眼均匀呼吸) */
+/* 1. STATE: SLEEP (真正软萌侧卧横躺睡觉与盖被被入眠 - 身体横躺在云朵枕头上，被子盖身，闭眼均匀呼吸) */
+.usagi-is-sleeping #usagi-bouncer,
 #usagi-bouncer.state-sleep {
-  animation: none !important; /* 停止站立跳跃 */
+  animation: none !important;
+  /* 睡觉时停止站立跳跃，安心在床上呼吸 */
 }
+
+.usagi-is-sleeping #usagi-actor-box,
+
 #usagi-bouncer.state-sleep #usagi-actor-box {
-  animation: usagiLyingDeepSleep 3s ease-in-out infinite !important;
-  transform-origin: center 70%;
+  transform: rotate(-88deg) translate(-14px, 14px) scale(0.96, 0.92) !important;
+  transform-origin: center center !important;
+  animation: usagiLyingDeepSleep 2.8s ease-in-out infinite alternate !important;
 }
+
 @keyframes usagiLyingDeepSleep {
-  0%, 100% {
-    transform: rotate(-76deg) translate(-14px, 14px) scale(1, 0.94);
+  0% {
+    transform: rotate(-88deg) translate(-14px, 14px) scale(0.96, 0.92);
   }
-  50% {
-    transform: rotate(-76deg) translate(-14px, 16px) scale(1.03, 1.01);
+
+  100% {
+    transform: rotate(-88deg) translate(-14px, 16px) scale(0.99, 0.95);
   }
 }
-/* Fluffy Cloud Pillow */
+
+/* Fluffy Cloud Pillow: cradles her rotated head on the left */
 .act-sleep-pillow {
   position: absolute;
-  top: 48px;
-  left: -2px;
-  font-size: 32px;
-  z-index: 5;
+  top: 18px;
+  left: -20px;
+  font-size: 38px;
+  z-index: 4;
   filter: drop-shadow(0 4px 8px rgba(129, 140, 248, 0.4));
-  animation: pillowSquish 3s ease-in-out infinite;
+  animation: pillowSquish 2.8s ease-in-out infinite;
 }
+
 @keyframes pillowSquish {
-  0%, 100% { transform: scale(1, 0.92); }
-  50% { transform: scale(1.05, 1); }
+
+  0%,
+  100% {
+    transform: scale(1, 0.92);
+  }
+
+  50% {
+    transform: scale(1.06, 1);
+  }
 }
-/* Nightcap */
+
+/* Nightcap: sits gently on her ears on the left */
 .act-sleep-nightcap {
   position: absolute;
-  top: -12px;
-  left: 32px;
+  top: 12px;
+  left: -24px;
   font-size: 26px;
   z-index: 25;
-  transform: rotate(20deg);
+  transform: rotate(-35deg);
   filter: drop-shadow(0 2px 6px rgba(251, 191, 36, 0.6));
-  animation: capDangle 3s ease-in-out infinite;
+  animation: capDangle 2.8s ease-in-out infinite;
 }
+
 @keyframes capDangle {
-  0%, 100% { transform: rotate(18deg) translateY(0); }
-  50% { transform: rotate(28deg) translateY(2px); }
+
+  0%,
+  100% {
+    transform: rotate(-35deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(-25deg) translateY(2px);
+  }
 }
-/* Warm Blanket */
+
+/* Warm Blanket: covers her body and feet */
 .act-sleep-blanket {
   position: absolute;
-  bottom: 0px;
-  left: 12px;
-  font-size: 34px;
+  bottom: -6px;
+  left: 18px;
+  font-size: 42px;
   z-index: 20;
   filter: drop-shadow(0 4px 8px rgba(244, 63, 94, 0.3));
-  animation: blanketBreathe 3s ease-in-out infinite;
+  animation: blanketBreathe 2.8s ease-in-out infinite;
 }
+
 @keyframes blanketBreathe {
-  0%, 100% { transform: scale(1, 0.95); }
-  50% { transform: scale(1.04, 1.02); }
+
+  0%,
+  100% {
+    transform: scale(1, 0.95);
+  }
+
+  50% {
+    transform: scale(1.05, 1.02);
+  }
 }
+
 .usagi-state-prop-container {
   display: none !important;
 }
 
 @keyframes bubblePopGlow {
-  0% { transform: scale(0.96); }
-  50% { transform: scale(1.03); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0.96);
+  }
+
+  50% {
+    transform: scale(1.03);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
+
 .bubble-pop {
   animation: bubblePopGlow 0.35s ease-out !important;
 }
 
-/* Closed Eyes Overlay (⌒ ⌒) with Pupil Masking */
+/* Closed Eyes Overlay (⌒ ⌒) with Pupil Masking for Sleeping Usagi */
 .act-sleep-eyes {
   position: absolute;
-  top: 45px;
-  left: 31px;
-  width: 38px;
+  top: 36px;
+  left: 16px;
+  width: 32px;
   display: flex;
   justify-content: space-between;
   z-index: 24;
   pointer-events: none;
+  transform: rotate(2deg);
 }
+
 .act-sleep-eyes span {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 15px;
-  height: 12px;
-  background: #FFF7D1; /* Usagi fur skin tone covering black pupils */
+  width: 14px;
+  height: 11px;
+  background: #FFF7D1;
+  /* Usagi fur skin tone covering black pupils */
   border-radius: 50%;
   font-family: monospace;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 900;
   color: #372A28;
   transform: scaleY(0.75);
 }
-/* Floating ZZZ bubbles */
+
+/* Floating ZZZ bubbles rising from her pillow */
 .act-sleep-zzz-group {
   position: absolute;
-  top: -10px;
-  right: 6px;
+  top: -16px;
+  left: 8px;
   z-index: 30;
   pointer-events: none;
 }
+
 .act-sleep-zzz-group .z-item {
   position: absolute;
   font-weight: 900;
@@ -1036,52 +1426,82 @@ body {
   animation: floatZzzRise 2.4s infinite ease-out;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
+
 .act-sleep-zzz-group .z1 {
   font-size: 13px;
   top: 0px;
-  right: 4px;
+  left: 0px;
   animation-delay: 0s;
 }
+
 .act-sleep-zzz-group .z2 {
   font-size: 17px;
   top: -14px;
-  right: 14px;
+  left: 10px;
   animation-delay: 0.8s;
 }
+
 .act-sleep-zzz-group .z3 {
   font-size: 22px;
   top: -30px;
-  right: 22px;
+  left: 20px;
   animation-delay: 1.6s;
 }
+
 @keyframes floatZzzRise {
-  0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
-  30% { opacity: 1; transform: translate(-6px, -12px) scale(1); }
-  80% { opacity: 0.9; transform: translate(-14px, -28px) scale(1.2); }
-  100% { opacity: 0; transform: translate(-20px, -40px) scale(1.4); }
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.6);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translate(-6px, -12px) scale(1);
+  }
+
+  80% {
+    opacity: 0.9;
+    transform: translate(-14px, -28px) scale(1.2);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-20px, -40px) scale(1.4);
+  }
 }
 
 /* 2. STATE: WATER (喝水动作 - 身体后仰咕噜吞咽，奶瓶向上倾斜送水，水花溅射) */
 #usagi-bouncer.state-water {
   animation: none !important;
 }
+
 #usagi-bouncer.state-water #usagi-actor-box {
   animation: usagiGulpingDrink 1.2s ease-in-out infinite !important;
 }
+
 @keyframes usagiGulpingDrink {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: rotate(0deg) translateY(0) scale(1);
   }
+
   20% {
-    transform: rotate(-12deg) translateY(-4px) scale(1.04, 0.96); /* 仰头喝水 */
+    transform: rotate(-12deg) translateY(-4px) scale(1.04, 0.96);
+    /* 仰头喝水 */
   }
+
   45% {
-    transform: rotate(-6deg) translateY(2px) scale(0.96, 1.05); /* 大口吞咽 */
+    transform: rotate(-6deg) translateY(2px) scale(0.96, 1.05);
+    /* 大口吞咽 */
   }
+
   70% {
-    transform: rotate(-14deg) translateY(-3px) scale(1.03, 0.97); /* 接着喝 */
+    transform: rotate(-14deg) translateY(-3px) scale(1.03, 0.97);
+    /* 接着喝 */
   }
 }
+
 /* Bottle prop tilting to mouth */
 .act-drink-bottle {
   position: absolute;
@@ -1092,17 +1512,25 @@ body {
   filter: drop-shadow(0 3px 6px rgba(56, 189, 248, 0.5));
   animation: bottleTiltDrinking 1.2s ease-in-out infinite;
 }
+
 @keyframes bottleTiltDrinking {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: rotate(-25deg) translate(0, 0) scale(1);
   }
-  30%, 70% {
-    transform: rotate(-65deg) translate(-10px, -6px) scale(1.15); /* 瓶身倒扣送入嘴巴 */
+
+  30%,
+  70% {
+    transform: rotate(-65deg) translate(-10px, -6px) scale(1.15);
+    /* 瓶身倒扣送入嘴巴 */
   }
+
   50% {
     transform: rotate(-45deg) translate(-6px, -3px) scale(1.08);
   }
 }
+
 /* Water droplets spraying */
 .act-drink-drops {
   position: absolute;
@@ -1111,20 +1539,55 @@ body {
   z-index: 24;
   pointer-events: none;
 }
+
 .act-drink-drops .d-drop {
   position: absolute;
   font-size: 13px;
   animation: dropSplashOut 1.2s ease-out infinite;
 }
-.act-drink-drops .d1 { left: -8px; top: -6px; animation-delay: 0.1s; }
-.act-drink-drops .d2 { left: 8px; top: -10px; animation-delay: 0.4s; font-size: 11px; }
-.act-drink-drops .d3 { left: -14px; top: 4px; animation-delay: 0.7s; font-size: 10px; }
-@keyframes dropSplashOut {
-  0% { opacity: 0; transform: scale(0.3) translate(0, 0); }
-  40% { opacity: 1; transform: scale(1.1) translate(-6px, -10px); }
-  80% { opacity: 0.8; transform: scale(0.9) translate(-12px, -16px); }
-  100% { opacity: 0; transform: scale(0.5) translate(-16px, -20px); }
+
+.act-drink-drops .d1 {
+  left: -8px;
+  top: -6px;
+  animation-delay: 0.1s;
 }
+
+.act-drink-drops .d2 {
+  left: 8px;
+  top: -10px;
+  animation-delay: 0.4s;
+  font-size: 11px;
+}
+
+.act-drink-drops .d3 {
+  left: -14px;
+  top: 4px;
+  animation-delay: 0.7s;
+  font-size: 10px;
+}
+
+@keyframes dropSplashOut {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translate(0, 0);
+  }
+
+  40% {
+    opacity: 1;
+    transform: scale(1.1) translate(-6px, -10px);
+  }
+
+  80% {
+    opacity: 0.8;
+    transform: scale(0.9) translate(-12px, -16px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.5) translate(-16px, -20px);
+  }
+}
+
 /* Gulp text ripple */
 .act-drink-gulp-text {
   position: absolute;
@@ -1142,10 +1605,21 @@ body {
   animation: gulpTextPop 1.2s ease-in-out infinite;
   box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
 }
+
 @keyframes gulpTextPop {
-  0%, 100% { opacity: 0.4; transform: scale(0.85); }
-  45% { opacity: 1; transform: scale(1.15) translateY(-2px); }
+
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+
+  45% {
+    opacity: 1;
+    transform: scale(1.15) translateY(-2px);
+  }
 }
+
 /* Rosy Puffed Cheeks */
 .act-cheeks-puff {
   position: absolute;
@@ -1157,28 +1631,51 @@ body {
   z-index: 21;
   animation: cheeksPulse 1.2s infinite ease-in-out;
 }
-.act-cheeks-puff-left { left: 22px; }
-.act-cheeks-puff-right { right: 22px; }
+
+.act-cheeks-puff-left {
+  left: 22px;
+}
+
+.act-cheeks-puff-right {
+  right: 22px;
+}
+
 @keyframes cheeksPulse {
-  0%, 100% { transform: scale(1); opacity: 0.6; }
-  45% { transform: scale(1.5); opacity: 1; }
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  45% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
 }
 
 /* 3. STATE: COMFORT (安慰抱抱动作 - 紧抱毛绒泰迪熊与大爱心，轻拍后背摸摸头) */
 #usagi-bouncer.state-comfort {
   animation: none !important;
 }
+
 #usagi-bouncer.state-comfort #usagi-actor-box {
   animation: usagiSqueezeHug 1.5s ease-in-out infinite !important;
 }
+
 @keyframes usagiSqueezeHug {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1) translateY(0);
   }
+
   50% {
-    transform: scale(1.08, 0.95) translateY(-4px); /* 俯身用力紧紧抱住 */
+    transform: scale(1.08, 0.95) translateY(-4px);
+    /* 俯身用力紧紧抱住 */
   }
 }
+
 .act-comfort-teddy {
   position: absolute;
   top: 56px;
@@ -1188,10 +1685,19 @@ body {
   filter: drop-shadow(0 4px 8px rgba(251, 146, 60, 0.5));
   animation: teddyHugPulse 1.5s ease-in-out infinite;
 }
+
 @keyframes teddyHugPulse {
-  0%, 100% { transform: scale(1) rotate(-4deg); }
-  50% { transform: scale(1.22) rotate(4deg); }
+
+  0%,
+  100% {
+    transform: scale(1) rotate(-4deg);
+  }
+
+  50% {
+    transform: scale(1.22) rotate(4deg);
+  }
 }
+
 .act-comfort-heart {
   position: absolute;
   top: 36px;
@@ -1200,10 +1706,19 @@ body {
   z-index: 25;
   animation: heartFloatingPulse 1.2s infinite ease-in-out;
 }
+
 @keyframes heartFloatingPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.35) translateY(-4px); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.35) translateY(-4px);
+  }
 }
+
 .act-comfort-pat {
   position: absolute;
   top: 26px;
@@ -1219,22 +1734,40 @@ body {
   white-space: nowrap;
   animation: pattingGentle 1.5s ease-in-out infinite;
 }
+
 @keyframes pattingGentle {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-5px) rotate(-8deg); }
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-5px) rotate(-8deg);
+  }
 }
 
 /* 4. STATE: PERIOD CARE (经期暖水袋与揉肚肚 - 暖水袋贴肚，小爪子画圈轻揉，热气腾腾) */
 #usagi-bouncer.state-period {
   animation: none !important;
 }
+
 #usagi-bouncer.state-period #usagi-actor-box {
   animation: usagiGentleBreathe 2s ease-in-out infinite !important;
 }
+
 @keyframes usagiGentleBreathe {
-  0%, 100% { transform: scale(1) translateY(0); }
-  50% { transform: scale(1.03, 0.97) translateY(1px); }
+
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+
+  50% {
+    transform: scale(1.03, 0.97) translateY(1px);
+  }
 }
+
 .act-period-bottle {
   position: absolute;
   top: 70px;
@@ -1244,10 +1777,21 @@ body {
   filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.7));
   animation: hotBagWarmPulse 1.8s infinite ease-in-out;
 }
+
 @keyframes hotBagWarmPulse {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(244, 63, 94, 0.6)); }
-  50% { transform: scale(1.15); filter: drop-shadow(0 0 16px rgba(244, 63, 94, 0.95)); }
+
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 8px rgba(244, 63, 94, 0.6));
+  }
+
+  50% {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 16px rgba(244, 63, 94, 0.95));
+  }
 }
+
 .act-period-paw {
   position: absolute;
   top: 66px;
@@ -1256,26 +1800,67 @@ body {
   z-index: 24;
   animation: pawRubTummyCircle 2s infinite linear;
 }
+
 @keyframes pawRubTummyCircle {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  25% { transform: translate(6px, 4px) rotate(10deg); }
-  50% { transform: translate(2px, 8px) rotate(0deg); }
-  75% { transform: translate(-4px, 4px) rotate(-10deg); }
-  100% { transform: translate(0, 0) rotate(0deg); }
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(6px, 4px) rotate(10deg);
+  }
+
+  50% {
+    transform: translate(2px, 8px) rotate(0deg);
+  }
+
+  75% {
+    transform: translate(-4px, 4px) rotate(-10deg);
+  }
+
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
 }
+
 .act-period-steam {
   position: absolute;
   z-index: 25;
   pointer-events: none;
   animation: steamRiseWarm 2s ease-out infinite;
 }
-.act-steam-1 { top: 52px; left: 28px; font-size: 16px; animation-delay: 0s; }
-.act-steam-2 { top: 48px; right: 28px; font-size: 14px; animation-delay: 1s; }
-@keyframes steamRiseWarm {
-  0% { opacity: 0; transform: translateY(0) scale(0.6); }
-  40% { opacity: 0.9; transform: translateY(-10px) scale(1); }
-  100% { opacity: 0; transform: translateY(-24px) scale(1.3); }
+
+.act-steam-1 {
+  top: 52px;
+  left: 28px;
+  font-size: 16px;
+  animation-delay: 0s;
 }
+
+.act-steam-2 {
+  top: 48px;
+  right: 28px;
+  font-size: 14px;
+  animation-delay: 1s;
+}
+
+@keyframes steamRiseWarm {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.6);
+  }
+
+  40% {
+    opacity: 0.9;
+    transform: translateY(-10px) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-24px) scale(1.3);
+  }
+}
+
 .act-period-tip {
   position: absolute;
   bottom: -4px;
@@ -1296,20 +1881,28 @@ body {
 #usagi-bouncer.state-game_cheer {
   animation: none !important;
 }
+
 #usagi-bouncer.state-game_cheer #usagi-actor-box {
   animation: usagiMegaCheerJump 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite !important;
 }
+
 @keyframes usagiMegaCheerJump {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0) scale(1.06, 0.92);
   }
+
   35% {
-    transform: translateY(-34px) scale(0.94, 1.1) rotate(-4deg); /* 冲天高高飞跃 */
+    transform: translateY(-34px) scale(0.94, 1.1) rotate(-4deg);
+    /* 冲天高高飞跃 */
   }
+
   65% {
     transform: translateY(-24px) scale(1.02, 0.98) rotate(4deg);
   }
 }
+
 .act-cheer-crown {
   position: absolute;
   top: -14px;
@@ -1319,32 +1912,60 @@ body {
   filter: drop-shadow(0 2px 8px rgba(234, 179, 8, 0.8));
   animation: crownShine 0.65s infinite ease-in-out;
 }
+
 @keyframes crownShine {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  50% { transform: scale(1.2) rotate(8deg); }
+
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  50% {
+    transform: scale(1.2) rotate(8deg);
+  }
 }
+
 .act-cheer-pompom {
   position: absolute;
   top: 40px;
   font-size: 28px;
   z-index: 24;
 }
+
 .act-pompom-l {
   left: -12px;
   animation: wavePomPomL 0.65s infinite ease-in-out;
 }
+
 .act-pompom-r {
   right: -12px;
   animation: wavePomPomR 0.65s infinite ease-in-out;
 }
+
 @keyframes wavePomPomL {
-  0%, 100% { transform: rotate(-25deg) translateY(0); }
-  50% { transform: rotate(40deg) translateY(-14px); }
+
+  0%,
+  100% {
+    transform: rotate(-25deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(40deg) translateY(-14px);
+  }
 }
+
 @keyframes wavePomPomR {
-  0%, 100% { transform: rotate(25deg) translateY(-14px); }
-  50% { transform: rotate(-40deg) translateY(0); }
+
+  0%,
+  100% {
+    transform: rotate(25deg) translateY(-14px);
+  }
+
+  50% {
+    transform: rotate(-40deg) translateY(0);
+  }
 }
+
 .act-cheer-ribbon {
   position: absolute;
   bottom: -6px;
@@ -1366,17 +1987,37 @@ body {
 #usagi-bouncer.state-happy {
   animation: none !important;
 }
+
 #usagi-bouncer.state-happy #usagi-actor-box {
   animation: usagiSpinDance 1.6s ease-in-out infinite !important;
 }
+
 @keyframes usagiSpinDance {
-  0% { transform: translateY(0) rotate(0deg) scale(1); }
-  25% { transform: translateY(-18px) rotate(-14deg) scale(1.08); }
-  50% { transform: translateY(0) rotate(0deg) scale(0.95, 1.05); }
-  75% { transform: translateY(-22px) rotate(14deg) scale(1.08); }
-  90% { transform: translateY(-28px) rotate(360deg) scale(1.1); }
-  100% { transform: translateY(0) rotate(360deg) scale(1); }
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+
+  25% {
+    transform: translateY(-18px) rotate(-14deg) scale(1.08);
+  }
+
+  50% {
+    transform: translateY(0) rotate(0deg) scale(0.95, 1.05);
+  }
+
+  75% {
+    transform: translateY(-22px) rotate(14deg) scale(1.08);
+  }
+
+  90% {
+    transform: translateY(-28px) rotate(360deg) scale(1.1);
+  }
+
+  100% {
+    transform: translateY(0) rotate(360deg) scale(1);
+  }
 }
+
 .act-happy-rainbow {
   position: absolute;
   top: -16px;
@@ -1385,10 +2026,19 @@ body {
   z-index: 25;
   animation: rainbowFloat 1.6s infinite ease-in-out;
 }
+
 @keyframes rainbowFloat {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-6px) scale(1.15); }
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-6px) scale(1.15);
+  }
 }
+
 .act-happy-note {
   position: absolute;
   font-size: 16px;
@@ -1396,26 +2046,61 @@ body {
   z-index: 25;
   animation: notePopDance 1.6s infinite ease-out;
 }
-.act-happy-note.n1 { top: 20px; left: -10px; animation-delay: 0.2s; }
-.act-happy-note.n2 { top: 15px; right: -10px; animation-delay: 0.8s; }
+
+.act-happy-note.n1 {
+  top: 20px;
+  left: -10px;
+  animation-delay: 0.2s;
+}
+
+.act-happy-note.n2 {
+  top: 15px;
+  right: -10px;
+  animation-delay: 0.8s;
+}
+
 @keyframes notePopDance {
-  0% { opacity: 0; transform: translateY(0) scale(0.5); }
-  50% { opacity: 1; transform: translateY(-16px) scale(1.2); }
-  100% { opacity: 0; transform: translateY(-30px) scale(1.4); }
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-16px) scale(1.2);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-30px) scale(1.4);
+  }
 }
 
 /* 7. STATE: EXPENSE (金丝小眼镜快速记账) */
 #usagi-bouncer.state-expense {
   animation: none !important;
 }
+
 #usagi-bouncer.state-expense #usagi-actor-box {
   animation: usagiAccountantWorking 1.4s ease-in-out infinite !important;
 }
+
 @keyframes usagiAccountantWorking {
-  0%, 100% { transform: rotate(0deg) translateY(0); }
-  30% { transform: rotate(4deg) translateY(2px); }
-  70% { transform: rotate(-3deg) translateY(1px); }
+
+  0%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+
+  30% {
+    transform: rotate(4deg) translateY(2px);
+  }
+
+  70% {
+    transform: rotate(-3deg) translateY(1px);
+  }
 }
+
 .act-expense-glasses {
   position: absolute;
   top: 40px;
@@ -1425,10 +2110,19 @@ body {
   filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.7));
   animation: glassesNod 1.4s infinite ease-in-out;
 }
+
 @keyframes glassesNod {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.08) translateY(1px); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08) translateY(1px);
+  }
 }
+
 .act-expense-ledger {
   position: absolute;
   bottom: 8px;
@@ -1436,6 +2130,7 @@ body {
   font-size: 28px;
   z-index: 22;
 }
+
 .act-expense-pencil {
   position: absolute;
   bottom: 18px;
@@ -1444,22 +2139,51 @@ body {
   z-index: 23;
   animation: pencilRapidScribble 0.35s infinite alternate ease-in-out;
 }
+
 @keyframes pencilRapidScribble {
-  0% { transform: rotate(0deg) translate(0, 0); }
-  100% { transform: rotate(-25deg) translate(-6px, 4px); }
+  0% {
+    transform: rotate(0deg) translate(0, 0);
+  }
+
+  100% {
+    transform: rotate(-25deg) translate(-6px, 4px);
+  }
 }
+
 .act-expense-coin {
   position: absolute;
   font-size: 16px;
   z-index: 25;
   animation: coinPopUp 1.4s ease-out infinite;
 }
-.act-coin-1 { top: 20px; right: -8px; animation-delay: 0.2s; }
-.act-coin-2 { top: 25px; left: -10px; animation-delay: 0.8s; }
+
+.act-coin-1 {
+  top: 20px;
+  right: -8px;
+  animation-delay: 0.2s;
+}
+
+.act-coin-2 {
+  top: 25px;
+  left: -10px;
+  animation-delay: 0.8s;
+}
+
 @keyframes coinPopUp {
-  0% { opacity: 0; transform: translateY(0) scale(0.4); }
-  50% { opacity: 1; transform: translateY(-16px) scale(1.2); }
-  100% { opacity: 0; transform: translateY(-30px) scale(0.9); }
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.4);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-16px) scale(1.2);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.9);
+  }
 }
 
 /* 8. STATE: COUNTDOWN (倒数日小飞机) */
@@ -1471,11 +2195,21 @@ body {
   z-index: 25;
   animation: planeFlyOrbit 2.4s infinite ease-in-out;
 }
+
 @keyframes planeFlyOrbit {
-  0% { transform: translate(-10px, 10px) rotate(15deg); }
-  50% { transform: translate(14px, -12px) rotate(35deg); }
-  100% { transform: translate(-10px, 10px) rotate(15deg); }
+  0% {
+    transform: translate(-10px, 10px) rotate(15deg);
+  }
+
+  50% {
+    transform: translate(14px, -12px) rotate(35deg);
+  }
+
+  100% {
+    transform: translate(-10px, 10px) rotate(15deg);
+  }
 }
+
 .act-countdown-hourglass {
   position: absolute;
   bottom: 8px;
@@ -1484,10 +2218,22 @@ body {
   z-index: 23;
   animation: hourglassFlip 3s infinite ease-in-out;
 }
+
 @keyframes hourglassFlip {
-  0%, 45% { transform: rotate(0deg); }
-  50%, 95% { transform: rotate(180deg); }
-  100% { transform: rotate(360deg); }
+
+  0%,
+  45% {
+    transform: rotate(0deg);
+  }
+
+  50%,
+  95% {
+    transform: rotate(180deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 9. STATE: HIGHLIGHT (每日高光 - 魔法星星装进许愿瓶) */
@@ -1499,10 +2245,19 @@ body {
   z-index: 26;
   animation: wandWaveMagic 1.4s infinite ease-in-out;
 }
+
 @keyframes wandWaveMagic {
-  0%, 100% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(-30deg) translateY(-6px) scale(1.15); }
+
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(-30deg) translateY(-6px) scale(1.15);
+  }
 }
+
 .act-highlight-jar {
   position: absolute;
   bottom: 8px;
@@ -1511,6 +2266,7 @@ body {
   z-index: 23;
   filter: drop-shadow(0 2px 6px rgba(168, 85, 247, 0.4));
 }
+
 .act-highlight-star {
   position: absolute;
   font-size: 18px;
@@ -1518,14 +2274,41 @@ body {
   z-index: 25;
   animation: starDropInJar 1.6s infinite cubic-bezier(0.4, 0, 0.2, 1);
 }
-.act-highlight-star.s1 { top: 10px; right: 16px; animation-delay: 0.1s; }
-.act-highlight-star.s2 { top: 22px; left: 14px; animation-delay: 0.7s; }
-@keyframes starDropInJar {
-  0% { opacity: 0; transform: scale(0.3) translateY(-10px) rotate(0deg); }
-  40% { opacity: 1; transform: scale(1.2) translateY(8px) rotate(90deg); }
-  80% { opacity: 0.9; transform: scale(0.7) translateY(36px) rotate(180deg); }
-  100% { opacity: 0; transform: scale(0.4) translateY(44px) rotate(240deg); }
+
+.act-highlight-star.s1 {
+  top: 10px;
+  right: 16px;
+  animation-delay: 0.1s;
 }
+
+.act-highlight-star.s2 {
+  top: 22px;
+  left: 14px;
+  animation-delay: 0.7s;
+}
+
+@keyframes starDropInJar {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(-10px) rotate(0deg);
+  }
+
+  40% {
+    opacity: 1;
+    transform: scale(1.2) translateY(8px) rotate(90deg);
+  }
+
+  80% {
+    opacity: 0.9;
+    transform: scale(0.7) translateY(36px) rotate(180deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.4) translateY(44px) rotate(240deg);
+  }
+}
+
 .act-highlight-tag {
   position: absolute;
   bottom: -6px;
@@ -1546,14 +2329,27 @@ body {
 #usagi-bouncer.state-tired {
   animation: none !important;
 }
+
 #usagi-bouncer.state-tired #usagi-actor-box {
   animation: usagiTiredSway 2.2s ease-in-out infinite !important;
 }
+
 @keyframes usagiTiredSway {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  35% { transform: translateY(2px) rotate(-3deg) scale(0.98, 1.02); }
-  75% { transform: translateY(1px) rotate(3deg) scale(1.02, 0.98); }
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  35% {
+    transform: translateY(2px) rotate(-3deg) scale(0.98, 1.02);
+  }
+
+  75% {
+    transform: translateY(1px) rotate(3deg) scale(1.02, 0.98);
+  }
 }
+
 .act-tired-mug {
   position: absolute;
   bottom: 12px;
@@ -1562,10 +2358,19 @@ body {
   z-index: 24;
   animation: mugWarmSteam 2s infinite ease-in-out;
 }
+
 @keyframes mugWarmSteam {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  50% { transform: scale(1.12) rotate(-8deg); }
+
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  50% {
+    transform: scale(1.12) rotate(-8deg);
+  }
 }
+
 .act-tired-paws {
   position: absolute;
   top: 36px;
@@ -1574,10 +2379,19 @@ body {
   z-index: 25;
   animation: pawsMassageMotion 1.2s infinite ease-in-out;
 }
+
 @keyframes pawsMassageMotion {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(6px, -4px) scale(1.2); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(6px, -4px) scale(1.2);
+  }
 }
+
 .act-tired-tag {
   position: absolute;
   top: 18px;
@@ -1598,13 +2412,23 @@ body {
 #usagi-bouncer.state-emo {
   animation: none !important;
 }
+
 #usagi-bouncer.state-emo #usagi-actor-box {
   animation: usagiEmoSway 1.8s ease-in-out infinite !important;
 }
+
 @keyframes usagiEmoSway {
-  0%, 100% { transform: scale(1) translateY(0); }
-  50% { transform: scale(1.05, 0.96) translateY(2px); }
+
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+
+  50% {
+    transform: scale(1.05, 0.96) translateY(2px);
+  }
 }
+
 .act-emo-tissue {
   position: absolute;
   top: 48px;
@@ -1613,12 +2437,27 @@ body {
   z-index: 25;
   animation: tissueWipeEyes 1.4s infinite ease-in-out;
 }
+
 @keyframes tissueWipeEyes {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  25% { transform: translate(12px, -4px) rotate(15deg); }
-  50% { transform: translate(24px, 0px) rotate(-10deg); }
-  75% { transform: translate(12px, -2px) rotate(5deg); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(12px, -4px) rotate(15deg);
+  }
+
+  50% {
+    transform: translate(24px, 0px) rotate(-10deg);
+  }
+
+  75% {
+    transform: translate(12px, -2px) rotate(5deg);
+  }
 }
+
 .act-emo-bear {
   position: absolute;
   bottom: 8px;
@@ -1627,6 +2466,7 @@ body {
   z-index: 24;
   filter: drop-shadow(0 2px 6px rgba(251, 146, 60, 0.5));
 }
+
 .act-emo-heart {
   position: absolute;
   top: 24px;
@@ -1635,10 +2475,21 @@ body {
   z-index: 26;
   animation: emoHeartWarmth 1.2s infinite ease-in-out;
 }
+
 @keyframes emoHeartWarmth {
-  0%, 100% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.3) translateY(-4px); opacity: 1; }
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.3) translateY(-4px);
+    opacity: 1;
+  }
 }
+
 .act-emo-tag {
   position: absolute;
   bottom: -6px;
@@ -1659,13 +2510,23 @@ body {
 #usagi-bouncer.state-angry {
   animation: none !important;
 }
+
 #usagi-bouncer.state-angry #usagi-actor-box {
   animation: usagiAngryFanSway 0.75s ease-in-out infinite !important;
 }
+
 @keyframes usagiAngryFanSway {
-  0%, 100% { transform: rotate(-4deg) translateY(0); }
-  50% { transform: rotate(4deg) translateY(-2px); }
+
+  0%,
+  100% {
+    transform: rotate(-4deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(4deg) translateY(-2px);
+  }
 }
+
 .act-angry-fan {
   position: absolute;
   top: 40px;
@@ -1674,10 +2535,17 @@ body {
   z-index: 26;
   animation: rapidFanWaving 0.4s infinite alternate ease-in-out;
 }
+
 @keyframes rapidFanWaving {
-  0% { transform: rotate(-30deg) translate(0, 0); }
-  100% { transform: rotate(35deg) translate(10px, -6px); }
+  0% {
+    transform: rotate(-30deg) translate(0, 0);
+  }
+
+  100% {
+    transform: rotate(35deg) translate(10px, -6px);
+  }
 }
+
 .act-angry-wind {
   position: absolute;
   top: 36px;
@@ -1686,11 +2554,24 @@ body {
   z-index: 24;
   animation: windBlowAway 0.8s infinite ease-out;
 }
+
 @keyframes windBlowAway {
-  0% { opacity: 0; transform: translate(0, 0) scale(0.5); }
-  50% { opacity: 1; transform: translate(14px, -12px) scale(1.1); }
-  100% { opacity: 0; transform: translate(26px, -22px) scale(0.6); }
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(14px, -12px) scale(1.1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(26px, -22px) scale(0.6);
+  }
 }
+
 .act-angry-cake {
   position: absolute;
   bottom: 8px;
@@ -1700,10 +2581,19 @@ body {
   filter: drop-shadow(0 2px 6px rgba(244, 63, 94, 0.4));
   animation: cakeOfferPulse 1.2s infinite ease-in-out;
 }
+
 @keyframes cakeOfferPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2) translateY(-3px); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2) translateY(-3px);
+  }
 }
+
 .act-angry-tag {
   position: absolute;
   top: 14px;
@@ -1723,13 +2613,23 @@ body {
 #usagi-bouncer.state-calendar {
   animation: none !important;
 }
+
 #usagi-bouncer.state-calendar #usagi-actor-box {
   animation: usagiCalendarNod 1.5s ease-in-out infinite !important;
 }
+
 @keyframes usagiCalendarNod {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px) rotate(2deg); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px) rotate(2deg);
+  }
 }
+
 .act-cal-page {
   position: absolute;
   top: 42px;
@@ -1738,10 +2638,19 @@ body {
   z-index: 24;
   animation: calPageFlip 1.5s infinite ease-in-out;
 }
+
 @keyframes calPageFlip {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(-15deg) scale(1.1); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(-15deg) scale(1.1);
+  }
 }
+
 .act-cal-stamp {
   position: absolute;
   bottom: 12px;
@@ -1750,10 +2659,19 @@ body {
   z-index: 26;
   animation: flowerStampPress 1.5s infinite cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
 @keyframes flowerStampPress {
-  0%, 100% { transform: scale(1) translateY(-6px); }
-  60% { transform: scale(1.25) translateY(2px); }
+
+  0%,
+  100% {
+    transform: scale(1) translateY(-6px);
+  }
+
+  60% {
+    transform: scale(1.25) translateY(2px);
+  }
 }
+
 .act-cal-tag {
   position: absolute;
   bottom: -6px;
@@ -1774,13 +2692,23 @@ body {
 #usagi-bouncer.state-habit {
   animation: none !important;
 }
+
 #usagi-bouncer.state-habit #usagi-actor-box {
   animation: usagiHabitJump 1.2s ease-in-out infinite !important;
 }
+
 @keyframes usagiHabitJump {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-12px) scale(1.05); }
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-12px) scale(1.05);
+  }
 }
+
 .act-habit-board {
   position: absolute;
   top: 42px;
@@ -1788,6 +2716,7 @@ body {
   font-size: 28px;
   z-index: 24;
 }
+
 .act-habit-check {
   position: absolute;
   top: 48px;
@@ -1796,10 +2725,21 @@ body {
   z-index: 25;
   animation: checkPopIn 1.2s infinite cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
 @keyframes checkPopIn {
-  0%, 100% { transform: scale(0.6); opacity: 0.5; }
-  50% { transform: scale(1.3); opacity: 1; }
+
+  0%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
 }
+
 .act-habit-medal {
   position: absolute;
   bottom: 8px;
@@ -1809,10 +2749,19 @@ body {
   filter: drop-shadow(0 2px 6px rgba(245, 158, 11, 0.6));
   animation: medalSpinPulse 1.8s infinite ease-in-out;
 }
+
 @keyframes medalSpinPulse {
-  0%, 100% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(15deg) scale(1.2); }
+
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(15deg) scale(1.2);
+  }
 }
+
 .act-habit-tag {
   position: absolute;
   bottom: -6px;
@@ -1833,13 +2782,23 @@ body {
 #usagi-bouncer.state-note {
   animation: none !important;
 }
+
 #usagi-bouncer.state-note #usagi-actor-box {
   animation: usagiNotePonder 1.6s ease-in-out infinite !important;
 }
+
 @keyframes usagiNotePonder {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-3px) rotate(-3deg); }
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-3px) rotate(-3deg);
+  }
 }
+
 .act-note-bulb {
   position: absolute;
   top: -16px;
@@ -1849,10 +2808,19 @@ body {
   filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.95));
   animation: bulbIdeaFlash 1s infinite alternate ease-in-out;
 }
+
 @keyframes bulbIdeaFlash {
-  0% { transform: scale(0.9); filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.6)); }
-  100% { transform: scale(1.25) translateY(-2px); filter: drop-shadow(0 0 16px rgba(250, 204, 21, 1)); }
+  0% {
+    transform: scale(0.9);
+    filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.6));
+  }
+
+  100% {
+    transform: scale(1.25) translateY(-2px);
+    filter: drop-shadow(0 0 16px rgba(250, 204, 21, 1));
+  }
 }
+
 .act-note-scroll {
   position: absolute;
   bottom: 8px;
@@ -1860,6 +2828,7 @@ body {
   font-size: 26px;
   z-index: 24;
 }
+
 .act-note-quill {
   position: absolute;
   bottom: 20px;
@@ -1868,10 +2837,17 @@ body {
   z-index: 25;
   animation: quillWriteMotion 0.6s infinite alternate ease-in-out;
 }
+
 @keyframes quillWriteMotion {
-  0% { transform: rotate(0deg) translate(0, 0); }
-  100% { transform: rotate(-25deg) translate(-6px, 3px); }
+  0% {
+    transform: rotate(0deg) translate(0, 0);
+  }
+
+  100% {
+    transform: rotate(-25deg) translate(-6px, 3px);
+  }
 }
+
 .act-note-tag {
   position: absolute;
   bottom: -6px;
@@ -1892,13 +2868,23 @@ body {
 #usagi-bouncer.state-watchlist {
   animation: none !important;
 }
+
 #usagi-bouncer.state-watchlist #usagi-actor-box {
   animation: usagiWatchPop 1.4s ease-in-out infinite !important;
 }
+
 @keyframes usagiWatchPop {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
 }
+
 .act-watch-glasses-box {
   position: absolute;
   top: 24px;
@@ -1910,11 +2896,13 @@ body {
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.4));
   pointer-events: none;
 }
+
 .act-watch-glasses-svg {
   width: 100%;
   height: 100%;
   display: block;
 }
+
 .act-watch-popcorn {
   position: absolute;
   bottom: 4px;
@@ -1923,10 +2911,17 @@ body {
   z-index: 24;
   animation: popcornJiggle 0.7s infinite alternate ease-in-out;
 }
+
 @keyframes popcornJiggle {
-  0% { transform: rotate(-5deg) translateY(0); }
-  100% { transform: rotate(5deg) translateY(-2px); }
+  0% {
+    transform: rotate(-5deg) translateY(0);
+  }
+
+  100% {
+    transform: rotate(5deg) translateY(-2px);
+  }
 }
+
 .act-watch-clapper {
   position: absolute;
   top: 8px;
@@ -1935,10 +2930,19 @@ body {
   z-index: 26;
   animation: clapperSnap 1.4s infinite ease-in-out;
 }
+
 @keyframes clapperSnap {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(-20deg) translateY(-3px); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(-20deg) translateY(-3px);
+  }
 }
+
 .act-watch-tag {
   position: absolute;
   bottom: -6px;
@@ -1959,13 +2963,21 @@ body {
 #usagi-bouncer.state-music {
   animation: none !important;
 }
+
 #usagi-bouncer.state-music #usagi-actor-box {
   animation: usagiMusicGroove 0.75s ease-in-out infinite alternate !important;
 }
+
 @keyframes usagiMusicGroove {
-  0% { transform: translateY(0) rotate(-6deg) scale(1.02, 0.98); }
-  100% { transform: translateY(-8px) rotate(6deg) scale(0.98, 1.02); }
+  0% {
+    transform: translateY(0) rotate(-6deg) scale(1.02, 0.98);
+  }
+
+  100% {
+    transform: translateY(-8px) rotate(6deg) scale(0.98, 1.02);
+  }
 }
+
 .act-music-headphones-box {
   position: absolute;
   top: 0px;
@@ -1978,28 +2990,46 @@ body {
   animation: headphonesPulse 0.75s infinite alternate ease-in-out;
   pointer-events: none;
 }
+
 .act-cat-headset-svg {
   width: 100%;
   height: 100%;
   display: block;
 }
+
 @keyframes headphonesPulse {
-  0% { transform: translateX(-50%) scale(1); }
-  100% { transform: translateX(-50%) scale(1.08) translateY(-2px); }
+  0% {
+    transform: translateX(-50%) scale(1);
+  }
+
+  100% {
+    transform: translateX(-50%) scale(1.08) translateY(-2px);
+  }
 }
 
 /* 20. STATE: SOCIAL (常用社交 - 乌萨奇狂刷手机玩手机动画) */
 #usagi-bouncer.state-social {
   animation: none !important;
 }
+
 #usagi-bouncer.state-social #usagi-actor-box {
   animation: usagiPhoneTapping 0.75s ease-in-out infinite alternate !important;
 }
+
 @keyframes usagiPhoneTapping {
-  0% { transform: translateY(0) rotate(-3deg) scale(1); }
-  50% { transform: translateY(-5px) rotate(3deg) scale(1.04, 0.98); }
-  100% { transform: translateY(-1px) rotate(-2deg) scale(0.98, 1.02); }
+  0% {
+    transform: translateY(0) rotate(-3deg) scale(1);
+  }
+
+  50% {
+    transform: translateY(-5px) rotate(3deg) scale(1.04, 0.98);
+  }
+
+  100% {
+    transform: translateY(-1px) rotate(-2deg) scale(0.98, 1.02);
+  }
 }
+
 .act-social-phone-box {
   position: absolute;
   bottom: 4px;
@@ -2008,6 +3038,7 @@ body {
   z-index: 28;
   pointer-events: none;
 }
+
 .act-social-phone {
   position: relative;
   width: 22px;
@@ -2019,10 +3050,17 @@ body {
   box-shadow: 0 3px 8px rgba(244, 63, 94, 0.4);
   animation: phoneTypingVibrate 0.25s infinite alternate ease-in-out;
 }
+
 @keyframes phoneTypingVibrate {
-  0% { transform: translateY(0) rotate(-2deg); }
-  100% { transform: translateY(-1.5px) rotate(2deg); }
+  0% {
+    transform: translateY(0) rotate(-2deg);
+  }
+
+  100% {
+    transform: translateY(-1.5px) rotate(2deg);
+  }
 }
+
 .phone-paw {
   position: absolute;
   width: 7px;
@@ -2033,12 +3071,15 @@ body {
   top: 11px;
   z-index: 30;
 }
+
 .phone-paw.paw-l {
   left: -4px;
 }
+
 .phone-paw.paw-r {
   right: -4px;
 }
+
 .act-social-phone .phone-screen {
   width: 100%;
   height: 100%;
@@ -2051,26 +3092,31 @@ body {
   padding: 2px;
   gap: 1.5px;
 }
+
 .phone-chat-bar {
   width: 100%;
   height: 2px;
   background: #e2e8f0;
   border-radius: 1px;
 }
+
 .phone-chat-bubble {
   height: 3.5px;
   border-radius: 2px;
 }
+
 .phone-chat-bubble.b1 {
   width: 75%;
   background: #10b981;
   align-self: flex-end;
 }
+
 .phone-chat-bubble.b2 {
   width: 60%;
   background: #ec4899;
   align-self: flex-start;
 }
+
 .act-social-bubble {
   position: absolute;
   font-size: 16px;
@@ -2078,26 +3124,42 @@ body {
   pointer-events: none;
   animation: socialFloatUp 1.8s infinite ease-out;
 }
+
 .act-social-bubble.sb1 {
   top: 15px;
   left: 10px;
   animation-delay: 0s;
 }
+
 .act-social-bubble.sb2 {
   top: 0px;
   left: 50%;
   animation-delay: 0.6s;
 }
+
 .act-social-bubble.sb3 {
   top: 18px;
   right: 8px;
   animation-delay: 1.2s;
 }
+
 @keyframes socialFloatUp {
-  0% { opacity: 0; transform: translateY(10px) scale(0.6); }
-  35% { opacity: 1; transform: translateY(-4px) scale(1.15); }
-  100% { opacity: 0; transform: translateY(-26px) scale(0.85); }
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.6);
+  }
+
+  35% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.15);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-26px) scale(0.85);
+  }
 }
+
 .act-social-tag {
   position: absolute;
   bottom: -24px;
@@ -2115,6 +3177,7 @@ body {
   z-index: 30;
   pointer-events: none;
 }
+
 .act-music-note {
   position: absolute;
   font-size: 18px;
@@ -2122,13 +3185,36 @@ body {
   z-index: 25;
   animation: musicNoteFloat 1.2s infinite ease-out;
 }
-.act-music-note.mn1 { top: 22px; left: -8px; animation-delay: 0.1s; }
-.act-music-note.mn2 { top: 16px; right: -8px; animation-delay: 0.6s; }
-@keyframes musicNoteFloat {
-  0% { opacity: 0; transform: translateY(0) scale(0.4) rotate(0deg); }
-  50% { opacity: 1; transform: translateY(-16px) scale(1.2) rotate(20deg); }
-  100% { opacity: 0; transform: translateY(-32px) scale(0.8) rotate(-20deg); }
+
+.act-music-note.mn1 {
+  top: 22px;
+  left: -8px;
+  animation-delay: 0.1s;
 }
+
+.act-music-note.mn2 {
+  top: 16px;
+  right: -8px;
+  animation-delay: 0.6s;
+}
+
+@keyframes musicNoteFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.4) rotate(0deg);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-16px) scale(1.2) rotate(20deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-32px) scale(0.8) rotate(-20deg);
+  }
+}
+
 .act-music-tag {
   position: absolute;
   bottom: -6px;
@@ -2150,13 +3236,23 @@ body {
 #usagi-bouncer.state-love_hug {
   animation: none !important;
 }
+
 #usagi-bouncer.state-love_hug #usagi-actor-box {
   animation: usagiLoveHugPulse 1.2s ease-in-out infinite !important;
 }
+
 @keyframes usagiLoveHugPulse {
-  0%, 100% { transform: scale(1) translateY(0); }
-  50% { transform: scale(1.12, 0.95) translateY(-4px); }
+
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+
+  50% {
+    transform: scale(1.12, 0.95) translateY(-4px);
+  }
 }
+
 .act-hug-letter {
   position: absolute;
   top: 18px;
@@ -2165,11 +3261,21 @@ body {
   z-index: 26;
   animation: letterFlyOrbit 1.8s infinite ease-in-out;
 }
+
 @keyframes letterFlyOrbit {
-  0% { transform: translate(0, 0) rotate(-10deg) scale(0.9); }
-  50% { transform: translate(-8px, -12px) rotate(15deg) scale(1.2); }
-  100% { transform: translate(0, 0) rotate(-10deg) scale(0.9); }
+  0% {
+    transform: translate(0, 0) rotate(-10deg) scale(0.9);
+  }
+
+  50% {
+    transform: translate(-8px, -12px) rotate(15deg) scale(1.2);
+  }
+
+  100% {
+    transform: translate(0, 0) rotate(-10deg) scale(0.9);
+  }
 }
+
 .act-hug-hearts {
   position: absolute;
   top: 40px;
@@ -2178,10 +3284,19 @@ body {
   z-index: 25;
   animation: heartsBeatingPulse 0.9s infinite ease-in-out;
 }
+
 @keyframes heartsBeatingPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.3) translateY(-3px); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.3) translateY(-3px);
+  }
 }
+
 .act-hug-tag {
   position: absolute;
   bottom: -6px;
@@ -2203,13 +3318,23 @@ body {
 #usagi-bouncer.state-calm {
   animation: none !important;
 }
+
 #usagi-bouncer.state-calm #usagi-actor-box {
   animation: usagiCalmSway 2.5s ease-in-out infinite !important;
 }
+
 @keyframes usagiCalmSway {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-4px) rotate(2deg); }
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-4px) rotate(2deg);
+  }
 }
+
 .act-calm-tea {
   position: absolute;
   top: 26px;
@@ -2218,10 +3343,19 @@ body {
   z-index: 25;
   animation: teaSteamWobble 2s infinite ease-in-out;
 }
+
 @keyframes teaSteamWobble {
-  0%, 100% { transform: scale(1) translateY(0); }
-  50% { transform: scale(1.1) translateY(-3px); }
+
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+
+  50% {
+    transform: scale(1.1) translateY(-3px);
+  }
 }
+
 .act-calm-leaf {
   position: absolute;
   top: 6px;
@@ -2230,10 +3364,19 @@ body {
   z-index: 26;
   animation: leafFloatBreeze 2.2s infinite ease-in-out;
 }
+
 @keyframes leafFloatBreeze {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(6px, -5px) rotate(15deg); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  50% {
+    transform: translate(6px, -5px) rotate(15deg);
+  }
 }
+
 .act-calm-tag {
   position: absolute;
   bottom: -6px;
@@ -2257,15 +3400,31 @@ body {
 #usagi-bouncer.state-dashboard {
   animation: none !important;
 }
+
 #usagi-bouncer.state-dashboard #usagi-actor-box {
   animation: usagiDashWelcomeHop 1.1s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite !important;
 }
+
 @keyframes usagiDashWelcomeHop {
-  0%, 100% { transform: translateY(0) rotate(0deg) scale(1, 0.95); }
-  25% { transform: translateY(-16px) rotate(-6deg) scale(1.08, 1.02); }
-  50% { transform: translateY(-2px) rotate(0deg) scale(0.96, 1.04); }
-  75% { transform: translateY(-20px) rotate(6deg) scale(1.09, 1.02); }
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1, 0.95);
+  }
+
+  25% {
+    transform: translateY(-16px) rotate(-6deg) scale(1.08, 1.02);
+  }
+
+  50% {
+    transform: translateY(-2px) rotate(0deg) scale(0.96, 1.04);
+  }
+
+  75% {
+    transform: translateY(-20px) rotate(6deg) scale(1.09, 1.02);
+  }
 }
+
 .act-dash-wand {
   position: absolute;
   top: 18px;
@@ -2274,10 +3433,17 @@ body {
   z-index: 26;
   animation: dashWandSparkle 0.9s infinite alternate ease-in-out;
 }
+
 @keyframes dashWandSparkle {
-  0% { transform: rotate(-15deg) scale(0.95); }
-  100% { transform: rotate(15deg) scale(1.18); }
+  0% {
+    transform: rotate(-15deg) scale(0.95);
+  }
+
+  100% {
+    transform: rotate(15deg) scale(1.18);
+  }
 }
+
 .act-dash-star {
   position: absolute;
   top: -12px;
@@ -2286,10 +3452,21 @@ body {
   z-index: 26;
   animation: dashStarPulse 1.2s infinite ease-in-out;
 }
+
 @keyframes dashStarPulse {
-  0%, 100% { transform: scale(0.9) rotate(0deg); opacity: 0.8; }
-  50% { transform: scale(1.3) rotate(180deg); opacity: 1; }
+
+  0%,
+  100% {
+    transform: scale(0.9) rotate(0deg);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.3) rotate(180deg);
+    opacity: 1;
+  }
 }
+
 .act-dash-sparkle {
   position: absolute;
   top: 36px;
@@ -2298,10 +3475,19 @@ body {
   z-index: 26;
   animation: dashSparkleGlow 0.8s infinite alternate ease-in-out;
 }
+
 @keyframes dashSparkleGlow {
-  0% { opacity: 0.3; transform: scale(0.8); }
-  100% { opacity: 1; transform: scale(1.2); }
+  0% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
 }
+
 .act-dash-tag {
   position: absolute;
   top: -24px;
@@ -2325,15 +3511,31 @@ body {
 #usagi-bouncer.state-yaha {
   animation: none !important;
 }
+
 #usagi-bouncer.state-yaha #usagi-actor-box {
   animation: usagiYahaPartyJump 1.1s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite !important;
 }
+
 @keyframes usagiYahaPartyJump {
-  0%, 100% { transform: translateY(0) rotate(0deg) scale(1, 0.96); }
-  25% { transform: translateY(-24px) rotate(-16deg) scale(1.1, 1.05); }
-  50% { transform: translateY(-4px) rotate(0deg) scale(0.95, 1.06); }
-  75% { transform: translateY(-28px) rotate(16deg) scale(1.12, 1.05); }
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1, 0.96);
+  }
+
+  25% {
+    transform: translateY(-24px) rotate(-16deg) scale(1.1, 1.05);
+  }
+
+  50% {
+    transform: translateY(-4px) rotate(0deg) scale(0.95, 1.06);
+  }
+
+  75% {
+    transform: translateY(-28px) rotate(16deg) scale(1.12, 1.05);
+  }
 }
+
 .act-yaha-partyhat {
   position: absolute;
   top: -18px;
@@ -2342,10 +3544,17 @@ body {
   z-index: 26;
   animation: partyHatBob 0.8s infinite alternate ease-in-out;
 }
+
 @keyframes partyHatBob {
-  0% { transform: rotate(-8deg) scale(1); }
-  100% { transform: rotate(12deg) scale(1.15); }
+  0% {
+    transform: rotate(-8deg) scale(1);
+  }
+
+  100% {
+    transform: rotate(12deg) scale(1.15);
+  }
 }
+
 .act-yaha-popper {
   position: absolute;
   top: 10px;
@@ -2354,11 +3563,24 @@ body {
   z-index: 25;
   animation: popperPop 1.1s infinite ease-out;
 }
+
 @keyframes popperPop {
-  0% { transform: scale(0.8) rotate(-10deg); opacity: 0.8; }
-  50% { transform: scale(1.25) rotate(15deg); opacity: 1; }
-  100% { transform: scale(0.9) rotate(0deg); opacity: 0.8; }
+  0% {
+    transform: scale(0.8) rotate(-10deg);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.25) rotate(15deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.9) rotate(0deg);
+    opacity: 0.8;
+  }
 }
+
 .act-yaha-flag {
   position: absolute;
   bottom: 12px;
@@ -2375,29 +3597,65 @@ body {
   box-shadow: 0 2px 6px rgba(234, 179, 8, 0.3);
   animation: flagWave 0.7s infinite alternate ease-in-out;
 }
+
 @keyframes flagWave {
-  0% { transform: rotate(-10deg) translateY(0); }
-  100% { transform: rotate(10deg) translateY(-4px); }
+  0% {
+    transform: rotate(-10deg) translateY(0);
+  }
+
+  100% {
+    transform: rotate(10deg) translateY(-4px);
+  }
 }
+
 .act-yaha-sparkles {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 25;
 }
+
 .act-yaha-sparkles .y-spark {
   position: absolute;
   font-size: 14px;
   animation: ySparkFloat 1.2s infinite ease-out;
 }
-.act-yaha-sparkles .ys1 { top: -10px; left: -4px; animation-delay: 0.1s; }
-.act-yaha-sparkles .ys2 { top: 0px; right: 8px; animation-delay: 0.5s; }
-.act-yaha-sparkles .ys3 { bottom: 20px; right: -8px; animation-delay: 0.8s; }
-@keyframes ySparkFloat {
-  0% { opacity: 0; transform: translateY(0) scale(0.6); }
-  50% { opacity: 1; transform: translateY(-12px) scale(1.2); }
-  100% { opacity: 0; transform: translateY(-24px) scale(0.8); }
+
+.act-yaha-sparkles .ys1 {
+  top: -10px;
+  left: -4px;
+  animation-delay: 0.1s;
 }
+
+.act-yaha-sparkles .ys2 {
+  top: 0px;
+  right: 8px;
+  animation-delay: 0.5s;
+}
+
+.act-yaha-sparkles .ys3 {
+  bottom: 20px;
+  right: -8px;
+  animation-delay: 0.8s;
+}
+
+@keyframes ySparkFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.6);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-12px) scale(1.2);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-24px) scale(0.8);
+  }
+}
+
 .act-yaha-tag {
   position: absolute;
   bottom: -6px;
@@ -2421,13 +3679,23 @@ body {
 #usagi-bouncer.state-ura {
   animation: none !important;
 }
+
 #usagi-bouncer.state-ura #usagi-actor-box {
   animation: usagiUraHoverPower 0.9s ease-in-out infinite !important;
 }
+
 @keyframes usagiUraHoverPower {
-  0%, 100% { transform: translateY(-14px) rotate(-3deg) scale(1.08); }
-  50% { transform: translateY(-22px) rotate(3deg) scale(1.14); }
+
+  0%,
+  100% {
+    transform: translateY(-14px) rotate(-3deg) scale(1.08);
+  }
+
+  50% {
+    transform: translateY(-22px) rotate(3deg) scale(1.14);
+  }
 }
+
 .act-ura-eyes {
   position: absolute;
   top: 24px;
@@ -2436,10 +3704,19 @@ body {
   z-index: 26;
   animation: starEyesGlitter 0.5s infinite alternate ease-in-out;
 }
+
 @keyframes starEyesGlitter {
-  0% { transform: scale(0.95); filter: drop-shadow(0 0 2px #FACC15); }
-  100% { transform: scale(1.15); filter: drop-shadow(0 0 8px #FACC15); }
+  0% {
+    transform: scale(0.95);
+    filter: drop-shadow(0 0 2px #FACC15);
+  }
+
+  100% {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 8px #FACC15);
+  }
 }
+
 .act-ura-lightning {
   position: absolute;
   top: -14px;
@@ -2448,10 +3725,22 @@ body {
   z-index: 25;
   animation: lightningZing 0.6s infinite ease-in-out;
 }
+
 @keyframes lightningZing {
-  0%, 100% { transform: scale(0.9) rotate(-15deg); opacity: 0.7; }
-  50% { transform: scale(1.25) rotate(15deg); opacity: 1; filter: drop-shadow(0 0 6px #FACC15); }
+
+  0%,
+  100% {
+    transform: scale(0.9) rotate(-15deg);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: scale(1.25) rotate(15deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 6px #FACC15);
+  }
 }
+
 .act-ura-rocket {
   position: absolute;
   top: 8px;
@@ -2460,10 +3749,17 @@ body {
   z-index: 25;
   animation: rocketBlast 0.8s infinite alternate ease-in-out;
 }
+
 @keyframes rocketBlast {
-  0% { transform: translateY(2px) rotate(-10deg); }
-  100% { transform: translateY(-8px) rotate(15deg); }
+  0% {
+    transform: translateY(2px) rotate(-10deg);
+  }
+
+  100% {
+    transform: translateY(-8px) rotate(15deg);
+  }
 }
+
 .act-ura-tag {
   position: absolute;
   bottom: -6px;
@@ -2487,13 +3783,23 @@ body {
 #usagi-bouncer.state-happy {
   animation: none !important;
 }
+
 #usagi-bouncer.state-happy #usagi-actor-box {
   animation: usagiSweetBlushFloat 1.5s ease-in-out infinite !important;
 }
+
 @keyframes usagiSweetBlushFloat {
-  0%, 100% { transform: translateY(-8px) rotate(-6deg) scale(1.04); }
-  50% { transform: translateY(-16px) rotate(6deg) scale(1.08); }
+
+  0%,
+  100% {
+    transform: translateY(-8px) rotate(-6deg) scale(1.04);
+  }
+
+  50% {
+    transform: translateY(-16px) rotate(6deg) scale(1.08);
+  }
 }
+
 .act-happy-face {
   position: absolute;
   top: 24px;
@@ -2502,29 +3808,67 @@ body {
   z-index: 26;
   animation: happyFaceBlush 1.2s infinite ease-in-out;
 }
+
 @keyframes happyFaceBlush {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.12); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.12);
+  }
 }
+
 .act-happy-hearts {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 25;
 }
+
 .act-happy-hearts .h-heart {
   position: absolute;
   font-size: 16px;
   animation: happyHeartFloatUp 1.6s infinite ease-out;
 }
-.act-happy-hearts .hh1 { top: 0px; left: -6px; animation-delay: 0.1s; }
-.act-happy-hearts .hh2 { top: -14px; right: 10px; animation-delay: 0.5s; }
-.act-happy-hearts .hh3 { top: 12px; right: -8px; animation-delay: 0.9s; }
-@keyframes happyHeartFloatUp {
-  0% { opacity: 0; transform: translateY(0) scale(0.6); }
-  50% { opacity: 1; transform: translateY(-14px) scale(1.2); }
-  100% { opacity: 0; transform: translateY(-28px) scale(0.8); }
+
+.act-happy-hearts .hh1 {
+  top: 0px;
+  left: -6px;
+  animation-delay: 0.1s;
 }
+
+.act-happy-hearts .hh2 {
+  top: -14px;
+  right: 10px;
+  animation-delay: 0.5s;
+}
+
+.act-happy-hearts .hh3 {
+  top: 12px;
+  right: -8px;
+  animation-delay: 0.9s;
+}
+
+@keyframes happyHeartFloatUp {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.6);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-14px) scale(1.2);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-28px) scale(0.8);
+  }
+}
+
 .act-happy-tag {
   position: absolute;
   bottom: -6px;
@@ -2548,13 +3892,23 @@ body {
 #usagi-bouncer.state-mood {
   animation: none !important;
 }
+
 #usagi-bouncer.state-mood #usagi-actor-box {
   animation: usagiMoodListenTilt 1.6s ease-in-out infinite !important;
 }
+
 @keyframes usagiMoodListenTilt {
-  0%, 100% { transform: translateY(-6px) rotate(-8deg) scale(1.05); }
-  50% { transform: translateY(-14px) rotate(8deg) scale(1.08); }
+
+  0%,
+  100% {
+    transform: translateY(-6px) rotate(-8deg) scale(1.05);
+  }
+
+  50% {
+    transform: translateY(-14px) rotate(8deg) scale(1.08);
+  }
 }
+
 .act-mood-mask {
   position: absolute;
   top: -14px;
@@ -2563,10 +3917,19 @@ body {
   z-index: 26;
   animation: maskFloatBob 1.6s infinite ease-in-out;
 }
+
 @keyframes maskFloatBob {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-5px) scale(1.15); }
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-5px) scale(1.15);
+  }
 }
+
 .act-mood-mailbox {
   position: absolute;
   top: 12px;
@@ -2575,10 +3938,19 @@ body {
   z-index: 25;
   animation: mailboxFlutter 1.4s infinite ease-in-out;
 }
+
 @keyframes mailboxFlutter {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  50% { transform: scale(1.15) rotate(12deg); }
+
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  50% {
+    transform: scale(1.15) rotate(12deg);
+  }
 }
+
 .act-mood-tag {
   position: absolute;
   bottom: -6px;
@@ -2599,9 +3971,11 @@ body {
 .usagi-yaha-party {
   filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.95)) brightness(1.18) !important;
 }
+
 .usagi-ura-energy {
   filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.95)) brightness(1.2) !important;
 }
+
 .usagi-mood-station {
   filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.9)) brightness(1.15) !important;
 }
@@ -2610,54 +3984,71 @@ body {
 .usagi-sleeping {
   filter: drop-shadow(0 0 16px rgba(129, 140, 248, 0.85)) brightness(0.92) !important;
 }
+
 .usagi-drinking {
   filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.9)) brightness(1.1) !important;
 }
+
 .usagi-period-care {
   filter: drop-shadow(0 0 18px rgba(244, 63, 94, 0.9)) brightness(1.1) !important;
 }
+
 .usagi-comforting {
   filter: drop-shadow(0 0 18px rgba(251, 146, 60, 0.85)) brightness(1.12) !important;
 }
+
 .usagi-calm {
   filter: drop-shadow(0 0 18px rgba(52, 211, 153, 0.9)) brightness(1.08) !important;
 }
+
 .usagi-tired {
   filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.85)) brightness(1.05) !important;
 }
+
 .usagi-emo {
   filter: drop-shadow(0 0 18px rgba(244, 114, 182, 0.9)) brightness(1.08) !important;
 }
+
 .usagi-angry {
   filter: drop-shadow(0 0 18px rgba(239, 68, 68, 0.85)) brightness(1.1) !important;
 }
+
 .usagi-calendar {
   filter: drop-shadow(0 0 18px rgba(59, 130, 246, 0.85)) brightness(1.1) !important;
 }
+
 .usagi-habit {
   filter: drop-shadow(0 0 18px rgba(236, 72, 153, 0.9)) brightness(1.12) !important;
 }
+
 .usagi-note {
   filter: drop-shadow(0 0 18px rgba(234, 179, 8, 0.9)) brightness(1.15) !important;
 }
+
 .usagi-watchlist {
   filter: drop-shadow(0 0 18px rgba(249, 115, 22, 0.85)) brightness(1.12) !important;
 }
+
 .usagi-music {
   filter: drop-shadow(0 0 20px rgba(244, 63, 94, 0.95)) brightness(1.15) !important;
 }
+
 .usagi-game-cheering {
   filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.9)) brightness(1.18) !important;
 }
+
 .usagi-happy-dancing {
   filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.9)) brightness(1.18) !important;
 }
+
 .usagi-bookkeeping {
   filter: drop-shadow(0 0 18px rgba(245, 158, 11, 0.85)) brightness(1.12) !important;
 }
+
 .usagi-counting {
   filter: drop-shadow(0 0 18px rgba(244, 63, 94, 0.85)) brightness(1.12) !important;
 }
+
 .usagi-highlighting {
   filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.85)) brightness(1.18) !important;
 }
@@ -2668,10 +4059,12 @@ body {
     opacity: 0;
     transform: translate(0, 0) scale(0.6);
   }
+
   40% {
     opacity: 1;
     transform: translate(8px, -18px) scale(1);
   }
+
   100% {
     opacity: 0;
     transform: translate(16px, -38px) scale(1.3);
@@ -2700,12 +4093,14 @@ body {
   max-width: 440px;
   margin: 0 auto;
 }
+
 .memory-card {
   perspective: 1000px;
   aspect-ratio: 1;
   position: relative;
   cursor: pointer;
 }
+
 .memory-card-inner {
   position: absolute;
   inset: 0;
@@ -2713,10 +4108,13 @@ body {
   transform-style: preserve-3d;
   border-radius: 18px;
 }
+
 .memory-card.flipped .memory-card-inner {
   transform: rotateY(180deg);
 }
-.memory-card-front, .memory-card-back {
+
+.memory-card-front,
+.memory-card-back {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
@@ -2727,21 +4125,25 @@ body {
   justify-content: center;
   user-select: none;
 }
+
 .memory-card-front {
   background: linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%);
   border: 2px dashed #FDA4AF;
   box-shadow: 0 4px 10px rgba(244, 63, 94, 0.08);
 }
+
 .memory-card-back {
   background: #FFFFFF;
   border: 2.5px solid #F43F5E;
   transform: rotateY(180deg);
   box-shadow: 0 6px 16px rgba(244, 63, 94, 0.15);
 }
+
 .memory-card.matched .memory-card-inner {
   transform: rotateY(180deg) scale(0.95);
   opacity: 0.85;
 }
+
 .memory-card.matched .memory-card-back {
   border-color: #10B981;
   background: #ECFDF5;
@@ -2753,19 +4155,23 @@ body {
     opacity: 0;
     transform: translate(-50%, 0) scale(0.6);
   }
+
   20% {
     opacity: 1;
     transform: translate(-50%, -25px) scale(1.15);
   }
+
   80% {
     opacity: 0.9;
     transform: translate(-50%, -75px) scale(1);
   }
+
   100% {
     opacity: 0;
     transform: translate(-50%, -105px) scale(0.85);
   }
 }
+
 .floating-merit-text {
   position: absolute;
   left: 50%;
@@ -2786,6 +4192,7 @@ body {
   max-width: 420px;
   margin: 0 auto;
 }
+
 .mole-hole {
   position: relative;
   overflow: hidden;
@@ -2793,9 +4200,10 @@ body {
   border: 3px solid #D97706;
   border-radius: 22px;
   aspect-ratio: 1;
-  box-shadow: inset 0 6px 12px rgba(0,0,0,0.18), 0 4px 10px rgba(217, 119, 6, 0.2);
+  box-shadow: inset 0 6px 12px rgba(0, 0, 0, 0.18), 0 4px 10px rgba(217, 119, 6, 0.2);
   cursor: pointer;
 }
+
 .mole-inner-shadow {
   position: absolute;
   inset: 0;
@@ -2803,6 +4211,7 @@ body {
   background: radial-gradient(circle at 50% 120%, #78350F 0%, rgba(120, 53, 15, 0.2) 65%, transparent 70%);
   pointer-events: none;
 }
+
 .mole-target {
   position: absolute;
   bottom: -110%;
@@ -2816,6 +4225,7 @@ body {
   justify-content: center;
   user-select: none;
 }
+
 .mole-target.up {
   bottom: 5%;
 }
@@ -2829,11 +4239,14 @@ body {
   overflow: hidden;
   transition: all 0.2s ease;
 }
+
 .voucher-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 22px rgba(244, 63, 94, 0.18);
 }
-.voucher-card::before, .voucher-card::after {
+
+.voucher-card::before,
+.voucher-card::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -2844,8 +4257,14 @@ body {
   border-radius: 50%;
   border: 2px dashed #F43F5E;
 }
-.voucher-card::before { left: -10px; }
-.voucher-card::after { right: -10px; }
+
+.voucher-card::before {
+  left: -10px;
+}
+
+.voucher-card::after {
+  right: -10px;
+}
 
 /* ============================================================
    MOBILE RESPONSIVE & HORIZONTAL TAB PILLS (专为手机端优化)
@@ -2859,10 +4278,12 @@ body {
   cursor: pointer;
   flex-shrink: 0;
 }
+
 .mobile-tab-pill:hover {
   background: #FFF1F2;
   border-color: #F472B6;
 }
+
 .mobile-tab-pill.active {
   background: linear-gradient(135deg, #F43F5E 0%, #FB7185 100%) !important;
   color: #FFFFFF !important;
@@ -2877,6 +4298,7 @@ body {
 .desktop-sidebar {
   display: block !important;
 }
+
 .mobile-tab-bar {
   display: none !important;
 }
@@ -2885,9 +4307,11 @@ body {
   .desktop-sidebar {
     display: none !important;
   }
+
   .mobile-tab-bar {
     display: flex !important;
   }
+
   /* Mobile padding & card scale */
   .glass-card {
     padding: 1.15rem !important;
@@ -2901,7 +4325,8 @@ body {
      ============================================================ */
 
   /* Global mobile viewport & spacing */
-  html, body {
+  html,
+  body {
     overflow-x: hidden !important;
     font-size: 15px !important;
     padding-bottom: 125px !important;
@@ -2929,9 +4354,11 @@ body {
     border-radius: 1.25rem !important;
     gap: 6px !important;
   }
+
   header.glass-card h1 {
     font-size: 1.05rem !important;
   }
+
   #user-motto-display {
     display: none !important;
   }
@@ -2948,6 +4375,7 @@ body {
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch !important;
   }
+
   .mobile-tab-pill {
     padding: 8px 14px !important;
     font-size: 13px !important;
@@ -2960,6 +4388,7 @@ body {
     flex-shrink: 0 !important;
     transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
   }
+
   .mobile-tab-pill.active {
     background: linear-gradient(135deg, #f472b6, #fb7185) !important;
     color: #ffffff !important;
@@ -2973,14 +4402,17 @@ body {
     padding: 14px !important;
     border-radius: 1.25rem !important;
   }
+
   #dash-greeting-title {
     font-size: 1.15rem !important;
     line-height: 1.35 !important;
   }
+
   #dash-greeting-sub {
     font-size: 0.85rem !important;
     line-height: 1.4 !important;
   }
+
   #hero-pat-btn {
     width: 100% !important;
     margin-top: 10px !important;
@@ -2998,6 +4430,7 @@ body {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 8px !important;
   }
+
   #tab-dashboard .mt-4.pt-3.border-t.border-pink-200\/60 button {
     padding: 10px 8px !important;
     min-height: 58px !important;
@@ -3006,27 +4439,32 @@ body {
     align-items: center !important;
     gap: 8px !important;
   }
+
   #tab-dashboard .mt-4.pt-3.border-t.border-pink-200\/60 button .text-lg {
     font-size: 1.35rem !important;
   }
+
   #tab-dashboard .mt-4.pt-3.border-t.border-pink-200\/60 button .text-xs {
     font-size: 0.82rem !important;
     font-weight: 800 !important;
   }
+
   #tab-dashboard .mt-4.pt-3.border-t.border-pink-200\/60 button .text-\[10px\] {
     font-size: 0.72rem !important;
   }
 
   /* Dashboard Quick Metrics: Clean 2x2 Grid with Big Readable Numbers */
-  #tab-dashboard > .grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-4 {
+  #tab-dashboard>.grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-4 {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 10px !important;
   }
-  #tab-dashboard > .grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-4 > .glass-card {
+
+  #tab-dashboard>.grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-4>.glass-card {
     padding: 12px 14px !important;
     border-radius: 1.15rem !important;
   }
+
   #dash-cal-count,
   #dash-period-status,
   #dash-water-text {
@@ -3034,12 +4472,14 @@ body {
     font-weight: 900 !important;
     line-height: 1.3 !important;
   }
+
   #dash-expense-spent {
     font-size: 1.3rem !important;
     font-weight: 900 !important;
     color: #e11d48 !important;
     line-height: 1.2 !important;
   }
+
   #dash-cal-sub,
   #dash-period-sub,
   #dash-expense-remaining,
@@ -3049,12 +4489,13 @@ body {
   }
 
   /* Dashboard Countdown & Todos Stacked */
-  #tab-dashboard > .grid.grid-cols-1.md\:grid-cols-2 {
+  #tab-dashboard>.grid.grid-cols-1.md\:grid-cols-2 {
     display: flex !important;
     flex-direction: column !important;
     gap: 12px !important;
   }
-  #tab-dashboard > .grid.grid-cols-1.md\:grid-cols-2 > .glass-card {
+
+  #tab-dashboard>.grid.grid-cols-1.md\:grid-cols-2>.glass-card {
     padding: 14px !important;
     border-radius: 1.25rem !important;
   }
@@ -3077,6 +4518,7 @@ body {
     justify-content: space-around !important;
     align-items: center !important;
   }
+
   .mobile-nav-btn {
     flex: 1 !important;
     display: flex !important;
@@ -3091,22 +4533,27 @@ body {
     border: none !important;
     cursor: pointer !important;
   }
+
   .mobile-nav-btn .text-xl {
     font-size: 1.35rem !important;
     line-height: 1 !important;
     transition: transform 0.2s !important;
   }
+
   .mobile-nav-btn .text-\[10px\] {
     font-size: 0.74rem !important;
     font-weight: 800 !important;
     margin-top: 2px !important;
   }
+
   .mobile-nav-btn.active {
     color: #db2777 !important;
   }
+
   .mobile-nav-btn.active .text-xl {
     transform: scale(1.18) translateY(-2px) !important;
   }
+
   .mobile-nav-btn.active::after {
     content: '' !important;
     display: block !important;
@@ -3120,13 +4567,15 @@ body {
   /* Usagi Mascot elevated cleanly above the Mobile App Dock */
   .usagi-mascot-float {
     bottom: calc(76px + env(safe-area-inset-bottom, 12px)) !important;
-    right: 12px !important;
+    right: auto !important;
     z-index: 9990 !important;
   }
+
   #usagi-actor-box {
     width: 4.8rem !important;
     height: 5.6rem !important;
   }
+
   #usagi-mascot-img {
     width: 4.8rem !important;
     height: 5.6rem !important;
@@ -3144,10 +4593,12 @@ body {
     border-radius: 18px !important;
     box-shadow: 0 8px 24px rgba(244, 114, 182, 0.25) !important;
   }
+
   .speech-bubble #usagi-speech-text {
     font-size: 0.86rem !important;
     font-weight: 700 !important;
   }
+
   .speech-bubble #usagi-speech-tag {
     font-size: 0.74rem !important;
   }
@@ -3160,6 +4611,7 @@ body {
     background: rgba(255, 255, 255, 0.95) !important;
     border: 1.5px solid #fbcfe8 !important;
   }
+
   .usagi-assistant-dock button {
     padding: 4px 8px !important;
     font-size: 0.76rem !important;
@@ -3185,7 +4637,8 @@ body {
    ============================================================ */
 #youtube-mini-pip-dock {
   position: fixed !important;
-  bottom: 82px !important; /* Mobile: right above the bottom dock */
+  bottom: 82px !important;
+  /* Mobile: right above the bottom dock */
   right: 14px !important;
   width: 220px !important;
   aspect-ratio: 16 / 9 !important;
@@ -3203,6 +4656,7 @@ body {
     transform: translateY(24px) scale(0.92);
     opacity: 0;
   }
+
   to {
     transform: translateY(0) scale(1);
     opacity: 1;
@@ -3227,6 +4681,7 @@ body {
   #youtube-mini-pip-dock .mini-pip-bar {
     opacity: 0;
   }
+
   #youtube-mini-pip-dock:hover .mini-pip-bar,
   #youtube-mini-pip-dock:focus-within .mini-pip-bar {
     opacity: 1;
@@ -3278,110 +4733,239 @@ body {
 #tab-dashboard:not(.hidden) {
   animation: usagiElasticPop 0.46s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
 }
+
 @keyframes usagiElasticPop {
-  0% { opacity: 0; transform: scale(0.88) translateY(28px); }
-  60% { opacity: 1; transform: scale(1.025) translateY(-5px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.88) translateY(28px);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.025) translateY(-5px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* 2. 生理期: 暖暖樱花爱心绽放 (Heart Bloom) */
 #tab-period:not(.hidden) {
   animation: usagiHeartBloom 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
 @keyframes usagiHeartBloom {
-  0% { opacity: 0; transform: scale(0.92) translateY(20px); filter: drop-shadow(0 0 16px rgba(251, 113, 133, 0.4)) blur(3px); }
-  50% { filter: drop-shadow(0 0 24px rgba(244, 63, 94, 0.25)) blur(0); }
-  100% { opacity: 1; transform: scale(1) translateY(0); filter: drop-shadow(0 0 0 transparent) blur(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(20px);
+    filter: drop-shadow(0 0 16px rgba(251, 113, 133, 0.4)) blur(3px);
+  }
+
+  50% {
+    filter: drop-shadow(0 0 24px rgba(244, 63, 94, 0.25)) blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 0 0 transparent) blur(0);
+  }
 }
 
 /* 3. 生活日历: 魔法手账翻页特效 (Calendar 3D Flip) */
 #tab-calendar:not(.hidden) {
   animation: usagiCalendarFlip 0.46s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
 @keyframes usagiCalendarFlip {
-  0% { opacity: 0; transform: perspective(800px) rotateX(10deg) translateY(24px); }
-  100% { opacity: 1; transform: perspective(800px) rotateX(0deg) translateY(0); }
+  0% {
+    opacity: 0;
+    transform: perspective(800px) rotateX(10deg) translateY(24px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: perspective(800px) rotateX(0deg) translateY(0);
+  }
 }
 
 /* 4. 音乐点歌台: 戴耳机摇摆律动 (Music Groove Wobble) */
 #tab-music:not(.hidden) {
   animation: usagiMusicGroove 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.25) both;
 }
+
 @keyframes usagiMusicGroove {
-  0% { opacity: 0; transform: translateY(30px) rotate(-2.5deg) scale(0.95); }
-  50% { transform: translateY(-4px) rotate(1.5deg) scale(1.015); }
-  75% { transform: translateY(2px) rotate(-0.8deg); }
-  100% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+  0% {
+    opacity: 0;
+    transform: translateY(30px) rotate(-2.5deg) scale(0.95);
+  }
+
+  50% {
+    transform: translateY(-4px) rotate(1.5deg) scale(1.015);
+  }
+
+  75% {
+    transform: translateY(2px) rotate(-0.8deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
 }
 
 /* 5. 日常开销: 乌萨奇金萝卜金币掉落 (Coin Drop & Bounce) */
 #tab-expense:not(.hidden) {
   animation: usagiCoinDrop 0.44s cubic-bezier(0.175, 0.885, 0.32, 1.2) both;
 }
+
 @keyframes usagiCoinDrop {
-  0% { opacity: 0; transform: translateY(-30px) scale(0.94); }
-  60% { opacity: 1; transform: translateY(6px) scale(1.02); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+  0% {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.94);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(6px) scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* 6. 饮水作息: 清透水泡咕噜咕噜升起 (Bubble Rise) */
 #tab-health:not(.hidden) {
   animation: usagiBubbleRise 0.46s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
 @keyframes usagiBubbleRise {
-  0% { opacity: 0; transform: translateY(36px) scale(0.94); filter: blur(4px); }
-  70% { transform: translateY(-4px) scale(1.01); filter: blur(0); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+  0% {
+    opacity: 0;
+    transform: translateY(36px) scale(0.94);
+    filter: blur(4px);
+  }
+
+  70% {
+    transform: translateY(-4px) scale(1.01);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* 7. 随身小影院: 爆米花大荧幕拉开 (Cinema Screen Pop) */
 #tab-cinema:not(.hidden) {
   animation: usagiCinemaScreen 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
 @keyframes usagiCinemaScreen {
-  0% { opacity: 0; transform: scale(0.86) translateY(20px); filter: contrast(1.15) brightness(1.1); }
-  60% { transform: scale(1.02) translateY(-2px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); filter: contrast(1) brightness(1); }
+  0% {
+    opacity: 0;
+    transform: scale(0.86) translateY(20px);
+    filter: contrast(1.15) brightness(1.1);
+  }
+
+  60% {
+    transform: scale(1.02) translateY(-2px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: contrast(1) brightness(1);
+  }
 }
 
 /* 8. 常用社交: 气泡传情轻快弹出 (Social Ping Pop) */
 #tab-social:not(.hidden) {
   animation: usagiSocialPing 0.44s cubic-bezier(0.175, 0.885, 0.32, 1.25) both;
 }
+
 @keyframes usagiSocialPing {
-  0% { opacity: 0; transform: scale(0.92) translateY(24px); }
-  65% { transform: scale(1.02) translateY(-3px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(24px);
+  }
+
+  65% {
+    transform: scale(1.02) translateY(-3px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* 9. 治愈游乐园: 马里奥像素跳跃 (Arcade Spring Jump) */
 #tab-games:not(.hidden) {
   animation: usagiArcadeJump 0.48s cubic-bezier(0.175, 0.885, 0.32, 1.3) both;
 }
+
 @keyframes usagiArcadeJump {
-  0% { opacity: 0; transform: translateY(45px) scale(0.92, 1.08); }
-  50% { transform: translateY(-8px) scale(1.04, 0.96); }
-  100% { opacity: 1; transform: translateY(0) scale(1, 1); }
+  0% {
+    opacity: 0;
+    transform: translateY(45px) scale(0.92, 1.08);
+  }
+
+  50% {
+    transform: translateY(-8px) scale(1.04, 0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1, 1);
+  }
 }
 
 /* 10. 待办清单与倒数日: 飞奔火箭急速突进 (Rocket Snap) */
 #tab-todos:not(.hidden) {
   animation: usagiRocketSnap 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
 @keyframes usagiRocketSnap {
-  0% { opacity: 0; transform: translateX(-35px) scale(0.96); }
-  70% { transform: translateX(4px) scale(1.01); }
-  100% { opacity: 1; transform: translateX(0) scale(1); }
+  0% {
+    opacity: 0;
+    transform: translateX(-35px) scale(0.96);
+  }
+
+  70% {
+    transform: translateX(4px) scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
 }
 
 /* 11. 碎片灵感备忘录: 便签书页微旋轻飘 (Notebook Flutter) */
 #tab-notes:not(.hidden) {
   animation: usagiNotebookFlutter 0.46s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
 @keyframes usagiNotebookFlutter {
-  0% { opacity: 0; transform: translateY(22px) rotate(1.8deg) scale(0.96); }
-  60% { transform: translateY(-3px) rotate(-0.6deg); }
-  100% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+  0% {
+    opacity: 0;
+    transform: translateY(22px) rotate(1.8deg) scale(0.96);
+  }
+
+  60% {
+    transform: translateY(-3px) rotate(-0.6deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
 }
 
 /* 12. 习惯养成与热力图: 花草萌芽生机破土 (Garden Bloom) */
@@ -3389,30 +4973,66 @@ body {
   animation: usagiGardenBloom 0.46s cubic-bezier(0.175, 0.885, 0.32, 1.2) both;
   transform-origin: bottom center;
 }
+
 @keyframes usagiGardenBloom {
-  0% { opacity: 0; transform: scale(0.9) translateY(25px); }
-  60% { transform: scale(1.02) translateY(-2px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(25px);
+  }
+
+  60% {
+    transform: scale(1.02) translateY(-2px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* 13. 书影音购物冷静期: 云朵惬意漫步飘逸 (Cloud Drift) */
 #tab-watchlist:not(.hidden) {
   animation: usagiCloudDrift 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
 @keyframes usagiCloudDrift {
-  0% { opacity: 0; transform: translateX(35px) scale(0.96); }
-  70% { transform: translateX(-3px) scale(1.01); }
-  100% { opacity: 1; transform: translateX(0) scale(1); }
+  0% {
+    opacity: 0;
+    transform: translateX(35px) scale(0.96);
+  }
+
+  70% {
+    transform: translateX(-3px) scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
 }
 
 /* 14. 感恩日记每日高光: 许愿瓶星光闪烁破晓 (Starlight Shimmer) */
 #tab-highlights:not(.hidden) {
   animation: usagiStarlightShimmer 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
 @keyframes usagiStarlightShimmer {
-  0% { opacity: 0; transform: scale(0.92) translateY(18px); filter: brightness(1.25) drop-shadow(0 0 16px rgba(253, 224, 71, 0.5)); }
-  70% { transform: scale(1.015) translateY(-2px); filter: brightness(1.05); }
-  100% { opacity: 1; transform: scale(1) translateY(0); filter: brightness(1); }
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(18px);
+    filter: brightness(1.25) drop-shadow(0 0 16px rgba(253, 224, 71, 0.5));
+  }
+
+  70% {
+    transform: scale(1.015) translateY(-2px);
+    filter: brightness(1.05);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: brightness(1);
+  }
 }
 
 /* 15. 情绪与症状日记: 梦幻彩虹秋千轻摆 (Rainbow Swing) */
@@ -3420,10 +5040,21 @@ body {
   animation: usagiRainbowSwing 0.48s cubic-bezier(0.175, 0.885, 0.32, 1.2) both;
   transform-origin: top center;
 }
+
 @keyframes usagiRainbowSwing {
-  0% { opacity: 0; transform: rotate(-3.5deg) scale(0.95) translateY(16px); }
-  60% { transform: rotate(1.2deg); }
-  100% { opacity: 1; transform: rotate(0deg) scale(1) translateY(0); }
+  0% {
+    opacity: 0;
+    transform: rotate(-3.5deg) scale(0.95) translateY(16px);
+  }
+
+  60% {
+    transform: rotate(1.2deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotate(0deg) scale(1) translateY(0);
+  }
 }
 
 /* ------------------------------------------------------------
@@ -3434,14 +5065,17 @@ body {
     opacity: 0;
     transform: translateY(60px) scale(0.4) rotate(-25deg);
   }
+
   35% {
     opacity: 1;
     transform: translateY(-20px) scale(1.15) rotate(12deg);
   }
+
   75% {
     opacity: 0.95;
     transform: translateY(-55px) scale(1.05) rotate(-6deg);
   }
+
   100% {
     opacity: 0;
     transform: translateY(-95px) scale(0.8) rotate(10deg);
@@ -3453,14 +5087,17 @@ body {
     opacity: 0;
     transform: translateY(40px) scale(0.5) rotate(-15deg);
   }
+
   30% {
     opacity: 1;
     transform: translateY(-10px) scale(1.2) rotate(10deg);
   }
+
   70% {
     opacity: 0.9;
     transform: translateY(-40px) scale(1) rotate(-5deg);
   }
+
   100% {
     opacity: 0;
     transform: translateY(-75px) scale(0.6) rotate(15deg);
@@ -3472,14 +5109,17 @@ body {
     opacity: 0;
     transform: translate(-50%, -20px) scale(0.85);
   }
+
   20% {
     opacity: 1;
     transform: translate(-50%, 0px) scale(1.05);
   }
+
   75% {
     opacity: 1;
     transform: translate(-50%, 0px) scale(1);
   }
+
   100% {
     opacity: 0;
     transform: translate(-50%, -15px) scale(0.92);
@@ -3487,6 +5127,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .tab-content:not(.hidden),
   .usagi-float-particle,
   .usagi-theme-emoji-particle,
@@ -3522,20 +5163,243 @@ body {
 }
 
 @keyframes usagiSquishBounce {
-  0% { transform: scale(1, 1); }
-  35% { transform: scale(1.35, 0.68); }
-  65% { transform: scale(0.85, 1.22); }
-  85% { transform: scale(1.08, 0.94); }
-  100% { transform: scale(1, 1); }
+  0% {
+    transform: scale(1, 1);
+  }
+
+  35% {
+    transform: scale(1.35, 0.68);
+  }
+
+  65% {
+    transform: scale(0.85, 1.22);
+  }
+
+  85% {
+    transform: scale(1.08, 0.94);
+  }
+
+  100% {
+    transform: scale(1, 1);
+  }
 }
 
 #usagi-speech-bubble.speaking-active {
   border-color: #f43f5e !important;
-  box-shadow: 0 0 20px rgba(244, 63, 94, 0.35), 0 8px 16px rgba(0,0,0,0.08) !important;
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.35), 0 8px 16px rgba(0, 0, 0, 0.08) !important;
   animation: speechPulseGlow 1.2s infinite alternate ease-in-out !important;
 }
 
 @keyframes speechPulseGlow {
-  0% { transform: translateX(-50%) scale(1); }
-  100% { transform: translateX(-50%) scale(1.03); }
+  0% {
+    transform: translateX(-50%) scale(1);
+  }
+
+  100% {
+    transform: translateX(-50%) scale(1.03);
+  }
+}
+
+/* ============================================================
+   USAGI KAWAII RHYTHM FESTIVAL (音游狂欢节 · 5-PERFECT 燃火特效)
+   ============================================================ */
+.rhythm-fever-active {
+  box-shadow: 0 0 35px #f59e0b, 0 0 70px #ef4444, inset 0 0 25px rgba(245, 158, 11, 0.45) !important;
+  border-color: #f59e0b !important;
+  animation: feverBorderPulse 0.45s infinite alternate ease-in-out !important;
+}
+
+@keyframes feverBorderPulse {
+  0% {
+    filter: brightness(1) drop-shadow(0 0 12px #f59e0b);
+  }
+
+  100% {
+    filter: brightness(1.25) drop-shadow(0 0 28px #ef4444);
+  }
+}
+
+.rhythm-rainbow-text {
+  background: linear-gradient(90deg, #ff007f, #ff7700, #ffea00, #00e676, #00b0ff, #d500f9, #ff007f);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbowShift 1.2s linear infinite;
+}
+
+@keyframes rainbowShift {
+  0% {
+    background-position: 0% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.rhythm-fever-badge {
+  animation: feverBadgeBounce 0.4s infinite alternate cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes feverBadgeBounce {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.12);
+  }
+}
+
+.song-cover-spin {
+  animation: songDiscSpin 6s linear infinite;
+}
+
+@keyframes songDiscSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   RHYTHM GAME SPEED CONTROLLER & CUSTOM MULTIPLIER STYLING
+   ============================================================ */
+.rhythm-speed-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 7px;
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #78350f;
+  border: 1.5px solid #fde68a;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: all 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+  line-height: 1;
+}
+
+.rhythm-speed-btn:hover {
+  transform: translateY(-1px) scale(1.05);
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #f59e0b;
+}
+
+.rhythm-speed-btn:active {
+  transform: scale(0.94);
+}
+
+.rhythm-speed-btn.active {
+  background: linear-gradient(135deg, #f59e0b, #ea580c) !important;
+  color: #ffffff !important;
+  border-color: #d97706 !important;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.38) !important;
+  font-weight: 900 !important;
+  transform: scale(1.06);
+}
+
+.rhythm-speed-step-btn {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 900;
+  border-radius: 7px;
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fcd34d;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  line-height: 1;
+}
+
+.rhythm-speed-step-btn:hover {
+  background: #fde68a;
+  color: #92400e;
+  transform: scale(1.12);
+}
+
+.rhythm-speed-step-btn:active {
+  transform: scale(0.92);
+}
+
+.rhythm-speed-custom-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ffedd5, #fee2e2);
+  color: #c2410c;
+  border: 1.5px dashed #fb923c;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+  line-height: 1;
+}
+
+.rhythm-speed-custom-btn:hover {
+  background: #fed7aa;
+  border-color: #ea580c;
+  transform: translateY(-1px) scale(1.05);
+}
+
+.rhythm-speed-custom-btn.active {
+  background: linear-gradient(135deg, #e11d48, #f43f5e) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #be123c !important;
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.38) !important;
+  font-weight: 900 !important;
+  transform: scale(1.06);
+}
+
+/* ============================================================
+   GLOBAL HARDWARE ACCELERATION & ZERO-LAG SILKY SMOOTH OPTIMIZATION
+   ============================================================ */
+.tab-content {
+  contain: paint;
+  will-change: opacity, transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.glass-card {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+#rhythm-canvas,
+#fruit-canvas,
+#watermelon-canvas,
+#jump-canvas,
+#whack-canvas {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+}
+
+.usagi-float-particle,
+.usagi-theme-emoji-particle,
+.usagi-entrance-banner {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
 }

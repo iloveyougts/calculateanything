@@ -122,23 +122,93 @@ const UsagiSound = (function () {
     },
 
     woodenFish: function () {
-      // Authentic Buddhist wooden fish "Tok!" knock sound
+      // 真实佛系高保真沉香木鱼敲击声学物理合成 (Tok! 空灵厚重空腔共鸣)
       if (isMuted) return;
       initCtx();
       const now = audioCtx.currentTime;
-      [580, 740].forEach((freq, i) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now);
-        osc.frequency.exponentialRampToValueAtTime(freq * 0.45, now + 0.12);
-        gain.gain.setValueAtTime(i === 0 ? 0.32 : 0.18, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(now);
-        osc.stop(now + 0.14);
-      });
+
+      // 1. 木槌敲击硬木瞬间的高频清脆瞬态脉冲 (Mallet contact click)
+      const clickOsc = audioCtx.createOscillator();
+      const clickGain = audioCtx.createGain();
+      clickOsc.type = 'sine';
+      clickOsc.frequency.setValueAtTime(1600, now);
+      clickOsc.frequency.exponentialRampToValueAtTime(300, now + 0.025);
+      clickGain.gain.setValueAtTime(0.45, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+      clickOsc.connect(clickGain);
+      clickGain.connect(audioCtx.destination);
+      clickOsc.start(now);
+      clickOsc.stop(now + 0.026);
+
+      // 2. 木鱼中空腹腔的主体浑厚共鸣 (Hollow wooden body cavity resonance)
+      const bodyOsc = audioCtx.createOscillator();
+      const bodyGain = audioCtx.createGain();
+      bodyOsc.type = 'sine';
+      bodyOsc.frequency.setValueAtTime(435, now);
+      bodyOsc.frequency.exponentialRampToValueAtTime(395, now + 0.18);
+      bodyGain.gain.setValueAtTime(0.68, now);
+      bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      bodyOsc.connect(bodyGain);
+      bodyGain.connect(audioCtx.destination);
+      bodyOsc.start(now);
+      bodyOsc.stop(now + 0.23);
+
+      // 3. 檀木木质泛音 (Wood grain acoustic overtones)
+      const toneOsc = audioCtx.createOscillator();
+      const toneGain = audioCtx.createGain();
+      toneOsc.type = 'triangle';
+      toneOsc.frequency.setValueAtTime(840, now);
+      toneOsc.frequency.exponentialRampToValueAtTime(680, now + 0.09);
+      toneGain.gain.setValueAtTime(0.25, now);
+      toneGain.gain.exponentialRampToValueAtTime(0.001, now + 0.10);
+      toneOsc.connect(toneGain);
+      toneGain.connect(audioCtx.destination);
+      toneOsc.start(now);
+      toneOsc.stop(now + 0.11);
+
+      // 4. 空灵空间尾音扩散 (Subtle ambient warmth)
+      const subOsc = audioCtx.createOscillator();
+      const subGain = audioCtx.createGain();
+      subOsc.type = 'sine';
+      subOsc.frequency.setValueAtTime(220, now);
+      subGain.gain.setValueAtTime(0.20, now);
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+      subOsc.connect(subGain);
+      subGain.connect(audioCtx.destination);
+      subOsc.start(now);
+      subOsc.stop(now + 0.29);
+    },
+
+    hammerSmash: function (isHitMonster = true) {
+      if (isMuted) return;
+      initCtx();
+      const now = audioCtx.currentTime;
+
+      // 1. 重锤猛击低频冲击波 (Heavy mallet thump)
+      const thumpOsc = audioCtx.createOscillator();
+      const thumpGain = audioCtx.createGain();
+      thumpOsc.type = 'triangle';
+      thumpOsc.frequency.setValueAtTime(260, now);
+      thumpOsc.frequency.exponentialRampToValueAtTime(45, now + 0.14);
+      thumpGain.gain.setValueAtTime(0.55, now);
+      thumpGain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      thumpOsc.connect(thumpGain);
+      thumpGain.connect(audioCtx.destination);
+      thumpOsc.start(now);
+      thumpOsc.stop(now + 0.16);
+
+      // 2. 趣味卡通冲击声 (Comic impact crack / squeak)
+      const crackOsc = audioCtx.createOscillator();
+      const crackGain = audioCtx.createGain();
+      crackOsc.type = isHitMonster ? 'sawtooth' : 'sine';
+      crackOsc.frequency.setValueAtTime(isHitMonster ? 880 : 540, now);
+      crackOsc.frequency.exponentialRampToValueAtTime(isHitMonster ? 180 : 320, now + 0.08);
+      crackGain.gain.setValueAtTime(isHitMonster ? 0.35 : 0.25, now);
+      crackGain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+      crackOsc.connect(crackGain);
+      crackGain.connect(audioCtx.destination);
+      crackOsc.start(now);
+      crackOsc.stop(now + 0.10);
     },
 
     hit: function () {
@@ -236,6 +306,91 @@ const UsagiSound = (function () {
         gain.connect(audioCtx.destination);
         osc.start(now);
         osc.stop(now + 0.45);
+      } catch (e) {}
+    },
+
+    feverIgnite: function () {
+      // Explosive Fever Mode ignition (5-Perfect streak!)
+      if (isMuted) return;
+      try {
+        initCtx();
+        const now = audioCtx.currentTime;
+        // Rising power-up synth
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(260, now);
+        osc.frequency.exponentialRampToValueAtTime(1046, now + 0.28);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.35);
+
+        // Celebratory sparkle chime chords
+        [659.25, 783.99, 1046.50, 1318.51].forEach((f, i) => {
+          setTimeout(() => playTone(f, 'triangle', 0.25, 0.12), i * 40);
+        });
+      } catch (e) {}
+    },
+
+    taikoDon: function () {
+      // Deep bass punchy Taiko Drum DON!
+      if (isMuted) return;
+      try {
+        initCtx();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(160, now);
+        osc.frequency.exponentialRampToValueAtTime(45, now + 0.22);
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      } catch (e) {}
+    },
+
+    taikoKa: function () {
+      // High-pitched crisp Taiko Rim KA!
+      if (isMuted) return;
+      try {
+        initCtx();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(880, now);
+        osc.frequency.exponentialRampToValueAtTime(320, now + 0.08);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.09);
+      } catch (e) {}
+    },
+
+    perfectHit: function () {
+      // Crisp sparkling chime for PERFECT hit
+      if (isMuted) return;
+      try {
+        initCtx();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1174.66, now); // D6
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.18);
       } catch (e) {}
     },
 
