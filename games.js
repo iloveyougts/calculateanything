@@ -6,11 +6,72 @@
 /* ============================================================
    0. USAGI KAWAII VOICE ENGINE (真人自然甜美女声 & 防截断守护引擎)
    ============================================================ */
+/* ============================================================
+   0. USAGI KAWAII VOICE ENGINE (TTSMaker 真人声库 & 声优高品质 MP3 引擎)
+   ============================================================ */
 const UsagiVoice = (function () {
   let isVoiceEnabled = localStorage.getItem('usagi_voice_enabled') !== 'false'; // 默认开启
-  let voices = [];
+  let voiceMode = localStorage.getItem('usagi_voice_mode') || 'real'; // 'real' (MP3真实真人录音) 或 'tts'
+  let currentTrackId = localStorage.getItem('usagi_voice_track') || 'tiantian';
+  let customAudioUrl = localStorage.getItem('usagi_custom_voice_url') || '';
+  let audioPlayer = null;
   let isSpeaking = false;
+  let voices = [];
   let currentUtterance = null;
+
+  // 11款高品质 TTSMaker 真人萌声 & 日漫声优原声 MP3 库 (零人机、零机械感)
+  const REAL_TRACKS = [
+    { id: 'tiantian', name: '🍬 甜甜萌妹', tag: 'TTSMaker 萌系治愈', file: 'voice_tiantian.mp3', emoji: '👧' },
+    { id: 'doudou', name: '🎀 糖豆萝莉', tag: 'TTSMaker 软萌童声', file: 'voice_doudou.mp3', emoji: '🎀' },
+    { id: 'lili', name: '🌸 莉莉少女', tag: 'TTSMaker 二次元萌音', file: 'voice_lili.mp3', emoji: '🌸' },
+    { id: 'mengmeng', name: '✨ 梦梦元气', tag: 'TTSMaker 活泼声优', file: 'voice_mengmeng.mp3', emoji: '✨' },
+    { id: 'xiaoxiao', name: '🍓 潇潇自然', tag: 'TTSMaker 爆款真人女声', file: 'voice_xiaoxiao.mp3', emoji: '🍓' },
+    { id: 'taiwan', name: '💖 菡颖甜心', tag: 'TTSMaker 台湾软萌女友', file: 'voice_taiwan.mp3', emoji: '💖' },
+    { id: 'tian', name: '🍵 小田知性', tag: 'TTSMaker 温柔陪伴', file: 'voice_tian.mp3', emoji: '🍵' },
+    { id: 'cheer', name: '🎌 がんばれ', tag: '日漫经典元气加油原声', file: 'voice_cheer.mp3', emoji: '📣' },
+    { id: 'uwu', name: '🐾 Uwu 撒娇', tag: '日漫经典可爱原声', file: 'voice_uwu.mp3', emoji: '🐾' },
+    { id: 'konnichiwa', name: '🌸 Konnichiwa', tag: '日漫经典温柔问候原声', file: 'voice_konnichiwa.mp3', emoji: '💐' },
+    { id: 'ara_ara', name: '👑 Ara Ara', tag: '日漫经典声优调侃原声', file: 'voice_ara_ara.mp3', emoji: '👑' }
+  ];
+
+  function getTrackFile(id) {
+    if (customAudioUrl && id === 'custom') return customAudioUrl;
+    const t = REAL_TRACKS.find(x => x.id === id);
+    return t ? t.file : 'voice_tiantian.mp3';
+  }
+
+  function playRealAudio(src) {
+    try {
+      if (audioPlayer) {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+      }
+      audioPlayer = new Audio(src);
+      audioPlayer.volume = 0.95;
+      audioPlayer.onplay = () => {
+        isSpeaking = true;
+        updateUI(true);
+      };
+      audioPlayer.onended = () => {
+        isSpeaking = false;
+        updateUI(false);
+      };
+      audioPlayer.onerror = () => {
+        isSpeaking = false;
+        updateUI(false);
+      };
+      const p = audioPlayer.play();
+      if (p && p.catch) {
+        p.catch(() => {
+          isSpeaking = false;
+          updateUI(false);
+        });
+      }
+    } catch (e) {
+      isSpeaking = false;
+      updateUI(false);
+    }
+  }
 
   function loadVoices() {
     if (!('speechSynthesis' in window)) return;
@@ -28,57 +89,45 @@ const UsagiVoice = (function () {
 
   function getBestVoice() {
     if (!voices || voices.length === 0) loadVoices();
-
-    // 优先选择最逼真、最自然的真人感中文女声（严格避开机械单调音）
-    const preferred = [
-      'Xiaoxiao',     // 微软晓晓 — 最自然生动的真人女声
-      'Xiaoyi',       // 微软小艺 — 清新自然
-      'Google 普通话', // Google Chrome 在线真人自然女声
-      'Tingting',     // 苹果 macOS / iOS 婷婷 (清澈真人女声)
-      'Mei-Jia',      // 苹果美佳
-      'Sin-ji',       // 粤语女声
-      'Natural',      // 微软自然神经网络语音
-      'Online'        // 在线高音质女声
-    ];
-
+    const preferred = ['Xiaoxiao', 'Xiaoyi', 'Google 普通话', 'Tingting', 'Mei-Jia', 'Sin-ji', 'Natural', 'Online'];
     for (const name of preferred) {
       const match = voices.find(v => v.name && v.name.includes(name) && (v.lang.startsWith('zh') || v.lang.startsWith('cmn')));
       if (match) return match;
     }
-
-    // 兜底策略：寻找非机械声的中文声音（严格排除 Huihui、Kangkang、Hanhan 等上古机械音）
     const nonRobotic = voices.find(v => {
       if (!v.lang || (!v.lang.startsWith('zh') && !v.lang.startsWith('cmn'))) return false;
       const n = v.name || '';
       return !n.includes('Huihui') && !n.includes('Kangkang') && !n.includes('Hanhan');
     });
     if (nonRobotic) return nonRobotic;
-
     const anyZh = voices.find(v => v.lang && (v.lang.startsWith('zh') || v.lang.startsWith('cmn')));
     return anyZh || null;
   }
 
   function speak(text, options = {}) {
     if (!isVoiceEnabled) return;
+
+    // 模式1：优先使用真实的 TTSMaker 真人/声优高保真 MP3 录音（零机械感、真实人声）
+    if (voiceMode === 'real') {
+      const src = options.clip ? options.clip : getTrackFile(currentTrackId);
+      playRealAudio(src);
+      return;
+    }
+
+    // 模式2：Web Speech 浏览器合成（作为次选模式）
     if (!('speechSynthesis' in window)) return;
     if (!text || !text.trim()) return;
 
     try {
-      // 灵动丝滑响应：每次新台词触发时流畅接续，无需强制死锁播报到底
       window.speechSynthesis.cancel();
-
-      // 过滤表情符号与特殊标记，保留自然语气标点
       const cleanText = text
         .replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]/gu, '')
         .replace(/[【】「」『』·_—]/g, ' ')
         .trim();
-
       if (!cleanText) return;
 
       const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = 'zh-CN';
-
-      // 动漫日漫声优声学参数：甜美清澈、元气活泼的萌系声线
       utterance.pitch = options.pitch || 1.30;
       utterance.rate = options.rate || 1.06;
       utterance.volume = options.volume || 1.0;
@@ -86,40 +135,28 @@ const UsagiVoice = (function () {
       const v = getBestVoice();
       if (v) utterance.voice = v;
 
-      utterance.onstart = () => {
-        isSpeaking = true;
-        updateUI(true);
-      };
-      utterance.onend = () => {
-        isSpeaking = false;
-        currentUtterance = null;
-        updateUI(false);
-      };
-      utterance.onerror = () => {
-        isSpeaking = false;
-        currentUtterance = null;
-        updateUI(false);
-      };
+      utterance.onstart = () => { isSpeaking = true; updateUI(true); };
+      utterance.onend = () => { isSpeaking = false; currentUtterance = null; updateUI(false); };
+      utterance.onerror = () => { isSpeaking = false; currentUtterance = null; updateUI(false); };
 
       currentUtterance = utterance;
-      if (window.UsagiSound && !options.silent) {
-        UsagiSound.pop();
-      }
-
+      if (window.UsagiSound && !options.silent) UsagiSound.pop();
       window.speechSynthesis.speak(utterance);
     } catch (e) {
-      console.warn("SpeechSynthesis error:", e);
       isSpeaking = false;
     }
   }
 
   function stop() {
+    if (audioPlayer) {
+      try { audioPlayer.pause(); } catch (e) { }
+    }
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      isSpeaking = false;
-      currentUtterance = null;
-      updateUI(false);
     }
+    isSpeaking = false;
+    currentUtterance = null;
+    updateUI(false);
   }
 
   function toggleVoice() {
@@ -128,7 +165,7 @@ const UsagiVoice = (function () {
     if (!isVoiceEnabled) stop();
     updateButtonUI();
     if (isVoiceEnabled) {
-      speak('乌萨奇真人陪伴语音已开启！我会贴心提醒芷萱哦~ ✨', { force: true });
+      speak('乌萨奇真实声优与真人伴读语音已开启！✨', { force: true });
     }
     return isVoiceEnabled;
   }
@@ -144,9 +181,116 @@ const UsagiVoice = (function () {
     const btn = document.getElementById('btn-speech-voice-toggle');
     if (btn) {
       btn.innerHTML = isVoiceEnabled ? '🔊 语音开启' : '🔇 语音静音';
-      btn.title = isVoiceEnabled ? '点击关闭语音播报' : '点击开启真人陪伴语音播报';
+      btn.title = isVoiceEnabled ? '点击关闭语音' : '点击开启真实声优/TTSMaker陪伴语音';
       btn.classList.toggle('text-pink-600', isVoiceEnabled);
       btn.classList.toggle('text-stone-400', !isVoiceEnabled);
+    }
+  }
+
+  // 声库控制台界面与交互
+  function openConsole() {
+    const modal = document.getElementById('usagi-voice-console-modal');
+    if (!modal) return;
+    renderTrackList();
+    syncConsoleInputs();
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  function closeConsole() {
+    const modal = document.getElementById('usagi-voice-console-modal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  function syncConsoleInputs() {
+    const radios = document.querySelectorAll('input[name="voice_mode_radio"]');
+    radios.forEach(r => { r.checked = (r.value === voiceMode); });
+    const urlInput = document.getElementById('input-custom-voice-url');
+    if (urlInput) urlInput.value = customAudioUrl || '';
+  }
+
+  function renderTrackList() {
+    const container = document.getElementById('voice-tracks-container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    REAL_TRACKS.forEach(track => {
+      const isSelected = (currentTrackId === track.id);
+      const card = document.createElement('div');
+      card.className = `p-2 rounded-2xl border transition-all flex items-center justify-between gap-2 ${
+        isSelected ? 'bg-pink-50 border-pink-300 shadow-xs' : 'bg-white border-stone-100 hover:border-pink-200'
+      }`;
+      card.innerHTML = `
+        <div class="flex items-center gap-2 cursor-pointer flex-1" onclick="UsagiVoice.selectTrack('${track.id}')">
+          <span class="text-xl">${track.emoji}</span>
+          <div>
+            <div class="text-xs font-black ${isSelected ? 'text-pink-700' : 'text-stone-700'}">${track.name}</div>
+            <div class="text-[10px] text-stone-400">${track.tag}</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button onclick="event.stopPropagation(); UsagiVoice.previewTrack('${track.file}')" class="px-2 py-1 rounded-xl bg-pink-100 hover:bg-pink-200 text-pink-700 font-bold text-[10px] transition-colors cursor-pointer" title="试听这段真人录音">
+            ▶️ 试听
+          </button>
+          <button onclick="event.stopPropagation(); UsagiVoice.selectTrack('${track.id}')" class="px-2 py-1 rounded-xl ${
+            isSelected ? 'bg-pink-600 text-white font-black' : 'bg-stone-100 text-stone-600 hover:bg-stone-200 font-bold'
+          } text-[10px] transition-all cursor-pointer">
+            ${isSelected ? '已选择' : '使用'}
+          </button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function selectTrack(id) {
+    currentTrackId = id;
+    voiceMode = 'real';
+    localStorage.setItem('usagi_voice_track', id);
+    localStorage.setItem('usagi_voice_mode', 'real');
+    renderTrackList();
+    syncConsoleInputs();
+    playRealAudio(getTrackFile(id));
+  }
+
+  function previewTrack(file) {
+    playRealAudio(file);
+  }
+
+  function setMode(m) {
+    voiceMode = m;
+    localStorage.setItem('usagi_voice_mode', m);
+    syncConsoleInputs();
+  }
+
+  function applyCustomUrl(url) {
+    if (!url || !url.trim()) return;
+    customAudioUrl = url.trim();
+    currentTrackId = 'custom';
+    voiceMode = 'real';
+    localStorage.setItem('usagi_custom_voice_url', customAudioUrl);
+    localStorage.setItem('usagi_voice_track', 'custom');
+    localStorage.setItem('usagi_voice_mode', 'real');
+    const status = document.getElementById('custom-file-status');
+    if (status) status.innerText = '已应用自定义链接！';
+    playRealAudio(customAudioUrl);
+  }
+
+  function handleFileUpload(file) {
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    applyCustomUrl(url);
+    const status = document.getElementById('custom-file-status');
+    if (status) status.innerText = file.name;
+  }
+
+  function testCurrentVoice() {
+    if (voiceMode === 'real') {
+      playRealAudio(getTrackFile(currentTrackId));
+    } else {
+      speak('芷萱！乌萨奇在呢，今天也要超级开心哦！🌸', { force: true });
     }
   }
 
@@ -154,10 +298,20 @@ const UsagiVoice = (function () {
     speak,
     stop,
     toggleVoice,
+    openConsole,
+    closeConsole,
+    renderTrackList,
+    selectTrack,
+    previewTrack,
+    setMode,
+    applyCustomUrl,
+    handleFileUpload,
+    testCurrentVoice,
     isSpeakingNow: () => isSpeaking,
     isEnabled: () => isVoiceEnabled,
     updateButtonUI,
-    getBestVoice
+    getBestVoice,
+    REAL_TRACKS
   };
 })();
 window.UsagiVoice = UsagiVoice;
