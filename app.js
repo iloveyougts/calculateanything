@@ -580,6 +580,9 @@ window.USAGI_APP = {
         appEl.classList.remove('hidden');
         appEl.classList.add('flex');
         appEl.style.display = 'flex';
+        if (window.UsagiPetManager && typeof UsagiPetManager.updatePositionStyle === 'function') {
+          setTimeout(() => UsagiPetManager.updatePositionStyle(), 60);
+        }
       }
 
       this.renderAll();
@@ -613,6 +616,9 @@ window.USAGI_APP = {
         appEl.classList.remove('hidden');
         appEl.classList.add('flex');
         appEl.style.display = 'flex';
+        if (window.UsagiPetManager && typeof UsagiPetManager.updatePositionStyle === 'function') {
+          setTimeout(() => UsagiPetManager.updatePositionStyle(), 60);
+        }
       }
     }
   },

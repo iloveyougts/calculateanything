@@ -865,13 +865,19 @@ const UsagiPetManager = (function () {
     window.addEventListener('resize', () => {
       cachedWindowWidth = window.innerWidth || 1024;
       cachedIsMobile = cachedWindowWidth < 768;
+      const mascotWidth = cachedIsMobile ? 76 : 96;
+      const minX = 12;
+      const maxX = Math.max(minX + 30, cachedWindowWidth - mascotWidth - 12);
+      if (posX > maxX) posX = maxX;
+      if (posX < minX) posX = minX;
       updatePositionStyle();
     }, { passive: true });
   }
 
   function init() {
-    const minX = 10;
-    const maxX = Math.max(minX + 30, cachedWindowWidth - (cachedIsMobile ? 95 : 120));
+    const mascotWidth = cachedIsMobile ? 76 : 96;
+    const minX = 12;
+    const maxX = Math.max(minX + 30, cachedWindowWidth - mascotWidth - 12);
     posX = maxX; // 保证开屏与刷新绝对处于右下角！
 
     const savedRoam = localStorage.getItem('usagi_pet_roam');
@@ -895,15 +901,6 @@ const UsagiPetManager = (function () {
     // 初始化姿势系统
     const savedPose = localStorage.getItem('usagi_pet_pose') || 'standing';
     setPose(savedPose, false);
-
-    // Window resize handler
-    window.addEventListener('resize', () => {
-      const minX = 10;
-      const isMobile = (window.innerWidth < 768);
-      const maxX = Math.max(minX + 30, (window.innerWidth || 1024) - (isMobile ? 95 : 120));
-      if (posX > maxX) posX = maxX;
-      updatePositionStyle();
-    });
 
     // Start movement loop
     startLoop();
@@ -951,8 +948,10 @@ const UsagiPetManager = (function () {
       if (isRoaming && !isMinimized && !isPaused && !isTossing && currentState !== 'sleep') {
         const container = document.getElementById('usagi-mascot-container');
         if (container) {
-          const minX = 10;
-          const maxX = Math.max(minX + 30, cachedWindowWidth - (cachedIsMobile ? 95 : 120));
+          const mascotWidth = cachedIsMobile ? 76 : 96;
+          const minX = 12;
+          const screenW = cachedWindowWidth || window.innerWidth || 1024;
+          const maxX = Math.max(minX + 30, screenW - mascotWidth - 12);
 
           posX += direction * speed;
 
@@ -1002,38 +1001,66 @@ const UsagiPetManager = (function () {
     const container = document.getElementById('usagi-mascot-container');
     if (!container) return;
 
-    if (lastMobileState !== cachedIsMobile) {
-      lastMobileState = cachedIsMobile;
-      container.style.bottom = cachedIsMobile ? 'calc(76px + env(safe-area-inset-bottom, 12px))' : '24px';
+    const screenW = window.innerWidth || document.documentElement.clientWidth || 430;
+    const isMobile = screenW < 768;
+
+    if (lastMobileState !== isMobile) {
+      lastMobileState = isMobile;
+      container.style.bottom = isMobile ? 'calc(76px + env(safe-area-inset-bottom, 12px))' : '24px';
     }
 
     if (isMinimized) {
       container.style.left = 'auto';
-      container.style.right = cachedIsMobile ? '12px' : '24px';
+      container.style.right = isMobile ? '12px' : '24px';
       return;
     }
 
-    const minX = 10;
-    const maxX = Math.max(minX + 30, cachedWindowWidth - (cachedIsMobile ? 95 : 120));
+    const mascotWidth = isMobile ? 76 : 96;
+    const minX = 12;
+    const maxX = Math.max(minX + 30, screenW - mascotWidth - 12);
 
     if (posX > maxX) posX = maxX;
     if (posX < minX) posX = minX;
     container.style.left = posX + 'px';
     container.style.right = 'auto';
 
+    // 1. 动态智能夹持对话气泡：无论乌萨奇走到最左还是最右，气泡永远100%保持在屏幕可视区域内，绝不出界截断！
     const bubble = document.getElementById('usagi-speech-bubble');
     if (bubble) {
+      bubble.style.position = 'relative';
       bubble.style.left = '0px';
-      const rect = bubble.getBoundingClientRect();
-      const screenW = cachedWindowWidth || window.innerWidth || 430;
-      if (rect.right > screenW - 12) {
-        const overflow = rect.right - (screenW - 12);
-        bubble.style.left = `-${overflow}px`;
-      } else if (rect.left < 12) {
-        const underflow = 12 - rect.left;
-        bubble.style.left = `${underflow}px`;
-      } else {
-        bubble.style.left = '0px';
+      const bRect = bubble.getBoundingClientRect();
+      if (bRect.width > 0) {
+        let shiftX = 0;
+        if (bRect.right > screenW - 10) {
+          shiftX = screenW - 10 - bRect.right;
+        } else if (bRect.left < 10) {
+          shiftX = 10 - bRect.left;
+        }
+        bubble.style.left = Math.round(shiftX) + 'px';
+
+        // 气泡下方的小三角箭头：始终精准对准乌萨奇头部中心
+        const mascotCenterX = posX + mascotWidth / 2;
+        const bubbleFinalLeft = bRect.left + shiftX;
+        const arrowLeftPx = Math.max(18, Math.min(bRect.width - 18, mascotCenterX - bubbleFinalLeft));
+        bubble.style.setProperty('--arrow-left', Math.round(arrowLeftPx) + 'px');
+      }
+    }
+
+    // 2. 动态智能夹持底部操作快捷栏：操作栏居中对齐乌萨奇脚下，靠近左右边缘时自动防溢出
+    const dock = document.getElementById('usagi-assistant-dock');
+    if (dock) {
+      dock.style.position = 'relative';
+      dock.style.left = '0px';
+      const dRect = dock.getBoundingClientRect();
+      if (dRect.width > 0) {
+        let dockShiftX = 0;
+        if (dRect.right > screenW - 8) {
+          dockShiftX = screenW - 8 - dRect.right;
+        } else if (dRect.left < 8) {
+          dockShiftX = 8 - dRect.left;
+        }
+        dock.style.left = Math.round(dockShiftX) + 'px';
       }
     }
   }
@@ -1829,8 +1856,9 @@ const UsagiPetManager = (function () {
       container.style.bottom = isMobile ? 'calc(76px + env(safe-area-inset-bottom, 12px))' : '24px';
 
       const screenW = window.innerWidth || 1024;
-      const minX = 10;
-      const maxX = Math.max(minX + 30, screenW - (isMobile ? 95 : 120));
+      const mascotWidth = isMobile ? 76 : 96;
+      const minX = 12;
+      const maxX = Math.max(minX + 30, screenW - mascotWidth - 12);
       posX = Math.max(minX, Math.min(maxX, finalX));
       container.style.left = posX + 'px';
       container.style.right = 'auto';
@@ -1841,7 +1869,6 @@ const UsagiPetManager = (function () {
       if (bubble) {
         bubble.style.top = '';
         bubble.style.bottom = '';
-        bubble.style.left = '';
         bubble.style.right = '';
       }
       const dock = document.getElementById('usagi-assistant-dock');
@@ -2057,7 +2084,10 @@ const UsagiPetManager = (function () {
     clearDizzyEffects,
     getPose: () => currentPose,
     getState: () => currentState,
-    isRoaming: () => isRoaming
+    isRoaming: () => isRoaming,
+    moveTo: (x) => { posX = x; updatePositionStyle(); },
+    getPosX: () => posX,
+    updatePositionStyle
   };
 })();
 window.UsagiPetManager = UsagiPetManager;

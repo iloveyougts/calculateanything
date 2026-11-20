@@ -452,7 +452,7 @@ body {
   content: '';
   position: absolute;
   top: 100%;
-  left: 50%;
+  left: var(--arrow-left, 50%);
   transform: translateX(-50%);
   border-width: 7px;
   border-style: solid;
@@ -980,8 +980,9 @@ body {
   .usagi-mascot-float {
     bottom: calc(76px + env(safe-area-inset-bottom, 12px)) !important;
     right: auto !important;
-    transform: scale(0.88);
-    transform-origin: bottom right;
+    width: 76px !important;
+    max-width: 76px !important;
+    overflow: visible !important;
     z-index: 9990 !important;
   }
 
@@ -1052,7 +1053,8 @@ body {
   bottom: 24px;
   right: auto !important;
   z-index: 9980;
-  width: max-content !important;
+  width: 96px !important;
+  max-width: 96px !important;
   height: auto !important;
   max-height: max-content !important;
   display: flex !important;
@@ -1065,6 +1067,7 @@ body {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   pointer-events: auto;
+  overflow: visible !important;
 }
 
 .usagi-mascot-float.roaming {
@@ -4568,6 +4571,9 @@ body {
   .usagi-mascot-float {
     bottom: calc(76px + env(safe-area-inset-bottom, 12px)) !important;
     right: auto !important;
+    width: 76px !important;
+    max-width: 76px !important;
+    overflow: visible !important;
     z-index: 9990 !important;
   }
 
@@ -4583,38 +4589,41 @@ body {
 
   /* Speech Bubble mobile styling: Crisp, big and perfectly readable */
   .speech-bubble {
-    max-width: calc(100vw - 28px) !important;
-    padding: 10px 14px !important;
-    font-size: 0.88rem !important;
-    line-height: 1.4 !important;
+    max-width: min(280px, calc(100vw - 24px)) !important;
+    width: max-content !important;
+    padding: 8px 12px !important;
+    font-size: 0.84rem !important;
+    line-height: 1.38 !important;
     font-weight: 700 !important;
     color: #292524 !important;
     border: 2px solid #f472b6 !important;
-    border-radius: 18px !important;
+    border-radius: 16px !important;
     box-shadow: 0 8px 24px rgba(244, 114, 182, 0.25) !important;
   }
 
   .speech-bubble #usagi-speech-text {
-    font-size: 0.86rem !important;
+    font-size: 0.84rem !important;
     font-weight: 700 !important;
   }
 
   .speech-bubble #usagi-speech-tag {
-    font-size: 0.74rem !important;
+    font-size: 0.72rem !important;
   }
 
   /* Assistant Dock: Thumb-friendly buttons */
   .usagi-assistant-dock {
-    padding: 4px 8px !important;
+    padding: 3px 6px !important;
     border-radius: 9999px !important;
-    gap: 4px !important;
+    gap: 3px !important;
     background: rgba(255, 255, 255, 0.95) !important;
     border: 1.5px solid #fbcfe8 !important;
+    white-space: nowrap !important;
+    width: max-content !important;
   }
 
   .usagi-assistant-dock button {
-    padding: 4px 8px !important;
-    font-size: 0.76rem !important;
+    padding: 3px 6px !important;
+    font-size: 11px !important;
     font-weight: 800 !important;
   }
 
