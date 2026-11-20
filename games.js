@@ -7,71 +7,13 @@
    0. USAGI KAWAII VOICE ENGINE (真人自然甜美女声 & 防截断守护引擎)
    ============================================================ */
 /* ============================================================
-   0. USAGI KAWAII VOICE ENGINE (TTSMaker 真人声库 & 声优高品质 MP3 引擎)
+   0. USAGI KAWAII VOICE ENGINE (纯净原声语录 · 自然甜美声优引擎 · 100%免费零试听)
    ============================================================ */
 const UsagiVoice = (function () {
   let isVoiceEnabled = localStorage.getItem('usagi_voice_enabled') !== 'false'; // 默认开启
-  let voiceMode = localStorage.getItem('usagi_voice_mode') || 'real'; // 'real' (MP3真实真人录音) 或 'tts'
-  let currentTrackId = localStorage.getItem('usagi_voice_track') || 'tiantian';
-  let customAudioUrl = localStorage.getItem('usagi_custom_voice_url') || '';
-  let audioPlayer = null;
   let isSpeaking = false;
   let voices = [];
   let currentUtterance = null;
-
-  // 11款高品质 TTSMaker 真人萌声 & 日漫声优原声 MP3 库 (零人机、零机械感)
-  const REAL_TRACKS = [
-    { id: 'tiantian', name: '🍬 甜甜萌妹', tag: 'TTSMaker 萌系治愈', file: 'voice_tiantian.mp3', emoji: '👧' },
-    { id: 'doudou', name: '🎀 糖豆萝莉', tag: 'TTSMaker 软萌童声', file: 'voice_doudou.mp3', emoji: '🎀' },
-    { id: 'lili', name: '🌸 莉莉少女', tag: 'TTSMaker 二次元萌音', file: 'voice_lili.mp3', emoji: '🌸' },
-    { id: 'mengmeng', name: '✨ 梦梦元气', tag: 'TTSMaker 活泼声优', file: 'voice_mengmeng.mp3', emoji: '✨' },
-    { id: 'xiaoxiao', name: '🍓 潇潇自然', tag: 'TTSMaker 爆款真人女声', file: 'voice_xiaoxiao.mp3', emoji: '🍓' },
-    { id: 'taiwan', name: '💖 菡颖甜心', tag: 'TTSMaker 台湾软萌女友', file: 'voice_taiwan.mp3', emoji: '💖' },
-    { id: 'tian', name: '🍵 小田知性', tag: 'TTSMaker 温柔陪伴', file: 'voice_tian.mp3', emoji: '🍵' },
-    { id: 'cheer', name: '🎌 がんばれ', tag: '日漫经典元气加油原声', file: 'voice_cheer.mp3', emoji: '📣' },
-    { id: 'uwu', name: '🐾 Uwu 撒娇', tag: '日漫经典可爱原声', file: 'voice_uwu.mp3', emoji: '🐾' },
-    { id: 'konnichiwa', name: '🌸 Konnichiwa', tag: '日漫经典温柔问候原声', file: 'voice_konnichiwa.mp3', emoji: '💐' },
-    { id: 'ara_ara', name: '👑 Ara Ara', tag: '日漫经典声优调侃原声', file: 'voice_ara_ara.mp3', emoji: '👑' }
-  ];
-
-  function getTrackFile(id) {
-    if (customAudioUrl && id === 'custom') return customAudioUrl;
-    const t = REAL_TRACKS.find(x => x.id === id);
-    return t ? t.file : 'voice_tiantian.mp3';
-  }
-
-  function playRealAudio(src) {
-    try {
-      if (audioPlayer) {
-        audioPlayer.pause();
-        audioPlayer.currentTime = 0;
-      }
-      audioPlayer = new Audio(src);
-      audioPlayer.volume = 0.95;
-      audioPlayer.onplay = () => {
-        isSpeaking = true;
-        updateUI(true);
-      };
-      audioPlayer.onended = () => {
-        isSpeaking = false;
-        updateUI(false);
-      };
-      audioPlayer.onerror = () => {
-        isSpeaking = false;
-        updateUI(false);
-      };
-      const p = audioPlayer.play();
-      if (p && p.catch) {
-        p.catch(() => {
-          isSpeaking = false;
-          updateUI(false);
-        });
-      }
-    } catch (e) {
-      isSpeaking = false;
-      updateUI(false);
-    }
-  }
 
   function loadVoices() {
     if (!('speechSynthesis' in window)) return;
@@ -87,72 +29,94 @@ const UsagiVoice = (function () {
     }
   }
 
+  // 严选自然、甜美、无机械感的真人与声优级女声 (优先微软与谷歌神经网络女声，坚决过滤古早人机机械音)
   function getBestVoice() {
     if (!voices || voices.length === 0) loadVoices();
-    const preferred = ['Xiaoxiao', 'Xiaoyi', 'Google 普通话', 'Tingting', 'Mei-Jia', 'Sin-ji', 'Natural', 'Online'];
-    for (const name of preferred) {
-      const match = voices.find(v => v.name && v.name.includes(name) && (v.lang.startsWith('zh') || v.lang.startsWith('cmn')));
+
+    // 1. 优先匹配现代高质量神经网络声优女声 (Edge/Chrome/Android/iOS 顶级声线)
+    const seiyuuKeywords = [
+      'Xiaoxiao', 'Xiaoyi', 'Yunxi', 'Xiaochen', 'HsiaoChen',
+      'Google 普通话', 'Google 汉语', 'zh-CN-x-ccc',
+      'Ting-Ting', 'Sin-ji', 'Mei-Jia', 'Natural', 'Online'
+    ];
+    for (const kw of seiyuuKeywords) {
+      const match = voices.find(v => {
+        if (!v.name) return false;
+        const matchesLang = !v.lang || v.lang.startsWith('zh') || v.lang.startsWith('cmn');
+        return matchesLang && v.name.toLowerCase().includes(kw.toLowerCase());
+      });
       if (match) return match;
     }
-    const nonRobotic = voices.find(v => {
+
+    // 2. 备选：任意非古早机械音的中文声音 (坚决屏蔽老旧 Huihui/Kangkang/Hanhan 机械声)
+    const naturalZh = voices.find(v => {
       if (!v.lang || (!v.lang.startsWith('zh') && !v.lang.startsWith('cmn'))) return false;
-      const n = v.name || '';
-      return !n.includes('Huihui') && !n.includes('Kangkang') && !n.includes('Hanhan');
+      const n = (v.name || '').toLowerCase();
+      return !n.includes('huihui') && !n.includes('kangkang') && !n.includes('hanhan');
     });
-    if (nonRobotic) return nonRobotic;
+    if (naturalZh) return naturalZh;
+
+    // 3. 保底中文
     const anyZh = voices.find(v => v.lang && (v.lang.startsWith('zh') || v.lang.startsWith('cmn')));
     return anyZh || null;
   }
 
+  // 核心：精准动态跟随乌萨奇当下的每一句温馨语录播报，绝不播放无关广告试听音频
   function speak(text, options = {}) {
     if (!isVoiceEnabled) return;
-
-    // 模式1：优先使用真实的 TTSMaker 真人/声优高保真 MP3 录音（零机械感、真实人声）
-    if (voiceMode === 'real') {
-      const src = options.clip ? options.clip : getTrackFile(currentTrackId);
-      playRealAudio(src);
-      return;
-    }
-
-    // 模式2：Web Speech 浏览器合成（作为次选模式）
     if (!('speechSynthesis' in window)) return;
     if (!text || !text.trim()) return;
 
     try {
+      // 停止上一句播报，保证随时切换动作时立即更新，绝不死锁或卡顿
       window.speechSynthesis.cancel();
+
+      // 智能净化台词文本：剔除Emoji与复杂标点符号，让发音自然灵动、字正腔圆
       const cleanText = text
         .replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]/gu, '')
-        .replace(/[【】「」『』·_—]/g, ' ')
+        .replace(/[【】「」『』·_—★☆✦✧]/g, ' ')
+        .replace(/\s+/g, ' ')
         .trim();
+
       if (!cleanText) return;
 
       const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = 'zh-CN';
-      utterance.pitch = options.pitch || 1.30;
-      utterance.rate = options.rate || 1.06;
+      // 少女日漫声优声线参数调谐：音调 1.25（轻快清甜），语速 1.04（活泼自然）
+      utterance.pitch = options.pitch || 1.25;
+      utterance.rate = options.rate || 1.04;
       utterance.volume = options.volume || 1.0;
 
       const v = getBestVoice();
       if (v) utterance.voice = v;
 
-      utterance.onstart = () => { isSpeaking = true; updateUI(true); };
-      utterance.onend = () => { isSpeaking = false; currentUtterance = null; updateUI(false); };
-      utterance.onerror = () => { isSpeaking = false; currentUtterance = null; updateUI(false); };
+      utterance.onstart = () => {
+        isSpeaking = true;
+        updateUI(true);
+      };
+      utterance.onend = () => {
+        isSpeaking = false;
+        currentUtterance = null;
+        updateUI(false);
+      };
+      utterance.onerror = () => {
+        isSpeaking = false;
+        currentUtterance = null;
+        updateUI(false);
+      };
 
       currentUtterance = utterance;
       if (window.UsagiSound && !options.silent) UsagiSound.pop();
       window.speechSynthesis.speak(utterance);
     } catch (e) {
       isSpeaking = false;
+      updateUI(false);
     }
   }
 
   function stop() {
-    if (audioPlayer) {
-      try { audioPlayer.pause(); } catch (e) { }
-    }
     if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
+      try { window.speechSynthesis.cancel(); } catch (e) { }
     }
     isSpeaking = false;
     currentUtterance = null;
@@ -162,10 +126,12 @@ const UsagiVoice = (function () {
   function toggleVoice() {
     isVoiceEnabled = !isVoiceEnabled;
     localStorage.setItem('usagi_voice_enabled', isVoiceEnabled ? 'true' : 'false');
-    if (!isVoiceEnabled) stop();
+    if (!isVoiceEnabled) {
+      stop();
+    }
     updateButtonUI();
     if (isVoiceEnabled) {
-      speak('乌萨奇真实声优与真人伴读语音已开启！✨', { force: true });
+      speak('乌萨奇在呢！芷萱今天也要超级开心哦！✨', { force: true });
     }
     return isVoiceEnabled;
   }
@@ -181,137 +147,33 @@ const UsagiVoice = (function () {
     const btn = document.getElementById('btn-speech-voice-toggle');
     if (btn) {
       btn.innerHTML = isVoiceEnabled ? '🔊 语音开启' : '🔇 语音静音';
-      btn.title = isVoiceEnabled ? '点击关闭语音' : '点击开启真实声优/TTSMaker陪伴语音';
+      btn.title = isVoiceEnabled ? '点击关闭语录语音' : '点击开启乌萨奇甜美语录伴读';
       btn.classList.toggle('text-pink-600', isVoiceEnabled);
       btn.classList.toggle('text-stone-400', !isVoiceEnabled);
     }
   }
 
-  // 声库控制台界面与交互
-  function openConsole() {
-    const modal = document.getElementById('usagi-voice-console-modal');
-    if (!modal) return;
-    renderTrackList();
-    syncConsoleInputs();
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-  }
-
-  function closeConsole() {
-    const modal = document.getElementById('usagi-voice-console-modal');
-    if (!modal) return;
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-  }
-
-  function syncConsoleInputs() {
-    const radios = document.querySelectorAll('input[name="voice_mode_radio"]');
-    radios.forEach(r => { r.checked = (r.value === voiceMode); });
-    const urlInput = document.getElementById('input-custom-voice-url');
-    if (urlInput) urlInput.value = customAudioUrl || '';
-  }
-
-  function renderTrackList() {
-    const container = document.getElementById('voice-tracks-container');
-    if (!container) return;
-    container.innerHTML = '';
-
-    REAL_TRACKS.forEach(track => {
-      const isSelected = (currentTrackId === track.id);
-      const card = document.createElement('div');
-      card.className = `p-2 rounded-2xl border transition-all flex items-center justify-between gap-2 ${
-        isSelected ? 'bg-pink-50 border-pink-300 shadow-xs' : 'bg-white border-stone-100 hover:border-pink-200'
-      }`;
-      card.innerHTML = `
-        <div class="flex items-center gap-2 cursor-pointer flex-1" onclick="UsagiVoice.selectTrack('${track.id}')">
-          <span class="text-xl">${track.emoji}</span>
-          <div>
-            <div class="text-xs font-black ${isSelected ? 'text-pink-700' : 'text-stone-700'}">${track.name}</div>
-            <div class="text-[10px] text-stone-400">${track.tag}</div>
-          </div>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <button onclick="event.stopPropagation(); UsagiVoice.previewTrack('${track.file}')" class="px-2 py-1 rounded-xl bg-pink-100 hover:bg-pink-200 text-pink-700 font-bold text-[10px] transition-colors cursor-pointer" title="试听这段真人录音">
-            ▶️ 试听
-          </button>
-          <button onclick="event.stopPropagation(); UsagiVoice.selectTrack('${track.id}')" class="px-2 py-1 rounded-xl ${
-            isSelected ? 'bg-pink-600 text-white font-black' : 'bg-stone-100 text-stone-600 hover:bg-stone-200 font-bold'
-          } text-[10px] transition-all cursor-pointer">
-            ${isSelected ? '已选择' : '使用'}
-          </button>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-  }
-
-  function selectTrack(id) {
-    currentTrackId = id;
-    voiceMode = 'real';
-    localStorage.setItem('usagi_voice_track', id);
-    localStorage.setItem('usagi_voice_mode', 'real');
-    renderTrackList();
-    syncConsoleInputs();
-    playRealAudio(getTrackFile(id));
-  }
-
-  function previewTrack(file) {
-    playRealAudio(file);
-  }
-
-  function setMode(m) {
-    voiceMode = m;
-    localStorage.setItem('usagi_voice_mode', m);
-    syncConsoleInputs();
-  }
-
-  function applyCustomUrl(url) {
-    if (!url || !url.trim()) return;
-    customAudioUrl = url.trim();
-    currentTrackId = 'custom';
-    voiceMode = 'real';
-    localStorage.setItem('usagi_custom_voice_url', customAudioUrl);
-    localStorage.setItem('usagi_voice_track', 'custom');
-    localStorage.setItem('usagi_voice_mode', 'real');
-    const status = document.getElementById('custom-file-status');
-    if (status) status.innerText = '已应用自定义链接！';
-    playRealAudio(customAudioUrl);
-  }
-
-  function handleFileUpload(file) {
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    applyCustomUrl(url);
-    const status = document.getElementById('custom-file-status');
-    if (status) status.innerText = file.name;
-  }
-
   function testCurrentVoice() {
-    if (voiceMode === 'real') {
-      playRealAudio(getTrackFile(currentTrackId));
-    } else {
-      speak('芷萱！乌萨奇在呢，今天也要超级开心哦！🌸', { force: true });
-    }
+    speak('芷萱！乌萨奇在呢，今天也要超级开心哦！🌸', { force: true });
   }
 
   return {
     speak,
     stop,
     toggleVoice,
-    openConsole,
-    closeConsole,
-    renderTrackList,
-    selectTrack,
-    previewTrack,
-    setMode,
-    applyCustomUrl,
-    handleFileUpload,
     testCurrentVoice,
     isSpeakingNow: () => isSpeaking,
     isEnabled: () => isVoiceEnabled,
     updateButtonUI,
     getBestVoice,
-    REAL_TRACKS
+    openConsole: () => {},
+    closeConsole: () => {},
+    renderTrackList: () => {},
+    selectTrack: () => {},
+    previewTrack: () => {},
+    applyCustomUrl: () => {},
+    handleFileUpload: () => {},
+    REAL_TRACKS: []
   };
 })();
 window.UsagiVoice = UsagiVoice;
@@ -1271,6 +1133,54 @@ const UsagiPetManager = (function () {
     speak(item.tag, item.text, true);
   }
 
+  // ============================================================
+  // 乌萨奇可爱头顶金星 + 眼睛经典日漫蓝色大蚊香旋涡眼 (🌀 🌀)
+  // ============================================================
+  function spawnDizzyEffects() {
+    const actorBox = document.getElementById('usagi-actor-box');
+    if (!actorBox) return;
+    clearDizzyEffects();
+
+    // 1. 头顶紧贴兔耳端小金星
+    const starsWrapper = document.createElement('div');
+    starsWrapper.className = 'usagi-dizzy-stars';
+    ['✨', '⭐', '✨'].forEach(emoji => {
+      const s = document.createElement('span');
+      s.className = 'usagi-dizzy-star';
+      s.textContent = emoji;
+      starsWrapper.appendChild(s);
+    });
+    actorBox.appendChild(starsWrapper);
+
+    // 2. 眼睛经典日漫萌系蓝色大蚊香旋涡眼 (🌀 🌀)
+    const eyesWrapper = document.createElement('div');
+    eyesWrapper.className = 'usagi-spiral-eyes';
+    const eye1 = document.createElement('span');
+    eye1.className = 'usagi-spiral-eye';
+    eye1.textContent = '🌀';
+    const eye2 = document.createElement('span');
+    eye2.className = 'usagi-spiral-eye';
+    eye2.textContent = '🌀';
+    eyesWrapper.appendChild(eye1);
+    eyesWrapper.appendChild(eye2);
+    actorBox.appendChild(eyesWrapper);
+
+    if (window.UsagiSound && UsagiSound.dizzyStarsWarble) {
+      UsagiSound.dizzyStarsWarble();
+    }
+  }
+
+  function clearDizzyEffects() {
+    const actorBox = document.getElementById('usagi-actor-box');
+    if (!actorBox) return;
+    const stars = actorBox.querySelector('.usagi-dizzy-stars');
+    if (stars) stars.remove();
+    const eyes = actorBox.querySelector('.usagi-spiral-eyes');
+    if (eyes) eyes.remove();
+    const sweat = actorBox.querySelector('.usagi-dizzy-sweat');
+    if (sweat) sweat.remove();
+  }
+
   let isTossing = false;
   let tossAnimId = null;
   let wasRoamingBeforeDrag = false;
@@ -1469,54 +1379,6 @@ const UsagiPetManager = (function () {
         document.body.appendChild(dust);
         setTimeout(() => { if (dust.parentNode) dust.parentNode.removeChild(dust); }, 550);
       }
-    }
-
-    // ============================================================
-    // 乌萨奇可爱头顶金星 + 眼睛经典日漫蓝色大蚊香旋涡眼 (🌀 🌀)
-    // ============================================================
-    function spawnDizzyEffects() {
-      const actorBox = document.getElementById('usagi-actor-box');
-      if (!actorBox) return;
-      clearDizzyEffects();
-
-      // 1. 头顶紧贴兔耳端小金星
-      const starsWrapper = document.createElement('div');
-      starsWrapper.className = 'usagi-dizzy-stars';
-      ['✨', '⭐', '✨'].forEach(emoji => {
-        const s = document.createElement('span');
-        s.className = 'usagi-dizzy-star';
-        s.textContent = emoji;
-        starsWrapper.appendChild(s);
-      });
-      actorBox.appendChild(starsWrapper);
-
-      // 2. 眼睛经典日漫萌系蓝色大蚊香旋涡眼 (🌀 🌀)
-      const eyesWrapper = document.createElement('div');
-      eyesWrapper.className = 'usagi-spiral-eyes';
-      const eye1 = document.createElement('span');
-      eye1.className = 'usagi-spiral-eye';
-      eye1.textContent = '🌀';
-      const eye2 = document.createElement('span');
-      eye2.className = 'usagi-spiral-eye';
-      eye2.textContent = '🌀';
-      eyesWrapper.appendChild(eye1);
-      eyesWrapper.appendChild(eye2);
-      actorBox.appendChild(eyesWrapper);
-
-      if (window.UsagiSound && UsagiSound.dizzyStarsWarble) {
-        UsagiSound.dizzyStarsWarble();
-      }
-    }
-
-    function clearDizzyEffects() {
-      const actorBox = document.getElementById('usagi-actor-box');
-      if (!actorBox) return;
-      const stars = actorBox.querySelector('.usagi-dizzy-stars');
-      if (stars) stars.remove();
-      const eyes = actorBox.querySelector('.usagi-spiral-eyes');
-      if (eyes) eyes.remove();
-      const sweat = actorBox.querySelector('.usagi-dizzy-sweat');
-      if (sweat) sweat.remove();
     }
 
     // ============================================================
@@ -1903,6 +1765,8 @@ const UsagiPetManager = (function () {
     checkDailyReminders,
     setPose,
     cyclePose,
+    spawnDizzyEffects,
+    clearDizzyEffects,
     getPose: () => currentPose,
     getState: () => currentState,
     isRoaming: () => isRoaming
