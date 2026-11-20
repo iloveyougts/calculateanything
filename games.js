@@ -63,13 +63,8 @@ const UsagiVoice = (function () {
     if (!('speechSynthesis' in window)) return;
     if (!text || !text.trim()) return;
 
-    // 【核心防截断机制】：如果当前正在讲话，坚决不允许截断切成两半！
-    // 必须等当前一句话完整讲完，绝不发生“话讲一半就被下一句打断”的问题！
-    if (isSpeaking && !options.force) {
-      return;
-    }
-
     try {
+      // 灵动丝滑响应：每次新台词触发时流畅接续，无需强制死锁播报到底
       window.speechSynthesis.cancel();
 
       // 过滤表情符号与特殊标记，保留自然语气标点
@@ -83,9 +78,9 @@ const UsagiVoice = (function () {
       const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = 'zh-CN';
 
-      // 真人自然声学参数：正常自然人声音调与语速，毫无机械人机感！
-      utterance.pitch = options.pitch || 1.0;
-      utterance.rate = options.rate || 1.0;
+      // 动漫日漫声优声学参数：甜美清澈、元气活泼的萌系声线
+      utterance.pitch = options.pitch || 1.30;
+      utterance.rate = options.rate || 1.06;
       utterance.volume = options.volume || 1.0;
 
       const v = getBestVoice();
@@ -672,9 +667,9 @@ const UsagiPetManager = (function () {
         }
       }
 
-      // Check periodic automatic reminder (every 50s，严格确保当前没在说话、没被锁定时才提醒，绝不打断当前台词)
+      // Check periodic automatic reminder (every 50s，当前没在说话时提醒)
       const now = Date.now();
-      if (now - lastReminderTime > 50000 && !isMinimized && !isTossing && now > speechLockUntil && (!window.UsagiVoice || !UsagiVoice.isSpeakingNow())) {
+      if (now - lastReminderTime > 50000 && !isMinimized && !isTossing && (!window.UsagiVoice || !UsagiVoice.isSpeakingNow())) {
         lastReminderTime = now;
         speakRandomSweet();
       }
@@ -837,19 +832,12 @@ const UsagiPetManager = (function () {
     }
   }
 
-  let speechLockUntil = 0;
-
   function speak(tag, message, autoVoice = false, options = {}) {
-    const now = Date.now();
-    // 【核心防截断守护】：如果当前正在说话或锁定期未结束，且不是用户强制动作，严禁截断切碎句子！
-    if (now < speechLockUntil && !options.force) {
-      return;
-    }
-
     const tagEl = document.getElementById('usagi-speech-tag');
     const textEl = document.getElementById('usagi-speech-text');
     const bubble = document.getElementById('usagi-speech-bubble');
 
+    // 始终完整显示整句台词，让芷萱随时一眼看完完整温暖文字
     if (tagEl) tagEl.innerText = tag;
     if (textEl) textEl.innerText = message;
     else if (bubble) bubble.innerText = message;
@@ -860,10 +848,7 @@ const UsagiPetManager = (function () {
       bubble.classList.add('bubble-pop');
     }
 
-    // 锁定气泡显示时间：中文自然阅读/说话速度约 3-4字/秒，至少锁住5秒，确保整句播完、读完！
-    const lockMs = Math.max(5000, (message || '').length * 350);
-    speechLockUntil = now + lockMs;
-
+    // 语音灵动播报（不强制死锁，交互流畅无阻碍）
     if (autoVoice && window.UsagiVoice) {
       UsagiVoice.speak(message, options);
     }
@@ -1333,13 +1318,14 @@ const UsagiPetManager = (function () {
     }
 
     // ============================================================
-    // 乌萨奇可爱头顶金星闪烁 (精致微型，紧贴兔耳顶端，绝不遮挡脸庞或上方卡片)
+    // 乌萨奇可爱头顶金星 + 眼睛经典日漫蓝色大蚊香旋涡眼 (🌀 🌀)
     // ============================================================
     function spawnDizzyEffects() {
       const actorBox = document.getElementById('usagi-actor-box');
       if (!actorBox) return;
       clearDizzyEffects();
 
+      // 1. 头顶紧贴兔耳端小金星
       const starsWrapper = document.createElement('div');
       starsWrapper.className = 'usagi-dizzy-stars';
       ['✨', '⭐', '✨'].forEach(emoji => {
@@ -1349,6 +1335,19 @@ const UsagiPetManager = (function () {
         starsWrapper.appendChild(s);
       });
       actorBox.appendChild(starsWrapper);
+
+      // 2. 眼睛经典日漫萌系蓝色大蚊香旋涡眼 (🌀 🌀)
+      const eyesWrapper = document.createElement('div');
+      eyesWrapper.className = 'usagi-spiral-eyes';
+      const eye1 = document.createElement('span');
+      eye1.className = 'usagi-spiral-eye';
+      eye1.textContent = '🌀';
+      const eye2 = document.createElement('span');
+      eye2.className = 'usagi-spiral-eye';
+      eye2.textContent = '🌀';
+      eyesWrapper.appendChild(eye1);
+      eyesWrapper.appendChild(eye2);
+      actorBox.appendChild(eyesWrapper);
 
       if (window.UsagiSound && UsagiSound.dizzyStarsWarble) {
         UsagiSound.dizzyStarsWarble();
@@ -1599,7 +1598,7 @@ const UsagiPetManager = (function () {
           // 触发兔耳顶端精致小金星光环
           spawnDizzyEffects();
 
-          // 700ms后自动收起光环，彻底站稳，恢复直立姿态
+          // 950ms后自动收起晕眩光环与旋涡眼，彻底站稳，恢复直立姿态
           setTimeout(() => {
             clearDizzyEffects();
             if (mascotImg) {
@@ -1610,7 +1609,7 @@ const UsagiPetManager = (function () {
             if (actorBox) actorBox.style.transform = '';
             if (container) container.style.transition = '';
             setPose(currentPose || 'standing', false);
-          }, 700);
+          }, 950);
 
           // 【核心关键】：只完整讲一整句完整的真人温馨陪伴语，绝不打断！
           const landingWarmQuotes = [
