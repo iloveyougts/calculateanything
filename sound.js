@@ -394,6 +394,69 @@ const UsagiSound = (function () {
       } catch (e) {}
     },
 
+    // 乌萨奇从高处跌落的可爱惊叫 + 着地冲击音效
+    tossLand: function (impactForce = 1.0) {
+      if (isMuted) return;
+      try {
+        initCtx();
+        const now = audioCtx.currentTime;
+        const force = Math.min(1.5, Math.max(0.3, impactForce));
+
+        // 1. 着地冲击低频震动 (地面震荡感)
+        const impactOsc = audioCtx.createOscillator();
+        const impactGain = audioCtx.createGain();
+        impactOsc.type = 'sine';
+        impactOsc.frequency.setValueAtTime(180 * force, now);
+        impactOsc.frequency.exponentialRampToValueAtTime(35, now + 0.18);
+        impactGain.gain.setValueAtTime(0.4 * force, now);
+        impactGain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+        impactOsc.connect(impactGain);
+        impactGain.connect(audioCtx.destination);
+        impactOsc.start(now);
+        impactOsc.stop(now + 0.21);
+
+        // 2. 卡通弹性回弹音 (Boing squish)
+        const boingOsc = audioCtx.createOscillator();
+        const boingGain = audioCtx.createGain();
+        boingOsc.type = 'sine';
+        boingOsc.frequency.setValueAtTime(220, now + 0.04);
+        boingOsc.frequency.exponentialRampToValueAtTime(560, now + 0.12);
+        boingOsc.frequency.exponentialRampToValueAtTime(340, now + 0.22);
+        boingGain.gain.setValueAtTime(0.18 * force, now + 0.04);
+        boingGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        boingOsc.connect(boingGain);
+        boingGain.connect(audioCtx.destination);
+        boingOsc.start(now + 0.04);
+        boingOsc.stop(now + 0.31);
+
+        // 3. 可爱星星散落音 (高频碎闪)
+        [1046.50, 1318.51, 1567.98].forEach((freq, i) => {
+          setTimeout(() => playTone(freq, 'sine', 0.12, 0.06 * force), 60 + i * 35);
+        });
+      } catch (e) {}
+    },
+
+    // 乌萨奇飞行中可爱的呼呼声
+    tossFlying: function () {
+      if (isMuted) return;
+      try {
+        initCtx();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, now);
+        osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
+        osc.frequency.exponentialRampToValueAtTime(350, now + 0.4);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.4);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.4);
+      } catch (e) {}
+    },
+
     toggleMute: function () {
       isMuted = !isMuted;
       localStorage.setItem('usagi_muted', isMuted);

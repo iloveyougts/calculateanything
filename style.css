@@ -5158,6 +5158,7 @@ body {
   transition: none !important;
 }
 
+/* 旧的简单弹跳保留作为轻落地用 */
 .usagi-bounce-squish {
   animation: usagiSquishBounce 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
 }
@@ -5181,6 +5182,258 @@ body {
 
   100% {
     transform: scale(1, 1);
+  }
+}
+
+/* ============================================================
+   USAGI EPIC TOSS LANDING SYSTEM (专业跌落跌倒与爬起全套特效)
+   ============================================================ */
+
+/* 空中翻滚动画 */
+.usagi-tumbling #usagi-mascot-img {
+  animation: usagiTumble 0.45s linear infinite !important;
+  filter: drop-shadow(0 0 14px rgba(255, 182, 193, 0.7)) !important;
+}
+
+@keyframes usagiTumble {
+  0% { transform: rotate(0deg) scale(0.95); }
+  25% { transform: rotate(90deg) scale(1.04); }
+  50% { transform: rotate(180deg) scale(0.95); }
+  75% { transform: rotate(270deg) scale(1.04); }
+  100% { transform: rotate(360deg) scale(0.95); }
+}
+
+/* 高速翻滚时更快的旋转 + 惊慌光晕 */
+.usagi-tumbling-fast #usagi-mascot-img {
+  animation: usagiTumbleFast 0.24s linear infinite !important;
+  filter: drop-shadow(0 0 20px rgba(244, 63, 94, 0.6)) drop-shadow(0 0 35px rgba(255, 214, 10, 0.5)) !important;
+}
+
+@keyframes usagiTumbleFast {
+  0% { transform: rotate(0deg) scale(0.9, 1.1); }
+  25% { transform: rotate(90deg) scale(1.08, 0.9); }
+  50% { transform: rotate(180deg) scale(0.9, 1.1); }
+  75% { transform: rotate(270deg) scale(1.08, 0.9); }
+  100% { transform: rotate(360deg) scale(0.9, 1.1); }
+}
+
+/* 跌倒趴地特效 (跌落在地，像软趴趴棉花糖一样摔倒) */
+.usagi-stumble-fall #usagi-mascot-img {
+  animation: usagiStumbleFall 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+  transform-origin: center bottom !important;
+}
+
+@keyframes usagiStumbleFall {
+  0% {
+    transform: scale(1, 1) translateY(0) rotate(0deg);
+  }
+  15% {
+    /* 触地扁压 */
+    transform: scale(1.6, 0.45) translateY(12px) rotate(-8deg);
+  }
+  35% {
+    /* 反弹并向侧边倾倒跌跤 */
+    transform: scale(0.85, 1.25) translateY(-22px) rotate(25deg);
+  }
+  55% {
+    /* 软摔趴倒在地上 */
+    transform: scale(1.35, 0.6) translateY(8px) rotate(65deg);
+  }
+  75% {
+    /* 趴在地上弹一下 */
+    transform: scale(1.15, 0.8) translateY(2px) rotate(58deg);
+  }
+  100% {
+    /* 彻底趴在地上眼冒金星 */
+    transform: scale(1.25, 0.68) translateY(6px) rotate(60deg);
+  }
+}
+
+/* 眩晕微颤抖 */
+.usagi-dizzy-lying #usagi-mascot-img {
+  animation: usagiDizzyTremble 0.25s ease-in-out infinite alternate !important;
+  transform: scale(1.25, 0.68) translateY(6px) rotate(60deg) !important;
+  transform-origin: center bottom !important;
+}
+
+@keyframes usagiDizzyTremble {
+  0% { transform: scale(1.25, 0.68) translateY(6px) rotate(58deg); }
+  100% { transform: scale(1.25, 0.68) translateY(6px) rotate(63deg); }
+}
+
+/* 爬起来拍拍灰尘跳跃动画 */
+.usagi-get-up-hop #usagi-mascot-img {
+  animation: usagiGetUpHop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+  transform-origin: center bottom !important;
+}
+
+@keyframes usagiGetUpHop {
+  0% {
+    transform: scale(1.25, 0.68) translateY(6px) rotate(60deg);
+  }
+  30% {
+    /* 蓄力蹲起 */
+    transform: scale(1.3, 0.7) translateY(4px) rotate(15deg);
+  }
+  60% {
+    /* 欢快跳起！甩掉灰尘 */
+    transform: scale(0.9, 1.25) translateY(-24px) rotate(-5deg);
+  }
+  85% {
+    /* 落地缓冲 */
+    transform: scale(1.15, 0.9) translateY(2px) rotate(2deg);
+  }
+  100% {
+    /* 完美直立 */
+    transform: scale(1, 1) translateY(0) rotate(0deg);
+  }
+}
+
+/* 超级重击着陆 — 经典大弹跳 */
+.usagi-epic-land #usagi-mascot-img {
+  animation: usagiEpicLand 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+}
+
+@keyframes usagiEpicLand {
+  0% { transform: scale(1, 1) translateY(0); }
+  8% { transform: scale(1.55, 0.5) translateY(6px); }  /* 超扁压 */
+  18% { transform: scale(0.7, 1.4) translateY(-18px); }  /* 大反弹 */
+  28% { transform: scale(1.2, 0.72) translateY(3px); }  /* 二次压扁 */
+  38% { transform: scale(0.88, 1.18) translateY(-8px); }  /* 小反弹 */
+  52% { transform: scale(1.1, 0.88) translateY(1px); }  /* 微压 */
+  68% { transform: scale(0.96, 1.06) translateY(-2px); }  /* 微弹 */
+  84% { transform: scale(1.02, 0.98) translateY(0); }
+  100% { transform: scale(1, 1) translateY(0); }
+}
+
+/* 着陆冲击震屏 */
+@keyframes tossScreenShake {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-4px, 3px); }
+  20% { transform: translate(5px, -2px); }
+  30% { transform: translate(-3px, 4px); }
+  40% { transform: translate(4px, -3px); }
+  50% { transform: translate(-2px, 2px); }
+  60% { transform: translate(3px, -1px); }
+  70% { transform: translate(-1px, 2px); }
+  80% { transform: translate(1px, -1px); }
+  90% { transform: translate(-1px, 0); }
+  100% { transform: translate(0, 0); }
+}
+
+.usagi-screen-shake {
+  animation: tossScreenShake 0.4s ease-out !important;
+}
+
+/* 着陆冲击粒子 (星星/爱心/尘埃) */
+.usagi-impact-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10001;
+  font-size: 20px;
+  animation: impactParticleBurst 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes impactParticleBurst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.3) rotate(0deg);
+  }
+  30% {
+    opacity: 1;
+    transform: translate(var(--tx, 20px), var(--ty, -30px)) scale(1.2) rotate(120deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--tx, 20px) * 1.5), calc(var(--ty, -30px) + 25px)) scale(0.4) rotate(280deg);
+  }
+}
+
+/* 拖尾星星粒子 (飞行中) */
+.usagi-trail-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 14px;
+  animation: trailFade 0.6s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes trailFade {
+  0% {
+    opacity: 0.9;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.6) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.1) rotate(360deg);
+  }
+}
+
+/* 头顶眩晕星星 */
+.usagi-dizzy-stars {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 10002;
+  animation: dizzyStarsOrbit 1.8s linear forwards;
+  opacity: 0;
+}
+
+@keyframes dizzyStarsOrbit {
+  0% { opacity: 0; transform: translateX(-50%) rotate(0deg); }
+  10% { opacity: 1; }
+  80% { opacity: 0.8; transform: translateX(-50%) rotate(720deg); }
+  100% { opacity: 0; transform: translateX(-50%) rotate(900deg); }
+}
+
+.usagi-dizzy-star {
+  position: absolute;
+  font-size: 16px;
+  animation: dizzyStarFloat 0.6s ease-in-out infinite alternate;
+}
+
+.usagi-dizzy-star:nth-child(1) { left: -18px; top: 0; animation-delay: 0s; }
+.usagi-dizzy-star:nth-child(2) { left: 8px; top: -8px; animation-delay: 0.15s; }
+.usagi-dizzy-star:nth-child(3) { left: 24px; top: 2px; animation-delay: 0.3s; }
+
+@keyframes dizzyStarFloat {
+  0% { transform: translateY(0) scale(0.8); }
+  100% { transform: translateY(-6px) scale(1.1); }
+}
+
+/* 着陆烟尘特效 */
+.usagi-dust-cloud {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  width: 60px;
+  height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255,228,196,0.7) 0%, rgba(255,228,196,0) 70%);
+  animation: dustCloudPoof 0.5s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes dustCloudPoof {
+  0% {
+    opacity: 0.8;
+    transform: scale(0.3) translateY(0);
+  }
+  40% {
+    opacity: 0.6;
+    transform: scale(1.5) translateY(-8px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.2) translateY(-18px);
   }
 }
 

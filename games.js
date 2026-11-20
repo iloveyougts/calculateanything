@@ -27,11 +27,26 @@ const UsagiVoice = (function () {
 
   function getBestVoice() {
     if (!voices || voices.length === 0) loadVoices();
-    const preferred = ['Xiaoxiao', 'Yaoyao', 'Tingting', 'Mei-Jia', 'Sin-ji', 'Huihui', 'Lily', 'Google 普通话', 'Microsoft', 'Chinese'];
+    // 优先选择最可爱最自然的中文女声（高音质 TTS 优先）
+    const preferred = [
+      'Xiaoxiao',    // 微软晓晓 — 最甜美可爱的中文女声
+      'Xiaoyi',      // 微软小艺 — 温柔少女音
+      'Yaoyao',      // 微软瑶瑶 — 软萌
+      'Xiaochen',    // 微软小辰
+      'Tingting',    // Apple 婷婷
+      'Mei-Jia',     // macOS 美佳
+      'Lili',        // Apple Lili
+      'Sin-ji',      // 粤语女声
+      'Huihui',      // 微软慧慧
+      'Google 普通话', // Chrome 普通话
+      'Microsoft',   // 任意微软中文声音
+      'Chinese'      // 兜底中文声音
+    ];
     for (const name of preferred) {
       const match = voices.find(v => v.name && v.name.includes(name) && (v.lang.startsWith('zh') || v.lang.startsWith('cmn')));
       if (match) return match;
     }
+    // 兜底：任何中文女声
     const zh = voices.find(v => v.lang && (v.lang.startsWith('zh') || v.lang.startsWith('cmn')));
     return zh || null;
   }
@@ -44,18 +59,18 @@ const UsagiVoice = (function () {
     try {
       window.speechSynthesis.cancel();
 
-      // 过滤表情符号与特殊标点，获得最自然清脆的萌系朗读
+      // 过滤表情符号与特殊标点，保留标点语气（逗号、句号、感叹号、问号）以保证TTS自然的萌系语调起伏
       const cleanText = text
         .replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]/gu, '')
-        .replace(/[【】「」『』~！!？?·_—]/g, ' ')
+        .replace(/[【】「」『』·_—]/g, ' ')
         .trim();
 
       if (!cleanText) return;
 
       const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = 'zh-CN';
-      utterance.pitch = options.pitch || 1.48; // 可爱软萌的高音调
-      utterance.rate = options.rate || 1.12;   // 活泼轻快语速
+      utterance.pitch = options.pitch || 1.32; // 黄金甜美可爱音调 (既软萌甜美又清晰自然，无任何机械失真破音)
+      utterance.rate = options.rate || 1.02;   // 轻快温和的少女语速 (自然灵动)
       utterance.volume = options.volume || 1.0;
 
       const v = getBestVoice();
@@ -1233,6 +1248,92 @@ const UsagiPetManager = (function () {
       startFlingFlight(posX, currentY, vx, vy);
     }
 
+    // ============================================================
+    // 拖尾粒子系统 (飞行中散落可爱星星)
+    // ============================================================
+    let trailCounter = 0;
+    function spawnTrailParticle(cx, cy) {
+      trailCounter++;
+      if (trailCounter % 3 !== 0) return; // 每3帧生成1个，避免过多
+      const emojis = ['✨', '⭐', '💫', '🌟', '💖', '🩷', '✦'];
+      const el = document.createElement('div');
+      el.className = 'usagi-trail-particle';
+      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      el.style.left = (cx + (Math.random() - 0.5) * 40) + 'px';
+      el.style.top = (cy + (Math.random() - 0.5) * 30) + 'px';
+      el.style.fontSize = (10 + Math.random() * 10) + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 650);
+    }
+
+    // ============================================================
+    // 着陆冲击粒子爆发 (星星/爱心/尘埃四散)
+    // ============================================================
+    function spawnImpactBurst(cx, cy, intensity) {
+      const count = Math.min(14, Math.floor(5 + intensity * 8));
+      const emojis = ['⭐', '✨', '💫', '🌟', '💖', '🩷', '💕', '✦', '🎀'];
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'usagi-impact-particle';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+        const dist = 25 + Math.random() * 50 * intensity;
+        const tx = Math.cos(angle) * dist;
+        const ty = Math.sin(angle) * dist - 20;
+        el.style.setProperty('--tx', tx + 'px');
+        el.style.setProperty('--ty', ty + 'px');
+        el.style.left = cx + 'px';
+        el.style.top = cy + 'px';
+        el.style.fontSize = (14 + Math.random() * 12 * intensity) + 'px';
+        document.body.appendChild(el);
+        setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 800);
+      }
+
+      // 尘烟特效 (左右各一朵)
+      for (let side = -1; side <= 1; side += 2) {
+        const dust = document.createElement('div');
+        dust.className = 'usagi-dust-cloud';
+        dust.style.left = (cx + side * 25) + 'px';
+        dust.style.top = (cy + 5) + 'px';
+        document.body.appendChild(dust);
+        setTimeout(() => { if (dust.parentNode) dust.parentNode.removeChild(dust); }, 550);
+      }
+    }
+
+    // ============================================================
+    // 头顶眩晕星星 (重击着陆后短暂显示)
+    // ============================================================
+    function spawnDizzyStars() {
+      const actorBox = document.getElementById('usagi-actor-box');
+      if (!actorBox) return;
+      // 移除旧的
+      const old = actorBox.querySelector('.usagi-dizzy-stars');
+      if (old) old.remove();
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'usagi-dizzy-stars';
+      ['⭐', '💫', '✨'].forEach(emoji => {
+        const s = document.createElement('span');
+        s.className = 'usagi-dizzy-star';
+        s.textContent = emoji;
+        wrapper.appendChild(s);
+      });
+      actorBox.appendChild(wrapper);
+      setTimeout(() => { if (wrapper.parentNode) wrapper.remove(); }, 1900);
+    }
+
+    // ============================================================
+    // 屏幕震动 (着陆冲击)
+    // ============================================================
+    function tossScreenShake(intensity) {
+      if (intensity < 0.3) return;
+      const body = document.body;
+      body.classList.remove('usagi-screen-shake');
+      void body.offsetWidth; // force reflow
+      body.classList.add('usagi-screen-shake');
+      setTimeout(() => body.classList.remove('usagi-screen-shake'), 420);
+    }
+
     function startFlingFlight(startX, startY, initVx, initVy) {
       isTossing = true;
       container.classList.add('is-flying');
@@ -1252,12 +1353,23 @@ const UsagiPetManager = (function () {
       const bounceCoeff = 0.35;
       const startTime = performance.now();
       let lastFrameTime = performance.now();
+      let lastTrailTime = 0;
+
+      // 计算初始速度大小以决定翻滚等级
+      const initSpeed = Math.sqrt(initVx * initVx + initVy * initVy);
+      const isFastToss = initSpeed > 10 || isDroppedFromHigh;
 
       if (window.UsagiSound) UsagiSound.whoosh();
+      if (window.UsagiSound && isFastToss) UsagiSound.tossFlying();
       if (isDroppedFromHigh) {
         speak('🎈 慢慢飘落', '呀哈——！像小降落伞一样晃晃悠悠飘下来啦~ 芷萱接住我呀！💫🐰', true);
       } else {
         speak('🚀 起飞啦！', '呀哈——！起飞啦！好高好高呀~ 💫💨', true);
+      }
+
+      // 添加翻滚动画类
+      if (isFastToss) {
+        container.classList.add(initSpeed > 16 ? 'usagi-tumbling-fast' : 'usagi-tumbling');
       }
 
       function physicsStep() {
@@ -1282,7 +1394,7 @@ const UsagiPetManager = (function () {
 
         // 软性安全保护：8秒充足时间让慢速飘落平稳触地，绝不在空中提前硬刹车
         if (now - startTime > 8000) {
-          finishToss(x, maxY);
+          finishToss(x, maxY, isFastToss ? 1.0 : 0.3, isDroppedFromHigh);
           return;
         }
 
@@ -1319,14 +1431,24 @@ const UsagiPetManager = (function () {
         // 碰地面 -> 触地即刻稳稳着陆站立，迅速恢复直立！
         else if (y >= maxY) {
           y = maxY;
-          if (window.UsagiSound) UsagiSound.boing();
-          finishToss(x, maxY);
+          // 着陆冲击力度 (基于最终垂直速度)
+          const impactForce = Math.min(1.5, Math.abs(vy) / maxFallSpeed);
+          finishToss(x, maxY, impactForce, isDroppedFromHigh);
           return;
         }
 
-        // 空中随微风软萌摇摆倾斜 (像小风筝/落叶轻舞飘摆)
-        const wobble = Math.sin(timeInAir / 125) * (isDroppedFromHigh ? 13 : Math.min(20, 6 + Math.abs(vx) * 1.5));
-        if (mascotImg) mascotImg.style.transform = `rotate(${wobble}deg) scale(0.96, 1.05)`;
+        // 空中不再用旧的 wobble — 翻滚由 CSS 动画处理
+        if (!isFastToss) {
+          const wobble = Math.sin(timeInAir / 125) * (isDroppedFromHigh ? 13 : Math.min(20, 6 + Math.abs(vx) * 1.5));
+          if (mascotImg) mascotImg.style.transform = `rotate(${wobble}deg) scale(0.96, 1.05)`;
+        }
+
+        // 飞行中拖尾粒子
+        if (isFastToss && now - lastTrailTime > 80) {
+          lastTrailTime = now;
+          const rect = container.getBoundingClientRect();
+          spawnTrailParticle(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        }
 
         container.style.left = x + 'px';
         container.style.top = y + 'px';
@@ -1337,13 +1459,16 @@ const UsagiPetManager = (function () {
       tossAnimId = requestAnimationFrame(physicsStep);
     }
 
-    function finishToss(finalX, finalY) {
+    function finishToss(finalX, finalY, impactForce, fromHigh) {
+      impactForce = impactForce || 0.3;
+      fromHigh = fromHigh || false;
+
       isTossing = false;
       if (tossAnimId) {
         cancelAnimationFrame(tossAnimId);
         tossAnimId = null;
       }
-      container.classList.remove('is-flying', 'is-dragging');
+      container.classList.remove('is-flying', 'is-dragging', 'usagi-tumbling', 'usagi-tumbling-fast');
 
       // 1. 核心关键：立刻彻底清除 top，严禁与 bottom 同时存在导致容器拉伸分离！
       container.style.top = '';
@@ -1386,32 +1511,129 @@ const UsagiPetManager = (function () {
       }
       updateDockUI();
 
-      // 4. 立刻恢复用户选定的萌姿（保留选好的毛球/趴趴/坐坐等姿势，若为站立则100%笔直站好）
+      // ============================================================
+      // 4. 专业着陆特效系统 (根据冲击力度分级)
+      // ============================================================
       const actorBox = document.getElementById('usagi-actor-box');
       if (actorBox) {
         actorBox.style.transform = '';
       }
+
+      const isHardLanding = impactForce > 0.5;
+      const isEpicLanding = impactForce > 0.75 || fromHigh;
+
       if (mascotImg) {
         mascotImg.style.transition = 'transform 0.15s ease-out';
         mascotImg.style.transform = '';
-        mascotImg.classList.add('usagi-bounce-squish');
-        setTimeout(() => {
-          if (mascotImg) {
-            mascotImg.classList.remove('usagi-bounce-squish');
-            mascotImg.style.transition = '';
-            mascotImg.style.transform = '';
-          }
-          if (actorBox) actorBox.style.transform = '';
-          if (container) container.style.transition = '';
-          setPose(currentPose || 'standing', false);
-        }, 180);
+
+        if (isEpicLanding) {
+          // 超级高空跌落：跌倒趴地 -> 眩晕眼冒金星 -> 元气拍土爬起来
+          mascotImg.classList.add('usagi-stumble-fall');
+
+          // 着陆冲击粒子爆发
+          const rect = container.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.bottom - 10;
+          spawnImpactBurst(cx, cy, impactForce);
+
+          // 屏幕震动
+          tossScreenShake(impactForce);
+
+          // 着陆重击音效
+          if (window.UsagiSound) UsagiSound.tossLand(impactForce);
+
+          // 跌倒抱怨台词
+          const stumbleQuotes = [
+            '哎呀呀！跌倒摔了个大屁墩儿~ 呜哇，芷萱快扶乌萨奇一把！💫🐰',
+            '砰——！脸先着地啦！乌萨奇差点变成香喷喷的兔兔松饼了啦~ 🥞✨🐰',
+            '呜哇——！好高好高！乌萨奇眼冒金星啦，天上的星星在转圈圈~ ⭐💫🐰',
+            '啪叽！跌了个四脚朝天~ 芷萱力气好大，丢得乌萨奇晕乎乎的！💫🥰'
+          ];
+          speak('💫 哎呀跌倒啦！', stumbleQuotes[Math.floor(Math.random() * stumbleQuotes.length)], true);
+
+          // 阶段2：摔倒在地，眩晕眼冒金星
+          setTimeout(() => {
+            if (mascotImg) {
+              mascotImg.classList.remove('usagi-stumble-fall');
+              mascotImg.classList.add('usagi-dizzy-lying');
+            }
+            spawnDizzyStars();
+
+            // 阶段3：700ms后元气拍土爬起来！
+            setTimeout(() => {
+              if (mascotImg) {
+                mascotImg.classList.remove('usagi-dizzy-lying');
+                mascotImg.classList.add('usagi-get-up-hop');
+              }
+              if (window.UsagiSound) UsagiSound.sparkle();
+              if (typeof confettiRain === 'function') confettiRain(25);
+
+              const recoverQuotes = [
+                '呼！拍拍屁股上的灰尘，乌萨奇重新元气站起来啦！芷萱看我厉不厉害~ ✨🐰',
+                '摇摇头晃晃脑袋，乌萨奇又是最可爱的小兔子啦！芷萱再丢一次嘛~ 💖🐾',
+                '嘿咻！乌萨奇拍拍小手手站好啦，继续守在芷萱身边哦！🥰🌸'
+              ];
+              speak('✨ 元气站起！', recoverQuotes[Math.floor(Math.random() * recoverQuotes.length)], true);
+
+              // 阶段4：彻底站稳恢复常规姿势
+              setTimeout(() => {
+                if (mascotImg) {
+                  mascotImg.classList.remove('usagi-get-up-hop');
+                  mascotImg.style.transition = '';
+                  mascotImg.style.transform = '';
+                }
+                if (actorBox) actorBox.style.transform = '';
+                if (container) container.style.transition = '';
+                setPose(currentPose || 'standing', false);
+              }, 550);
+            }, 750);
+          }, 700);
+        } else if (isHardLanding) {
+          // 中等着陆：加强版弹跳
+          mascotImg.classList.add('usagi-bounce-squish');
+          if (window.UsagiSound) UsagiSound.tossLand(impactForce);
+
+          const rect = container.getBoundingClientRect();
+          spawnImpactBurst(rect.left + rect.width / 2, rect.bottom - 10, 0.4);
+
+          setTimeout(() => {
+            if (mascotImg) {
+              mascotImg.classList.remove('usagi-bounce-squish');
+              mascotImg.style.transition = '';
+              mascotImg.style.transform = '';
+            }
+            if (actorBox) actorBox.style.transform = '';
+            if (container) container.style.transition = '';
+            setPose(currentPose || 'standing', false);
+          }, 350);
+        } else {
+          // 轻柔着陆：简单弹跳
+          mascotImg.classList.add('usagi-bounce-squish');
+          setTimeout(() => {
+            if (mascotImg) {
+              mascotImg.classList.remove('usagi-bounce-squish');
+              mascotImg.style.transition = '';
+              mascotImg.style.transform = '';
+            }
+            if (actorBox) actorBox.style.transform = '';
+            if (container) container.style.transition = '';
+            setPose(currentPose || 'standing', false);
+          }, 180);
+        }
       } else {
         setPose(currentPose || 'standing', false);
       }
 
-      if (window.UsagiSound) UsagiSound.pop();
-      if (typeof confettiRain === 'function') confettiRain(15);
-      speak('✨ 稳稳落地', wasRoamingBeforeDrag ? '呼~ 稳稳着陆啦！乌萨奇从这里继续欢快漫步巡逻陪芷萱啦~ 🐾🐰' : '呼~ 稳稳着陆啦！芷萱丢得真好玩，乌萨奇就在这里乖乖陪着你哦！🥰🐰', true);
+      // 音效 & 庆祝特效
+      if (!isEpicLanding && !isHardLanding) {
+        if (window.UsagiSound) UsagiSound.pop();
+      }
+      if (typeof confettiRain === 'function') confettiRain(isEpicLanding ? 30 : 15);
+
+      // 着陆对话 (根据冲击力度选择不同的可爱台词)
+      if (!isEpicLanding) {
+        speak('✨ 稳稳落地', wasRoamingBeforeDrag ? '呼~ 稳稳着陆啦！乌萨奇从这里继续欢快漫步巡逻陪芷萱啦~ 🐾🐰' : '呼~ 稳稳着陆啦！芷萱丢得真好玩，乌萨奇就在这里乖乖陪着你哦！🥰🐰', true);
+      }
 
       // 同步最新布局
       updatePositionStyle();
