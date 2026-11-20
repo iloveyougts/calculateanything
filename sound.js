@@ -457,6 +457,162 @@ const UsagiSound = (function () {
       } catch (e) {}
     },
 
+    // ============================================================
+    // 卡通高空跌落与眩晕眼冒金星音效系统 (超滑稽搞笑卡通声学物理)
+    // ============================================================
+
+    // 1. 卡通下落滑音口哨 (Cartoon Slide Whistle Falling: 呜——优——滑落)
+    fallSlideWhistle: function () {
+      if (isMuted) return;
+      try {
+        initCtx();
+        const now = audioCtx.currentTime;
+        const duration = 0.85;
+
+        // 主哨音 (高音快速往下滑降)
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1350, now);
+        osc.frequency.exponentialRampToValueAtTime(180, now + duration);
+
+        // 微颤音 (滑音哨特有的气流震荡)
+        const lfo = audioCtx.createOscillator();
+        const lfoGain = audioCtx.createGain();
+        lfo.frequency.setValueAtTime(12, now);
+        lfoGain.gain.setValueAtTime(18, now);
+        lfo.connect(osc.frequency);
+        lfo.start(now);
+        lfo.stop(now + duration);
+
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.linearRampToValueAtTime(0.24, now + duration * 0.7);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + duration);
+      } catch (e) {}
+    },
+
+    // 2. 卡通触地搞笑扁压与橡胶叫声 (Splat + Squeak + Boink)
+    cartoonSplatBoink: function (intensity = 1.0) {
+      if (isMuted) return;
+      try {
+        initCtx();
+        const now = audioCtx.currentTime;
+        const force = Math.min(1.5, Math.max(0.4, intensity));
+
+        // 扁压低频重击 (Thud)
+        const thudOsc = audioCtx.createOscillator();
+        const thudGain = audioCtx.createGain();
+        thudOsc.type = 'triangle';
+        thudOsc.frequency.setValueAtTime(240 * force, now);
+        thudOsc.frequency.exponentialRampToValueAtTime(35, now + 0.16);
+        thudGain.gain.setValueAtTime(0.55 * force, now);
+        thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+        thudOsc.connect(thudGain);
+        thudGain.connect(audioCtx.destination);
+        thudOsc.start(now);
+        thudOsc.stop(now + 0.19);
+
+        // 卡通搞笑挤压尖叫 (Rubber Duck Squeak)
+        const squeakOsc = audioCtx.createOscillator();
+        const squeakGain = audioCtx.createGain();
+        squeakOsc.type = 'sine';
+        squeakOsc.frequency.setValueAtTime(650, now + 0.03);
+        squeakOsc.frequency.exponentialRampToValueAtTime(1450, now + 0.09);
+        squeakOsc.frequency.exponentialRampToValueAtTime(520, now + 0.18);
+        squeakGain.gain.setValueAtTime(0.25 * force, now + 0.03);
+        squeakGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+        squeakOsc.connect(squeakGain);
+        squeakGain.connect(audioCtx.destination);
+        squeakOsc.start(now + 0.03);
+        squeakOsc.stop(now + 0.23);
+
+        // 弹簧余震 (Cartoon Spring Boing)
+        const boingOsc = audioCtx.createOscillator();
+        const boingGain = audioCtx.createGain();
+        boingOsc.type = 'sine';
+        boingOsc.frequency.setValueAtTime(280, now + 0.1);
+        boingOsc.frequency.exponentialRampToValueAtTime(720, now + 0.22);
+        boingOsc.frequency.exponentialRampToValueAtTime(360, now + 0.38);
+        boingGain.gain.setValueAtTime(0.18 * force, now + 0.1);
+        boingGain.gain.exponentialRampToValueAtTime(0.001, now + 0.42);
+        boingOsc.connect(boingGain);
+        boingGain.connect(audioCtx.destination);
+        boingOsc.start(now + 0.1);
+        boingOsc.stop(now + 0.43);
+      } catch (e) {}
+    },
+
+    // 3. 卡通眩晕眼冒金星与小鸟转圈声 (Dizzy Warble & Tweety Birds)
+    dizzyStarsWarble: function () {
+      if (isMuted) return;
+      try {
+        initCtx();
+        const now = audioCtx.currentTime;
+        const duration = 1.35;
+
+        // 眩晕波动主音 (Wobble-wobble-wobble 旋转眩晕声)
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(580, now);
+
+        // 5.5Hz 经典卡通头晕震颤 LFO
+        const lfo = audioCtx.createOscillator();
+        const lfoGain = audioCtx.createGain();
+        lfo.frequency.setValueAtTime(5.8, now);
+        lfoGain.gain.setValueAtTime(75, now);
+        lfo.connect(osc.frequency);
+        lfo.start(now);
+        lfo.stop(now + duration);
+
+        gain.gain.setValueAtTime(0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + duration);
+
+        // 伴随可爱小鸟唧唧啾啾叫与金星碎响 (Tweety Birds chirp / Sparkles)
+        const birdNotes = [1760, 2093, 2349, 1975, 2637, 2093];
+        birdNotes.forEach((f, idx) => {
+          setTimeout(() => {
+            if (isMuted) return;
+            const bNow = audioCtx.currentTime;
+            const bOsc = audioCtx.createOscillator();
+            const bGain = audioCtx.createGain();
+            bOsc.type = 'sine';
+            bOsc.frequency.setValueAtTime(f, bNow);
+            bOsc.frequency.exponentialRampToValueAtTime(f * 1.15, bNow + 0.04);
+            bOsc.frequency.exponentialRampToValueAtTime(f * 0.9, bNow + 0.1);
+            bGain.gain.setValueAtTime(0.07, bNow);
+            bGain.gain.exponentialRampToValueAtTime(0.001, bNow + 0.11);
+            bOsc.connect(bGain);
+            bGain.connect(audioCtx.destination);
+            bOsc.start(bNow);
+            bOsc.stop(bNow + 0.12);
+          }, idx * 170);
+        });
+      } catch (e) {}
+    },
+
+    // 4. 阿尼亚专属哇酷哇酷欢呼音 (Anya Waku Waku Celebration Fanfare)
+    anyaWakuWaku: function () {
+      if (isMuted) return;
+      try {
+        initCtx();
+        const notes = [659.25, 783.99, 987.77, 1318.51];
+        notes.forEach((f, i) => {
+          setTimeout(() => playTone(f, 'triangle', 0.18, 0.12), i * 65);
+        });
+      } catch (e) {}
+    },
+
     toggleMute: function () {
       isMuted = !isMuted;
       localStorage.setItem('usagi_muted', isMuted);

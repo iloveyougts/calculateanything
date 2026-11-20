@@ -5375,38 +5375,97 @@ body {
   }
 }
 
-/* 头顶眩晕星星 */
+/* 头顶眩晕星星与旋转小鸟光环 */
 .usagi-dizzy-stars {
   position: absolute;
-  top: -30px;
+  top: -24px;
   left: 50%;
   transform: translateX(-50%);
+  width: 90px;
+  height: 38px;
   pointer-events: none;
   z-index: 10002;
-  animation: dizzyStarsOrbit 1.8s linear forwards;
-  opacity: 0;
+  animation: dizzyStarsOrbit 2s linear infinite;
 }
 
 @keyframes dizzyStarsOrbit {
-  0% { opacity: 0; transform: translateX(-50%) rotate(0deg); }
-  10% { opacity: 1; }
-  80% { opacity: 0.8; transform: translateX(-50%) rotate(720deg); }
-  100% { opacity: 0; transform: translateX(-50%) rotate(900deg); }
+  0% { transform: translateX(-50%) rotate(0deg) scaleY(0.48); }
+  100% { transform: translateX(-50%) rotate(360deg) scaleY(0.48); }
 }
 
 .usagi-dizzy-star {
   position: absolute;
-  font-size: 16px;
-  animation: dizzyStarFloat 0.6s ease-in-out infinite alternate;
+  font-size: 18px;
+  animation: dizzyStarFloat 0.5s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
 }
 
-.usagi-dizzy-star:nth-child(1) { left: -18px; top: 0; animation-delay: 0s; }
-.usagi-dizzy-star:nth-child(2) { left: 8px; top: -8px; animation-delay: 0.15s; }
-.usagi-dizzy-star:nth-child(3) { left: 24px; top: 2px; animation-delay: 0.3s; }
+.usagi-dizzy-star:nth-child(1) { left: 0px; top: 0; animation-delay: 0s; }
+.usagi-dizzy-star:nth-child(2) { left: 32px; top: -10px; animation-delay: 0.15s; }
+.usagi-dizzy-star:nth-child(3) { left: 64px; top: 2px; animation-delay: 0.3s; }
+.usagi-dizzy-star:nth-child(4) { left: 45px; top: 12px; animation-delay: 0.45s; }
 
 @keyframes dizzyStarFloat {
-  0% { transform: translateY(0) scale(0.8); }
-  100% { transform: translateY(-6px) scale(1.1); }
+  0% { transform: translateY(0) scale(0.85); }
+  100% { transform: translateY(-7px) scale(1.15); }
+}
+
+/* 经典动漫阿尼亚/乌萨奇眩晕双眼蚊香眼 (Spiral Dizzy Eyes) */
+.usagi-spiral-eyes {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 54px;
+  pointer-events: none;
+  z-index: 10003;
+  animation: dizzyPopIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes dizzyPopIn {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.usagi-spiral-eye {
+  display: inline-block;
+  font-size: 22px;
+  line-height: 1;
+  animation: spiralEyeSpin 0.6s linear infinite;
+  filter: drop-shadow(0 0 5px rgba(244, 63, 94, 0.5));
+}
+
+.usagi-spiral-eye.reverse {
+  animation: spiralEyeSpinRev 0.6s linear infinite;
+}
+
+@keyframes spiralEyeSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spiralEyeSpinRev {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+/* 眩晕冷汗滴 */
+.usagi-dizzy-sweat {
+  position: absolute;
+  top: 18%;
+  right: -2px;
+  font-size: 20px;
+  pointer-events: none;
+  z-index: 10004;
+  animation: sweatDropDrip 0.7s ease-in-out infinite alternate;
+}
+
+@keyframes sweatDropDrip {
+  0% { transform: translateY(0) scale(0.9); }
+  100% { transform: translateY(6px) scale(1.1); }
 }
 
 /* 着陆烟尘特效 */
