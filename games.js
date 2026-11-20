@@ -4,24 +4,13 @@
    ============================================================ */
 
 /* ============================================================
-   0. USAGI KAWAII VOICE ENGINE (阿尼亚萌音声线 & Web Speech API)
+   0. USAGI KAWAII VOICE ENGINE (真人自然甜美女声 & 防截断守护引擎)
    ============================================================ */
 const UsagiVoice = (function () {
   let isVoiceEnabled = localStorage.getItem('usagi_voice_enabled') !== 'false'; // 默认开启
   let voices = [];
   let isSpeaking = false;
-
-  // 用户声线偏好设置 (默认：阿尼亚超萌幼童音)
-  let currentPreset = localStorage.getItem('usagi_voice_preset') || 'anya';
-  let userPitch = parseFloat(localStorage.getItem('usagi_voice_pitch') || '1.34');
-  let userRate = parseFloat(localStorage.getItem('usagi_voice_rate') || '1.05');
-  let customVoiceName = localStorage.getItem('usagi_voice_name') || '';
-
-  const PRESETS = {
-    anya: { name: '👧 阿尼亚超萌幼童音', pitch: 1.34, rate: 1.05, desc: '哇酷哇酷！天真软萌的小幼童声音，充满好奇与活力~ 🥜' },
-    sweet: { name: '🌸 软萌甜美少女音', pitch: 1.25, rate: 1.02, desc: '轻柔甜美的二次元治愈少女音，温柔清澈~ ✨' },
-    natural: { name: '🍵 温润自然陪伴音', pitch: 1.08, rate: 1.0, desc: '温润从容的日常陪伴音，自然舒适~ 🌸' }
-  };
+  let currentUtterance = null;
 
   function loadVoices() {
     if (!('speechSynthesis' in window)) return;
@@ -33,50 +22,31 @@ const UsagiVoice = (function () {
   if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
     loadVoices();
     if (window.speechSynthesis.onvoiceschanged !== undefined) {
-      window.speechSynthesis.onvoiceschanged = () => {
-        loadVoices();
-        populateVoiceDropdown();
-      };
+      window.speechSynthesis.onvoiceschanged = loadVoices;
     }
-  }
-
-  function getAvailableChineseVoices() {
-    if (!voices || voices.length === 0) loadVoices();
-    return voices.filter(v => v.lang && (v.lang.startsWith('zh') || v.lang.startsWith('cmn')));
   }
 
   function getBestVoice() {
     if (!voices || voices.length === 0) loadVoices();
 
-    // 1. 如果用户手动挑选了指定声音，直接优先使用
-    if (customVoiceName) {
-      const userChoice = voices.find(v => v.name === customVoiceName);
-      if (userChoice) return userChoice;
-    }
-
-    // 2. 顶级阿尼亚/软萌中文女声优先推荐链（严格排除旧版机械声音）
-    const anyaPreferred = [
-      'Yunxia',       // 微软云夏 — 真正的天真幼童/小萝莉音！(阿尼亚首选)
-      'Xiaoyi',       // 微软小艺 — 清新灵动少女萌音
-      'Xiaoxiao',     // 微软晓晓 — 最甜美的女声
-      'Yaoyao',       // 微软瑶瑶 — 软萌少女
-      'Xiaochen',     // 微软小辰
-      'Google 普通话', // Google Chrome 在线自然女声 (高音质，柔和甜美)
-      'Google',       // 任意谷歌高音质
-      'Tingting',     // 苹果 macOS / iOS 婷婷 (清澈女声)
+    // 优先选择最逼真、最自然的真人感中文女声（严格避开机械单调音）
+    const preferred = [
+      'Xiaoxiao',     // 微软晓晓 — 最自然生动的真人女声
+      'Xiaoyi',       // 微软小艺 — 清新自然
+      'Google 普通话', // Google Chrome 在线真人自然女声
+      'Tingting',     // 苹果 macOS / iOS 婷婷 (清澈真人女声)
       'Mei-Jia',      // 苹果美佳
-      'Lili',         // 苹果 Lili
       'Sin-ji',       // 粤语女声
-      'Natural',      // 任意微软自然神经网络女声
-      'Online'        // 任意在线高品质女声
+      'Natural',      // 微软自然神经网络语音
+      'Online'        // 在线高音质女声
     ];
 
-    for (const name of anyaPreferred) {
+    for (const name of preferred) {
       const match = voices.find(v => v.name && v.name.includes(name) && (v.lang.startsWith('zh') || v.lang.startsWith('cmn')));
       if (match) return match;
     }
 
-    // 3. 兜底查找非机械声的中文声音（严格绕过 Huihui、Kangkang、Hanhan 等上古机械单调音）
+    // 兜底策略：寻找非机械声的中文声音（严格排除 Huihui、Kangkang、Hanhan 等上古机械音）
     const nonRobotic = voices.find(v => {
       if (!v.lang || (!v.lang.startsWith('zh') && !v.lang.startsWith('cmn'))) return false;
       const n = v.name || '';
@@ -84,7 +54,6 @@ const UsagiVoice = (function () {
     });
     if (nonRobotic) return nonRobotic;
 
-    // 4. 最终兜底
     const anyZh = voices.find(v => v.lang && (v.lang.startsWith('zh') || v.lang.startsWith('cmn')));
     return anyZh || null;
   }
@@ -94,10 +63,16 @@ const UsagiVoice = (function () {
     if (!('speechSynthesis' in window)) return;
     if (!text || !text.trim()) return;
 
+    // 【核心防截断机制】：如果当前正在讲话，坚决不允许截断切成两半！
+    // 必须等当前一句话完整讲完，绝不发生“话讲一半就被下一句打断”的问题！
+    if (isSpeaking && !options.force) {
+      return;
+    }
+
     try {
       window.speechSynthesis.cancel();
 
-      // 过滤表情符号与特殊特殊符号，保留标点语气（逗号、句号、感叹号、问号）以保证阿尼亚萌系的真实语调起伏
+      // 过滤表情符号与特殊标记，保留自然语气标点
       const cleanText = text
         .replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]/gu, '')
         .replace(/[【】「」『』·_—]/g, ' ')
@@ -108,21 +83,13 @@ const UsagiVoice = (function () {
       const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = 'zh-CN';
 
-      // 声学参数匹配阿尼亚幼童音 (根据选定的声线自适应调节)
+      // 真人自然声学参数：正常自然人声音调与语速，毫无机械人机感！
+      utterance.pitch = options.pitch || 1.0;
+      utterance.rate = options.rate || 1.0;
+      utterance.volume = options.volume || 1.0;
+
       const v = getBestVoice();
       if (v) utterance.voice = v;
-
-      const isOldRoboticVoice = v && (v.name.includes('Huihui') || v.name.includes('Kangkang'));
-      if (isOldRoboticVoice) {
-        // 如果系统极度受限只有旧版机械音，保持标准声调避免严重破音
-        utterance.pitch = 1.05;
-        utterance.rate = 1.0;
-      } else {
-        // 阿尼亚黄金萌音声调
-        utterance.pitch = options.pitch || userPitch || 1.34;
-        utterance.rate = options.rate || userRate || 1.05;
-      }
-      utterance.volume = options.volume || 1.0;
 
       utterance.onstart = () => {
         isSpeaking = true;
@@ -130,24 +97,24 @@ const UsagiVoice = (function () {
       };
       utterance.onend = () => {
         isSpeaking = false;
+        currentUtterance = null;
         updateUI(false);
       };
       utterance.onerror = () => {
         isSpeaking = false;
+        currentUtterance = null;
         updateUI(false);
       };
 
+      currentUtterance = utterance;
       if (window.UsagiSound && !options.silent) {
-        if (Math.random() < 0.3 && UsagiSound.anyaWakuWaku) {
-          UsagiSound.anyaWakuWaku();
-        } else {
-          UsagiSound.pop();
-        }
+        UsagiSound.pop();
       }
 
       window.speechSynthesis.speak(utterance);
     } catch (e) {
       console.warn("SpeechSynthesis error:", e);
+      isSpeaking = false;
     }
   }
 
@@ -155,6 +122,7 @@ const UsagiVoice = (function () {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       isSpeaking = false;
+      currentUtterance = null;
       updateUI(false);
     }
   }
@@ -165,7 +133,7 @@ const UsagiVoice = (function () {
     if (!isVoiceEnabled) stop();
     updateButtonUI();
     if (isVoiceEnabled) {
-      speak('哇酷哇酷！阿尼亚萌音开启啦！我会天天陪着芷萱姐姐哦~ 🥜✨');
+      speak('乌萨奇真人陪伴语音已开启！我会贴心提醒芷萱哦~ ✨', { force: true });
     }
     return isVoiceEnabled;
   }
@@ -181,120 +149,17 @@ const UsagiVoice = (function () {
     const btn = document.getElementById('btn-speech-voice-toggle');
     if (btn) {
       btn.innerHTML = isVoiceEnabled ? '🔊 语音开启' : '🔇 语音静音';
-      btn.title = isVoiceEnabled ? '点击关闭语音播报' : '点击开启阿尼亚萌音播报';
+      btn.title = isVoiceEnabled ? '点击关闭语音播报' : '点击开启真人陪伴语音播报';
       btn.classList.toggle('text-pink-600', isVoiceEnabled);
       btn.classList.toggle('text-stone-400', !isVoiceEnabled);
     }
-  }
-
-  // ============================================================
-  // 阿尼亚声线控制台与试听弹窗 (Voice Settings Modal)
-  // ============================================================
-  function openVoiceModal() {
-    const modal = document.getElementById('usagi-voice-modal');
-    if (!modal) return;
-    loadVoices();
-    populateVoiceDropdown();
-    updateModalUI();
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-  }
-
-  function closeVoiceModal() {
-    const modal = document.getElementById('usagi-voice-modal');
-    if (modal) {
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-  }
-
-  function populateVoiceDropdown() {
-    const select = document.getElementById('voice-select-dropdown');
-    if (!select) return;
-    const zhVoices = getAvailableChineseVoices();
-    select.innerHTML = '';
-
-    const autoOpt = document.createElement('option');
-    autoOpt.value = '';
-    const best = getBestVoice();
-    autoOpt.textContent = `✨ 自动推荐阿尼亚最甜声线 (${best ? best.name : '系统智能推荐'})`;
-    select.appendChild(autoOpt);
-
-    zhVoices.forEach(v => {
-      const opt = document.createElement('option');
-      opt.value = v.name;
-      opt.textContent = `${v.name} (${v.lang})`;
-      if (v.name === customVoiceName) opt.selected = true;
-      select.appendChild(opt);
-    });
-  }
-
-  function updateModalUI() {
-    const pitchVal = document.getElementById('voice-pitch-val');
-    const rateVal = document.getElementById('voice-rate-val');
-    const pitchSlider = document.getElementById('voice-pitch-slider');
-    const rateSlider = document.getElementById('voice-rate-slider');
-
-    if (pitchVal) pitchVal.textContent = userPitch.toFixed(2) + 'x';
-    if (rateVal) rateVal.textContent = userRate.toFixed(2) + 'x';
-    if (pitchSlider) pitchSlider.value = userPitch;
-    if (rateSlider) rateSlider.value = userRate;
-
-    // Preset buttons active state
-    ['anya', 'sweet', 'natural'].forEach(key => {
-      const btn = document.getElementById(`preset-voice-${key}`);
-      if (btn) {
-        btn.classList.toggle('ring-2', currentPreset === key);
-        btn.classList.toggle('ring-pink-500', currentPreset === key);
-        btn.classList.toggle('bg-pink-100', currentPreset === key);
-      }
-    });
-  }
-
-  function setPreset(presetKey) {
-    if (!PRESETS[presetKey]) return;
-    currentPreset = presetKey;
-    userPitch = PRESETS[presetKey].pitch;
-    userRate = PRESETS[presetKey].rate;
-
-    localStorage.setItem('usagi_voice_preset', currentPreset);
-    localStorage.setItem('usagi_voice_pitch', userPitch.toString());
-    localStorage.setItem('usagi_voice_rate', userRate.toString());
-
-    updateModalUI();
-    testVoice();
-  }
-
-  function testVoice() {
-    const samples = [
-      '哇酷哇酷！阿尼亚最喜欢芷萱姐姐了！任务完成，要吃花生奖励~ 🥜✨',
-      '哼哼！阿尼亚才没有跌倒呢，阿尼亚是宇宙最厉害的小特工！⭐🐰',
-      '芷萱姐姐，今天也要多喝温水、开开心心哦！阿尼亚永远守护你~ 🥰🌸'
-    ];
-    speak(samples[Math.floor(Math.random() * samples.length)]);
-  }
-
-  function saveSettings(voiceName, pitch, rate) {
-    customVoiceName = voiceName;
-    userPitch = parseFloat(pitch);
-    userRate = parseFloat(rate);
-
-    localStorage.setItem('usagi_voice_name', customVoiceName);
-    localStorage.setItem('usagi_voice_pitch', userPitch.toString());
-    localStorage.setItem('usagi_voice_rate', userRate.toString());
-    closeVoiceModal();
-    speak('声线设置已保存！哇酷哇酷~ 芷萱姐姐觉得这个声音好听嘛？🥜✨');
   }
 
   return {
     speak,
     stop,
     toggleVoice,
-    openVoiceModal,
-    closeVoiceModal,
-    setPreset,
-    testVoice,
-    saveSettings,
+    isSpeakingNow: () => isSpeaking,
     isEnabled: () => isVoiceEnabled,
     updateButtonUI,
     getBestVoice
@@ -786,14 +651,13 @@ const UsagiPetManager = (function () {
 
           posX += direction * speed;
 
-          // Hit Right Boundary -> Turn Left
+          // Hit Right Boundary -> Turn Left (安静转身，绝不在撞墙时频繁插嘴截断正在说的话)
           if (posX >= maxX) {
             posX = maxX;
             direction = -1;
             const mascotImg = document.getElementById('usagi-mascot-img');
             if (mascotImg) mascotImg.style.transform = 'scaleX(-1)';
             pauseWaddle(800);
-            if (Math.random() < 0.4) speakRandomSweet();
           }
           // Hit Left Boundary -> Turn Right
           else if (posX <= minX) {
@@ -802,16 +666,15 @@ const UsagiPetManager = (function () {
             const mascotImg = document.getElementById('usagi-mascot-img');
             if (mascotImg) mascotImg.style.transform = 'scaleX(1)';
             pauseWaddle(800);
-            if (Math.random() < 0.4) speakRandomSweet();
           }
 
           updatePositionStyle();
         }
       }
 
-      // Check periodic automatic reminder (every 32s)
+      // Check periodic automatic reminder (every 50s，严格确保当前没在说话、没被锁定时才提醒，绝不打断当前台词)
       const now = Date.now();
-      if (now - lastReminderTime > 32000 && !isMinimized && !isTossing) {
+      if (now - lastReminderTime > 50000 && !isMinimized && !isTossing && now > speechLockUntil && (!window.UsagiVoice || !UsagiVoice.isSpeakingNow())) {
         lastReminderTime = now;
         speakRandomSweet();
       }
@@ -974,7 +837,15 @@ const UsagiPetManager = (function () {
     }
   }
 
-  function speak(tag, message, autoVoice = false) {
+  let speechLockUntil = 0;
+
+  function speak(tag, message, autoVoice = false, options = {}) {
+    const now = Date.now();
+    // 【核心防截断守护】：如果当前正在说话或锁定期未结束，且不是用户强制动作，严禁截断切碎句子！
+    if (now < speechLockUntil && !options.force) {
+      return;
+    }
+
     const tagEl = document.getElementById('usagi-speech-tag');
     const textEl = document.getElementById('usagi-speech-text');
     const bubble = document.getElementById('usagi-speech-bubble');
@@ -989,8 +860,12 @@ const UsagiPetManager = (function () {
       bubble.classList.add('bubble-pop');
     }
 
+    // 锁定气泡显示时间：中文自然阅读/说话速度约 3-4字/秒，至少锁住5秒，确保整句播完、读完！
+    const lockMs = Math.max(5000, (message || '').length * 350);
+    speechLockUntil = now + lockMs;
+
     if (autoVoice && window.UsagiVoice) {
-      UsagiVoice.speak(message);
+      UsagiVoice.speak(message, options);
     }
   }
 
@@ -1332,7 +1207,7 @@ const UsagiPetManager = (function () {
         container.style.bottom = 'auto';
         container.style.right = 'auto';
         if (window.UsagiSound) UsagiSound.pop();
-        speak('🐰 抓起来啦！', '咦？抓我起来啦！芷萱要把我丢到哪里去呀~ 呀哈！✈️', true);
+        speak('🐰 抓起来啦！', '咦？抓我起来啦！芷萱要把我丢到哪里去呀~ 呀哈！✈️', false);
       }
 
       if (hasDragged) {
@@ -1458,17 +1333,16 @@ const UsagiPetManager = (function () {
     }
 
     // ============================================================
-    // 经典动漫阿尼亚眩晕特效：双眼蚊香眼 + 头顶转圈小鸟与金星 + 卡通眩晕音效
+    // 乌萨奇可爱头顶金星闪烁 (精致微型，紧贴兔耳顶端，绝不遮挡脸庞或上方卡片)
     // ============================================================
     function spawnDizzyEffects() {
       const actorBox = document.getElementById('usagi-actor-box');
       if (!actorBox) return;
       clearDizzyEffects();
 
-      // 1. 头顶旋转金星与小鸟光环
       const starsWrapper = document.createElement('div');
       starsWrapper.className = 'usagi-dizzy-stars';
-      ['⭐', '💫', '🐦', '🌟'].forEach(emoji => {
+      ['✨', '⭐', '✨'].forEach(emoji => {
         const s = document.createElement('span');
         s.className = 'usagi-dizzy-star';
         s.textContent = emoji;
@@ -1476,19 +1350,6 @@ const UsagiPetManager = (function () {
       });
       actorBox.appendChild(starsWrapper);
 
-      // 2. 双眼经典动漫阿尼亚蚊香眼 (Spiral Dizzy Eyes)
-      const eyesWrapper = document.createElement('div');
-      eyesWrapper.className = 'usagi-spiral-eyes';
-      eyesWrapper.innerHTML = '<span class="usagi-spiral-eye">🌀</span><span class="usagi-spiral-eye reverse">🌀</span>';
-      actorBox.appendChild(eyesWrapper);
-
-      // 3. 眩晕冷汗滴
-      const sweat = document.createElement('div');
-      sweat.className = 'usagi-dizzy-sweat';
-      sweat.textContent = '💧';
-      actorBox.appendChild(sweat);
-
-      // 4. 播放经典卡通眩晕转圈声与小鸟啾啾叫
       if (window.UsagiSound && UsagiSound.dizzyStarsWarble) {
         UsagiSound.dizzyStarsWarble();
       }
@@ -1549,11 +1410,12 @@ const UsagiPetManager = (function () {
           UsagiSound.whoosh();
         }
       }
-      if (isDroppedFromHigh) {
-        speak('🎈 哇酷哇酷！飞好高~', '哇酷哇酷——！像小降落伞一样飘飘晃晃掉下来啦~ 芷萱快接住阿尼亚！💫🎈', true);
-      } else {
-        speak('🚀 起飞啦！', '哇酷哇酷——！起飞啦！阿尼亚飞得好高好高呀~ 💫💨', true);
-      }
+
+      // 静默更新气泡文字提示（绝不在空中发起语音，彻底避免话讲一半就被着陆打断！）
+      const bubbleTag = document.getElementById('usagi-speech-tag');
+      const bubbleText = document.getElementById('usagi-speech-text');
+      if (bubbleTag) bubbleTag.textContent = isDroppedFromHigh ? '🎈 轻盈飘落' : '🚀 起飞啦！';
+      if (bubbleText) bubbleText.textContent = isDroppedFromHigh ? '像小降落伞一样晃晃悠悠飘落中~ 💫' : '起飞啦~ 好高好高！💨';
 
       // 添加翻滚动画类
       if (isFastToss) {
@@ -1625,7 +1487,7 @@ const UsagiPetManager = (function () {
           return;
         }
 
-        // 空中不再用旧的 wobble — 翻滚由 CSS 动画处理
+        // 空中随微风软萌摇摆倾斜
         if (!isFastToss) {
           const wobble = Math.sin(timeInAir / 125) * (isDroppedFromHigh ? 13 : Math.min(20, 6 + Math.abs(vx) * 1.5));
           if (mascotImg) mascotImg.style.transform = `rotate(${wobble}deg) scale(0.96, 1.05)`;
@@ -1700,7 +1562,7 @@ const UsagiPetManager = (function () {
       updateDockUI();
 
       // ============================================================
-      // 4. 专业着陆特效系统 (根据冲击力度分级)
+      // 4. 专业着陆特效系统：深度弹性缓冲 + 稳稳直立 + 一整句完整温润语音
       // ============================================================
       const actorBox = document.getElementById('usagi-actor-box');
       if (actorBox) {
@@ -1715,7 +1577,7 @@ const UsagiPetManager = (function () {
         mascotImg.style.transform = '';
 
         if (isEpicLanding) {
-          // 超级高空跌落：跌倒趴地 -> 蚊香眼眩晕冒星 -> 元气拍土爬起来
+          // 深度弹性缓冲动画 (触地扁压 -> 弹起缓冲 -> 100% 笔直站立)
           mascotImg.classList.add('usagi-stumble-fall');
 
           // 着陆冲击粒子爆发
@@ -1724,71 +1586,44 @@ const UsagiPetManager = (function () {
           const cy = rect.bottom - 10;
           spawnImpactBurst(cx, cy, impactForce);
 
-          // 屏幕震动
+          // 屏幕微震
           tossScreenShake(impactForce);
 
-          // 着陆扁压与挤压搞笑音效 (Splat + Squeak + Boink)
+          // 卡通触地搞笑音效
           if (window.UsagiSound && UsagiSound.cartoonSplatBoink) {
             UsagiSound.cartoonSplatBoink(impactForce);
           } else if (window.UsagiSound) {
             UsagiSound.tossLand(impactForce);
           }
 
-          // 阿尼亚华语经典名场面台词
-          const stumbleQuotes = [
-            '呜哇！屁股好痛痛！阿尼亚才没有哭呢……呜，芷萱快给阿尼亚一颗花生安慰一下~ 🥜💫',
-            '砰——！脸先着地啦！阿尼亚差点变成香喷喷的小兔松饼了啦~ 🥞✨',
-            '呜呜~ 好晕好晕！天上的小鸟和星星都在阿尼亚头上转圈圈啦~ 🐦⭐💫',
-            '啪叽！摔了个四脚朝天~ 芷萱力气好大，阿尼亚心跳噗通噗通的！💫🥰'
-          ];
-          speak('💫 哎呀跌倒啦！', stumbleQuotes[Math.floor(Math.random() * stumbleQuotes.length)], true);
+          // 触发兔耳顶端精致小金星光环
+          spawnDizzyEffects();
 
-          // 阶段2：摔倒在地，触发全套阿尼亚蚊香眼与小鸟转圈声！
+          // 700ms后自动收起光环，彻底站稳，恢复直立姿态
           setTimeout(() => {
+            clearDizzyEffects();
             if (mascotImg) {
               mascotImg.classList.remove('usagi-stumble-fall');
-              mascotImg.classList.add('usagi-dizzy-lying');
+              mascotImg.style.transition = '';
+              mascotImg.style.transform = '';
             }
-            spawnDizzyEffects();
-
-            // 阶段3：850ms后元气拍土爬起来！
-            setTimeout(() => {
-              clearDizzyEffects();
-              if (mascotImg) {
-                mascotImg.classList.remove('usagi-dizzy-lying');
-                mascotImg.classList.add('usagi-get-up-hop');
-              }
-              if (window.UsagiSound && UsagiSound.anyaWakuWaku) {
-                UsagiSound.anyaWakuWaku();
-              } else if (window.UsagiSound) {
-                UsagiSound.sparkle();
-              }
-              if (typeof confettiRain === 'function') confettiRain(25);
-
-              const recoverQuotes = [
-                '呼~ 拍拍小裙子上的灰尘，阿尼亚又满血复活啦！哇酷哇酷！✨🐰',
-                '摇摇头晃晃脑袋，阿尼亚又是最聪明最勇敢的小特工啦！芷萱再丢阿尼亚一次嘛~ 💖🥜',
-                '嘿咻！阿尼亚站得笔直笔直的，要继续守护在芷萱姐姐身边哦！🥰🌸'
-              ];
-              speak('✨ 哇酷哇酷！', recoverQuotes[Math.floor(Math.random() * recoverQuotes.length)], true);
-
-              // 阶段4：彻底站稳恢复常规姿势
-              setTimeout(() => {
-                if (mascotImg) {
-                  mascotImg.classList.remove('usagi-get-up-hop');
-                  mascotImg.style.transition = '';
-                  mascotImg.style.transform = '';
-                }
-                if (actorBox) actorBox.style.transform = '';
-                if (container) container.style.transition = '';
-                setPose(currentPose || 'standing', false);
-              }, 550);
-            }, 850);
+            if (actorBox) actorBox.style.transform = '';
+            if (container) container.style.transition = '';
+            setPose(currentPose || 'standing', false);
           }, 700);
+
+          // 【核心关键】：只完整讲一整句完整的真人温馨陪伴语，绝不打断！
+          const landingWarmQuotes = [
+            '呼~ 稳稳着陆啦！芷萱丢得真好玩，乌萨奇就在这里乖乖陪着你哦！🥰🐰',
+            '安全降落！刚才从高高的地方落下来，有芷萱在身边乌萨奇一点都不怕！💖✨',
+            '呼~ 稳稳站好啦！芷萱今天也要开开心心、元气满满哦！🌸🐰'
+          ];
+          speak('✨ 稳稳着陆', landingWarmQuotes[Math.floor(Math.random() * landingWarmQuotes.length)], true, { force: true });
+
         } else if (isHardLanding) {
           // 中等着陆：加强版弹跳
           mascotImg.classList.add('usagi-bounce-squish');
-          if (window.UsagiSound) UsagiSound.tossLand(impactForce);
+          if (window.UsagiSound) UsagiSound.cartoonSplatBoink(impactForce);
 
           const rect = container.getBoundingClientRect();
           spawnImpactBurst(rect.left + rect.width / 2, rect.bottom - 10, 0.4);
@@ -1803,6 +1638,9 @@ const UsagiPetManager = (function () {
             if (container) container.style.transition = '';
             setPose(currentPose || 'standing', false);
           }, 350);
+
+          speak('✨ 稳稳落地', wasRoamingBeforeDrag ? '呼~ 稳稳着陆啦！乌萨奇从这里继续欢快漫步巡逻陪芷萱啦~ 🐾🐰' : '呼~ 稳稳着陆啦！芷萱丢得真好玩，乌萨奇就在这里乖乖陪着你哦！🥰🐰', true, { force: true });
+
         } else {
           // 轻柔着陆：简单弹跳
           mascotImg.classList.add('usagi-bounce-squish');
@@ -1816,21 +1654,14 @@ const UsagiPetManager = (function () {
             if (container) container.style.transition = '';
             setPose(currentPose || 'standing', false);
           }, 180);
+
+          speak('✨ 稳稳落地', wasRoamingBeforeDrag ? '呼~ 稳稳着陆啦！乌萨奇从这里继续欢快漫步巡逻陪芷萱啦~ 🐾🐰' : '呼~ 稳稳着陆啦！芷萱丢得真好玩，乌萨奇就在这里乖乖陪着你哦！🥰🐰', true, { force: true });
         }
       } else {
         setPose(currentPose || 'standing', false);
       }
 
-      // 音效 & 庆祝特效
-      if (!isEpicLanding && !isHardLanding) {
-        if (window.UsagiSound) UsagiSound.pop();
-      }
-      if (typeof confettiRain === 'function') confettiRain(isEpicLanding ? 30 : 15);
-
-      // 着陆对话 (根据冲击力度选择不同的可爱台词)
-      if (!isEpicLanding) {
-        speak('✨ 稳稳落地', wasRoamingBeforeDrag ? '呼~ 稳稳着陆啦！乌萨奇从这里继续欢快漫步巡逻陪芷萱啦~ 🐾🐰' : '呼~ 稳稳着陆啦！芷萱丢得真好玩，乌萨奇就在这里乖乖陪着你哦！🥰🐰', true);
-      }
+      if (typeof confettiRain === 'function') confettiRain(isEpicLanding ? 25 : 15);
 
       // 同步最新布局
       updatePositionStyle();

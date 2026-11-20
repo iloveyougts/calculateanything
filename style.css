@@ -5217,9 +5217,9 @@ body {
   100% { transform: rotate(360deg) scale(0.9, 1.1); }
 }
 
-/* 跌倒趴地特效 (跌落在地，像软趴趴棉花糖一样摔倒) */
+/* 跌落着陆弹性缓冲特效 (触地深度压扁 + 弹跳缓冲 + 稳稳直立) */
 .usagi-stumble-fall #usagi-mascot-img {
-  animation: usagiStumbleFall 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+  animation: usagiStumbleFall 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
   transform-origin: center bottom !important;
 }
 
@@ -5227,65 +5227,58 @@ body {
   0% {
     transform: scale(1, 1) translateY(0) rotate(0deg);
   }
-  15% {
-    /* 触地扁压 */
-    transform: scale(1.6, 0.45) translateY(12px) rotate(-8deg);
+  18% {
+    /* 触地深度弹性扁压 */
+    transform: scale(1.48, 0.52) translateY(10px) rotate(0deg);
   }
-  35% {
-    /* 反弹并向侧边倾倒跌跤 */
-    transform: scale(0.85, 1.25) translateY(-22px) rotate(25deg);
+  40% {
+    /* 大弹性反弹腾空 */
+    transform: scale(0.82, 1.26) translateY(-18px) rotate(0deg);
   }
-  55% {
-    /* 软摔趴倒在地上 */
-    transform: scale(1.35, 0.6) translateY(8px) rotate(65deg);
+  62% {
+    /* 二次接地缓冲微扁 */
+    transform: scale(1.15, 0.88) translateY(3px) rotate(0deg);
   }
-  75% {
-    /* 趴在地上弹一下 */
-    transform: scale(1.15, 0.8) translateY(2px) rotate(58deg);
+  80% {
+    /* 轻微回弹 */
+    transform: scale(0.94, 1.06) translateY(-4px) rotate(0deg);
   }
   100% {
-    /* 彻底趴在地上眼冒金星 */
-    transform: scale(1.25, 0.68) translateY(6px) rotate(60deg);
+    /* 100% 笔直稳立 */
+    transform: scale(1, 1) translateY(0) rotate(0deg);
   }
 }
 
-/* 眩晕微颤抖 */
+/* 眩晕晃头微动效 (保持站立，小脑袋轻微晃动) */
 .usagi-dizzy-lying #usagi-mascot-img {
-  animation: usagiDizzyTremble 0.25s ease-in-out infinite alternate !important;
-  transform: scale(1.25, 0.68) translateY(6px) rotate(60deg) !important;
+  animation: usagiDizzyTremble 0.3s ease-in-out infinite alternate !important;
   transform-origin: center bottom !important;
 }
 
 @keyframes usagiDizzyTremble {
-  0% { transform: scale(1.25, 0.68) translateY(6px) rotate(58deg); }
-  100% { transform: scale(1.25, 0.68) translateY(6px) rotate(63deg); }
+  0% { transform: scale(1, 1) rotate(-3deg); }
+  100% { transform: scale(1, 1) rotate(3deg); }
 }
 
-/* 爬起来拍拍灰尘跳跃动画 */
+/* 拍拍灰尘跳跃动画 */
 .usagi-get-up-hop #usagi-mascot-img {
-  animation: usagiGetUpHop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+  animation: usagiGetUpHop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
   transform-origin: center bottom !important;
 }
 
 @keyframes usagiGetUpHop {
   0% {
-    transform: scale(1.25, 0.68) translateY(6px) rotate(60deg);
+    transform: scale(1, 1) translateY(0);
   }
-  30% {
-    /* 蓄力蹲起 */
-    transform: scale(1.3, 0.7) translateY(4px) rotate(15deg);
+  40% {
+    /* 欢快小跳 */
+    transform: scale(0.92, 1.18) translateY(-14px);
   }
-  60% {
-    /* 欢快跳起！甩掉灰尘 */
-    transform: scale(0.9, 1.25) translateY(-24px) rotate(-5deg);
-  }
-  85% {
-    /* 落地缓冲 */
-    transform: scale(1.15, 0.9) translateY(2px) rotate(2deg);
+  75% {
+    transform: scale(1.08, 0.94) translateY(2px);
   }
   100% {
-    /* 完美直立 */
-    transform: scale(1, 1) translateY(0) rotate(0deg);
+    transform: scale(1, 1) translateY(0);
   }
 }
 
@@ -5375,97 +5368,41 @@ body {
   }
 }
 
-/* 头顶眩晕星星与旋转小鸟光环 */
+/* 乌萨奇可爱头顶金星光环 (精致小巧，紧贴兔耳顶端，绝不遮挡上方卡片) */
 .usagi-dizzy-stars {
   position: absolute;
-  top: -24px;
+  top: 2px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90px;
-  height: 38px;
+  width: 44px;
+  height: 14px;
   pointer-events: none;
   z-index: 10002;
-  animation: dizzyStarsOrbit 2s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  animation: dizzyStarsTwinkle 1.2s ease-in-out infinite alternate;
 }
 
-@keyframes dizzyStarsOrbit {
-  0% { transform: translateX(-50%) rotate(0deg) scaleY(0.48); }
-  100% { transform: translateX(-50%) rotate(360deg) scaleY(0.48); }
+@keyframes dizzyStarsTwinkle {
+  0% { transform: translateX(-50%) scale(0.95); opacity: 0.85; }
+  100% { transform: translateX(-50%) scale(1.05); opacity: 1; }
 }
 
 .usagi-dizzy-star {
-  position: absolute;
-  font-size: 18px;
-  animation: dizzyStarFloat 0.5s ease-in-out infinite alternate;
-  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
+  font-size: 11px;
+  filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.85));
+  animation: dizzyStarBounce 0.4s ease-in-out infinite alternate;
+  user-select: none;
 }
 
-.usagi-dizzy-star:nth-child(1) { left: 0px; top: 0; animation-delay: 0s; }
-.usagi-dizzy-star:nth-child(2) { left: 32px; top: -10px; animation-delay: 0.15s; }
-.usagi-dizzy-star:nth-child(3) { left: 64px; top: 2px; animation-delay: 0.3s; }
-.usagi-dizzy-star:nth-child(4) { left: 45px; top: 12px; animation-delay: 0.45s; }
+.usagi-dizzy-star:nth-child(1) { animation-delay: 0s; }
+.usagi-dizzy-star:nth-child(2) { font-size: 13px; animation-delay: 0.15s; }
+.usagi-dizzy-star:nth-child(3) { animation-delay: 0.3s; }
 
-@keyframes dizzyStarFloat {
-  0% { transform: translateY(0) scale(0.85); }
-  100% { transform: translateY(-7px) scale(1.15); }
-}
-
-/* 经典动漫阿尼亚/乌萨奇眩晕双眼蚊香眼 (Spiral Dizzy Eyes) */
-.usagi-spiral-eyes {
-  position: absolute;
-  top: 48%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 54px;
-  pointer-events: none;
-  z-index: 10003;
-  animation: dizzyPopIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-@keyframes dizzyPopIn {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
-  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-}
-
-.usagi-spiral-eye {
-  display: inline-block;
-  font-size: 22px;
-  line-height: 1;
-  animation: spiralEyeSpin 0.6s linear infinite;
-  filter: drop-shadow(0 0 5px rgba(244, 63, 94, 0.5));
-}
-
-.usagi-spiral-eye.reverse {
-  animation: spiralEyeSpinRev 0.6s linear infinite;
-}
-
-@keyframes spiralEyeSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes spiralEyeSpinRev {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
-}
-
-/* 眩晕冷汗滴 */
-.usagi-dizzy-sweat {
-  position: absolute;
-  top: 18%;
-  right: -2px;
-  font-size: 20px;
-  pointer-events: none;
-  z-index: 10004;
-  animation: sweatDropDrip 0.7s ease-in-out infinite alternate;
-}
-
-@keyframes sweatDropDrip {
-  0% { transform: translateY(0) scale(0.9); }
-  100% { transform: translateY(6px) scale(1.1); }
+@keyframes dizzyStarBounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-2px); }
 }
 
 /* 着陆烟尘特效 */

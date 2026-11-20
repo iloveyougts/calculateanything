@@ -601,8 +601,8 @@ const UsagiSound = (function () {
       } catch (e) {}
     },
 
-    // 4. 阿尼亚专属哇酷哇酷欢呼音 (Anya Waku Waku Celebration Fanfare)
-    anyaWakuWaku: function () {
+    // 4. 乌萨奇欢快庆祝欢呼音 (Mascot Cheer Fanfare)
+    mascotCheerFanfare: function () {
       if (isMuted) return;
       try {
         initCtx();
@@ -611,6 +611,9 @@ const UsagiSound = (function () {
           setTimeout(() => playTone(f, 'triangle', 0.18, 0.12), i * 65);
         });
       } catch (e) {}
+    },
+    anyaWakuWaku: function () {
+      this.mascotCheerFanfare();
     },
 
     toggleMute: function () {

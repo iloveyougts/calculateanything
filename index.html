@@ -4265,11 +4265,8 @@
         <div class="flex items-center justify-between gap-1.5 mb-1">
           <span id="usagi-speech-tag" class="text-[10px] font-black px-1.5 py-0.5 rounded-full bg-pink-100 text-rose-600 inline-block shadow-xs">✨ 专属陪伴</span>
           <div class="flex items-center gap-1">
-            <button id="btn-speech-voice-toggle" onclick="event.stopPropagation(); if(window.UsagiVoice) UsagiVoice.toggleVoice();" class="text-[10px] font-bold text-pink-600 hover:text-pink-800 transition-colors flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-pink-50 hover:bg-pink-100 border border-pink-200" title="点击开关阿尼亚可爱语音播报">
+            <button id="btn-speech-voice-toggle" onclick="event.stopPropagation(); if(window.UsagiVoice) UsagiVoice.toggleVoice();" class="text-[10px] font-bold text-pink-600 hover:text-pink-800 transition-colors flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-pink-50 hover:bg-pink-100 border border-pink-200 shadow-2xs" title="点击开关真人温馨陪伴语音播报">
               🔊 语音播报
-            </button>
-            <button id="btn-voice-settings" onclick="event.stopPropagation(); if(window.UsagiVoice) UsagiVoice.openVoiceModal();" class="text-[10px] font-bold text-amber-700 hover:text-amber-900 transition-colors flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-200 shadow-2xs" title="切换阿尼亚专属声线与调音控制台">
-              ⚙️ 声线
             </button>
           </div>
         </div>
@@ -7129,82 +7126,7 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       阿尼亚专属萌音声线调音台弹窗 (Anya Kawaii Voice Console Modal)
-       ============================================================ -->
-  <div id="usagi-voice-modal" class="hidden fixed inset-0 z-[10005] bg-black/50 backdrop-blur-xs items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl border-2 border-pink-200 animate-scale-up text-stone-700 relative">
-      <!-- Close button -->
-      <button onclick="UsagiVoice.closeVoiceModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-500 font-bold flex items-center justify-center transition-colors">✕</button>
 
-      <!-- Header -->
-      <div class="flex items-center gap-2 mb-3">
-        <span class="text-2xl">🥜</span>
-        <div>
-          <h3 class="text-sm font-black text-pink-700">阿尼亚专属萌音声线控制台</h3>
-          <p class="text-[11px] text-stone-400">哇酷哇酷！为芷萱定制最甜美的华语萌音~</p>
-        </div>
-      </div>
-
-      <!-- Presets -->
-      <div class="space-y-2 mb-4">
-        <label class="text-[11px] font-bold text-stone-500 block">✨ 推荐萌音预设 (点击即切)</label>
-        <div class="grid grid-cols-3 gap-1.5">
-          <button id="preset-voice-anya" onclick="UsagiVoice.setPreset('anya')" class="p-2 rounded-xl border border-pink-200 bg-pink-50 hover:bg-pink-100 text-center transition-all cursor-pointer">
-            <div class="text-lg mb-0.5">👧</div>
-            <div class="text-[11px] font-black text-pink-700">阿尼亚幼童音</div>
-            <div class="text-[9px] text-pink-500">超萌天真</div>
-          </button>
-          <button id="preset-voice-sweet" onclick="UsagiVoice.setPreset('sweet')" class="p-2 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-center transition-all cursor-pointer">
-            <div class="text-lg mb-0.5">🌸</div>
-            <div class="text-[11px] font-black text-rose-700">软萌少女音</div>
-            <div class="text-[9px] text-rose-500">甜美清澈</div>
-          </button>
-          <button id="preset-voice-natural" onclick="UsagiVoice.setPreset('natural')" class="p-2 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-center transition-all cursor-pointer">
-            <div class="text-lg mb-0.5">🍵</div>
-            <div class="text-[11px] font-black text-amber-700">温润陪伴音</div>
-            <div class="text-[9px] text-amber-500">自然舒适</div>
-          </button>
-        </div>
-      </div>
-
-      <!-- Voice dropdown -->
-      <div class="mb-3.5">
-        <label class="text-[11px] font-bold text-stone-500 block mb-1">🎙️ 系统中文声源选择</label>
-        <select id="voice-select-dropdown" class="w-full text-xs p-2 rounded-xl border border-stone-200 bg-stone-50 text-stone-700 focus:outline-pink-400">
-        </select>
-        <p class="text-[10px] text-stone-400 mt-1">💡 推荐使用带 Xiaoxiao、Xiaoyi、Google 或 自然/Online 标识的声线，声音最真实甜美！</p>
-      </div>
-
-      <!-- Sliders for Pitch and Rate -->
-      <div class="space-y-2 mb-4 bg-pink-50/60 p-3 rounded-2xl border border-pink-100">
-        <div>
-          <div class="flex justify-between text-[11px] font-bold mb-0.5">
-            <span class="text-pink-700">🎵 声调高低 (Pitch)</span>
-            <span id="voice-pitch-val" class="text-pink-600">1.34x</span>
-          </div>
-          <input id="voice-pitch-slider" type="range" min="0.8" max="1.8" step="0.02" value="1.34" oninput="document.getElementById('voice-pitch-val').textContent = parseFloat(this.value).toFixed(2) + 'x'" class="w-full accent-pink-500 cursor-pointer" />
-        </div>
-        <div>
-          <div class="flex justify-between text-[11px] font-bold mb-0.5">
-            <span class="text-pink-700">⚡ 语速轻快 (Speed)</span>
-            <span id="voice-rate-val" class="text-pink-600">1.05x</span>
-          </div>
-          <input id="voice-rate-slider" type="range" min="0.8" max="1.4" step="0.02" value="1.05" oninput="document.getElementById('voice-rate-val').textContent = parseFloat(this.value).toFixed(2) + 'x'" class="w-full accent-pink-500 cursor-pointer" />
-        </div>
-      </div>
-
-      <!-- Action buttons -->
-      <div class="flex gap-2">
-        <button onclick="UsagiVoice.testVoice()" class="flex-1 py-2 px-3 rounded-xl bg-pink-100 hover:bg-pink-200 text-pink-700 font-bold text-xs flex items-center justify-center gap-1 transition-all cursor-pointer">
-          ▶️ 试听阿尼亚台词
-        </button>
-        <button onclick="UsagiVoice.saveSettings(document.getElementById('voice-select-dropdown').value, document.getElementById('voice-pitch-slider').value, document.getElementById('voice-rate-slider').value)" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold text-xs shadow-md shadow-pink-200 flex items-center justify-center gap-1 transition-all cursor-pointer">
-          💾 保存设置
-        </button>
-      </div>
-    </div>
-  </div>
 
 </body>
 </html>
