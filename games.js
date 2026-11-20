@@ -15,6 +15,18 @@ const UsagiVoice = (function () {
   let voices = [];
   let currentUtterance = null;
 
+  // 用户可直接调整的音调、语速、专属声线与录音
+  let userPitch = parseFloat(localStorage.getItem('usagi_voice_pitch') || '1.25');
+  let userRate = parseFloat(localStorage.getItem('usagi_voice_rate') || '1.04');
+  let userVoiceName = localStorage.getItem('usagi_voice_chosen_name') || '';
+  let recordedAudioBase64 = localStorage.getItem('usagi_custom_recorded_audio') || '';
+  let preferRecorded = localStorage.getItem('usagi_prefer_recorded') === 'true';
+
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let isRecording = false;
+  let recordedAudioPlayer = null;
+
   function loadVoices() {
     if (!('speechSynthesis' in window)) return;
     try {
@@ -32,6 +44,12 @@ const UsagiVoice = (function () {
   // 严选自然、甜美、无机械感的真人与声优级女声 (优先微软与谷歌神经网络女声，坚决过滤古早人机机械音)
   function getBestVoice() {
     if (!voices || voices.length === 0) loadVoices();
+
+    // 用户手动指定的声线优先
+    if (userVoiceName) {
+      const chosen = voices.find(v => v.name === userVoiceName);
+      if (chosen) return chosen;
+    }
 
     // 1. 优先匹配现代高质量神经网络声优女声 (Edge/Chrome/Android/iOS 顶级声线)
     const seiyuuKeywords = [
@@ -61,9 +79,16 @@ const UsagiVoice = (function () {
     return anyZh || null;
   }
 
-  // 核心：精准动态跟随乌萨奇当下的每一句温馨语录播报，绝不播放无关广告试听音频
+  // 核心：精准动态跟随乌萨奇当下的每一句温馨语录播报，或优先播放用户录制的真实原声
   function speak(text, options = {}) {
     if (!isVoiceEnabled) return;
+
+    // 模式A：如果用户开启了“优先播放我的真实录音”，直接播放真实录音！
+    if (preferRecorded && recordedAudioBase64 && !options.forceTTS) {
+      playRecordedAudio();
+      return;
+    }
+
     if (!('speechSynthesis' in window)) return;
     if (!text || !text.trim()) return;
 
@@ -82,9 +107,9 @@ const UsagiVoice = (function () {
 
       const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = 'zh-CN';
-      // 少女日漫声优声线参数调谐：音调 1.25（轻快清甜），语速 1.04（活泼自然）
-      utterance.pitch = options.pitch || 1.25;
-      utterance.rate = options.rate || 1.04;
+      // 用户自定义音调与语速优先 (默认少女日漫声优 1.25 / 1.04)
+      utterance.pitch = options.pitch || userPitch || 1.25;
+      utterance.rate = options.rate || userRate || 1.04;
       utterance.volume = options.volume || 1.0;
 
       const v = getBestVoice();
@@ -115,6 +140,9 @@ const UsagiVoice = (function () {
   }
 
   function stop() {
+    if (recordedAudioPlayer) {
+      try { recordedAudioPlayer.pause(); } catch(e){}
+    }
     if ('speechSynthesis' in window) {
       try { window.speechSynthesis.cancel(); } catch (e) { }
     }
@@ -154,7 +182,260 @@ const UsagiVoice = (function () {
   }
 
   function testCurrentVoice() {
-    speak('芷萱！乌萨奇在呢，今天也要超级开心哦！🌸', { force: true });
+    speak('芷萱！乌萨奇在呢，今天也要超级开心哦！🌸', { force: true, forceTTS: true });
+  }
+
+  // ============================================================
+  // 麦克风实时录音系统 (录制男友真实原声 / 专属录音)
+  // ============================================================
+  function toggleMicRecording() {
+    if (isRecording) {
+      stopMicRecording();
+    } else {
+      startMicRecording();
+    }
+  }
+
+  function startMicRecording() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert('您的浏览器当前未授予麦克风权限，您可以直接滑动上方滑块微调音调/语速，或上传本地录音音频文件！');
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+      audioChunks = [];
+      try {
+        mediaRecorder = new MediaRecorder(stream);
+      } catch (e) {
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+      }
+      mediaRecorder.ondataavailable = e => {
+        if (e.data && e.data.size > 0) audioChunks.push(e.data);
+      };
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          recordedAudioBase64 = reader.result;
+          localStorage.setItem('usagi_custom_recorded_audio', recordedAudioBase64);
+          preferRecorded = true;
+          localStorage.setItem('usagi_prefer_recorded', 'true');
+          updateRecordingUI();
+          speak('录音保存成功！已优先为您启用专属录音~ ✨', { force: true, forceTTS: true });
+        };
+        reader.readAsDataURL(audioBlob);
+        stream.getTracks().forEach(t => t.stop());
+      };
+      mediaRecorder.start();
+      isRecording = true;
+      updateRecordingUI();
+    }).catch(err => {
+      alert('获取麦克风失败，请在浏览器地址栏允许麦克风权限，或使用下方文件上传功能！');
+    });
+  }
+
+  function stopMicRecording() {
+    if (mediaRecorder && isRecording) {
+      mediaRecorder.stop();
+      isRecording = false;
+      updateRecordingUI();
+    }
+  }
+
+  function playRecordedAudio() {
+    if (!recordedAudioBase64) return;
+    try {
+      if (recordedAudioPlayer) {
+        recordedAudioPlayer.pause();
+        recordedAudioPlayer.currentTime = 0;
+      }
+      recordedAudioPlayer = new Audio(recordedAudioBase64);
+      recordedAudioPlayer.onplay = () => { isSpeaking = true; updateUI(true); };
+      recordedAudioPlayer.onended = () => { isSpeaking = false; updateUI(false); };
+      recordedAudioPlayer.onerror = () => { isSpeaking = false; updateUI(false); };
+      recordedAudioPlayer.play();
+    } catch(e) {
+      isSpeaking = false;
+      updateUI(false);
+    }
+  }
+
+  function deleteRecordedAudio() {
+    recordedAudioBase64 = '';
+    preferRecorded = false;
+    localStorage.removeItem('usagi_custom_recorded_audio');
+    localStorage.removeItem('usagi_prefer_recorded');
+    updateRecordingUI();
+  }
+
+  function setPreferRecorded(val) {
+    preferRecorded = val;
+    localStorage.setItem('usagi_prefer_recorded', val ? 'true' : 'false');
+  }
+
+  function handleAudioFileUpload(input) {
+    if (!input || !input.files || input.files.length === 0) return;
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      recordedAudioBase64 = reader.result;
+      localStorage.setItem('usagi_custom_recorded_audio', recordedAudioBase64);
+      preferRecorded = true;
+      localStorage.setItem('usagi_prefer_recorded', 'true');
+      updateRecordingUI();
+      playRecordedAudio();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function updateRecordingUI() {
+    const btnRecord = document.getElementById('btn-mic-record');
+    const icon = document.getElementById('record-btn-icon');
+    const label = document.getElementById('record-btn-label');
+    const badge = document.getElementById('record-status-badge');
+    const btnPlay = document.getElementById('btn-play-recorded');
+    const btnDel = document.getElementById('btn-delete-recorded');
+    const toggleRow = document.getElementById('recorded-audio-toggle-row');
+    const chk = document.getElementById('chk-prefer-recorded');
+
+    if (isRecording) {
+      if (icon) icon.innerText = '⏹️';
+      if (label) label.innerText = '正在录音中... 点击停止';
+      if (btnRecord) {
+        btnRecord.classList.add('animate-pulse', 'from-red-500', 'to-rose-600');
+        btnRecord.classList.remove('from-rose-500', 'to-pink-500');
+      }
+      if (badge) {
+        badge.innerText = '🔴 录音中...';
+        badge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-600 font-black border border-red-200 animate-pulse';
+      }
+    } else {
+      if (icon) icon.innerText = '🎙️';
+      if (label) label.innerText = recordedAudioBase64 ? '重新录制真实声音' : '点击开始录音';
+      if (btnRecord) {
+        btnRecord.classList.remove('animate-pulse', 'from-red-500', 'to-rose-600');
+        btnRecord.classList.add('from-rose-500', 'to-pink-500');
+      }
+      if (badge) {
+        if (recordedAudioBase64) {
+          badge.innerText = '✅ 已有专属录音';
+          badge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-bold border border-emerald-200';
+        } else {
+          badge.innerText = '未录制';
+          badge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-white text-rose-600 font-bold border border-rose-200';
+        }
+      }
+    }
+
+    if (btnPlay) btnPlay.classList.toggle('hidden', !recordedAudioBase64);
+    if (btnDel) btnDel.classList.toggle('hidden', !recordedAudioBase64);
+    if (toggleRow) toggleRow.classList.toggle('hidden', !recordedAudioBase64);
+    if (chk) chk.checked = preferRecorded;
+  }
+
+  // ============================================================
+  // 声学调音控制台 (音调、语速、预设)
+  // ============================================================
+  function openSettingsModal() {
+    loadVoices();
+    const modal = document.getElementById('usagi-voice-settings-modal');
+    if (!modal) return;
+
+    const sliderPitch = document.getElementById('slider-voice-pitch');
+    const labelPitch = document.getElementById('voice-pitch-val');
+    if (sliderPitch) sliderPitch.value = userPitch;
+    if (labelPitch) labelPitch.innerText = `${userPitch.toFixed(2)}x (${getPitchDesc(userPitch)})`;
+
+    const sliderRate = document.getElementById('slider-voice-rate');
+    const labelRate = document.getElementById('voice-rate-val');
+    if (sliderRate) sliderRate.value = userRate;
+    if (labelRate) labelRate.innerText = `${userRate.toFixed(2)}x (${getRateDesc(userRate)})`;
+
+    const select = document.getElementById('voice-select-dropdown');
+    if (select) {
+      select.innerHTML = '<option value="">自动优选最甜美声优女声</option>';
+      const zhVoices = voices.filter(v => !v.lang || v.lang.startsWith('zh') || v.lang.startsWith('cmn'));
+      const listToRender = zhVoices.length > 0 ? zhVoices : voices;
+      listToRender.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v.name;
+        opt.textContent = `${v.name} (${v.lang})`;
+        if (v.name === userVoiceName) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    updateRecordingUI();
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  function closeSettingsModal() {
+    const modal = document.getElementById('usagi-voice-settings-modal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  function onPitchChange(val) {
+    userPitch = parseFloat(val) || 1.25;
+    localStorage.setItem('usagi_voice_pitch', userPitch);
+    const labelPitch = document.getElementById('voice-pitch-val');
+    if (labelPitch) labelPitch.innerText = `${userPitch.toFixed(2)}x (${getPitchDesc(userPitch)})`;
+  }
+
+  function onRateChange(val) {
+    userRate = parseFloat(val) || 1.04;
+    localStorage.setItem('usagi_voice_rate', userRate);
+    const labelRate = document.getElementById('voice-rate-val');
+    if (labelRate) labelRate.innerText = `${userRate.toFixed(2)}x (${getRateDesc(userRate)})`;
+  }
+
+  function onVoiceSelect(val) {
+    userVoiceName = val || '';
+    localStorage.setItem('usagi_voice_chosen_name', userVoiceName);
+  }
+
+  function applyPreset(type) {
+    if (type === 'seiyuu') {
+      userPitch = 1.25;
+      userRate = 1.04;
+    } else if (type === 'loli') {
+      userPitch = 1.45;
+      userRate = 1.08;
+    } else if (type === 'gentle') {
+      userPitch = 1.05;
+      userRate = 0.98;
+    } else if (type === 'natural') {
+      userPitch = 1.00;
+      userRate = 1.00;
+    }
+    localStorage.setItem('usagi_voice_pitch', userPitch);
+    localStorage.setItem('usagi_voice_rate', userRate);
+
+    const sliderPitch = document.getElementById('slider-voice-pitch');
+    const labelPitch = document.getElementById('voice-pitch-val');
+    if (sliderPitch) sliderPitch.value = userPitch;
+    if (labelPitch) labelPitch.innerText = `${userPitch.toFixed(2)}x (${getPitchDesc(userPitch)})`;
+
+    const sliderRate = document.getElementById('slider-voice-rate');
+    const labelRate = document.getElementById('voice-rate-val');
+    if (sliderRate) sliderRate.value = userRate;
+    if (labelRate) labelRate.innerText = `${userRate.toFixed(2)}x (${getRateDesc(userRate)})`;
+
+    speak('声线预设切换好啦！芷萱听听乌萨奇这个声音喜欢吗？✨', { force: true, forceTTS: true });
+  }
+
+  function getPitchDesc(p) {
+    if (p < 0.9) return '成熟沉稳';
+    if (p <= 1.15) return '温柔自然';
+    if (p <= 1.35) return '日漫声优';
+    return '超萌萝莉';
+  }
+
+  function getRateDesc(r) {
+    if (r < 0.9) return '温柔慢读';
+    if (r <= 1.15) return '自然灵动';
+    return '快嘴活泼';
   }
 
   return {
@@ -162,12 +443,23 @@ const UsagiVoice = (function () {
     stop,
     toggleVoice,
     testCurrentVoice,
+    openSettingsModal,
+    closeSettingsModal,
+    onPitchChange,
+    onRateChange,
+    onVoiceSelect,
+    applyPreset,
+    toggleMicRecording,
+    playRecordedAudio,
+    deleteRecordedAudio,
+    setPreferRecorded,
+    handleAudioFileUpload,
     isSpeakingNow: () => isSpeaking,
     isEnabled: () => isVoiceEnabled,
     updateButtonUI,
     getBestVoice,
-    openConsole: () => {},
-    closeConsole: () => {},
+    openConsole: openSettingsModal,
+    closeConsole: closeSettingsModal,
     renderTrackList: () => {},
     selectTrack: () => {},
     previewTrack: () => {},
@@ -578,8 +870,8 @@ const UsagiPetManager = (function () {
   }
 
   function init() {
-    const minX = 16;
-    const maxX = Math.max(minX + 30, cachedWindowWidth - (cachedIsMobile ? 180 : 240));
+    const minX = 10;
+    const maxX = Math.max(minX + 30, cachedWindowWidth - (cachedIsMobile ? 95 : 120));
     posX = maxX; // 保证开屏与刷新绝对处于右下角！
 
     const savedRoam = localStorage.getItem('usagi_pet_roam');
@@ -606,7 +898,9 @@ const UsagiPetManager = (function () {
 
     // Window resize handler
     window.addEventListener('resize', () => {
-      const maxX = Math.max(30, (window.innerWidth || 1024) - 240);
+      const minX = 10;
+      const isMobile = (window.innerWidth < 768);
+      const maxX = Math.max(minX + 30, (window.innerWidth || 1024) - (isMobile ? 95 : 120));
       if (posX > maxX) posX = maxX;
       updatePositionStyle();
     });
@@ -657,8 +951,8 @@ const UsagiPetManager = (function () {
       if (isRoaming && !isMinimized && !isPaused && !isTossing && currentState !== 'sleep') {
         const container = document.getElementById('usagi-mascot-container');
         if (container) {
-          const minX = 20;
-          const maxX = Math.max(minX + 40, cachedWindowWidth - 240);
+          const minX = 10;
+          const maxX = Math.max(minX + 30, cachedWindowWidth - (cachedIsMobile ? 95 : 120));
 
           posX += direction * speed;
 
@@ -719,8 +1013,8 @@ const UsagiPetManager = (function () {
       return;
     }
 
-    const minX = 16;
-    const maxX = Math.max(minX + 30, cachedWindowWidth - (cachedIsMobile ? 180 : 240));
+    const minX = 10;
+    const maxX = Math.max(minX + 30, cachedWindowWidth - (cachedIsMobile ? 95 : 120));
 
     if (posX > maxX) posX = maxX;
     if (posX < minX) posX = minX;
@@ -729,24 +1023,17 @@ const UsagiPetManager = (function () {
 
     const bubble = document.getElementById('usagi-speech-bubble');
     if (bubble) {
-      let desiredAlign = 'center';
-      if (posX < 160) desiredAlign = 'left';
-      else if (posX > cachedWindowWidth - 260) desiredAlign = 'right';
-
-      if (lastBubbleAlign !== desiredAlign) {
-        lastBubbleAlign = desiredAlign;
-        if (desiredAlign === 'left') {
-          bubble.style.alignSelf = 'flex-start';
-          bubble.classList.add('bubble-align-left');
-          bubble.classList.remove('bubble-align-right');
-        } else if (desiredAlign === 'right') {
-          bubble.style.alignSelf = 'flex-end';
-          bubble.classList.add('bubble-align-right');
-          bubble.classList.remove('bubble-align-left');
-        } else {
-          bubble.style.alignSelf = 'center';
-          bubble.classList.remove('bubble-align-left', 'bubble-align-right');
-        }
+      bubble.style.left = '0px';
+      const rect = bubble.getBoundingClientRect();
+      const screenW = cachedWindowWidth || window.innerWidth || 430;
+      if (rect.right > screenW - 12) {
+        const overflow = rect.right - (screenW - 12);
+        bubble.style.left = `-${overflow}px`;
+      } else if (rect.left < 12) {
+        const underflow = 12 - rect.left;
+        bubble.style.left = `${underflow}px`;
+      } else {
+        bubble.style.left = '0px';
       }
     }
   }
@@ -762,7 +1049,7 @@ const UsagiPetManager = (function () {
     if (container) {
       if (isRoaming) {
         container.classList.add('roaming');
-        posX = container.offsetLeft || (window.innerWidth - 150);
+        posX = container.offsetLeft || (cachedWindowWidth - (cachedIsMobile ? 95 : 120));
         updatePositionStyle();
         speak('🚶 漫步模式', '乌萨奇开始在屏幕底部走来走去巡逻啦~ 陪伴芷萱！🐰');
       } else {
@@ -862,6 +1149,7 @@ const UsagiPetManager = (function () {
       bubble.classList.remove('bubble-pop');
       void bubble.offsetWidth;
       bubble.classList.add('bubble-pop');
+      updatePositionStyle();
     }
 
     // 语音灵动播报（不强制死锁，交互流畅无阻碍）
@@ -1452,8 +1740,8 @@ const UsagiPetManager = (function () {
         const w = container.offsetWidth || 110;
         const h = container.offsetHeight || 140;
 
-        const minX = 16;
-        const maxX = screenW - w - 16;
+        const minX = 10;
+        const maxX = Math.max(minX + 30, screenW - (isMobile ? 95 : 120));
         const minY = 8;
         const maxY = screenH - h - (isMobile ? 86 : 28);
 
@@ -1469,11 +1757,11 @@ const UsagiPetManager = (function () {
         if (vy > maxFallSpeed) vy = maxFallSpeed;
         vx *= Math.pow(friction, dtScale);
 
-        // 趣味随风左右轻微摆动 (像降落伞轻悠摇曳)
+        // 趣味微晃：保持在用户释放的垂直轴线上轻盈飘落，绝不偏移到屏幕中间！
         const timeInAir = now - startTime;
-        if (isDroppedFromHigh) {
-          const sway = Math.sin(timeInAir / 150) * 1.6;
-          x += sway * dtScale;
+        if (isDroppedFromHigh && Math.abs(vx) < 1.0) {
+          const swayOffset = Math.sin(timeInAir / 160) * 3.5;
+          x = startX + swayOffset;
         }
 
         // 碰左右墙 -> 软萌玩偶吸收撞击，微弱贴边缓冲，绝不大幅弹回屏幕中间
@@ -1541,12 +1829,12 @@ const UsagiPetManager = (function () {
       container.style.bottom = isMobile ? 'calc(76px + env(safe-area-inset-bottom, 12px))' : '24px';
 
       const screenW = window.innerWidth || 1024;
-      const minX = 16;
-      const maxX = Math.max(minX + 30, screenW - (isMobile ? 180 : 240));
+      const minX = 10;
+      const maxX = Math.max(minX + 30, screenW - (isMobile ? 95 : 120));
       posX = Math.max(minX, Math.min(maxX, finalX));
       container.style.left = posX + 'px';
       container.style.right = 'auto';
-      container.style.transition = 'left 0.2s ease';
+      container.style.transition = ''; // 落地坚决不水平回弹滑动，从哪里丢下来就在哪里稳稳着陆！
 
       // 2. 彻底重置对话框与操作栏的相对位置，确保永远紧紧贴合在乌萨奇头顶
       const bubble = document.getElementById('usagi-speech-bubble');
@@ -1555,13 +1843,13 @@ const UsagiPetManager = (function () {
         bubble.style.bottom = '';
         bubble.style.left = '';
         bubble.style.right = '';
-        bubble.style.transform = '';
       }
       const dock = document.getElementById('usagi-assistant-dock');
       if (dock) {
         dock.style.top = '';
         dock.style.bottom = '';
       }
+      updatePositionStyle();
 
       // 3. 拖拽丢下后：若之前处于漫步巡逻，着陆后立刻从新位置继续漫步巡逻，绝不擅自停止！
       if (wasRoamingBeforeDrag) {

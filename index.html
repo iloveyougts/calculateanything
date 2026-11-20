@@ -4268,6 +4268,9 @@
             <button id="btn-speech-voice-toggle" onclick="event.stopPropagation(); if(window.UsagiVoice) UsagiVoice.toggleVoice();" class="text-[10px] font-bold text-pink-600 hover:text-pink-800 transition-colors flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-pink-50 hover:bg-pink-100 border border-pink-200 shadow-2xs" title="点击开关乌萨奇语录陪伴语音">
               🔊 语音播报
             </button>
+            <button id="btn-speech-voice-settings" onclick="event.stopPropagation(); if(window.UsagiVoice) UsagiVoice.openSettingsModal();" class="text-[10px] font-bold text-rose-500 hover:text-rose-700 transition-colors flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-white hover:bg-rose-50 border border-rose-200 shadow-2xs cursor-pointer" title="直接调音 / 录制专属声音">
+              🎛️ 调音/录音
+            </button>
           </div>
         </div>
         <div id="usagi-speech-text">芷萱加油！呀哈！今天也是元气满满的一天~ ✨</div>
@@ -7127,6 +7130,124 @@
   </div>
 
 
+
+  <!-- Modal: Usagi Voice & Recording Settings (直接调音 & 录音) -->
+  <div id="usagi-voice-settings-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/60 backdrop-blur-sm p-4 hidden select-none">
+    <div class="relative max-w-sm w-full p-5 sm:p-6 rounded-[28px] bg-white border-2 border-pink-200 shadow-2xl overflow-hidden transition-all my-auto max-h-[90vh] flex flex-col">
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-pink-100 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl animate-bounce">🎙️</span>
+          <div>
+            <h3 class="text-sm sm:text-base font-black text-stone-800">乌萨奇调音 & 专属录音</h3>
+            <p class="text-[10px] text-pink-500 font-bold">可直接微调声线，或录制真实声音</p>
+          </div>
+        </div>
+        <button onclick="UsagiVoice.closeSettingsModal()" class="w-7 h-7 rounded-full bg-stone-100 hover:bg-rose-100 text-stone-400 hover:text-rose-600 flex items-center justify-center text-xs font-bold transition-all cursor-pointer">
+          ✕
+        </button>
+      </div>
+
+      <!-- Scrollable Body -->
+      <div class="flex-1 overflow-y-auto space-y-3.5 pr-1 text-xs">
+        <!-- Section 1: 声学调音 (Pitch & Rate) -->
+        <div class="p-3 bg-pink-50/70 rounded-2xl border border-pink-200/80 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="font-black text-stone-700 flex items-center gap-1">🎛️ 声调微调 (Pitch)</span>
+            <span id="voice-pitch-val" class="font-bold text-pink-600 text-[11px]">1.25x (日漫声优)</span>
+          </div>
+          <input id="slider-voice-pitch" type="range" min="0.6" max="1.8" step="0.05" value="1.25" oninput="UsagiVoice.onPitchChange(this.value)" class="w-full accent-pink-500 cursor-pointer">
+          <div class="flex justify-between text-[9px] text-stone-400">
+            <span>成熟沉稳 (0.6x)</span>
+            <span>日漫声优 (1.25x)</span>
+            <span>超萌萝莉 (1.8x)</span>
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <span class="font-black text-stone-700 flex items-center gap-1">⚡ 语速微调 (Speed)</span>
+            <span id="voice-rate-val" class="font-bold text-pink-600 text-[11px]">1.04x (自然灵动)</span>
+          </div>
+          <input id="slider-voice-rate" type="range" min="0.6" max="1.8" step="0.05" value="1.04" oninput="UsagiVoice.onRateChange(this.value)" class="w-full accent-pink-500 cursor-pointer">
+          <div class="flex justify-between text-[9px] text-stone-400">
+            <span>温柔慢读 (0.6x)</span>
+            <span>自然灵动 (1.04x)</span>
+            <span>快嘴活泼 (1.8x)</span>
+          </div>
+        </div>
+
+        <!-- Section 2: 预设一键切换 -->
+        <div>
+          <div class="font-black text-stone-700 mb-1.5 flex items-center gap-1">✨ 一键快速声线预设:</div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button onclick="UsagiVoice.applyPreset('seiyuu')" class="px-2 py-1.5 rounded-xl border border-pink-200 bg-white hover:bg-pink-100 font-bold text-pink-700 text-[11px] transition-all cursor-pointer">
+              🎀 甜美声优 (1.25x)
+            </button>
+            <button onclick="UsagiVoice.applyPreset('loli')" class="px-2 py-1.5 rounded-xl border border-rose-200 bg-white hover:bg-rose-100 font-bold text-rose-700 text-[11px] transition-all cursor-pointer">
+              🍓 软萌萝莉 (1.45x)
+            </button>
+            <button onclick="UsagiVoice.applyPreset('gentle')" class="px-2 py-1.5 rounded-xl border border-purple-200 bg-white hover:bg-purple-100 font-bold text-purple-700 text-[11px] transition-all cursor-pointer">
+              🍵 温柔女友 (1.05x)
+            </button>
+            <button onclick="UsagiVoice.applyPreset('natural')" class="px-2 py-1.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-100 font-bold text-stone-700 text-[11px] transition-all cursor-pointer">
+              🌟 原生自然 (1.00x)
+            </button>
+          </div>
+        </div>
+
+        <!-- Section 3: 系统声库选择 -->
+        <div>
+          <label class="font-black text-stone-700 block mb-1">🗣️ 选择系统/浏览器可用声音:</label>
+          <select id="voice-select-dropdown" onchange="UsagiVoice.onVoiceSelect(this.value)" class="w-full p-2 text-xs rounded-xl border border-pink-200 bg-white text-stone-700 focus:outline-none focus:ring-2 focus:ring-pink-300">
+            <option value="">自动优选最甜美声优女声</option>
+          </select>
+        </div>
+
+        <!-- Section 4: 麦克风录音 (录制我的专属声音) -->
+        <div class="p-3 bg-rose-50/70 rounded-2xl border border-rose-200/80 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-black text-rose-800 flex items-center gap-1">🎤 录制我的真实声音</span>
+            <span id="record-status-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-white text-rose-600 font-bold border border-rose-200">未录制</span>
+          </div>
+          <p class="text-[10px] text-stone-500">点击下方按钮直接说一句话（如“芷萱宝贝我来啦”），乌萨奇就会直接播放你的真实原声！</p>
+          <div class="flex items-center gap-2">
+            <button id="btn-mic-record" onclick="UsagiVoice.toggleMicRecording()" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-black text-xs shadow-md shadow-rose-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+              <span id="record-btn-icon">🎙️</span>
+              <span id="record-btn-label">点击开始录音</span>
+            </button>
+            <button id="btn-play-recorded" onclick="UsagiVoice.playRecordedAudio()" class="hidden py-2 px-3 rounded-xl bg-white border border-rose-300 text-rose-600 hover:bg-rose-50 font-bold text-xs transition-all cursor-pointer">
+              ▶️ 试听
+            </button>
+            <button id="btn-delete-recorded" onclick="UsagiVoice.deleteRecordedAudio()" class="hidden py-2 px-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-500 font-bold text-xs transition-all cursor-pointer" title="删除录音">
+              🗑️
+            </button>
+          </div>
+          <div id="recorded-audio-toggle-row" class="hidden items-center gap-2 pt-1 border-t border-rose-200/60">
+            <label class="flex items-center gap-1.5 cursor-pointer text-[11px] font-bold text-rose-700">
+              <input type="checkbox" id="chk-prefer-recorded" onchange="UsagiVoice.setPreferRecorded(this.checked)" class="accent-rose-500 rounded cursor-pointer">
+              优先播放我的真实录音作为问候
+            </label>
+          </div>
+          <div class="pt-1 flex items-center justify-between text-[10px] text-stone-500">
+            <span>也可以直接上传本地音频:</span>
+            <label class="px-2 py-1 rounded-lg bg-white border border-stone-200 text-stone-600 hover:text-pink-600 font-bold cursor-pointer">
+              📁 选择文件
+              <input type="file" accept="audio/*" onchange="UsagiVoice.handleAudioFileUpload(this)" class="hidden">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="pt-3 border-t border-pink-100 flex items-center justify-between gap-2 mt-2">
+        <button onclick="UsagiVoice.testCurrentVoice()" class="flex-1 py-2 rounded-xl bg-pink-100 hover:bg-pink-200 text-pink-700 font-black text-xs transition-colors flex items-center justify-center gap-1 cursor-pointer">
+          ▶️ 试听当前声音
+        </button>
+        <button onclick="UsagiVoice.closeSettingsModal()" class="flex-1 py-2 rounded-xl bg-pink-600 hover:bg-pink-700 text-white font-black text-xs shadow-md shadow-pink-200 transition-all flex items-center justify-center cursor-pointer">
+          ✅ 完成保存
+        </button>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
